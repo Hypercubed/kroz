@@ -1,0 +1,34 @@
+{
+  "name": "vite-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "check": "npm-run-all check:**",
+    "check:prettier": "prettier . --check",
+    "check:lint": "eslint",
+    "fix": "npm-run-all fix:**",
+    "fix:lint": "eslint --fix",
+    "fix:prettier": "prettier . --write"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.14.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "3.4.2",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.18.2",
+    "vite": "^6.0.5"
+  },
+  "dependencies": {
+    "gamecontroller.js": "^1.5.0",
+    "mini-signals": "^2.0.0",
+    "rot-js": "^2.2.1"
+  }
+}
