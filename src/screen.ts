@@ -21,21 +21,53 @@ export function renderScreen() {
 
 // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST1.LEV#L328
 export function renderStats() {
-  const whipStr = world.state.whipPower > 2 ?
-    `${world.state.whips}+${world.state.whipPower - 2}` :
-    world.state.whips.toString();
+  const whipStr =
+    world.state.whipPower > 2
+      ? `${world.state.whips}+${world.state.whipPower - 2}`
+      : world.state.whips.toString();
 
   const width = 4;
   const size = 8;
 
-  const gc = !world.state.paused && world.state.gems < 10 ? Color.Red | 16 : Color.Red;
+  const gc =
+    !world.state.paused && world.state.gems < 10 ? Color.Red | 16 : Color.Red;
 
-  display.drawText(70, 2, pad((world.state.score * 10).toString(), width + 1, size), Color.Red, Color.Grey);
-  display.drawText(70, 5, pad(world.state.level.toString(), width, size), Color.Red, Color.Grey);
-  display.drawText(70, 8, pad(world.state.gems.toString(), width, size), gc, Color.Grey);
+  display.drawText(
+    70,
+    2,
+    pad((world.state.score * 10).toString(), width + 1, size),
+    Color.Red,
+    Color.Grey,
+  );
+  display.drawText(
+    70,
+    5,
+    pad(world.state.level.toString(), width, size),
+    Color.Red,
+    Color.Grey,
+  );
+  display.drawText(
+    70,
+    8,
+    pad(world.state.gems.toString(), width, size),
+    gc,
+    Color.Grey,
+  );
   display.drawText(70, 11, pad(whipStr, width, size), Color.Red, Color.Grey);
-  display.drawText(70, 14, pad(world.state.teleports.toString(), width, size), Color.Red, Color.Grey);
-  display.drawText(70, 17, pad(world.state.keys.toString(), width, size), Color.Red, Color.Grey);
+  display.drawText(
+    70,
+    14,
+    pad(world.state.teleports.toString(), width, size),
+    Color.Red,
+    Color.Grey,
+  );
+  display.drawText(
+    70,
+    17,
+    pad(world.state.keys.toString(), width, size),
+    Color.Red,
+    Color.Grey,
+  );
 }
 
 export function render() {
@@ -85,7 +117,11 @@ export async function flash(msg: string | number, once = false) {
   world.state.paused = false;
 }
 
-export function message(msg: string | number, fg?: string | Color, bg?:string | Color) {
+export function message(
+  msg: string | number,
+  fg?: string | Color,
+  bg?: string | Color,
+) {
   if (typeof msg === 'number') {
     msg = TileMessage[msg];
   }

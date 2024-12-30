@@ -20,7 +20,7 @@ export enum Action {
   FreeItems,
   NextLevel,
   PrevLevel,
-  Teleport
+  Teleport,
 }
 
 // Tracks the current state of joystick actions
@@ -167,13 +167,13 @@ export function anyKey() {
 }
 
 export function readKey() {
-  return new Promise(resolve => {
-    window.addEventListener('keypress', resolve, {once:true});
+  return new Promise((resolve) => {
+    window.addEventListener('keypress', resolve, { once: true });
   });
 }
 
 export function pollActions() {
-  const actions: Partial<Record<Action, boolean>> = { };
+  const actions: Partial<Record<Action, boolean>> = {};
   for (const action in actionBuffer) {
     const key = action as unknown as Action;
     actions[key] = actionBuffer[key] || actionState[key];

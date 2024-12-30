@@ -8,7 +8,7 @@ The goal is mimic the original KROZ games, while proving a framework for new fea
 
 ## How to Play
 
-The game is played in the browser. You can play the game by visiting the following URL: TBD
+The game is played in the browser. You can play the game by visiting the following URL: https://hypercubed.github.io/kroz/
 
 ## License
 

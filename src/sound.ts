@@ -1,8 +1,10 @@
-import { RNG } from "rot-js";
+import { RNG } from 'rot-js';
 
 const SILENT = false;
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const audioContext = new (window.AudioContext ||
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).webkitAudioContext)();
 
 const VOLUME = 0.005;
 // const VOLUME_CURVE = [1.0, 0.61, 0.37, 0.22, 0.14, 0.08, 0.05, 0.0];

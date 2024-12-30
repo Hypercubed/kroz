@@ -11,9 +11,18 @@ import { Timer } from './world';
 
 // Dummy entities used for the scheduler
 const PlayerActor = { type: Tile.Player, getSpeed: () => 30 };
-const SlowActor = { type: Tile.Slow, getSpeed: () => 10 * world.getTimeScale() };
-const MediumActor = { type: Tile.Medium, getSpeed: () => 20 * world.getTimeScale() };
-const FastActor = { type: Tile.Fast, getSpeed: () => 30 * world.getTimeScale() };
+const SlowActor = {
+  type: Tile.Slow,
+  getSpeed: () => 10 * world.getTimeScale(),
+};
+const MediumActor = {
+  type: Tile.Medium,
+  getSpeed: () => 20 * world.getTimeScale(),
+};
+const FastActor = {
+  type: Tile.Fast,
+  getSpeed: () => 30 * world.getTimeScale(),
+};
 
 export async function start() {
   const scheduler = new Scheduler.Speed();
@@ -60,7 +69,7 @@ export async function start() {
       return;
     }
 
-    dt += (currentTime - previousTime);
+    dt += currentTime - previousTime;
     previousTime = currentTime;
 
     world.state.T = world.state.T.map((t) => (t > 0 ? t - 1 : 0));
@@ -70,7 +79,8 @@ export async function start() {
       if (!world.state.paused) {
         const current = scheduler.next();
         await world.action(Tile.Player);
-        if (world.state.T[Timer.FreezeTime] < 1) { // Freeze time spell active
+        if (world.state.T[Timer.FreezeTime] < 1) {
+          // Freeze time spell active
           await world.action(current.type);
         }
         world.renderPlayfield();

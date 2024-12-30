@@ -6,13 +6,20 @@ import * as sound from './sound';
 import * as screen from './screen';
 
 import { TileChar, TileColor, MapLookup, Tile } from './tiles';
-import { DEBUG, FLOOR_CHAR, XBot, XSize, XTop, YBot, YSize, YTop } from './constants';
+import {
+  DEBUG,
+  FLOOR_CHAR,
+  XBot,
+  XSize,
+  XTop,
+  YBot,
+  YSize,
+  YTop,
+} from './constants';
 import { Entity, EntityType } from './entities';
 import { Action } from './controls';
 
-import {
-  LEVELS,
-} from './levels';
+import { LEVELS } from './levels';
 import { Color, ColorCodes } from './colors';
 
 // TODO: Spells enum
@@ -33,10 +40,10 @@ function getDefaultState() {
   return {
     player: new Entity(Tile.Player, 0, 0),
     entities: [] as Entity[],
-  
+
     PF: [] as (Tile | string)[][],
     foundSet: new Set(),
-  
+
     T: [
       0,
       0,
@@ -47,9 +54,9 @@ function getDefaultState() {
       Timer.SpeedTime, // 6 - Speed Time
       Timer.FreezeTime, // 7 - Freeze Time
       0,
-      0
+      0,
     ], // Timers
-  
+
     level: DEBUG ? 0 : 1,
     score: 0,
     gems: 20,
@@ -57,10 +64,10 @@ function getDefaultState() {
     teleports: 0,
     keys: 0,
     whipPower: 2,
-  
+
     actionActive: false,
     paused: false,
-    done: false
+    done: false,
   };
 }
 
@@ -168,22 +175,31 @@ async function playerAction() {
   if (actionState[Action.NextLevel]) await doPlayerAction(Action.NextLevel);
   if (actionState[Action.PrevLevel]) await doPlayerAction(Action.PrevLevel);
 
-  if (actionState[Action.North] && actionState[Action.West]) return await doPlayerAction(Action.Northwest);
-  if (actionState[Action.North] && actionState[Action.East]) return await doPlayerAction(Action.Northeast);
-  if (actionState[Action.South] && actionState[Action.West]) return await doPlayerAction(Action.Southwest);
-  if (actionState[Action.South] && actionState[Action.East]) return await doPlayerAction(Action.Southeast);
+  if (actionState[Action.North] && actionState[Action.West])
+    return await doPlayerAction(Action.Northwest);
+  if (actionState[Action.North] && actionState[Action.East])
+    return await doPlayerAction(Action.Northeast);
+  if (actionState[Action.South] && actionState[Action.West])
+    return await doPlayerAction(Action.Southwest);
+  if (actionState[Action.South] && actionState[Action.East])
+    return await doPlayerAction(Action.Southeast);
 
   if (actionState[Action.North]) return await doPlayerAction(Action.North);
   if (actionState[Action.South]) return await doPlayerAction(Action.South);
   if (actionState[Action.West]) return await doPlayerAction(Action.West);
   if (actionState[Action.East]) return await doPlayerAction(Action.East);
-  if (actionState[Action.Southeast]) return await doPlayerAction(Action.Southeast);
-  if (actionState[Action.Southwest]) return await doPlayerAction(Action.Southwest);
-  if (actionState[Action.Northeast]) return await doPlayerAction(Action.Northeast);
-  if (actionState[Action.Northwest]) return await doPlayerAction(Action.Northwest);
+  if (actionState[Action.Southeast])
+    return await doPlayerAction(Action.Southeast);
+  if (actionState[Action.Southwest])
+    return await doPlayerAction(Action.Southwest);
+  if (actionState[Action.Northeast])
+    return await doPlayerAction(Action.Northeast);
+  if (actionState[Action.Northwest])
+    return await doPlayerAction(Action.Northwest);
 
   if (actionState[Action.Whip]) return await doPlayerAction(Action.Whip);
-  if (actionState[Action.Teleport]) return await doPlayerAction(Action.Teleport);
+  if (actionState[Action.Teleport])
+    return await doPlayerAction(Action.Teleport);
 }
 
 async function doPlayerAction(action: Action) {
@@ -440,16 +456,17 @@ async function playerMove(dx: number, dy: number) {
       for (let x = x1; x <= x2; x++) {
         for (let y = y1; y < y2; y++) {
           const block = (state.PF?.[x]?.[y] as number) ?? Tile.Floor;
-          if ([
-            0,   1,  2,  3,  4, 13, 16, 19, 28, 29,
-            30, 32, 32, 33, 35, 36, 37, 38, 39, 43,
-            45, 48, 49, 50, 51, 64, 67, 68, 69, 70,
-            71, 72, 73, 74, 224, 225, 226, 227, 228,
-            229, 230, 231].includes(block as number)) {
-              if (block >= 1 && block <= 4) {
-                killAt(x, y);
-              }
-              state.PF[x][y] = Tile.Floor;
+          if (
+            [
+              0, 1, 2, 3, 4, 13, 16, 19, 28, 29, 30, 32, 32, 33, 35, 36, 37, 38,
+              39, 43, 45, 48, 49, 50, 51, 64, 67, 68, 69, 70, 71, 72, 73, 74,
+              224, 225, 226, 227, 228, 229, 230, 231,
+            ].includes(block as number)
+          ) {
+            if (block >= 1 && block <= 4) {
+              killAt(x, y);
+            }
+            state.PF[x][y] = Tile.Floor;
           }
         }
       }
@@ -505,14 +522,17 @@ async function playerMove(dx: number, dy: number) {
           const x = RNG.getUniformInt(0, XSize);
           const y = RNG.getUniformInt(0, YSize);
           const block = state.PF?.[x]?.[y] ?? Tile.Floor;
-          if ([
+          if (
+            [
               0, 1, 2, 3, 5, 7, 8, 9, 10, 11, 15, 16, 26, 32, 33, 37, 39, 67,
-              224, 225, 226, 227, 228, 229, 230, 231].includes(block as number)) {
-                state.PF[x][y] = Tile.Rock;
-                drawTile(x, y, Tile.Rock);
-                break;
+              224, 225, 226, 227, 228, 229, 230, 231,
+            ].includes(block as number)
+          ) {
+            state.PF[x][y] = Tile.Rock;
+            drawTile(x, y, Tile.Rock);
+            break;
           }
-        } while(Math.random() > 0.01);
+        } while (Math.random() > 0.01);
         for (let i = 0; i < 50; i++) {
           sound.play(RNG.getUniformInt(0, 200), 50, 100);
         }
@@ -640,7 +660,7 @@ async function playerMove(dx: number, dy: number) {
             break;
           default:
             nogo = false;
-            break
+            break;
         }
       }
 
@@ -763,7 +783,13 @@ async function playerWhip() {
 
 export async function flashPlayer() {
   for (let i = 0; i < 80; i++) {
-    drawTile(state.player.x, state.player.y, Tile.Player, RNG.getUniformInt(0, 15), RNG.getUniformInt(0, 8));
+    drawTile(
+      state.player.x,
+      state.player.y,
+      Tile.Player,
+      RNG.getUniformInt(0, 15),
+      RNG.getUniformInt(0, 8),
+    );
     await sound.delay(1);
     sound.play(i / 2, 1000, 30);
   }
@@ -837,16 +863,34 @@ export function renderPlayfield() {
     drawTile(e.x, e.y, e.getChar(), TileColor[e.type][0]!, floorColor);
   }
 
-  drawTile(state.player.x, state.player.y, state.player.getChar(), TileColor[state.player.type][0]!, floorColor);
+  drawTile(
+    state.player.x,
+    state.player.y,
+    state.player.getChar(),
+    TileColor[state.player.type][0]!,
+    floorColor,
+  );
 }
 
-export function drawTile(x: number, y: number, block: Tile | string = Tile.Floor, fg?: Color | string, bg?: Color | string) {
+export function drawTile(
+  x: number,
+  y: number,
+  block: Tile | string = Tile.Floor,
+  fg?: Color | string,
+  bg?: Color | string,
+) {
   let ch: string;
 
   if (typeof block === 'number') {
-    ch = TileChar[block] ?? block ?? TileChar[Tile.Floor]
-    fg = fg ?? TileColor[block as unknown as Tile]?.[0] ?? TileColor[Tile.Floor][0]!;
-    bg = bg ?? TileColor[block as unknown as Tile]?.[1] ?? TileColor[Tile.Floor][1]!;
+    ch = TileChar[block] ?? block ?? TileChar[Tile.Floor];
+    fg =
+      fg ??
+      TileColor[block as unknown as Tile]?.[0] ??
+      TileColor[Tile.Floor][0]!;
+    bg =
+      bg ??
+      TileColor[block as unknown as Tile]?.[1] ??
+      TileColor[Tile.Floor][1]!;
   } else if (block >= 'a' && block <= 'z') {
     ch = block.toUpperCase();
     fg = fg ?? Color.HighIntensityWhite;
@@ -858,10 +902,8 @@ export function drawTile(x: number, y: number, block: Tile | string = Tile.Floor
   switch (block) {
     case Tile.Stairs:
       fg = typeof fg === 'number' && !state.paused ? fg | 16 : fg; // add blink
-      break
+      break;
   }
-
-
 
   display.draw(x + XBot, y + YBot, ch, fg, bg);
 }
@@ -874,7 +916,7 @@ async function hit(x: number, y: number, ch: string) {
     x + XBot,
     y + YBot,
     ch,
-    ColorCodes[RNG.getUniformInt(0, 15) as Color]
+    ColorCodes[RNG.getUniformInt(0, 15) as Color],
   );
 
   switch (thing) {
@@ -886,7 +928,8 @@ async function hit(x: number, y: number, ch: string) {
     case Tile.Block:
     case Tile.Forest:
     case Tile.Tree:
-    case Tile.Message: { // Destroy?
+    case Tile.Message: {
+      // Destroy?
       const w = state.whipPower;
       if (6 * Math.random() < w) {
         sound.play(130, 50);
@@ -1030,10 +1073,12 @@ async function endRoutine() {
   await screen.flash('You are magically transported from Kroz!');
 
   // Check for infinite items
-  const gems = state.gems = isFinite(state.gems) ? state.gems : 150;
-  const whips = state.whips = isFinite(state.whips) ? state.whips : 20;
-  const teleports = state.teleports = isFinite(state.teleports) ? state.teleports : 10;
-  const keys = state.keys = isFinite(state.keys) ? state.keys : 5;
+  const gems = (state.gems = isFinite(state.gems) ? state.gems : 150);
+  const whips = (state.whips = isFinite(state.whips) ? state.whips : 20);
+  const teleports = (state.teleports = isFinite(state.teleports)
+    ? state.teleports
+    : 10);
+  const keys = (state.keys = isFinite(state.keys) ? state.keys : 5);
 
   await screen.flash('Your Gems are worth 100 points each...');
 
@@ -1041,7 +1086,7 @@ async function endRoutine() {
     state.gems--;
     state.score += 10;
     screen.renderStats();
-    await sound.play(i*8+100, 20);
+    await sound.play(i * 8 + 100, 20);
   }
 
   await screen.flash('Your Whips are worth 100 points each...');
@@ -1049,7 +1094,7 @@ async function endRoutine() {
     state.whips--;
     state.score += 10;
     screen.renderStats();
-    await sound.play(i*8+100, 20);
+    await sound.play(i * 8 + 100, 20);
   }
 
   await screen.flash('Your Teleport Scrolls are worth 200 points each...');
@@ -1057,7 +1102,7 @@ async function endRoutine() {
     state.teleports--;
     state.score += 20;
     screen.renderStats();
-    await sound.play(i*8+100, 20);
+    await sound.play(i * 8 + 100, 20);
   }
 
   await screen.flash('Your Keys are worth 10,000 points each....');
@@ -1065,7 +1110,7 @@ async function endRoutine() {
     state.keys--;
     state.score += 1000;
     screen.renderStats();
-    await sound.play(i*8+100, 20);
+    await sound.play(i * 8 + 100, 20);
   }
 
   display.clear();
@@ -1076,20 +1121,38 @@ async function endRoutine() {
   display.writeln('ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ');
 
   display.gotoxy(15, 5);
-  display.writeln('   Carefully, you place the ancient tome on your table and open');
+  display.writeln(
+    '   Carefully, you place the ancient tome on your table and open',
+  );
   display.writeln(' to the first page.  You read the book intently, quickly');
   display.writeln(' deciphering the archaic writings.');
-  display.writeln('   You learn of Lord Dullwit, the once powerful and benevolent');
-  display.writeln(' ruler of Kroz, who sought wealth and education for his people.');
-  display.writeln(' The magnificent kingdom of Kroz was once a great empire, until');
-  display.writeln(' it was overthrown by an evil Wizard, who wanted the riches of');
+  display.writeln(
+    '   You learn of Lord Dullwit, the once powerful and benevolent',
+  );
+  display.writeln(
+    ' ruler of Kroz, who sought wealth and education for his people.',
+  );
+  display.writeln(
+    ' The magnificent kingdom of Kroz was once a great empire, until',
+  );
+  display.writeln(
+    ' it was overthrown by an evil Wizard, who wanted the riches of',
+  );
   display.writeln(' Kroz for himself.');
-  display.writeln('   Using magic beyond understanding, the Wizard trapped Lord');
-  display.writeln(' Dullwit and his people in a chamber so deep in Kroz that any');
+  display.writeln(
+    '   Using magic beyond understanding, the Wizard trapped Lord',
+  );
+  display.writeln(
+    ' Dullwit and his people in a chamber so deep in Kroz that any',
+  );
   display.writeln(' hope of escape was fruitless.');
-  display.writeln('   The Wizard then built hundreds of deadly chambers that would');
+  display.writeln(
+    '   The Wizard then built hundreds of deadly chambers that would',
+  );
   display.writeln(' stop anyone from ever rescuing the good people of Kroz.');
-  display.writeln('   Once again your thoughts becomes clear:  To venture into the');
+  display.writeln(
+    '   Once again your thoughts becomes clear:  To venture into the',
+  );
   display.writeln(' depths once more and set free the people of Kroz, in:');
   display.writeln('');
 

@@ -190,5 +190,5 @@ export const LEVELS = [
   LostLevel4,
   CavernsLevel2,
   CavernsLevel4,
-  KingdomLevel1
-]
+  KingdomLevel1,
+];

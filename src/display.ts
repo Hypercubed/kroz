@@ -39,7 +39,11 @@ export function col(fg: Color | string) {
 }
 
 export function write(s: string) {
-  return rotDisplay.drawText(state.x, state.y, `%c{${state.fg}}%b{${state.bg}}` + s);
+  return rotDisplay.drawText(
+    state.x,
+    state.y,
+    `%c{${state.fg}}%b{${state.bg}}` + s,
+  );
 }
 
 export function writeln(s: string) {
@@ -59,7 +63,7 @@ function getColors(fg: string | Color, bg: string | Color) {
   // Blinking
   if (typeof fg === 'number' && fg > 15) {
     const v = 500;
-    const f = Date.now() % v < (v / 2);
+    const f = Date.now() % v < v / 2;
     fg = f ? fg % 16 : bg;
   }
 
@@ -99,15 +103,14 @@ export function drawText(
   fg: string | Color = state.fg,
   bg: string | Color = state.bg,
 ) {
-
   if (typeof fg === 'number' && fg > 15) {
     const v = 500;
-    const f = Date.now() % v < (v / 2);
+    const f = Date.now() % v < v / 2;
     fg = f ? fg : bg;
   }
 
-  if (typeof bg === 'number') bg = ColorCodes[bg % 16 as Color];
-  if (typeof fg === 'number') fg = ColorCodes[fg % 16 as Color];
+  if (typeof bg === 'number') bg = ColorCodes[(bg % 16) as Color];
+  if (typeof fg === 'number') fg = ColorCodes[(fg % 16) as Color];
   rotDisplay.drawText(x, y, `%c{${fg}}%b{${bg}}` + s);
 }
 
