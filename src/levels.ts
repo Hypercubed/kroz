@@ -1,3 +1,29 @@
+export const DebugLevel = `
+         ######                                #######          
+         ##whip W W W                  ~~~~~   ewall##          
+   3 3   #chest C C C                  #####   wall###   2  2   
+         ##nugg * * *                  RRRRR   river##          
+   3 3   ###gem + + +                  /////   forest#   2  2   
+         ##door D D D                  ♣♣♣♣♣   tree###          
+   3 3   ##tele T T T                  VVVVV   lava###   2  2   
+         ###key K K K                  =====   pit####          
+         #power Q Q Q                  XXXXX   block##          
+     ##########                                ############     
+                                                                
+                              P                                 
+                                                                
+   ############                                 ##########      
+         ###zap % % %                   0 0 0   rock##          
+         ##slow S S S                   < [ | " kroz##          
+   1 1   #speed F F F                           ######   G  G   
+         #freez Z Z Z        B B B      U U U   tunnel          
+   1 1   ###inv I I I      XXbombXXX            ######   G  G   
+         ######            XG1 2 3GX    . . .   traps#          
+   1 1   #amule ƒ ƒ ƒ      DZ/EWLCSV    & & &   show##   G  G   
+         ##tome A A A                   E E E   quake#          
+         ######                         T T T   ######          
+`;
+
 // Lost Adventures of Kroz, Level 1
 export const LostLevel1 = `
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
@@ -156,3 +182,13 @@ T##                       2    +    2                        ##T
 WW     ########+++++        #######         WWWWW########1    WW
 ########                     2 2 2                      ########
 L2  +  X                                                X  +  2L`;
+
+export const LEVELS = [
+  DebugLevel,
+  LostLevel1,
+  LostLevel2,
+  LostLevel4,
+  CavernsLevel2,
+  CavernsLevel4,
+  KingdomLevel1
+]

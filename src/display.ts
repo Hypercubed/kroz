@@ -1,139 +1,116 @@
-import { Display as _Display } from "rot-js";
-import { HEIGHT, WIDTH } from "./constants";
+import { Display } from 'rot-js';
+import { HEIGHT, WIDTH } from './constants';
+import { TileColor, Tile } from './tiles';
+import { Color, ColorCodes } from './colors';
 
-_Display.Rect.cache = true;
+Display.Rect.cache = true;
 
-export enum Colors {
-  Black = 0,
-  Blue = 1,
-  Green = 2,
-  Cyan = 3,
-  Red = 4,
-  Magenta = 5,
-  Brown = 6,
-  White = 7,
-  Grey = 8,
-  LightBlue = 9,
-  LightGreen = 10,
-  LightCyan = 11,
-  LightRed = 12,
-  LightMagenta = 13,
-  Yellow = 14,
-  HighIntensityWhite = 15,
-}
+const rotDisplay = new Display({
+  width: WIDTH,
+  height: HEIGHT,
+  fontFamily: 'ModernDOS9x16, monospace',
+  bg: 'blue', // background
+  fg: 'white', // foreground
+  fontSize: 32, // canvas fontsize
+  // forceSquareRatio: true, // make the canvas squared ratio
+  // spacing: 0.50
+});
 
-export const ColorCodes = {
-  [Colors.Black]: "black",
-  [Colors.Blue]: "blue",
-  [Colors.Green]: "green",
-  [Colors.Cyan]: "cyan",
-  [Colors.Red]: "red",
-  [Colors.Magenta]: "magenta",
-  [Colors.Brown]: "brown",
-  [Colors.White]: "#D3D3D3",
-  [Colors.Grey]: "#808080",
-  [Colors.LightBlue]: "#ADD8E6",
-  [Colors.LightGreen]: "#90EE90",
-  [Colors.LightCyan]: "#E0FFFF",
-  [Colors.LightRed]: "#FF474C",
-  [Colors.LightMagenta]: "#FFC0CB",
-  [Colors.Yellow]: "yellow",
-  [Colors.HighIntensityWhite]: "white",
+const state = {
+  x: 0,
+  y: 0,
+  bg: 'black',
+  fg: 'white',
 };
 
-export class Display {
-  rotDisplay = new _Display({
-    width: WIDTH,
-    height: HEIGHT,
-    fontFamily: "ModernDOS9x16, monospace",
-    bg: "blue", // background
-    fg: "white", // foreground
-    fontSize: 32, // canvas fontsize
-    // forceSquareRatio: true, // make the canvas squared ratio
-    // spacing: 0.50
-  });
+export function gotoxy(x: number, y: number = state.y) {
+  state.x = x;
+  state.y = y;
+}
 
-  x = 0;
-  y = 0;
-  bg = "black";
-  fg = "white";
+export function bak(bg: Color | string) {
+  if (typeof bg === 'number') bg = ColorCodes[bg];
+  state.bg = bg;
+}
 
-  constructor() {}
+export function col(fg: Color | string) {
+  if (typeof fg === 'number') fg = ColorCodes[fg];
+  state.fg = fg;
+}
 
-  print(x: number, y: number, s: string) {
-    this.gotoxy(x, y);
-    this.writeln(s);
+export function write(s: string) {
+  return rotDisplay.drawText(state.x, state.y, `%c{${state.fg}}%b{${state.bg}}` + s);
+}
+
+export function writeln(s: string) {
+  state.y += write(s);
+}
+
+export function print(x: number, y: number, s: string) {
+  gotoxy(x, y);
+  writeln(s);
+}
+
+export function clear() {
+  rotDisplay.clear();
+}
+
+function getColors(fg: string | Color, bg: string | Color) {
+  // Blinking
+  if (typeof fg === 'number' && fg > 15) {
+    const v = 500;
+    const f = Date.now() % v < (v / 2);
+    fg = f ? fg % 16 : bg;
   }
 
-  gotoxy(x: number, y: number = this.y) {
-    this.x = x;
-    this.y = y;
+  if (typeof fg === 'number') fg = ColorCodes[fg];
+  if (typeof bg === 'number') bg = ColorCodes[bg];
+
+  return [fg, bg];
+}
+
+export function draw(
+  x: number,
+  y: number,
+  ch: string | string[] | null,
+  fg: string | Color = state.fg,
+  bg: string | Color = state.bg,
+) {
+  [fg, bg] = getColors(fg, bg);
+  rotDisplay.draw(x, y, ch, fg, bg);
+}
+
+export function drawOver(
+  x: number,
+  y: number,
+  ch: string | null,
+  fg: string | Color = state.fg,
+  bg: string | Color = state.bg,
+) {
+  [fg, bg] = getColors(fg, bg);
+  bg = bg ?? rotDisplay._data[`${x},${y}`]?.[4] ?? TileColor[Tile.Floor];
+  rotDisplay.draw(x, y, ch, fg, bg);
+}
+
+export function drawText(
+  x: number,
+  y: number,
+  s: string,
+  fg: string | Color = state.fg,
+  bg: string | Color = state.bg,
+) {
+
+  if (typeof fg === 'number' && fg > 15) {
+    const v = 500;
+    const f = Date.now() % v < (v / 2);
+    fg = f ? fg : bg;
   }
 
-  writeln(s: string) {
-    this.write(s);
-    this.y++;
-  }
+  if (typeof bg === 'number') bg = ColorCodes[bg % 16 as Color];
+  if (typeof fg === 'number') fg = ColorCodes[fg % 16 as Color];
+  rotDisplay.drawText(x, y, `%c{${fg}}%b{${bg}}` + s);
+}
 
-  write(s: string) {
-    this.rotDisplay.drawText(
-      this.x,
-      this.y,
-      `%c{${this.fg}}%b{${this.bg}}` + s,
-    );
-  }
-
-  bak(bg: Colors | string) {
-    if (typeof bg === "number") bg = ColorCodes[bg];
-    this.bg = bg;
-  }
-
-  col(fg: Colors | string) {
-    if (typeof fg === "number") fg = ColorCodes[fg];
-    this.fg = fg;
-  }
-
-  clear() {
-    this.rotDisplay.clear();
-  }
-
-  draw(
-    x: number,
-    y: number,
-    ch: string | string[] | null,
-    fg: string = this.fg,
-    bg: string = this.bg,
-  ) {
-    if (typeof fg === "number") fg = ColorCodes[fg];
-    if (typeof bg === "number") bg = ColorCodes[bg];
-    this.rotDisplay.draw(x, y, ch, fg, bg);
-  }
-
-  drawOver(
-    x: number,
-    y: number,
-    ch: string | null,
-    fg: string = this.fg,
-    bg: string = this.bg,
-  ) {
-    if (typeof fg === "number") fg = ColorCodes[fg];
-    if (typeof bg === "number") bg = ColorCodes[bg];
-    this.rotDisplay.drawOver(x, y, ch, fg, bg);
-  }
-
-  drawText(
-    x: number,
-    y: number,
-    s: string,
-    fg: string = this.fg,
-    bg: string = this.bg,
-  ) {
-    if (typeof fg === "number") fg = ColorCodes[fg];
-    if (typeof bg === "number") bg = ColorCodes[bg];
-    this.rotDisplay.drawText(x, y, `%c{${fg}}%b{${bg}}` + s);
-  }
-
-  getContainer() {
-    return this.rotDisplay.getContainer();
-  }
+export function getContainer() {
+  return rotDisplay.getContainer();
 }

@@ -1,17 +1,11 @@
-import "./style.css";
+import './style.css';
 
-import { Display } from "./display";
-import { World } from "./world";
-import { Engine } from "./engine";
+import * as display from './display';
+import * as engine from './engine';
 
-window.addEventListener("DOMContentLoaded", () => {
-  const display = new Display();
-  const world = new World(display);
-
-  const engine = new Engine(display, world);
-
+window.addEventListener('DOMContentLoaded', () => {
   const container = display.getContainer()!;
-  const app = document.getElementById("app")!;
+  const app = document.getElementById('app')!;
   app.appendChild(container);
   engine.start();
 });
