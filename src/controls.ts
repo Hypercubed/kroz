@@ -123,7 +123,6 @@ export function disableGamepadControls() {
 function keydownListener(event: KeyboardEvent) {
   anyKeyPressed = true;
 
-
   const action = KEY_BINDING[event.key];
   if (!action) return;
   event.preventDefault();

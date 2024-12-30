@@ -1160,6 +1160,6 @@ async function pause() {
   await screen.flash('Press any key to resume', false);
 }
 
-function mod(n, m) {
+function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
