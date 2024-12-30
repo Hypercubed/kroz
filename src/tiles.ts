@@ -304,7 +304,7 @@ export const TileColor: Record<Tile, [Color | null, Color | null]> = {
   [Tile.Block]: [Color.Brown, null],
   [Tile.Whip]: [Color.HighIntensityWhite, null],
   [Tile.Stairs]: [Color.Black | 16, Color.White],
-  [Tile.Chest]: [Color.Yellow, null],
+  [Tile.Chest]: [Color.Yellow, Color.Red],
   [Tile.SlowTime]: [Color.Red, null],
   [Tile.Gem]: [Color.Blue, null],
   [Tile.Invisible]: [Color.Green, null],
@@ -440,3 +440,78 @@ export const TileMessage: Record<number, string> = {
   [Tile.Rope]: 'You grabbed a Rope.',
   [Tile.Amulet]: 'YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!',
 };
+
+const MOBS = [Tile.Fast, Tile.Medium, Tile.Slow];
+const TBLOCKS = [
+  Tile.TBlock,
+  Tile.TRock,
+  Tile.TGem,
+  Tile.TBlind,
+  Tile.TWhip,
+  Tile.TGold,
+  Tile.TTree,
+];
+const ITRAPS = [
+  Tile.Trap2,
+  Tile.Trap3,
+  Tile.MBlock,
+  Tile.Trap4,
+  Tile.Trap5,
+  224,
+  225,
+  226,
+  227,
+  228,
+  229,
+  230,
+  231,
+];
+const IBLOCKS = [Tile.IBlock, Tile.IWall, Tile.IDoor];
+const COLLECTABLES = [Tile.Whip, Tile.Gem, Tile.Teleport];
+const SPELLS = [Tile.SlowTime, Tile.Invisible, Tile.SpeedTime, Tile.Freeze];
+const CWALLS = [Tile.CWall1, Tile.CWall2, Tile.CWall3];
+const CSPELLS = [Tile.CSpell1, Tile.CSpell2, Tile.CSpell3];
+
+export const BOMBABLES = [
+  ...MOBS,
+  Tile.Block,
+  ...IBLOCKS,
+  Tile.ZBlock,
+  Tile.GBlock,
+  ...TBLOCKS,
+  Tile.Door,
+  Tile.Trap,
+  ...ITRAPS,
+  Tile.Forest,
+  Tile.Quake,
+  Tile.Stop,
+  Tile.Create,
+  Tile.Generator,
+  Tile.Chance,
+  Tile.K,
+  Tile.R,
+  Tile.O,
+  Tile.Z,
+];
+
+export const ROCKABLES = [
+  ...MOBS,
+  ...COLLECTABLES,
+  ...SPELLS,
+  Tile.Chest,
+  Tile.Trap,
+  ...ITRAPS,
+  Tile.Stop,
+];
+
+export const VISUAL_TELEPORTABLES = [
+  Tile.Floor,
+  Tile.Stop,
+  ...ITRAPS,
+  Tile.ShowGems,
+  Tile.BlockSpell,
+  Tile.WallVanish,
+  ...CWALLS,
+  ...CSPELLS,
+  ...TBLOCKS,
+];

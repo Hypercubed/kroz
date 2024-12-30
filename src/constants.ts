@@ -1,5 +1,7 @@
 export const DEBUG = false;
 
+export const TITLE = 'The Underground Empire of Kroz';
+
 export const WIDTH = 80;
 export const HEIGHT = 25;
 

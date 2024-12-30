@@ -1,27 +1,27 @@
-import { RNG, Scheduler } from 'rot-js';
+import { Scheduler } from 'rot-js';
 
 import * as controls from './controls';
 import * as display from './display';
 import * as world from './world';
-import * as sound from './sound';
 import * as screen from './screen';
 
 import { Tile } from './tiles';
+import { DEBUG, HEIGHT, WIDTH } from './constants';
 import { Timer } from './world';
 
 // Dummy entities used for the scheduler
-const PlayerActor = { type: Tile.Player, getSpeed: () => 30 };
+const PlayerActor = { type: Tile.Player, getSpeed: () => 10 };
 const SlowActor = {
   type: Tile.Slow,
-  getSpeed: () => 10 * world.getTimeScale(),
+  getSpeed: () => 1 * world.getTimeScale(),
 };
 const MediumActor = {
   type: Tile.Medium,
-  getSpeed: () => 20 * world.getTimeScale(),
+  getSpeed: () => 2 * world.getTimeScale(),
 };
 const FastActor = {
   type: Tile.Fast,
-  getSpeed: () => 30 * world.getTimeScale(),
+  getSpeed: () => 3 * world.getTimeScale(),
 };
 
 export async function start() {
@@ -29,10 +29,10 @@ export async function start() {
 
   controls.start();
 
-  await renderTitle();
+  await screen.renderTitle();
 
   world.loadLevel(); // Don't wait
-  screen.render();
+  screen.fullRender();
   await world.flashPlayer();
 
   // for (let i = 0; i < 80; i++) {
@@ -49,13 +49,14 @@ export async function start() {
   scheduler.add(MediumActor, true);
   scheduler.add(FastActor, true);
 
-  screen.render();
+  screen.fullRender();
 
   // Game loop
-  const speed = 80;
+  const speed = 16 * 8;
 
   let dt = 0;
   let previousTime = 0;
+  let fps = 0;
 
   const raf = async (currentTime: number) => {
     if (world.state.gems < 0) {
@@ -69,69 +70,49 @@ export async function start() {
       return;
     }
 
+    const DT = currentTime - previousTime;
     dt += currentTime - previousTime;
+    fps = 1000 / DT;
     previousTime = currentTime;
-
-    world.state.T = world.state.T.map((t) => (t > 0 ? t - 1 : 0));
 
     if (dt > speed) {
       dt %= speed;
       if (!world.state.paused) {
+        await world.effects();
+        await world.playerAction(); // Player acts every tick
         const current = scheduler.next();
-        await world.action(Tile.Player);
-        if (world.state.T[Timer.FreezeTime] < 1) {
-          // Freeze time spell active
-          await world.action(current.type);
-        }
-        world.renderPlayfield();
-        screen.renderStats();
+        await world.entitiesAction(current.type);
+      }
+
+      if (DEBUG) {
+        display.drawText(
+          WIDTH - 10,
+          HEIGHT - 4,
+          'fps: ' + fps.toFixed(),
+          'white',
+          'black',
+        );
+
+        const e = [
+          world.state.T[Timer.SlowTime],
+          world.state.T[Timer.Invisible],
+          world.state.T[Timer.SpeedTime],
+          world.state.T[Timer.FreezeTime],
+        ];
+        display.drawText(
+          WIDTH - 12,
+          HEIGHT - 2,
+          e.toString(),
+          'white',
+          'black',
+        );
       }
     }
 
+    screen.fastRender();
     requestAnimationFrame(raf);
   };
   requestAnimationFrame(raf);
-}
-
-async function renderTitle() {
-  display.bak(1);
-
-  display.gotoxy(1, 9);
-  display.col(11);
-  display.writeln(
-    `  In your search for the priceless Amulet within the ancient Caverns of Kroz,`,
-  );
-  display.writeln(
-    `  you have stumbled upon a secret passage leading deep into the Earth.   With`,
-  );
-  display.writeln(
-    `  your worn lantern you descend into the misty depths,  sweat beading on your`,
-  );
-  display.writeln(
-    `  forehead as you realize the peril that awaits.   If this is really the path`,
-  );
-  display.writeln(
-    `  leading into the great underground caverns you'll find unimaginable wealth.`,
-  );
-
-  display.gotoxy(23);
-  display.writeln('But only if you can reach it alive!');
-
-  display.gotoxy(27, 25);
-  display.col(12);
-  display.write('Press any key to continue.');
-
-  controls.clearKeys();
-  while (!controls.anyKey()) {
-    display.gotoxy(34, 3);
-    display.col(RNG.getUniformInt(0, 16));
-    display.write('CAVERNS OF KROZ');
-    await sound.delay(50);
-
-    // await sound.play(300, 100);
-    await sound.delay(100);
-  }
-  controls.clearKeys();
 }
 
 function reset() {

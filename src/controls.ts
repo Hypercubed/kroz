@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { default as gameControl } from 'gamecontroller.js/src/gamecontrol.js';
+import { DEBUG } from './constants';
 
 let anyKeyPressed = false;
 
@@ -21,43 +22,19 @@ export enum Action {
   NextLevel,
   PrevLevel,
   Teleport,
+  ResetFound,
+  HideFound,
+  Pause,
+  Quit,
 }
 
 // Tracks the current state of joystick actions
-export const actionState = {
-  [Action.North]: false,
-  [Action.South]: false,
-  [Action.East]: false,
-  [Action.West]: false,
-  [Action.Northwest]: false,
-  [Action.Northeast]: false,
-  [Action.Southwest]: false,
-  [Action.Southeast]: false,
-  [Action.Whip]: false,
-  [Action.FreeItems]: false,
-  [Action.NextLevel]: false,
-  [Action.PrevLevel]: false,
-  [Action.Teleport]: false,
-};
+export const actionState: Partial<Record<Action, boolean>> = {};
 
 // Tracks the current state of keyboard actions
-export const actionBuffer = {
-  [Action.North]: false,
-  [Action.South]: false,
-  [Action.East]: false,
-  [Action.West]: false,
-  [Action.Northwest]: false,
-  [Action.Northeast]: false,
-  [Action.Southwest]: false,
-  [Action.Southeast]: false,
-  [Action.Whip]: false,
-  [Action.FreeItems]: false,
-  [Action.NextLevel]: false,
-  [Action.PrevLevel]: false,
-  [Action.Teleport]: false,
-};
+export const actionBuffer: Partial<Record<Action, boolean>> = {};
 
-const KEY_BINDING: Record<string, Action> = {
+const KEY_BINDING: Record<string, Action | null> = {
   ArrowUp: Action.North,
   ArrowDown: Action.South,
   ArrowLeft: Action.West,
@@ -84,16 +61,21 @@ const KEY_BINDING: Record<string, Action> = {
   t: Action.Teleport,
   T: Action.Teleport,
   ')': Action.FreeItems,
-  // '(': Action.NextLevel,
-  PageDown: Action.PrevLevel,
-  PageUp: Action.NextLevel,
+  '+': Action.ResetFound,
+  '-': Action.HideFound,
+  '(': Action.NextLevel,
+  PageDown: DEBUG ? Action.PrevLevel : null,
+  PageUp: DEBUG ? Action.NextLevel : null,
+  p: Action.Pause,
+  P: Action.Pause,
+  Escape: Action.Quit,
 };
 
-const GAMEPAD_BINDING: Record<string, Action> = {
+const GAMEPAD_BINDING: Record<string, Action | null> = {
   button0: Action.Whip,
   button1: Action.Teleport,
-  button4: Action.PrevLevel,
-  button5: Action.NextLevel,
+  button4: DEBUG ? Action.PrevLevel : null,
+  button5: DEBUG ? Action.NextLevel : null,
   up: Action.North,
   down: Action.South,
   left: Action.West,
@@ -118,11 +100,14 @@ function enableGamepadControls() {
     for (const [key, action] of Object.entries(GAMEPAD_BINDING)) {
       gamepad.before(key, () => {
         anyKeyPressed = true;
+        if (!action) return;
+
         actionState[action] = true;
         // actionBuffer[action] = true;
       });
 
       gamepad.after(key, () => {
+        if (!action) return;
         actionState[action] = false;
         // actionBuffer[action] = true;
       });
@@ -138,11 +123,12 @@ export function disableGamepadControls() {
 function keydownListener(event: KeyboardEvent) {
   anyKeyPressed = true;
 
+  console.log(event.key);
+
   const action = KEY_BINDING[event.key];
-  if (action) {
-    event.preventDefault();
-    actionBuffer[action] = true;
-  }
+  if (!action) return;
+  event.preventDefault();
+  actionBuffer[action] = true;
 }
 
 export function start() {

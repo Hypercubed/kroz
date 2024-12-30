@@ -49,10 +49,11 @@ export function delay(duration: number = 0) {
   });
 }
 
-export function grab() {
+export async function grab() {
   for (let x = 1; x <= 65; x++) {
     play(Math.random() * 1000 + 1000, 1000);
   }
+  await delay(59);
 }
 
 export async function blocked() {

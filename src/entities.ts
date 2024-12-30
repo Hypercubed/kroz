@@ -33,8 +33,8 @@ export class Entity {
     this.y = y;
   }
 
-  kill() {
-    sound.play(200 + 200 * this.type, 25, 100);
+  async kill() {
+    await sound.play(200 + 200 * this.type, 25, 100);
 
     this.x = -1;
     this.y = -1;

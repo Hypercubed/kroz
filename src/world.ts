@@ -5,7 +5,15 @@ import * as display from './display';
 import * as sound from './sound';
 import * as screen from './screen';
 
-import { TileChar, TileColor, MapLookup, Tile } from './tiles';
+import {
+  TileChar,
+  TileColor,
+  MapLookup,
+  Tile,
+  BOMBABLES,
+  ROCKABLES,
+  VISUAL_TELEPORTABLES,
+} from './tiles';
 import {
   DEBUG,
   FLOOR_CHAR,
@@ -22,17 +30,20 @@ import { Action } from './controls';
 import { LEVELS } from './levels';
 import { Color, ColorCodes } from './colors';
 
-// TODO: Spells enum
-// TODO: Spells duration
-
-const SPELL_DURATION = 1000;
-
 export enum Timer {
   SlowTime = 4,
   Invisible = 5,
   SpeedTime = 6,
   FreezeTime = 7,
 }
+
+const S = 5; // Overall time scale... impacts creatre move speed and spell duration
+const SPELL_DURATION = {
+  [Timer.SlowTime]: 70 * S,
+  [Timer.Invisible]: 75 * S,
+  [Timer.SpeedTime]: 80 * S,
+  [Timer.FreezeTime]: 55 * S,
+};
 
 export const state = getDefaultState();
 
@@ -68,6 +79,16 @@ function getDefaultState() {
     actionActive: false,
     paused: false,
     done: false,
+
+    // TODO:
+    // hideGems
+    // hideStairs
+    // HideMBlock
+    // HideCreate
+    // TreeRate ??
+    // HideOpenWall
+    // LavaFlow
+    // LavaRate
   };
 }
 
@@ -97,7 +118,18 @@ async function prevLevel() {
   loadLevel();
 }
 
-async function enemyAction(e: Entity) {
+export async function effects() {
+  state.T = state.T.map((t) => (t > 0 ? t - 1 : 0));
+
+  // TODO: Creature generation
+  // Lava Flow
+  // Gravity
+  // MagitEWalls
+  // Evaporate
+  // TreeGrow
+}
+
+async function mobAction(e: Entity) {
   if (
     e.x === -1 ||
     e.y === -1 ||
@@ -122,18 +154,7 @@ async function enemyAction(e: Entity) {
   const block = state.PF?.[x]?.[y] ?? Tile.Floor;
 
   switch (block) {
-    case Tile.Block:
-    case Tile.MBlock:
-    case Tile.ZBlock:
-    case Tile.GBlock: // Kills
-      state.PF[e.x][e.y] = Tile.Floor;
-      state.PF[x][y] = Tile.Floor;
-      e.kill();
-      state.score += block;
-      sound.play(800, 18);
-      sound.play(400, 20);
-      break;
-    case Tile.Floor: // Eats
+    case Tile.Floor: // Breaks
     case Tile.TBlock:
     case Tile.TRock:
     case Tile.TGem:
@@ -143,10 +164,43 @@ async function enemyAction(e: Entity) {
     case Tile.TTree:
       go(e, x, y);
       break;
-    case Tile.Player:
+    case Tile.Block: // Breaks + Kills
+    case Tile.MBlock:
+    case Tile.ZBlock:
+    case Tile.GBlock:
+      state.PF[e.x][e.y] = Tile.Floor;
+      state.PF[x][y] = Tile.Floor;
+      e.kill();
+      addScore(block);
+      sound.play(800, 18);
+      sound.play(400, 20);
+      break;
+    case Tile.Player: // Damage + Kills
       state.gems--;
       state.PF[e.x][e.y] = Tile.Floor;
       e.kill();
+      addScore(block);
+      break;
+    case Tile.Whip: // Grabs
+    case Tile.Chest:
+    case Tile.SlowTime:
+    case Tile.Gem:
+    case Tile.Invisible:
+    case Tile.Teleport:
+    case Tile.Key:
+    case Tile.SpeedTime:
+    case Tile.Trap:
+    case Tile.Power:
+    case Tile.Freeze:
+    case Tile.Nugget:
+    case Tile.K:
+    case Tile.R:
+    case Tile.O:
+    case Tile.Z:
+    case Tile.ShootRight:
+    case Tile.ShootLeft:
+      sound.grab();
+      go(e, x, y);
       break;
     default: // Blocked
       go(e, e.x, e.y);
@@ -154,26 +208,33 @@ async function enemyAction(e: Entity) {
   }
 }
 
-export async function action(t?: EntityType) {
+export async function entitiesAction(t?: EntityType) {
   if (t === Tile.Player) {
-    await playerAction();
+    // await playerAction(); // Player acts every tick
+    return;
   }
+
+  if (state.T[Timer.FreezeTime] > 0) return;
 
   for (let i = 0; i < state.entities.length; i++) {
     const e = state.entities[i];
     if (t && e.type !== t) continue;
 
     if (e.x === -1 || e.y === -1) continue; // dead
-    await enemyAction(e);
+    await mobAction(e);
   }
 }
 
-async function playerAction() {
+export async function playerAction() {
   const actionState = controls.pollActions();
 
   if (actionState[Action.FreeItems]) await doPlayerAction(Action.FreeItems);
   if (actionState[Action.NextLevel]) await doPlayerAction(Action.NextLevel);
   if (actionState[Action.PrevLevel]) await doPlayerAction(Action.PrevLevel);
+  // if (actionState[Action.HideFound]) await doPlayerAction(Action.Teleport); // TBD
+  if (actionState[Action.ResetFound]) state.foundSet = new Set();
+  if (actionState[Action.Pause]) pause();
+  if (actionState[Action.Quit]) quit();
 
   if (actionState[Action.North] && actionState[Action.West])
     return await doPlayerAction(Action.Northwest);
@@ -330,8 +391,11 @@ async function playerMove(dx: number, dy: number) {
     case Tile.Fast:
       killAt(x, y);
       go(state.player, x, y);
+      addScore(block);
       break;
     case Tile.Block:
+    case Tile.ZBlock:
+    case Tile.GBlock:
       addScore(block);
       await screen.flash(Tile.Block, true);
       break;
@@ -345,7 +409,7 @@ async function playerMove(dx: number, dy: number) {
     case Tile.Stairs:
       if (state.level === LEVELS.length - 1) {
         go(state.player, x, y);
-        await endRoutine();
+        await screen.endRoutine();
         return;
       }
       addScore(block);
@@ -369,7 +433,7 @@ async function playerMove(dx: number, dy: number) {
       break;
     case Tile.SlowTime:
       state.T[Timer.SpeedTime] = 0; // Reset Speed Time
-      state.T[Timer.SlowTime] = SPELL_DURATION; // Slow Time
+      state.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime]; // Slow Time
       addScore(block);
       go(state.player, x, y);
       await screen.flash(block, true);
@@ -381,7 +445,7 @@ async function playerMove(dx: number, dy: number) {
       screen.flash(block, true);
       break;
     case Tile.Invisible:
-      state.T[Timer.Invisible] = SPELL_DURATION;
+      state.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
       addScore(block);
       go(state.player, x, y);
       await screen.flash(block, true);
@@ -421,7 +485,7 @@ async function playerMove(dx: number, dy: number) {
       break;
     case Tile.SpeedTime:
       state.T[Timer.SlowTime] = 0; // Reset Slow Time
-      state.T[Timer.SpeedTime] = SPELL_DURATION; // Speed Time
+      state.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime]; // Speed Time
       addScore(block);
       go(state.player, x, y);
       await screen.flash(block, true);
@@ -454,17 +518,12 @@ async function playerMove(dx: number, dy: number) {
       const y2 = Math.min(state.player.y + d, YTop);
 
       for (let x = x1; x <= x2; x++) {
-        for (let y = y1; y < y2; y++) {
+        for (let y = y1; y <= y2; y++) {
           const block = (state.PF?.[x]?.[y] as number) ?? Tile.Floor;
-          if (
-            [
-              0, 1, 2, 3, 4, 13, 16, 19, 28, 29, 30, 32, 32, 33, 35, 36, 37, 38,
-              39, 43, 45, 48, 49, 50, 51, 64, 67, 68, 69, 70, 71, 72, 73, 74,
-              224, 225, 226, 227, 228, 229, 230, 231,
-            ].includes(block as number)
-          ) {
+          if (BOMBABLES.includes(block as number)) {
             if (block >= 1 && block <= 4) {
-              killAt(x, y);
+              addScore(block);
+              await killAt(x, y);
             }
             state.PF[x][y] = Tile.Floor;
           }
@@ -494,10 +553,11 @@ async function playerMove(dx: number, dy: number) {
     case Tile.Nugget:
       sound.grab();
       go(state.player, x, y);
+      addScore(block);
       await screen.flash(block, true);
       break;
     case Tile.Freeze:
-      state.T[Timer.FreezeTime] = SPELL_DURATION;
+      state.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
       go(state.player, x, y);
       await screen.flash(block, true);
       break;
@@ -522,12 +582,7 @@ async function playerMove(dx: number, dy: number) {
           const x = RNG.getUniformInt(0, XSize);
           const y = RNG.getUniformInt(0, YSize);
           const block = state.PF?.[x]?.[y] ?? Tile.Floor;
-          if (
-            [
-              0, 1, 2, 3, 5, 7, 8, 9, 10, 11, 15, 16, 26, 32, 33, 37, 39, 67,
-              224, 225, 226, 227, 228, 229, 230, 231,
-            ].includes(block as number)
-          ) {
+          if (ROCKABLES.includes(block as number)) {
             state.PF[x][y] = Tile.Rock;
             drawTile(x, y, Tile.Rock);
             break;
@@ -560,7 +615,8 @@ async function playerMove(dx: number, dy: number) {
         const n = RNG.getUniformInt(0, state.entities.length);
         const e = state.entities[n];
         if (!e || e.x === -1 || e.y === -1) continue; // dead
-        state.PF[e.x][e.y] = Tile.Floor;
+        await killAt(e.x, e.y);
+        await sound.delay(20);
         k++;
       }
 
@@ -725,12 +781,29 @@ async function playerMove(dx: number, dy: number) {
       go(state.player, x, y);
       break;
     case Tile.Amulet:
-      // Got_Amulet
       go(state.player, x, y);
+      await gotAmulet();
       break;
     default:
       break;
   }
+}
+
+async function gotAmulet() {
+  await sound.grab();
+  for (let x = 45; x >= 11; x--) {
+    for (let y = 13; y >= 1; y--) {
+      await sound.play(x * x * y, y + 1, 100);
+    }
+  }
+  addScore(Tile.Amulet);
+  await screen.flash('You have found the Amulet of Yendor -- 25,000 points!');
+  await screen.flash(
+    'It seems that Kroz and Rogue share the same underground!)',
+  );
+  await screen.flash(
+    'Your quest for the treasure of Kroz must still continue...',
+  );
 }
 
 async function killAt(x: number, y: number) {
@@ -742,14 +815,12 @@ async function killAt(x: number, y: number) {
     for (let i = 0; i < state.entities.length; i++) {
       const m = state.entities[i];
       if (m.x === x && m.y === y) {
-        state.gems += m.type;
-        await sound.play(130, 50);
-        m.kill();
+        await m.kill();
       }
     }
   }
 
-  // renderPlayfield();
+  renderPlayfield();
 }
 
 function go(e: Entity, x: number, y: number) {
@@ -822,7 +893,7 @@ async function playerTeleport() {
     const x = RNG.getUniformInt(0, XSize);
     const y = RNG.getUniformInt(0, YSize);
     const block = state.PF?.[x]?.[y] ?? Tile.Floor;
-    if ([Tile.Floor].indexOf(block as Tile) > -1) {
+    if (VISUAL_TELEPORTABLES.indexOf(block as Tile) > -1) {
       drawTile(x, y, '☺', RNG.getUniformInt(0, 15), RNG.getUniformInt(0, 7));
       await sound.play(20, 10, 100);
       drawTile(x, y, block);
@@ -924,6 +995,7 @@ async function hit(x: number, y: number, ch: string) {
     case Tile.Medium:
     case Tile.Fast: // Kill
       killAt(x, y);
+      addScore(thing);
       break;
     case Tile.Block:
     case Tile.Forest:
@@ -996,6 +1068,8 @@ function addScore(block: Tile) {
       state.score += block;
       break;
     case Tile.Block:
+    case Tile.ZBlock:
+    case Tile.GBlock:
     case Tile.Wall:
     case Tile.River:
     case Tile.Tree:
@@ -1024,9 +1098,14 @@ function addScore(block: Tile) {
     case Tile.Invisible:
       state.score += 25;
       break;
+    case Tile.Nugget:
+      state.score += 50;
+      break;
+    case Tile.Door:
+      state.score += 10;
+      break;
     case Tile.Teleport:
     case Tile.Freeze:
-    case Tile.Door:
       state.score += 2;
       break;
     case Tile.SpeedTime:
@@ -1043,10 +1122,13 @@ function addScore(block: Tile) {
       state.score += 5000;
       break;
     case Tile.Tablet:
-      state.score += state.level + 2500;
+      state.score += state.level + 250;
       break;
     case Tile.Chance:
       state.score += 100;
+      break;
+    case Tile.Amulet:
+      state.score += 2500;
       break;
     // case Tile.Border:
     //   if (state.score > state.level) state.score -= Math.floor(state.level / 2);
@@ -1062,109 +1144,20 @@ export async function dead() {
   state.done = true;
 }
 
-async function endRoutine() {
-  await sound.footStep();
-  await sound.delay(200);
-  await sound.footStep();
-  await sound.delay(200);
-  await sound.footStep();
+export function getTimeScale() {
+  if (state.T[Timer.SlowTime] > 0) return 0.1 * S; // Slow Time
+  if (state.T[Timer.SpeedTime] > 0) return 100 * S; // Speed Time
+  return S;
+}
 
-  await screen.flash('Oh no, something strange is happening!');
-  await screen.flash('You are magically transported from Kroz!');
+// TODO: Esc to reset (Are you sure?)
+// TODO: P to pause/unpause (Press key to resume game)
 
-  // Check for infinite items
-  const gems = (state.gems = isFinite(state.gems) ? state.gems : 150);
-  const whips = (state.whips = isFinite(state.whips) ? state.whips : 20);
-  const teleports = (state.teleports = isFinite(state.teleports)
-    ? state.teleports
-    : 10);
-  const keys = (state.keys = isFinite(state.keys) ? state.keys : 5);
-
-  await screen.flash('Your Gems are worth 100 points each...');
-
-  for (let i = 0; i < gems; i++) {
-    state.gems--;
-    state.score += 10;
-    screen.renderStats();
-    await sound.play(i * 8 + 100, 20);
-  }
-
-  await screen.flash('Your Whips are worth 100 points each...');
-  for (let i = 0; i < whips; i++) {
-    state.whips--;
-    state.score += 10;
-    screen.renderStats();
-    await sound.play(i * 8 + 100, 20);
-  }
-
-  await screen.flash('Your Teleport Scrolls are worth 200 points each...');
-  for (let i = 0; i < teleports; i++) {
-    state.teleports--;
-    state.score += 20;
-    screen.renderStats();
-    await sound.play(i * 8 + 100, 20);
-  }
-
-  await screen.flash('Your Keys are worth 10,000 points each....');
-  for (let i = 0; i < keys; i++) {
-    state.keys--;
-    state.score += 1000;
-    screen.renderStats();
-    await sound.play(i * 8 + 100, 20);
-  }
-
-  display.clear();
-
-  display.gotoxy(25, 3);
-  display.bak(Color.Blue);
-
-  display.writeln('ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ');
-
-  display.gotoxy(15, 5);
-  display.writeln(
-    '   Carefully, you place the ancient tome on your table and open',
-  );
-  display.writeln(' to the first page.  You read the book intently, quickly');
-  display.writeln(' deciphering the archaic writings.');
-  display.writeln(
-    '   You learn of Lord Dullwit, the once powerful and benevolent',
-  );
-  display.writeln(
-    ' ruler of Kroz, who sought wealth and education for his people.',
-  );
-  display.writeln(
-    ' The magnificent kingdom of Kroz was once a great empire, until',
-  );
-  display.writeln(
-    ' it was overthrown by an evil Wizard, who wanted the riches of',
-  );
-  display.writeln(' Kroz for himself.');
-  display.writeln(
-    '   Using magic beyond understanding, the Wizard trapped Lord',
-  );
-  display.writeln(
-    ' Dullwit and his people in a chamber so deep in Kroz that any',
-  );
-  display.writeln(' hope of escape was fruitless.');
-  display.writeln(
-    '   The Wizard then built hundreds of deadly chambers that would',
-  );
-  display.writeln(' stop anyone from ever rescuing the good people of Kroz.');
-  display.writeln(
-    '   Once again your thoughts becomes clear:  To venture into the',
-  );
-  display.writeln(' depths once more and set free the people of Kroz, in:');
-  display.writeln('');
-
-  await screen.flash('Press any key, Adventurer.');
+function quit() {
+  // TODO: Are you sure?
   state.done = true;
 }
 
-export function getTimeScale() {
-  if (state.T[Timer.SlowTime] > 0) return 0.1; // Slow Time
-  if (state.T[Timer.SpeedTime] > 0) return 100; // Speed Time
-  return 1;
+async function pause() {
+  await screen.flash('Press any key to resume', false);
 }
-
-// https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST1.LEV#L1270
-// endRoutine

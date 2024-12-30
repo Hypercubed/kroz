@@ -1,3 +1,4 @@
+// PASCAL color codes
 export enum Color {
   Black = 0,
   Blue = 1,
@@ -17,21 +18,22 @@ export enum Color {
   HighIntensityWhite = 15,
 }
 
+// PASCAL colors
 export const ColorCodes = {
-  [Color.Black]: 'black',
-  [Color.Blue]: 'blue',
-  [Color.Green]: 'green',
-  [Color.Cyan]: 'cyan',
-  [Color.Red]: 'red',
-  [Color.Magenta]: 'magenta',
-  [Color.Brown]: 'brown',
-  [Color.White]: '#D3D3D3',
-  [Color.Grey]: '#808080',
-  [Color.LightBlue]: '#ADD8E6',
-  [Color.LightGreen]: '#90EE90',
-  [Color.LightCyan]: '#E0FFFF',
-  [Color.LightRed]: '#FF474C',
-  [Color.LightMagenta]: '#FFC0CB',
-  [Color.Yellow]: 'yellow',
-  [Color.HighIntensityWhite]: 'white',
+  [Color.Black]: '#000000',
+  [Color.Blue]: '#0000AA',
+  [Color.Green]: '#00AA00',
+  [Color.Cyan]: '#00AAAA',
+  [Color.Red]: '#AA0000',
+  [Color.Magenta]: '#AA00AA',
+  [Color.Brown]: '#AA5500',
+  [Color.White]: '#AAAAAA',
+  [Color.Grey]: '#AAAAAA',
+  [Color.LightBlue]: '#5555FF',
+  [Color.LightGreen]: '#55FF55',
+  [Color.LightCyan]: '#55FFFF',
+  [Color.LightRed]: '#FF5555',
+  [Color.LightMagenta]: '#FF55FF',
+  [Color.Yellow]: '#FFFF55',
+  [Color.HighIntensityWhite]: '#FFFFFF',
 };

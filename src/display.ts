@@ -9,11 +9,9 @@ const rotDisplay = new Display({
   width: WIDTH,
   height: HEIGHT,
   fontFamily: 'ModernDOS9x16, monospace',
-  bg: 'blue', // background
-  fg: 'white', // foreground
+  bg: ColorCodes[Color.Blue], // background
+  fg: ColorCodes[Color.White], // foreground
   fontSize: 32, // canvas fontsize
-  // forceSquareRatio: true, // make the canvas squared ratio
-  // spacing: 0.50
 });
 
 const state = {
