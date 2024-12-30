@@ -107,14 +107,12 @@ export async function loadLevel() {
 }
 
 export async function nextLevel() {
-  state.level++;
-  state.level %= LEVELS.length;
+  state.level = mod(state.level + 1, LEVELS.length);
   loadLevel();
 }
 
 async function prevLevel() {
-  state.level--;
-  state.level %= LEVELS.length;
+  state.level = mod(state.level - 1, LEVELS.length);
   loadLevel();
 }
 
@@ -1160,4 +1158,8 @@ function quit() {
 
 async function pause() {
   await screen.flash('Press any key to resume', false);
+}
+
+function mod(n, m) {
+  return ((n % m) + m) % m;
 }

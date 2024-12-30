@@ -123,7 +123,6 @@ export function disableGamepadControls() {
 function keydownListener(event: KeyboardEvent) {
   anyKeyPressed = true;
 
-  console.log(event.key);
 
   const action = KEY_BINDING[event.key];
   if (!action) return;
@@ -160,10 +159,13 @@ export function readKey() {
 
 export function pollActions() {
   const actions: Partial<Record<Action, boolean>> = {};
-  for (const action in actionBuffer) {
-    const key = action as unknown as Action;
-    actions[key] = actionBuffer[key] || actionState[key];
-    actionBuffer[key] = false;
+
+  for (const key in Action) {
+    if (!isNaN(Number(key))) {
+      const action = key as unknown as Action;
+      actions[action] = !!actionBuffer[action] || !!actionState[action];
+      actionBuffer[action] = false;
+    }
   }
   return actions;
 }

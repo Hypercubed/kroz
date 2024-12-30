@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
@@ -379,15 +381,15 @@ export const LEVELS = [
   DebugLevel,
   LostLevel1, // 1
   LostLevel2, // 2
-  LostLevel4, // 3
+  LostLevel4, // 3  // Difficult, missing magic walls
   CavernsLevel2, // 4
   CavernsLevel4, // 5
   KingdomLevel1, // 6
   LostLevel11, // 7
-  LostLevel20, // 8
-  LostLevel22, // 9
-  LostLevel26, // 10
-  LostLevel30, // 11
-  LostLevel33, // 12
-  LostLevel42, // 13
+  // LostLevel20, // 8  // Unbeatable as is
+  // LostLevel22, // 9  // Unbeatable as is
+  // LostLevel26, // 10
+  // LostLevel30, // 11
+  // LostLevel33, // 12 // Useless as is
+  // LostLevel42, // 13  // Unbeatable as is
 ];
