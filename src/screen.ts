@@ -283,7 +283,7 @@ export async function endRoutine() {
     ' ruler of Kroz, who sought wealth and education for his people.',
   );
   display.writeln(
-    ' The magnificent kingdom of Kroz was once a great empire, until',
+    ' The magnificent KINGDOM OF KROZ was once a great empire, until',
   );
   display.writeln(
     ' it was overthrown by an evil Wizard, who wanted the riches of',

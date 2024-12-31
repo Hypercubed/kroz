@@ -8,10 +8,13 @@ Display.Rect.cache = true;
 const rotDisplay = new Display({
   width: WIDTH,
   height: HEIGHT,
-  fontFamily: 'ModernDOS9x16, monospace',
+  // fontFamily: 'ModernDOS9x16, monospace',
+  fontFamily: 'IBM_VGA_8x16, monospace',
+  // fontFamily: 'AppleII, monospace'
   bg: ColorCodes[Color.Blue], // background
   fg: ColorCodes[Color.White], // foreground
-  fontSize: 32, // canvas fontsize
+  fontSize: 64, // canvas fontsize,
+  // forceSquareRatio: true,
 });
 
 const state = {

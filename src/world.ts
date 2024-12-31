@@ -27,10 +27,10 @@ import {
 import { Entity, EntityType } from './entities';
 import { Action } from './controls';
 
-import { LEVEL, LEVELS } from './levels';
 import { Color, ColorCodes } from './colors';
 import { mod } from 'rot-js/lib/util';
 import { delay } from './utils';
+import { LEVELS } from './levels';
 
 export enum Timer {
   SlowTime = 4,
@@ -71,7 +71,7 @@ function getDefaultState() {
     ], // Timers
 
     level: DEBUG ? 0 : 1,
-    levelId: DEBUG ? 0 : 1,
+    levelId: DEBUG ? 'debug' : 'Lost1',
     score: 0,
     gems: 20,
     whips: 0,
@@ -656,10 +656,6 @@ async function tryPlayerMove(dx: number, dy: number) {
       await screen.flash(block);
       break;
     case Tile.Tablet:
-      // Tablet_Message
-      // TODO: Reading the tablet has effects on some levels
-      // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L45
-
       go(state.player, x, y);
       sound.grab();
       addScore(block);
@@ -668,8 +664,8 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     case Tile.BlockSpell: {
       go(state.player, x, y);
-      for (let x = 0; x < XSize; x++) {
-        for (let y = 0; y < YSize; y++) {
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
           if (state.PF[x][y] === Tile.ZBlock) {
             sound.play(200, 60, 100);
             for (let i = 20; i > 0; i--) {
@@ -724,8 +720,8 @@ async function tryPlayerMove(dx: number, dy: number) {
       if (block === Tile.OSpell2) s = Tile.OWall2;
       if (block === Tile.OSpell3) s = Tile.OWall3;
 
-      for (let x = 0; x < XSize; x++) {
-        for (let y = 0; y < YSize; y++) {
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
           const block = state.PF?.[x]?.[y] ?? Tile.Floor;
           if (block === s) {
             for (let i = 60; i > 0; i--) {
@@ -1236,21 +1232,41 @@ async function pause() {
   await screen.flash('Press any key to resume', false);
 }
 
+// See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L45
 async function tabletMessage() {
   switch (state.levelId) {
-    case LEVEL.DebugLevel:
-    case LEVEL.LostLevel42:
+    case 'Debug':
+    case 'Lost30':
+      await prayer();
+      await screen.flash('"If goodness is in my heart, that which flows shall..."');
+
+      // Replace River with Nugget
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
+          if (state.PF[x][y] === Tile.River) {
+            await sound.play(x * y, 50, 10);
+            state.PF[x][y] = Tile.Nugget;
+            drawTile(x, y, Tile.Nugget);
+          }
+        }
+      }
+
+      await screen.flash('"...Turn to Gold!"');
+
+      break;
+    case 'Lost42':
       await prayer();
       await screen.flash(
         '"Barriers of water, like barriers in life, can always be..."',
       );
 
-      for (let x = 0; x < XSize; x++) {
-        for (let y = 0; y < YSize; y++) {
+      // Clears River with Block
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
           if (state.PF[x][y] === Tile.River) {
             await sound.play(x * y, 50, 10);
             state.PF[x][y] = Tile.Block;
-            drawTile(x, y);
+            drawTile(x, y, Tile.Block);
           }
         }
       }
