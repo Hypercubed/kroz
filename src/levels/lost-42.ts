@@ -34,5 +34,4 @@ LL---V--V-VV-V--VV---D-----D--’--D--”--D--66333333333333333-WWWW
 LL--V-VV-V--V-VV--V--D-----D--”--D--’--D--66YYYYYYYYYYYYYYYYYYYY
 `;
 
-
-export default { id, map }
+export default { id, map };

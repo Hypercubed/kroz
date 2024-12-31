@@ -20,9 +20,9 @@ import caverns2 from './levels/caverns-2.ts';
 import caverns4 from './levels/caverns-4.ts';
 
 interface Level {
-  id: string,
-  map: string,
-  name?: string,
+  id: string;
+  map: string;
+  name?: string;
 }
 
 export const LEVELS: Level[] = [
@@ -39,5 +39,5 @@ export const LEVELS: Level[] = [
   lost26 as Level,
   lost30 as Level,
   // lost33 as Level, // Needs WallVanish
-  lost42 as Level
+  lost42 as Level,
 ];

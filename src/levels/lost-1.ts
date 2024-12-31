@@ -34,4 +34,4 @@ export const map = `
 #by#scott#miller#♣///♣/////♣/♣////♣////♣////♣//♣//♣/♣//♣/♣♣///♣ü
 `;
 
-export default { id, map }
+export default { id, map };

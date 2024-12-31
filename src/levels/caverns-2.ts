@@ -33,4 +33,4 @@ XXXX2  2    2  2  2      2    2     2  2  2  2    2         XTX
 XXXX 2   2 2    2   2  2    2   2       2       2   2   2   XXX 
 CXXX   2    2  2 2    2 2     2    2  2  2   2    2  2    2    +`;
 
-export default { id, map }
+export default { id, map };

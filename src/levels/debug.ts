@@ -31,4 +31,4 @@ export const map = `
                           XXXXXXXXXXX   T T T                   
 `;
 
-export default { id, map }
+export default { id, map };

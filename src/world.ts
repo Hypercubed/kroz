@@ -1238,7 +1238,9 @@ async function tabletMessage() {
     case 'Debug':
     case 'Lost30':
       await prayer();
-      await screen.flash('"If goodness is in my heart, that which flows shall..."');
+      await screen.flash(
+        '"If goodness is in my heart, that which flows shall..."',
+      );
 
       // Replace River with Nugget
       for (let x = 0; x <= XSize; x++) {

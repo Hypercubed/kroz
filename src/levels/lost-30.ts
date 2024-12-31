@@ -34,5 +34,4 @@ MMMMM##                     RRRRRRRR                    DDDD77ôô
 ]]K]]##“                   RRRRRRK]                     DDDD77ô!
 `;
 
-
-export default { id, map }
+export default { id, map };

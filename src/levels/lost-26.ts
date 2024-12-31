@@ -34,5 +34,4 @@ const map = `
 #was#hereÃ#:::::::::::::::::::::::::::::::::::::::::::::::::::::
 `;
 
-
-export default { id, map }
+export default { id, map };

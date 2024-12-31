@@ -33,6 +33,6 @@ T##                       2    +    2                        ##T
     1         ########11111  +++++  111111########              
 WW     ########+++++        #######         WWWWW########1    WW
 ########¯                    2 2 2                     C########
-L2  +  X      #kingdom#of#kroz#ii#by#scott#miller#      X  +  2L`
+L2  +  X      #kingdom#of#kroz#ii#by#scott#miller#      X  +  2L`;
 
-export default { id, name, map }
+export default { id, name, map };
