@@ -27,7 +27,7 @@ import {
 import { Entity, EntityType } from './entities';
 import { Action } from './controls';
 
-import { LEVELS } from './levels';
+import { LEVEL, LEVELS } from './levels';
 import { Color, ColorCodes } from './colors';
 import { mod } from 'rot-js/lib/util';
 import { delay } from './utils';
@@ -71,6 +71,7 @@ function getDefaultState() {
     ], // Timers
 
     level: DEBUG ? 0 : 1,
+    levelId: DEBUG ? 0 : 1,
     score: 0,
     gems: 20,
     whips: 0,
@@ -100,7 +101,8 @@ export function resetState() {
 
 export function loadLevel() {
   const level = LEVELS[state.level];
-  readLevel(level);
+  state.levelId = level.id;
+  readLevelMap(level.map);
 
   state.T = state.T.map(() => 0); // Reset timers
   renderPlayfield();
@@ -265,7 +267,7 @@ export async function playerAction() {
 }
 
 async function doPlayerAction(action: Action) {
-  let _playerMove = false;
+  let _tryPlayerMove = false;
 
   switch (action) {
     case Action.FreeItems:
@@ -282,36 +284,36 @@ async function doPlayerAction(action: Action) {
       await prevLevel();
       break;
     case Action.North:
-      await playerMove(0, -1);
-      _playerMove = true;
+      await tryPlayerMove(0, -1);
+      _tryPlayerMove = true;
       break;
     case Action.South:
-      await playerMove(0, +1);
-      _playerMove = true;
+      await tryPlayerMove(0, +1);
+      _tryPlayerMove = true;
       break;
     case Action.West:
-      await playerMove(-1, 0);
-      _playerMove = true;
+      await tryPlayerMove(-1, 0);
+      _tryPlayerMove = true;
       break;
     case Action.East:
-      await playerMove(+1, 0);
-      _playerMove = true;
+      await tryPlayerMove(+1, 0);
+      _tryPlayerMove = true;
       break;
     case Action.Southeast:
-      await playerMove(+1, +1);
-      _playerMove = true;
+      await tryPlayerMove(+1, +1);
+      _tryPlayerMove = true;
       break;
     case Action.Southwest:
-      await playerMove(-1, +1);
-      _playerMove = true;
+      await tryPlayerMove(-1, +1);
+      _tryPlayerMove = true;
       break;
     case Action.Northeast:
-      await playerMove(+1, -1);
-      _playerMove = true;
+      await tryPlayerMove(+1, -1);
+      _tryPlayerMove = true;
       break;
     case Action.Northwest:
-      await playerMove(-1, -1);
-      _playerMove = true;
+      await tryPlayerMove(-1, -1);
+      _tryPlayerMove = true;
       break;
     case Action.Whip:
       if (state.whips < 1) {
@@ -320,7 +322,7 @@ async function doPlayerAction(action: Action) {
         state.whips--;
         await playerWhip();
       }
-      _playerMove = true;
+      _tryPlayerMove = true;
       break;
     case Action.Teleport:
       if (state.teleports < 1) {
@@ -329,13 +331,13 @@ async function doPlayerAction(action: Action) {
         state.teleports--;
         await playerTeleport();
       }
-      _playerMove = true;
+      _tryPlayerMove = true;
       break;
   }
-  return _playerMove;
+  return _tryPlayerMove;
 }
 
-function readLevel(level: string) {
+function readLevelMap(level: string) {
   state.entities = [];
 
   const lines = level.split('\n').filter((line) => line.length > 0);
@@ -369,7 +371,7 @@ function readLevel(level: string) {
   TileColor[Tile.Gem] = [RNG.getUniformInt(1, 16), null];
 }
 
-async function playerMove(dx: number, dy: number) {
+async function tryPlayerMove(dx: number, dy: number) {
   const x = state.player.x + dx;
   const y = state.player.y + dy;
 
@@ -538,7 +540,7 @@ async function playerMove(dx: number, dy: number) {
       break;
     case Tile.Pit:
       go(state.player, x, y);
-      state.gems = -1; // dead
+      if (!DEBUG) state.gems = -1; // dead
       await screen.flash(block);
       break;
     case Tile.Tome:
@@ -559,6 +561,7 @@ async function playerMove(dx: number, dy: number) {
       await screen.flash(block, true);
       break;
     case Tile.Tunnel:
+      // TODO:
       // Find a random tunnel exit
       // Find a random empty space near exit
       // Move player to exit
@@ -653,9 +656,15 @@ async function playerMove(dx: number, dy: number) {
       await screen.flash(block);
       break;
     case Tile.Tablet:
-      addScore(block);
+      // Tablet_Message
+      // TODO: Reading the tablet has effects on some levels
+      // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L45
+
       go(state.player, x, y);
+      sound.grab();
+      addScore(block);
       await screen.flash(block, true);
+      await tabletMessage();
       break;
     case Tile.BlockSpell: {
       go(state.player, x, y);
@@ -1225,4 +1234,36 @@ function quit() {
 
 async function pause() {
   await screen.flash('Press any key to resume', false);
+}
+
+async function tabletMessage() {
+  switch (state.levelId) {
+    case LEVEL.DebugLevel:
+    case LEVEL.LostLevel42:
+      await prayer();
+      await screen.flash(
+        '"Barriers of water, like barriers in life, can always be..."',
+      );
+
+      for (let x = 0; x < XSize; x++) {
+        for (let y = 0; y < YSize; y++) {
+          if (state.PF[x][y] === Tile.River) {
+            await sound.play(x * y, 50, 10);
+            state.PF[x][y] = Tile.Block;
+            drawTile(x, y);
+          }
+        }
+      }
+
+      await screen.flash('"...Overcome!"');
+
+      break;
+    default:
+      break;
+  }
+}
+
+async function prayer() {
+  await screen.flash('On the Ancient Tablet is a short Mantra, a prayer...');
+  await screen.flash('You take a deep breath and speak the words aloud...');
 }

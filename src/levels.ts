@@ -26,7 +26,7 @@ const DebugLevel = `
          #speed F F F     XXXXXXXXXXX                  #  G  G  
  ####### #freez Z Z Z          B        U U U   tunnel #        
   1 1  # ###inv I I I     ###bomb####                  #  G  G  
-   1   #                  #XG1 2 3GX#   . . .   traps# #        
+   1   # tablet ! ! !     #XG1 2 3GX#   . . .   traps# #        
   1 1  # #amule ƒ ƒ ƒ     XXXXXXXXXXX   & & &   show## #  G  G  
  ####### ##tome A A A     XDZ/EWLCSVX   E E E   quake# ######## 
                           XXXXXXXXXXX   T T T                   
@@ -382,19 +382,67 @@ LL---V--V-VV-V--VV---D-----D--’--D--”--D--66333333333333333-WWWW
 LL--V-VV-V--V-VV--V--D-----D--”--D--’--D--66YYYYYYYYYYYYYYYYYYYY
 `;
 
-export const LEVELS = [
+export enum LEVEL {
   DebugLevel,
-  LostLevel1, // 1
-  LostLevel2, // 2
-  LostLevel4, // 3
-  CavernsLevel2, // 4
-  CavernsLevel4, // 5
-  KingdomLevel1, // 6
-  LostLevel11, // 7
-  LostLevel20, // 8
-  // LostLevel22, // 9  // Boring as is (needs MBlocks)
-  LostLevel26, // 10
-  // LostLevel30, // 11  // Unbeatable as is (needs IWall, TGem, CWall, CSpell, Create, GBlock)
-  // LostLevel33, // 12 // Boring as is (Needs WallVanish)
-  // LostLevel42, // 13  // Unbeatable as is (needs Tablet_Message)
+  LostLevel1,
+  LostLevel2,
+  LostLevel4,
+  CavernsLevel2,
+  CavernsLevel4,
+  KingdomLevel1,
+  LostLevel11,
+  LostLevel20,
+  LostLevel26,
+  LostLevel30,
+  LostLevel33,
+  LostLevel42,
+}
+
+export const LEVELS = [
+  { id: LEVEL.DebugLevel, name: 'Debug Level', map: DebugLevel },
+  {
+    id: LEVEL.LostLevel1,
+    name: 'Lost Adventures of Kroz, Level 1',
+    map: LostLevel1,
+  },
+  {
+    id: LEVEL.LostLevel2,
+    name: 'Lost Adventures of Kroz, Level 2',
+    map: LostLevel2,
+  },
+  {
+    id: LEVEL.LostLevel4,
+    name: 'Lost Adventures of Kroz, Level 4',
+    map: LostLevel4,
+  },
+  { id: LEVEL.CavernsLevel2, name: 'Caverns II, Level 2', map: CavernsLevel2 },
+  { id: LEVEL.CavernsLevel4, name: 'Caverns II, Level 4', map: CavernsLevel4 },
+  {
+    id: LEVEL.KingdomLevel1,
+    name: 'Kingdom of Kroz, Level 1',
+    map: KingdomLevel1,
+  },
+  {
+    id: LEVEL.LostLevel11,
+    name: 'Lost Adventures of Kroz, Level 11',
+    map: LostLevel11,
+  },
+  {
+    id: LEVEL.LostLevel20,
+    name: 'Lost Adventures of Kroz, Level 20',
+    map: LostLevel20,
+  },
+  // { id: LostLevel22, name: 'Lost Adventures of Kroz, Level 22', map: LostLevel22 },
+  {
+    id: LEVEL.LostLevel26,
+    name: 'Lost Adventures of Kroz, Level 26',
+    map: LostLevel26,
+  },
+  // { id: LostLevel30, name: 'Lost Adventures of Kroz, Level 30', map: LostLevel30 },
+  // { id: LostLevel33, name: 'Lost Adventures of Kroz, Level 33', map: LostLevel33 },
+  {
+    id: LEVEL.LostLevel42,
+    name: 'Lost Adventures of Kroz, Level 42',
+    map: LostLevel42,
+  },
 ];

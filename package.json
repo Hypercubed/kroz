@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "NODE_ENV='production' tsc && vite build",
     "preview": "vite preview",
     "check": "npm-run-all check:**",
     "check:prettier": "prettier . --check",
@@ -29,8 +29,11 @@
     "vite": "^6.0.5"
   },
   "dependencies": {
+    "@types/stats.js": "^0.17.3",
     "gamecontroller.js": "^1.5.0",
+    "lil-gui": "^0.20.0",
     "mini-signals": "^2.0.0",
-    "rot-js": "^2.2.1"
+    "rot-js": "^2.2.1",
+    "stats.js": "^0.17.0"
   }
 }
