@@ -1,4 +1,4 @@
-export const DEBUG = false;
+export const DEBUG = import.meta.env.DEV;
 
 export const TITLE = 'The Underground Empire of Kroz';
 

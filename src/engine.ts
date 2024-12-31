@@ -34,13 +34,15 @@ export async function start() {
   world.loadLevel(); // Don't wait
   screen.fullRender();
   await world.flashPlayer();
+  screen.fastRender();
+  await screen.flash('Press any key to begin this level.');
 
   // for (let i = 0; i < 80; i++) {
   //   display.gotoxy(world.state.player.x + XBot, world.state.player.y + YBot);
   //   display.col(RNG.getUniformInt(0, 15));
   //   display.bak(RNG.getUniformInt(0, 8));
   //   display.write(TileChar[Tile.Player]);
-  //   await sound.delay(1);
+  //   await delay(1);
   //   sound.play(i / 2, 1000, 30);
   // }
 
@@ -77,12 +79,12 @@ export async function start() {
 
     if (dt > speed) {
       dt %= speed;
-      if (!world.state.paused) {
-        await world.effects();
-        await world.playerAction(); // Player acts every tick
-        const current = scheduler.next();
-        await world.entitiesAction(current.type);
-      }
+      // if (!world.state.paused) {
+      await world.effects();
+      await world.playerAction(); // Player acts every tick
+      const current = scheduler.next();
+      await world.entitiesAction(current.type);
+      // }
 
       if (DEBUG) {
         display.drawText(

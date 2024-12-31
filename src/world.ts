@@ -29,6 +29,8 @@ import { Action } from './controls';
 
 import { LEVELS } from './levels';
 import { Color, ColorCodes } from './colors';
+import { mod } from 'rot-js/lib/util';
+import { delay } from './utils';
 
 export enum Timer {
   SlowTime = 4,
@@ -96,24 +98,25 @@ export function resetState() {
   Object.assign(state, getDefaultState());
 }
 
-export async function loadLevel() {
+export function loadLevel() {
   const level = LEVELS[state.level];
   readLevel(level);
 
   state.T = state.T.map(() => 0); // Reset timers
   renderPlayfield();
   screen.renderStats();
-  await screen.flash('Press any key to begin this level.');
 }
 
 export async function nextLevel() {
   state.level = mod(state.level + 1, LEVELS.length);
   loadLevel();
+  await screen.flash('Press any key to begin this level.');
 }
 
 async function prevLevel() {
   state.level = mod(state.level - 1, LEVELS.length);
   loadLevel();
+  await screen.flash('Press any key to begin this level.');
 }
 
 export async function effects() {
@@ -262,9 +265,6 @@ export async function playerAction() {
 }
 
 async function doPlayerAction(action: Action) {
-  if (state.actionActive) return;
-  state.actionActive = true;
-
   let _playerMove = false;
 
   switch (action) {
@@ -332,7 +332,6 @@ async function doPlayerAction(action: Action) {
       _playerMove = true;
       break;
   }
-  state.actionActive = false;
   return _playerMove;
 }
 
@@ -571,10 +570,10 @@ async function playerMove(dx: number, dy: number) {
 
       for (let i = 0; i < 2500; i++) {
         sound.play(RNG.getUniformInt(0, i), 5, 100);
-        if (i % 25 === 0) await sound.delay();
+        if (i % 25 === 0) await delay();
       }
 
-      await sound.delay(50);
+      await delay(50);
       for (let i = 0; i < 50; i++) {
         do {
           const x = RNG.getUniformInt(0, XSize);
@@ -589,18 +588,32 @@ async function playerMove(dx: number, dy: number) {
         for (let i = 0; i < 50; i++) {
           sound.play(RNG.getUniformInt(0, 200), 50, 100);
         }
-        await sound.delay(50);
+        await delay(50);
       }
 
       for (let i = 2500; i > 50; i--) {
         sound.play(RNG.getUniformInt(0, i), 5, 100);
-        if (i % 25 === 0) await sound.delay();
+        if (i % 25 === 0) await delay();
       }
 
       await screen.flash(block, true);
       break;
+    case Tile.IWall:
+      sound.blockedWall();
+      state.PF[x][y] = Tile.Wall;
+      drawTile(x, y);
+      await screen.flash(block, true);
+      break;
     case Tile.IBlock:
+      sound.blockedWall();
+      state.PF[x][y] = Tile.Block;
+      drawTile(x, y);
+      await screen.flash(block, true);
+      break;
     case Tile.IDoor:
+      sound.blockedWall();
+      state.PF[x][y] = Tile.Door;
+      drawTile(x, y);
       await screen.flash(block, true);
       break;
     case Tile.Zap: {
@@ -614,7 +627,7 @@ async function playerMove(dx: number, dy: number) {
         const e = state.entities[n];
         if (!e || e.x === -1 || e.y === -1) continue; // dead
         await killAt(e.x, e.y);
-        await sound.delay(20);
+        await delay(20);
         k++;
       }
 
@@ -640,11 +653,31 @@ async function playerMove(dx: number, dy: number) {
       await screen.flash(block);
       break;
     case Tile.Tablet:
-    case Tile.BlockSpell:
       addScore(block);
       go(state.player, x, y);
       await screen.flash(block, true);
       break;
+    case Tile.BlockSpell: {
+      go(state.player, x, y);
+      for (let x = 0; x < XSize; x++) {
+        for (let y = 0; y < YSize; y++) {
+          if (state.PF[x][y] === Tile.ZBlock) {
+            sound.play(200, 60, 100);
+            for (let i = 20; i > 0; i--) {
+              drawTile(x, y, Tile.Block, RNG.getUniformInt(0, 15));
+              await delay(3);
+            }
+            state.PF[x][y] = Tile.Floor;
+            drawTile(x, y);
+          } else if (state.PF[x][y] === Tile.BlockSpell) {
+            state.PF[x][y] = Tile.Block;
+            drawTile(x, y);
+          }
+        }
+      }
+      await screen.flash(block, true);
+      break;
+    }
     case Tile.Chance: {
       addScore(block);
       const g = RNG.getUniformInt(14, 18);
@@ -675,10 +708,34 @@ async function playerMove(dx: number, dy: number) {
       break;
     case Tile.OSpell1:
     case Tile.OSpell2:
-    case Tile.OSpell3:
+    case Tile.OSpell3: {
       go(state.player, x, y);
+
+      let s = Tile.OWall1;
+      if (block === Tile.OSpell2) s = Tile.OWall2;
+      if (block === Tile.OSpell3) s = Tile.OWall3;
+
+      for (let x = 0; x < XSize; x++) {
+        for (let y = 0; y < YSize; y++) {
+          const block = state.PF?.[x]?.[y] ?? Tile.Floor;
+          if (block === s) {
+            for (let i = 60; i > 0; i--) {
+              drawTile(x, y, Tile.Wall, RNG.getUniformInt(0, 14));
+              sound.play(i * 40, 5, 10);
+              if (i % 5 === 0) await delay(1);
+            }
+
+            drawTile(x, y, Tile.Wall);
+            // await delay(8);
+            state.PF[x][y] = Tile.Floor;
+            drawTile(x, y);
+          }
+        }
+      }
+
       await screen.flash(Tile.OSpell1, true);
       break;
+    }
     case Tile.CSpell1:
     case Tile.CSpell2:
     case Tile.CSpell3:
@@ -859,7 +916,7 @@ export async function flashPlayer() {
       RNG.getUniformInt(0, 15),
       RNG.getUniformInt(0, 8),
     );
-    await sound.delay(1);
+    await delay(1);
     sound.play(i / 2, 1000, 30);
   }
 
@@ -1022,10 +1079,10 @@ async function hit(x: number, y: number, ch: string) {
       state.PF[x][y] = Tile.Floor;
       sound.play(400, 50);
       break;
-    case Tile.Quake:
     case Tile.IBlock:
     case Tile.IWall:
     case Tile.IDoor:
+    case Tile.Quake:
     case Tile.Trap2:
     case Tile.Trap3:
     case Tile.Trap4:
@@ -1043,19 +1100,29 @@ async function hit(x: number, y: number, ch: string) {
     case Tile.Stop:
       state.PF[x][y] = Tile.Floor;
       break;
+    case Tile.MBlock:
+    case Tile.ZBlock:
+    case Tile.GBlock: {
+      const w = state.whipPower;
+      if (6 * Math.random() < w) {
+        sound.play(130, 50);
+        state.PF[x][y] = Tile.Floor;
+      } else {
+        sound.play(130, 25);
+        sound.play(90, 50);
+      }
+      break;
+    }
     case Tile.Wall:
     case Tile.Statue:
     case Tile.Rock:
-    case Tile.ZBlock:
-    case Tile.GBlock:
-    case Tile.MBlock:
     // TBD
     // eslint-disable-next-line no-fallthrough
     default:
       break;
   }
   screen.renderStats();
-  await sound.delay(10);
+  await delay(10);
 }
 
 function addScore(block: Tile) {
@@ -1158,8 +1225,4 @@ function quit() {
 
 async function pause() {
   await screen.flash('Press any key to resume', false);
-}
-
-function mod(n: number, m: number) {
-  return ((n % m) + m) % m;
 }

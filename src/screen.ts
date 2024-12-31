@@ -7,6 +7,7 @@ import { FLOOR_CHAR, TITLE, WIDTH, XBot, XTop, YBot, YTop } from './constants';
 import { TileMessage } from './tiles';
 import { RNG } from 'rot-js';
 import { Color } from './colors';
+import { delay } from './utils';
 
 export function renderScreen() {
   display.col(14);
@@ -117,7 +118,7 @@ export async function flash(msg: string | number, once = false) {
   controls.clearKeys();
   while (!controls.anyKey()) {
     message(msg, RNG.getUniformInt(1, 15));
-    await sound.delay(50);
+    await delay(50);
   }
   renderBorder();
   controls.clearKeys();
@@ -197,19 +198,19 @@ export async function renderTitle() {
   controls.clearKeys();
   while (!controls.anyKey()) {
     display.drawText(x, 3, TITLE, RNG.getUniformInt(0, 16), Color.Red);
-    await sound.delay(50);
+    await delay(50);
 
     // await sound.play(300, 100);
-    await sound.delay(100);
+    await delay(100);
   }
   controls.clearKeys();
 }
 
 export async function endRoutine() {
   await sound.footStep();
-  await sound.delay(200);
+  await delay(200);
   await sound.footStep();
-  await sound.delay(200);
+  await delay(200);
   await sound.footStep();
 
   await flash('Oh no, something strange is happening!');
