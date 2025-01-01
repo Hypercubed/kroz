@@ -49,13 +49,13 @@ const FastActor = {
 export async function start() {
   controls.start();
 
-  await screen.renderTitle();
+  await world.renderTitle();
 
   world.loadLevel(); // Don't wait
   screen.fullRender();
   await world.flashPlayer();
   screen.fastRender();
-  await screen.flash('Press any key to begin this level.');
+  await screen.flashMessage('Press any key to begin this level.');
 
   // for (let i = 0; i < 80; i++) {
   //   display.gotoxy(world.state.player.x + XBot, world.state.player.y + YBot);

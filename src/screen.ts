@@ -1,10 +1,8 @@
 import * as display from './display';
 import * as world from './world';
 import * as controls from './controls';
-import * as sound from './sound';
 
-import { FLOOR_CHAR, TITLE, WIDTH, XBot, XTop, YBot, YTop } from './constants';
-import { TileMessage } from './tiles';
+import { FLOOR_CHAR, XBot, XTop, YBot, YTop } from './constants';
 import { RNG } from 'rot-js';
 import { Color } from './colors';
 import { delay } from './utils';
@@ -101,212 +99,26 @@ export function renderBorder() {
   }
 }
 
-export async function flash(msg: string | number, once = false) {
-  if (once) {
-    if (world.state.foundSet.has(msg)) return;
-    world.state.foundSet.add(msg);
-  }
-
-  if (typeof msg === 'number') {
-    msg = TileMessage[msg];
-  }
-
-  if (!msg) return;
-
-  world.state.paused = true;
-
-  controls.clearKeys();
-  while (!controls.anyKey()) {
-    message(msg, RNG.getUniformInt(1, 15));
-    await delay(50);
-  }
-  renderBorder();
-  controls.clearKeys();
-  world.state.paused = false;
-}
-
-export function message(
-  msg: string | number,
-  fg?: string | Color,
-  bg?: string | Color,
-) {
-  if (typeof msg === 'number') {
-    msg = TileMessage[msg];
-  }
-  if (!msg) return;
+export async function flashMessage(msg: string): Promise<string> {
+  if (!msg) return '';
 
   const x = (XTop - msg.length) / 2;
   const y = YTop + 1;
 
-  bg = bg ?? Color.Black;
-  fg = fg ?? Color.HighIntensityWhite;
+  world.state.paused = true;
+  const readkey = controls.readkey();
+  while (!readkey()) {
+    display.drawText(x, y, msg, RNG.getUniformInt(1, 15), Color.Black);
+    await delay(50);
+  }
+  renderBorder();
+  controls.clearKeys();
 
-  display.drawText(x, y, msg, fg, bg);
+  world.state.paused = false;
+
+  return readkey();
 }
 
 function pad(s: string, n: number, r: number) {
   return s.padStart(n, FLOOR_CHAR).padEnd(r, FLOOR_CHAR);
-}
-
-export async function renderTitle() {
-  // display.col(RNG.getUniformInt(1, 16));
-  // display.gotoxy(1, 5);
-  // display.writeln('     ÛÛÛ     ÛÛÛ     ÛÛÛÛÛÛÛÛÛÛ         ÛÛÛÛÛÛÛÛÛÛÛ        ÛÛÛÛÛÛÛÛÛÛÛÛÛ  (R)');
-  // display.writeln('     ÛÛÛ±±  ÛÛÛ±±±   ÛÛÛ±±±±±ÛÛÛ±      ÛÛÛ±±±±±±±ÛÛÛ±        ±±±±±±ÛÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±± ÛÛÛ±±±    ÛÛÛ±±   ÛÛÛ±±     ÛÛÛ±±     ÛÛÛ±±            ÛÛÛ±±±±');
-  // display.writeln('     ÛÛÛ±±ÛÛÛ±±±     ÛÛÛ±±   ÛÛÛ±±    ÛÛÛ±±±      ÛÛÛ±           ÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±ÛÛÛ±±±      ÛÛÛÛÛÛÛÛÛÛ±±±    ÛÛÛ±±       ÛÛÛ±±         ÛÛÛ±±±');
-  // display.writeln('     ÛÛÛÛÛÛ±±±       ÛÛÛ±±ÛÛÛ±±±±     ÛÛÛ±±       ÛÛÛ±±        ÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±ÛÛÛ±        ÛÛÛ±± ÛÛÛ±        ÛÛÛ±      ÛÛÛ±±±       ÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±±ÛÛÛ±       ÛÛÛ±±  ÛÛÛ±       ÛÛÛ±±     ÛÛÛ±±      ÛÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±± ÛÛÛ±      ÛÛÛ±±   ÛÛÛ±       ÛÛÛÛÛÛÛÛÛÛÛ±±±     ÛÛÛÛÛÛÛÛÛÛÛÛÛ');
-  // display.writeln('     ÛÛÛ±±  ÛÛÛ±       ±±±     ±±±        ±±±±±±±±±±±        ±±±±±±±±±±±±±');
-  // display.writeln('     ÛÛÛ±±   ÛÛÛ±');
-  // display.writeln('     ÛÛÛ±±    ÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛ');
-  // display.writeln('       ±±±      ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
-
-  display.bak(Color.Blue);
-  display.col(Color.LightCyan);
-
-  display.gotoxy(1, 9);
-  display.writeln(
-    '  Revitalized from the Fountain of Youth you uncovered in your last adventure',
-  );
-  display.writeln(
-    "  through Kroz,  you decide it's time once again to explore the vast mystical",
-  );
-  display.writeln(
-    '  kingdom.  From your last journey through the underground world of Kroz, you',
-  );
-  display.writeln(
-    '  noticed a new tunnel that requires further investigation.  What new mystery',
-  );
-  display.writeln(
-    '  awaits below?  Your adrenaline level rises as you decend the secret tunnels',
-  );
-  display.writeln(
-    '               that lead into the heart of Kroz.  One more time...',
-  );
-
-  // display.gotoxy(23);
-  // display.writeln('But only if you can reach it alive!');
-
-  display.drawText(27, 25, 'Press any key to continue.', Color.LightGreen);
-
-  const x = WIDTH / 2 - TITLE.length / 2;
-
-  controls.clearKeys();
-  while (!controls.anyKey()) {
-    display.drawText(x, 3, TITLE, RNG.getUniformInt(0, 16), Color.Red);
-    await delay(50);
-
-    // await sound.play(300, 100);
-    await delay(100);
-  }
-  controls.clearKeys();
-}
-
-export async function endRoutine() {
-  await sound.footStep();
-  await delay(200);
-  await sound.footStep();
-  await delay(200);
-  await sound.footStep();
-
-  await flash('Oh no, something strange is happening!');
-  await flash('You are magically transported from Kroz!');
-
-  // Check for infinite items
-  const gems = (world.state.gems = isFinite(world.state.gems)
-    ? world.state.gems
-    : 150);
-  const whips = (world.state.whips = isFinite(world.state.whips)
-    ? world.state.whips
-    : 20);
-  const teleports = (world.state.teleports = isFinite(world.state.teleports)
-    ? world.state.teleports
-    : 10);
-  const keys = (world.state.keys = isFinite(world.state.keys)
-    ? world.state.keys
-    : 5);
-
-  await flash('Your Gems are worth 100 points each...');
-
-  for (let i = 0; i < gems; i++) {
-    world.state.gems--;
-    world.state.score += 10;
-    renderStats();
-    await sound.play(i * 8 + 100, 20);
-  }
-
-  await flash('Your Whips are worth 100 points each...');
-  for (let i = 0; i < whips; i++) {
-    world.state.whips--;
-    world.state.score += 10;
-    renderStats();
-    await sound.play(i * 8 + 100, 20);
-  }
-
-  await flash('Your Teleport Scrolls are worth 200 points each...');
-  for (let i = 0; i < teleports; i++) {
-    world.state.teleports--;
-    world.state.score += 20;
-    renderStats();
-    await sound.play(i * 8 + 100, 20);
-  }
-
-  await flash('Your Keys are worth 10,000 points each....');
-  for (let i = 0; i < keys; i++) {
-    world.state.keys--;
-    world.state.score += 1000;
-    renderStats();
-    await sound.play(i * 8 + 100, 20);
-  }
-
-  display.clear();
-
-  display.gotoxy(25, 3);
-  display.col(Color.White);
-  display.bak(Color.Blue);
-
-  display.writeln('ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ');
-
-  display.gotoxy(15, 5);
-  display.writeln(
-    '   Carefully, you place the ancient tome on your table and open',
-  );
-  display.writeln(' to the first page.  You read the book intently, quickly');
-  display.writeln(' deciphering the archaic writings.');
-  display.writeln(
-    '   You learn of Lord Dullwit, the once powerful and benevolent',
-  );
-  display.writeln(
-    ' ruler of Kroz, who sought wealth and education for his people.',
-  );
-  display.writeln(
-    ' The magnificent KINGDOM OF KROZ was once a great empire, until',
-  );
-  display.writeln(
-    ' it was overthrown by an evil Wizard, who wanted the riches of',
-  );
-  display.writeln(' Kroz for himself.');
-  display.writeln(
-    '   Using magic beyond understanding, the Wizard trapped Lord',
-  );
-  display.writeln(
-    ' Dullwit and his people in a chamber so deep in Kroz that any',
-  );
-  display.writeln(' hope of escape was fruitless.');
-  display.writeln(
-    '   The Wizard then built hundreds of deadly chambers that would',
-  );
-  display.writeln(' stop anyone from ever rescuing the good people of Kroz.');
-  display.writeln(
-    '   Once again your thoughts becomes clear:  To venture into the',
-  );
-  display.writeln(' depths once more and set free the people of Kroz, in:');
-  display.writeln('');
-
-  await flash('Press any key, Adventurer.');
-  world.state.done = true;
 }

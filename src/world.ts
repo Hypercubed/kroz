@@ -13,11 +13,14 @@ import {
   BOMBABLES,
   ROCKABLES,
   VISUAL_TELEPORTABLES,
+  TileMessage,
 } from './tiles';
 import {
   DEBUG,
   FLOOR_CHAR,
   TIME_SCALE,
+  TITLE,
+  WIDTH,
   XBot,
   XSize,
   XTop,
@@ -112,13 +115,13 @@ export function loadLevel() {
 export async function nextLevel() {
   state.level = mod(state.level + 1, LEVELS.length);
   loadLevel();
-  await screen.flash('Press any key to begin this level.');
+  await screen.flashMessage('Press any key to begin this level.');
 }
 
 async function prevLevel() {
   state.level = mod(state.level - 1, LEVELS.length);
   loadLevel();
-  await screen.flash('Press any key to begin this level.');
+  await screen.flashMessage('Press any key to begin this level.');
 }
 
 export async function effects() {
@@ -376,7 +379,7 @@ async function tryPlayerMove(dx: number, dy: number) {
   const y = state.player.y + dy;
 
   if (x < 0 || x > XSize || y < 0 || y > YSize) return;
-  // Flash(16,25,'An Electrified Wall blocks your way.');
+  // flashTileMessage(16,25,'An Electrified Wall blocks your way.');
 
   const block = state.PF?.[x]?.[y] || Tile.Floor;
 
@@ -396,24 +399,24 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.ZBlock:
     case Tile.GBlock:
       addScore(block);
-      await screen.flash(Tile.Block, true);
+      await flashTileMessage(Tile.Block, true);
       break;
     case Tile.Whip:
       sound.grab();
       state.whips++;
       addScore(block);
       go(state.player, x, y);
-      await screen.flash(Tile.Whip, true);
+      await flashTileMessage(Tile.Whip, true);
       break;
     case Tile.Stairs:
       if (state.level === LEVELS.length - 1) {
         go(state.player, x, y);
-        await screen.endRoutine();
+        await endRoutine();
         return;
       }
       addScore(block);
       go(state.player, x, y);
-      await screen.flash(Tile.Stairs, true);
+      await flashTileMessage(Tile.Stairs, true);
       nextLevel();
       break;
     case Tile.Chest:
@@ -425,87 +428,91 @@ async function tryPlayerMove(dx: number, dy: number) {
         state.gems += gems;
         addScore(block);
         go(state.player, x, y);
-        await screen.flash(
+        await screen.flashMessage(
           `You found ${gems} gems and ${whips} whips inside the chest!`,
         );
       }
       break;
     case Tile.SlowTime:
       state.T[Timer.SpeedTime] = 0; // Reset Speed Time
+      state.T[Timer.FreezeTime] = 0;
       state.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime]; // Slow Time
       addScore(block);
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Gem:
       state.gems++;
       addScore(block);
       go(state.player, x, y);
-      screen.flash(block, true);
+      flashTileMessage(block, true);
       break;
     case Tile.Invisible:
       state.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
       addScore(block);
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Teleport:
       state.teleports++;
       addScore(block);
       go(state.player, x, y);
-      screen.flash(block, true);
+      flashTileMessage(block, true);
       break;
     case Tile.Key:
       sound.grab();
       state.keys++;
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Door:
       if (state.keys < 1) {
         sound.play(Math.random() * 129 + 30, 150, 100);
-        await screen.flash(block);
+        await delay(100);
+        await flashTileMessage(block);
       } else {
-        sound.openDoor();
         state.keys--;
         addScore(block);
+        await sound.openDoor();
         go(state.player, x, y);
-        await screen.flash('The Door opens!  (One of your Keys is used.)');
+        await screen.flashMessage(
+          'The Door opens!  (One of your Keys is used.)',
+        );
       }
       break;
     case Tile.Wall:
       sound.blockedWall();
       addScore(block);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.River:
       addScore(block);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.SpeedTime:
       state.T[Timer.SlowTime] = 0; // Reset Slow Time
       state.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime]; // Speed Time
       addScore(block);
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Trap:
       addScore(block);
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       await playerTeleport();
       break;
     case Tile.Power:
       state.whipPower++;
       addScore(block);
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Tree:
     case Tile.Forest:
       addScore(block);
       await sound.blocked();
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Bomb: {
       go(state.player, x, y);
@@ -529,19 +536,19 @@ async function tryPlayerMove(dx: number, dy: number) {
         }
       }
 
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     }
     case Tile.Lava:
       state.gems -= 10;
       addScore(block);
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Pit:
       go(state.player, x, y);
       if (!DEBUG) state.gems = -1; // dead
-      await screen.flash(block);
+      await flashTileMessage(block);
       break;
     case Tile.Tome:
       // Tome_Message;
@@ -551,19 +558,21 @@ async function tryPlayerMove(dx: number, dy: number) {
       drawTile(31, 6, Tile.Stairs);
 
       addScore(block);
-      await screen.flash(block);
-      await screen.flash('Congratulations, Adventurer, you finally did it!!!');
+      await flashTileMessage(block);
+      await screen.flashMessage(
+        'Congratulations, Adventurer, you finally did it!!!',
+      );
       break;
     case Tile.Nugget:
       sound.grab();
       go(state.player, x, y);
       addScore(block);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Freeze:
       state.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Tunnel:
       // TODO:
@@ -571,7 +580,7 @@ async function tryPlayerMove(dx: number, dy: number) {
       // Find a random empty space near exit
       // Move player to exit
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Quake:
       go(state.player, x, y);
@@ -604,25 +613,25 @@ async function tryPlayerMove(dx: number, dy: number) {
         if (i % 25 === 0) await delay();
       }
 
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.IWall:
       sound.blockedWall();
       state.PF[x][y] = Tile.Wall;
       drawTile(x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.IBlock:
       sound.blockedWall();
       state.PF[x][y] = Tile.Block;
       drawTile(x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.IDoor:
       sound.blockedWall();
       state.PF[x][y] = Tile.Door;
       drawTile(x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.Zap: {
       go(state.player, x, y);
@@ -643,28 +652,28 @@ async function tryPlayerMove(dx: number, dy: number) {
       renderPlayfield();
       screen.renderStats();
 
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     }
     case Tile.Create:
     case Tile.Generator:
       addScore(block);
       go(state.player, x, y);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.MBlock:
       addScore(block);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     case Tile.ShowGems:
       go(state.player, x, y);
-      await screen.flash(block);
+      await flashTileMessage(block);
       break;
     case Tile.Tablet:
       go(state.player, x, y);
       sound.grab();
       addScore(block);
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       await tabletMessage();
       break;
     case Tile.BlockSpell: {
@@ -685,7 +694,7 @@ async function tryPlayerMove(dx: number, dy: number) {
           }
         }
       }
-      await screen.flash(block, true);
+      await flashTileMessage(block, true);
       break;
     }
     case Tile.Chance: {
@@ -693,16 +702,16 @@ async function tryPlayerMove(dx: number, dy: number) {
       const g = RNG.getUniformInt(14, 18);
       state.gems += g;
       go(state.player, x, y);
-      await screen.flash(`You found a Pouch containing ${g} Gems!`);
+      await screen.flashMessage(`You found a Pouch containing ${g} Gems!`);
       break;
     }
     case Tile.Statue:
       go(state.player, x, y);
-      await screen.flash(block);
+      await flashTileMessage(block);
       break;
     case Tile.WallVanish:
       go(state.player, x, y);
-      await screen.flash(block);
+      await flashTileMessage(block);
       break;
     case Tile.K:
     case Tile.R:
@@ -714,7 +723,7 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.OWall2:
     case Tile.OWall3:
       sound.blockedWall();
-      await screen.flash(Tile.OWall1, true);
+      await flashTileMessage(Tile.OWall1, true);
       break;
     case Tile.OSpell1:
     case Tile.OSpell2:
@@ -743,14 +752,14 @@ async function tryPlayerMove(dx: number, dy: number) {
         }
       }
 
-      await screen.flash(Tile.OSpell1, true);
+      await flashTileMessage(Tile.OSpell1, true);
       break;
     }
     case Tile.CSpell1:
     case Tile.CSpell2:
     case Tile.CSpell3:
       go(state.player, x, y);
-      await screen.flash(Tile.CSpell1, true);
+      await flashTileMessage(Tile.CSpell1, true);
       break;
     case Tile.Rock: {
       let nogo = false;
@@ -770,14 +779,14 @@ async function tryPlayerMove(dx: number, dy: number) {
             state.PF[rx][ry] = Tile.Rock;
             go(state.player, x, y);
             renderPlayfield();
-            await screen.flash(Tile.Rock, true);
+            await flashTileMessage(Tile.Rock, true);
             break;
           case Tile.Stairs:
             nogo = false;
             await sound.blockMove(); // TODO: change sound
             go(state.player, x, y);
             renderPlayfield();
-            await screen.flash(Tile.Rock, true);
+            await flashTileMessage(Tile.Rock, true);
             break;
           default:
             nogo = false;
@@ -795,7 +804,7 @@ async function tryPlayerMove(dx: number, dy: number) {
       addScore(block);
       state.gems--;
       sound.noise();
-      await screen.flash(Tile.EWall, true);
+      await flashTileMessage(Tile.EWall, true);
       break;
     case Tile.CWall1:
     case Tile.CWall2:
@@ -827,7 +836,7 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     case Tile.Rope:
       go(state.player, x, y);
-      await screen.flash(Tile.Rope, true);
+      await flashTileMessage(Tile.Rope, true);
       break;
     case Tile.Message:
       // Secret_Message;
@@ -854,21 +863,16 @@ async function tryPlayerMove(dx: number, dy: number) {
   }
 }
 
-async function gotAmulet() {
-  await sound.grab();
-  for (let x = 45; x >= 11; x--) {
-    for (let y = 13; y >= 1; y--) {
-      await sound.play(x * x * y, y + 1, 100);
-    }
+async function flashTileMessage(msg: number, once: boolean = false) {
+  if (once) {
+    if (state.foundSet.has(msg)) return '';
+    state.foundSet.add(msg);
   }
-  addScore(Tile.Amulet);
-  await screen.flash('You have found the Amulet of Yendor -- 25,000 points!');
-  await screen.flash(
-    'It seems that Kroz and Rogue share the same underground!)',
-  );
-  await screen.flash(
-    'Your quest for the treasure of Kroz must still continue...',
-  );
+
+  const str = TileMessage[msg];
+  if (!str) return '';
+
+  return await screen.flashMessage(str);
 }
 
 async function killAt(x: number, y: number) {
@@ -898,8 +902,6 @@ function go(e: Entity, x: number, y: number) {
   state.PF[x][y] = e.type;
 
   renderPlayfield();
-  // drawTile(px, py);
-  // drawTile(e.x, e.y, e.ch, TileColor[e.type][0]!, TileColor[Tile.Floor][1]!);
 }
 
 async function playerWhip() {
@@ -977,71 +979,6 @@ async function playerTeleport() {
       break;
     }
   }
-}
-
-export function renderPlayfield() {
-  for (let x = 0; x < state.PF.length; x++) {
-    for (let y = 0; y < state.PF[x].length; y++) {
-      // Skip entities, will be rendered later
-      const b = state.PF[x][y] || Tile.Floor;
-      if (b === Tile.Player) continue;
-      if (b === Tile.Slow || b === Tile.Medium || b === Tile.Fast) continue;
-
-      drawTile(x, y, state.PF[x][y] || Tile.Floor);
-    }
-  }
-
-  const floorColor = TileColor[Tile.Floor][1]!;
-
-  for (let i = 0; i < state.entities.length; i++) {
-    const e = state.entities[i];
-    if (e.x === -1 || e.y === -1) continue; // dead
-    drawTile(e.x, e.y, e.getChar(), TileColor[e.type][0]!, floorColor);
-  }
-
-  drawTile(
-    state.player.x,
-    state.player.y,
-    state.player.getChar(),
-    TileColor[state.player.type][0]!,
-    floorColor,
-  );
-}
-
-export function drawTile(
-  x: number,
-  y: number,
-  block: Tile | string = Tile.Floor,
-  fg?: Color | string,
-  bg?: Color | string,
-) {
-  let ch: string;
-
-  if (typeof block === 'number') {
-    ch = TileChar[block] ?? block ?? TileChar[Tile.Floor];
-    fg =
-      fg ??
-      TileColor[block as unknown as Tile]?.[0] ??
-      TileColor[Tile.Floor][0]!;
-    bg =
-      bg ??
-      TileColor[block as unknown as Tile]?.[1] ??
-      TileColor[Tile.Floor][1]!;
-  } else if (block >= 'a' && block <= 'z') {
-    ch = block.toUpperCase();
-    fg = fg ?? Color.HighIntensityWhite;
-    bg = bg ?? Color.Brown;
-  } else {
-    ch = block as string;
-  }
-
-  switch (block) {
-    case Tile.Stairs:
-      fg = typeof fg === 'number' && !state.paused ? fg | 16 : fg; // add blink
-      break;
-  }
-
-  display.draw(x + XBot, y + YBot, ch, fg, bg);
 }
 
 // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER/LOST4.TIT#L399
@@ -1142,6 +1079,71 @@ async function hit(x: number, y: number, ch: string) {
   await delay(10);
 }
 
+export function renderPlayfield() {
+  for (let x = 0; x < state.PF.length; x++) {
+    for (let y = 0; y < state.PF[x].length; y++) {
+      // Skip entities, will be rendered later
+      const b = state.PF[x][y] || Tile.Floor;
+      if (b === Tile.Player) continue;
+      if (b === Tile.Slow || b === Tile.Medium || b === Tile.Fast) continue;
+
+      drawTile(x, y, state.PF[x][y] || Tile.Floor);
+    }
+  }
+
+  const floorColor = TileColor[Tile.Floor][1]!;
+
+  for (let i = 0; i < state.entities.length; i++) {
+    const e = state.entities[i];
+    if (e.x === -1 || e.y === -1) continue; // dead
+    drawTile(e.x, e.y, e.getChar(), TileColor[e.type][0]!, floorColor);
+  }
+
+  drawTile(
+    state.player.x,
+    state.player.y,
+    state.player.getChar(),
+    TileColor[state.player.type][0]!,
+    floorColor,
+  );
+}
+
+export function drawTile(
+  x: number,
+  y: number,
+  block: Tile | string = Tile.Floor,
+  fg?: Color | string,
+  bg?: Color | string,
+) {
+  let ch: string;
+
+  if (typeof block === 'number') {
+    ch = TileChar[block] ?? block ?? TileChar[Tile.Floor];
+    fg =
+      fg ??
+      TileColor[block as unknown as Tile]?.[0] ??
+      TileColor[Tile.Floor][0]!;
+    bg =
+      bg ??
+      TileColor[block as unknown as Tile]?.[1] ??
+      TileColor[Tile.Floor][1]!;
+  } else if (block >= 'a' && block <= 'z') {
+    ch = block.toUpperCase();
+    fg = fg ?? Color.HighIntensityWhite;
+    bg = bg ?? Color.Brown;
+  } else {
+    ch = block as string;
+  }
+
+  switch (block) {
+    case Tile.Stairs:
+      fg = typeof fg === 'number' && !state.paused ? fg | 16 : fg; // add blink
+      break;
+  }
+
+  display.draw(x + XBot, y + YBot, ch, fg, bg);
+}
+
 function addScore(block: Tile) {
   switch (block) {
     case Tile.Slow:
@@ -1222,20 +1224,24 @@ function addScore(block: Tile) {
 
 export async function dead() {
   display.drawText(XTop / 2 - 7, 0, 'You have died.', Color.Black, Color.Red);
-  await screen.flash('Press any key to continue.', false);
+  await screen.flashMessage('Press any key to continue.');
   state.done = true;
 }
 
-// TODO: Esc to reset (Are you sure?)
-// TODO: P to pause/unpause (Press key to resume game)
+async function quit() {
+  let answer = '';
 
-function quit() {
-  // TODO: Are you sure?
-  state.done = true;
+  while (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
+    answer = await screen.flashMessage('Are you sure you want to quit? (Y/N)');
+  }
+
+  if (answer.toLowerCase() === 'y') {
+    state.done = true;
+  }
 }
 
 async function pause() {
-  await screen.flash('Press any key to resume', false);
+  await screen.flashMessage('Press any key to resume');
 }
 
 // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L45
@@ -1244,7 +1250,7 @@ async function tabletMessage() {
     case 'Debug':
     case 'Lost30':
       await prayer();
-      await screen.flash(
+      await screen.flashMessage(
         '"If goodness is in my heart, that which flows shall..."',
       );
 
@@ -1259,12 +1265,12 @@ async function tabletMessage() {
         }
       }
 
-      await screen.flash('"...Turn to Gold!"');
+      await screen.flashMessage('"...Turn to Gold!"');
 
       break;
     case 'Lost42':
       await prayer();
-      await screen.flash(
+      await screen.flashMessage(
         '"Barriers of water, like barriers in life, can always be..."',
       );
 
@@ -1279,7 +1285,7 @@ async function tabletMessage() {
         }
       }
 
-      await screen.flash('"...Overcome!"');
+      await screen.flashMessage('"...Overcome!"');
 
       break;
     default:
@@ -1288,6 +1294,184 @@ async function tabletMessage() {
 }
 
 async function prayer() {
-  await screen.flash('On the Ancient Tablet is a short Mantra, a prayer...');
-  await screen.flash('You take a deep breath and speak the words aloud...');
+  await screen.flashMessage(
+    'On the Ancient Tablet is a short Mantra, a prayer...',
+  );
+  await screen.flashMessage(
+    'You take a deep breath and speak the words aloud...',
+  );
+}
+
+export async function renderTitle() {
+  // display.col(RNG.getUniformInt(1, 16));
+  // display.gotoxy(1, 5);
+  // display.writeln('     ÛÛÛ     ÛÛÛ     ÛÛÛÛÛÛÛÛÛÛ         ÛÛÛÛÛÛÛÛÛÛÛ        ÛÛÛÛÛÛÛÛÛÛÛÛÛ  (R)');
+  // display.writeln('     ÛÛÛ±±  ÛÛÛ±±±   ÛÛÛ±±±±±ÛÛÛ±      ÛÛÛ±±±±±±±ÛÛÛ±        ±±±±±±ÛÛÛÛ±±±');
+  // display.writeln('     ÛÛÛ±± ÛÛÛ±±±    ÛÛÛ±±   ÛÛÛ±±     ÛÛÛ±±     ÛÛÛ±±            ÛÛÛ±±±±');
+  // display.writeln('     ÛÛÛ±±ÛÛÛ±±±     ÛÛÛ±±   ÛÛÛ±±    ÛÛÛ±±±      ÛÛÛ±           ÛÛÛ±±±');
+  // display.writeln('     ÛÛÛ±ÛÛÛ±±±      ÛÛÛÛÛÛÛÛÛÛ±±±    ÛÛÛ±±       ÛÛÛ±±         ÛÛÛ±±±');
+  // display.writeln('     ÛÛÛÛÛÛ±±±       ÛÛÛ±±ÛÛÛ±±±±     ÛÛÛ±±       ÛÛÛ±±        ÛÛÛ±±±');
+  // display.writeln('     ÛÛÛ±ÛÛÛ±        ÛÛÛ±± ÛÛÛ±        ÛÛÛ±      ÛÛÛ±±±       ÛÛÛ±±±');
+  // display.writeln('     ÛÛÛ±±ÛÛÛ±       ÛÛÛ±±  ÛÛÛ±       ÛÛÛ±±     ÛÛÛ±±      ÛÛÛÛ±±±');
+  // display.writeln('     ÛÛÛ±± ÛÛÛ±      ÛÛÛ±±   ÛÛÛ±       ÛÛÛÛÛÛÛÛÛÛÛ±±±     ÛÛÛÛÛÛÛÛÛÛÛÛÛ');
+  // display.writeln('     ÛÛÛ±±  ÛÛÛ±       ±±±     ±±±        ±±±±±±±±±±±        ±±±±±±±±±±±±±');
+  // display.writeln('     ÛÛÛ±±   ÛÛÛ±');
+  // display.writeln('     ÛÛÛ±±    ÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛ');
+  // display.writeln('       ±±±      ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+
+  display.bak(Color.Blue);
+  display.col(Color.LightCyan);
+
+  display.gotoxy(1, 9);
+  display.writeln(
+    '  Revitalized from the Fountain of Youth you uncovered in your last adventure',
+  );
+  display.writeln(
+    "  through Kroz,  you decide it's time once again to explore the vast mystical",
+  );
+  display.writeln(
+    '  kingdom.  From your last journey through the underground world of Kroz, you',
+  );
+  display.writeln(
+    '  noticed a new tunnel that requires further investigation.  What new mystery',
+  );
+  display.writeln(
+    '  awaits below?  Your adrenaline level rises as you decend the secret tunnels',
+  );
+  display.writeln(
+    '               that lead into the heart of Kroz.  One more time...',
+  );
+
+  // display.gotoxy(23);
+  // display.writeln('But only if you can reach it alive!');
+
+  display.drawText(27, 25, 'Press any key to continue.', Color.LightGreen);
+
+  const x = WIDTH / 2 - TITLE.length / 2;
+
+  const readkey = controls.readkey();
+  while (!readkey()) {
+    display.drawText(x, 3, TITLE, RNG.getUniformInt(0, 16), Color.Red);
+    await delay(50);
+  }
+}
+
+export async function endRoutine() {
+  await sound.footStep();
+  await delay(200);
+  await sound.footStep();
+  await delay(200);
+  await sound.footStep();
+
+  await screen.flashMessage('Oh no, something strange is happening!');
+  await screen.flashMessage('You are magically transported from Kroz!');
+
+  // Check for infinite items
+  const gems = (state.gems = isFinite(state.gems) ? state.gems : 150);
+  const whips = (state.whips = isFinite(state.whips) ? state.whips : 20);
+  const teleports = (state.teleports = isFinite(state.teleports)
+    ? state.teleports
+    : 10);
+  const keys = (state.keys = isFinite(state.keys) ? state.keys : 5);
+
+  await screen.flashMessage('Your Gems are worth 100 points each...');
+
+  for (let i = 0; i < gems; i++) {
+    state.gems--;
+    state.score += 10;
+    screen.renderStats();
+    await sound.play(i * 8 + 100, 20);
+  }
+
+  await screen.flashMessage('Your Whips are worth 100 points each...');
+  for (let i = 0; i < whips; i++) {
+    state.whips--;
+    state.score += 10;
+    screen.renderStats();
+    await sound.play(i * 8 + 100, 20);
+  }
+
+  await screen.flashMessage(
+    'Your Teleport Scrolls are worth 200 points each...',
+  );
+  for (let i = 0; i < teleports; i++) {
+    state.teleports--;
+    state.score += 20;
+    screen.renderStats();
+    await sound.play(i * 8 + 100, 20);
+  }
+
+  await screen.flashMessage('Your Keys are worth 10,000 points each....');
+  for (let i = 0; i < keys; i++) {
+    state.keys--;
+    state.score += 1000;
+    screen.renderStats();
+    await sound.play(i * 8 + 100, 20);
+  }
+
+  display.clear();
+
+  display.gotoxy(25, 3);
+  display.col(Color.White);
+  display.bak(Color.Blue);
+
+  display.writeln('ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ');
+
+  display.gotoxy(15, 5);
+  display.writeln(
+    '   Carefully, you place the ancient tome on your table and open',
+  );
+  display.writeln(' to the first page.  You read the book intently, quickly');
+  display.writeln(' deciphering the archaic writings.');
+  display.writeln(
+    '   You learn of Lord Dullwit, the once powerful and benevolent',
+  );
+  display.writeln(
+    ' ruler of Kroz, who sought wealth and education for his people.',
+  );
+  display.writeln(
+    ' The magnificent KINGDOM OF KROZ was once a great empire, until',
+  );
+  display.writeln(
+    ' it was overthrown by an evil Wizard, who wanted the riches of',
+  );
+  display.writeln(' Kroz for himself.');
+  display.writeln(
+    '   Using magic beyond understanding, the Wizard trapped Lord',
+  );
+  display.writeln(
+    ' Dullwit and his people in a chamber so deep in Kroz that any',
+  );
+  display.writeln(' hope of escape was fruitless.');
+  display.writeln(
+    '   The Wizard then built hundreds of deadly chambers that would',
+  );
+  display.writeln(' stop anyone from ever rescuing the good people of Kroz.');
+  display.writeln(
+    '   Once again your thoughts becomes clear:  To venture into the',
+  );
+  display.writeln(' depths once more and set free the people of Kroz, in:');
+  display.writeln('');
+
+  await screen.flashMessage('Press any key, Adventurer.');
+  state.done = true;
+}
+
+async function gotAmulet() {
+  await sound.grab();
+  for (let x = 45; x >= 11; x--) {
+    for (let y = 13; y >= 1; y--) {
+      await sound.play(x * x * y, y + 1, 100);
+    }
+  }
+  addScore(Tile.Amulet);
+  await screen.flashMessage(
+    'You have found the Amulet of Yendor -- 25,000 points!',
+  );
+  await screen.flashMessage(
+    'It seems that Kroz and Rogue share the same underground!)',
+  );
+  await screen.flashMessage(
+    'Your quest for the treasure of Kroz must still continue...',
+  );
 }

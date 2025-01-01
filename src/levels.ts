@@ -5,7 +5,7 @@ import lost1 from './levels/lost-1.ts';
 import lost2 from './levels/lost-2.ts';
 import lost4 from './levels/lost-4.ts';
 import lost11 from './levels/lost-11.ts';
-import lost20 from './levels/lost-22.ts';
+import lost20 from './levels/lost-20.ts';
 // import lost22 from './levels/lost-22.ts';
 import lost26 from './levels/lost-26.ts';
 import lost30 from './levels/lost-30.ts';
@@ -35,7 +35,7 @@ export const LEVELS: Level[] = [
   caverns4 as Level,
   kingdom1 as Level,
   lost11 as Level,
-  lost20 as Level,
+  lost20 as Level, // Needs MBlocks
   // lost22 as Level, // Needs MBlocks
   lost26 as Level,
   lost30 as Level,

@@ -37,3 +37,7 @@ export default {
   map,
   // HideStairs:=true;
 };
+
+// TODO:
+// Reveal gems
+// HideStairs

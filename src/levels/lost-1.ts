@@ -35,3 +35,6 @@ export const map = `
 `;
 
 export default { id, map };
+
+// TODO:
+// Tile.Message

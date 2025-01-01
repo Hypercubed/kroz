@@ -3,8 +3,6 @@
 import { default as gameControl } from 'gamecontroller.js/src/gamecontrol.js';
 import { DEBUG } from './constants';
 
-let anyKeyPressed = false;
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let gamepad: any = null;
 
@@ -99,7 +97,6 @@ function enableGamepadControls() {
 
     for (const [key, action] of Object.entries(GAMEPAD_BINDING)) {
       gamepad.before(key, () => {
-        anyKeyPressed = true;
         if (!action) return;
 
         actionState[action] = true;
@@ -109,7 +106,6 @@ function enableGamepadControls() {
       gamepad.after(key, () => {
         if (!action) return;
         actionState[action] = false;
-        // actionBuffer[action] = true;
       });
     }
   });
@@ -121,8 +117,6 @@ export function disableGamepadControls() {
 
 // Note: when held down, the keydown event will fire repeatedly
 function keydownListener(event: KeyboardEvent) {
-  anyKeyPressed = true;
-
   const action = KEY_BINDING[event.key];
   if (!action) return;
   event.preventDefault();
@@ -140,20 +134,9 @@ export function stop() {
 }
 
 export function clearKeys() {
-  anyKeyPressed = false;
   for (const key in actionBuffer) {
     actionBuffer[key as unknown as Action] = false;
   }
-}
-
-export function anyKey() {
-  return anyKeyPressed;
-}
-
-export function readKey() {
-  return new Promise((resolve) => {
-    window.addEventListener('keypress', resolve, { once: true });
-  });
 }
 
 export function pollActions() {
@@ -167,4 +150,18 @@ export function pollActions() {
     }
   }
   return actions;
+}
+
+export function readkey() {
+  let key: string = '';
+  document.addEventListener(
+    'keydown',
+    (ev) => {
+      ev.preventDefault();
+      clearKeys();
+      key = ev.key;
+    },
+    { once: true },
+  );
+  return () => key;
 }

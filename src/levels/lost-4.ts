@@ -39,3 +39,9 @@ export default {
   map,
   // HideGems:=true;
 };
+
+// TODO:
+// HideGems
+// Reveal gems
+// Creature create spell
+// Magic has been released
