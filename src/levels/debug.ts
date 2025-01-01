@@ -6,29 +6,29 @@
 export const id = 'Debug';
 
 export const map = `
-                                                               S
- ####### ##whip W W W                  ~~~~~   ewall##         F
-  3 3  # #chest C C C                  #####   wall###         Z
-   3   # ##nugg * * *     ñ4444444444  RRRRR   river## #######  
-  3 3  # ###gem + + +     ò5555555555  /////   forest# # # # #  
- ####### ##door D D D     ó6666666666  ♣♣♣♣♣   tree### # # # #  
-         ##tele T T T                  VVVVV   lava### # # # #  
-         ###key K K K                  =====   pit#### #1#2#3#  
-         #power Q Q Q                  XXXXX   block## #######  
- #######                                                        
-  2 2  #                      P                               S 
-   2   #                                                      F 
-  2 2  #                  XXXXXXXXXXX                         Z 
- #######                  XXXXXXXXXXX                           
-         ###zap % % %     XXXXXXXXXXX   0 0 0   rock## ######## 
-         ##slow S S S     XXXXXXXXXXX   < [ | " kroz## #        
-         #speed F F F     XXXXXXXXXXX                  #  G  G  
- ####### #freez Z Z Z          B        U U U   tunnel #        
-  1 1  # ###inv I I I     ###bomb####                  #  G  G  
-   1   # tablet ! ! !     #XG1 2 3GX#   . . .   traps# #        
-  1 1  # #amule ƒ ƒ ƒ     XXXXXXXXXXX   & & &   show## #  G  G  
- ####### ##tome A A A     XDZ/EWLCSVX   E E E   quake# ######## 
-                          XXXXXXXXXXX   T T T                   
+                                                       #1#1#1#1#
+ ####### ##whip W W W                  ~~~~~   ewall## # # # # #
+  3 3  # #chest C C C                  #####   wall### # # # # #
+   3   # ##nugg * * *     ñ4444444444  RRRRR   river## # # # # #
+  3 3  # ###gem + + +     ò5555555555  /////   forest# # # # # #
+ ####### ##door D D D     ó6666666666  ♣♣♣♣♣   tree### #X#X#X#X#
+         ##tele T T T                  VVVVV   lava### #2#2#2#2#
+         ###key K K K                  =====   pit#### # # # # #
+         #power Q Q Q                  XXXXX   block## # # # # #
+ #######                                               # # # # #
+  2 2  #                      P                        # # # # #
+   2   #                                               #X#X#X#X#
+  2 2  #                  XXXXXXXXXXX                  #3#3#3#3#
+ #######                  XXXXXXXXXXX                  # # # # #
+         ###zap % % %     XXXXXXXXXXX   0 0 0   rock## # # # # #
+         ##slow S S S     XXXXXXXXXXX   < [ | " kroz## # # # # #
+         #speed F F F     XXXXXXXXXXX                  # # # # #
+ ####### #freez Z Z Z          B        U U U   tunnel #X#X#X#X#
+  1 1  # ###inv I I I     ###bomb####                  #########
+   1   # tablet ! ! !     #XG1 2 3GX#   . . .   traps#          
+  1 1  # #amule ƒ ƒ ƒ     XXXXXXXXXXX   & & &   show##  S       
+ ####### ##tome A A A     XDZ/EWLCSVX   E E E   quake#    F     
+                          XXXXXXXXXXX   T T T               Z   
 `;
 
 export default { id, map };

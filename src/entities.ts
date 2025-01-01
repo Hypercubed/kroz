@@ -48,18 +48,4 @@ export class Entity {
         : TileChar[this.type];
     return this.ch;
   }
-
-  getSpeed() {
-    // TODO: remove dependencey on world.state
-    switch (this.type) {
-      case Tile.Player:
-        return 30;
-      case Tile.Slow:
-        return 10 * world.getTimeScale();
-      case Tile.Medium:
-        return 20 * world.getTimeScale();
-      case Tile.Fast:
-        return 30 * world.getTimeScale();
-    }
-  }
 }

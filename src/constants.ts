@@ -13,3 +13,6 @@ export const XSize = XTop - XBot;
 export const YSize = YTop - YBot;
 
 export const FLOOR_CHAR = ' ';
+
+// Overall time scale... impacts creatre move speed and spell duration
+export const TIME_SCALE = 1;

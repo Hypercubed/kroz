@@ -8,25 +8,42 @@ import * as world from './world';
 import * as screen from './screen';
 
 import { Tile } from './tiles';
-import { DEBUG, XSize, YSize } from './constants';
+import { DEBUG, TIME_SCALE, XSize, YSize } from './constants';
 import { Timer } from './world';
 
 let stats: Stats;
 let gui: dat.GUI;
 
+const PT = 5;
+const ST = PT / 4;
+const MT = PT / 3;
+const FT = PT / 2;
+
 // Dummy entities used for the scheduler
-const PlayerActor = { type: Tile.Player, getSpeed: () => 10 };
+const PlayerActor = { type: Tile.Player, getSpeed: () => PT };
 const SlowActor = {
   type: Tile.Slow,
-  getSpeed: () => 1 * world.getTimeScale(),
+  getSpeed: () => {
+    if (world.state.T[Timer.SlowTime] > 0) return (ST / 5) * TIME_SCALE;
+    if (world.state.T[Timer.SpeedTime] > 0) return PT * TIME_SCALE;
+    return ST * TIME_SCALE;
+  },
 };
 const MediumActor = {
   type: Tile.Medium,
-  getSpeed: () => 2 * world.getTimeScale(),
+  getSpeed: () => {
+    if (world.state.T[Timer.SlowTime] > 0) return (MT / 5) * TIME_SCALE;
+    if (world.state.T[Timer.SpeedTime] > 0) return PT * TIME_SCALE;
+    return MT * TIME_SCALE;
+  },
 };
 const FastActor = {
   type: Tile.Fast,
-  getSpeed: () => 3 * world.getTimeScale(),
+  getSpeed: () => {
+    if (world.state.T[Timer.SlowTime] > 0) return (FT / 5) * TIME_SCALE;
+    if (world.state.T[Timer.SpeedTime] > 0) return PT * TIME_SCALE;
+    return FT * TIME_SCALE;
+  },
 };
 
 export async function start() {
@@ -138,8 +155,10 @@ async function run() {
 
     if (dt > speed) {
       dt %= speed;
+
       await world.effects();
       await world.playerAction(); // Player acts every tick
+
       const current = scheduler.next();
       await world.entitiesAction(current.type);
     }

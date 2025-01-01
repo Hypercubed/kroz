@@ -17,6 +17,7 @@ import {
 import {
   DEBUG,
   FLOOR_CHAR,
+  TIME_SCALE,
   XBot,
   XSize,
   XTop,
@@ -39,12 +40,11 @@ export enum Timer {
   FreezeTime = 7,
 }
 
-const S = 5; // Overall time scale... impacts creatre move speed and spell duration
 const SPELL_DURATION = {
-  [Timer.SlowTime]: 70 * S,
-  [Timer.Invisible]: 75 * S,
-  [Timer.SpeedTime]: 80 * S,
-  [Timer.FreezeTime]: 55 * S,
+  [Timer.SlowTime]: 70 * TIME_SCALE,
+  [Timer.Invisible]: 75 * TIME_SCALE,
+  [Timer.SpeedTime]: 80 * TIME_SCALE,
+  [Timer.FreezeTime]: 55 * TIME_SCALE,
 };
 
 export const state = getDefaultState();
@@ -1212,12 +1212,6 @@ export async function dead() {
   display.drawText(XTop / 2 - 7, 0, 'You have died.', Color.Black, Color.Red);
   await screen.flash('Press any key to continue.', false);
   state.done = true;
-}
-
-export function getTimeScale() {
-  if (state.T[Timer.SlowTime] > 0) return 0.1 * S; // Slow Time
-  if (state.T[Timer.SpeedTime] > 0) return 100 * S; // Speed Time
-  return S;
 }
 
 // TODO: Esc to reset (Are you sure?)
