@@ -34,4 +34,8 @@ const map = `
 111111111111111@                1 ##LLWWWD@         1   1    1 1
 `;
 
-export default { id, map };
+export default {
+  id: 'Lost4',
+  map,
+  // HideGems:=true;
+};

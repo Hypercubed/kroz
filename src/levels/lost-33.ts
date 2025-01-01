@@ -34,4 +34,8 @@ L---N-----##X###  CC  555555-----------------#####X##1111#######
 ################################################################
 `;
 
-export default { id, map };
+export default {
+  id,
+  map,
+  // HideStairs:=true; HideOpenWall:=true;
+};

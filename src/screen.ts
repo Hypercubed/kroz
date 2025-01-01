@@ -266,6 +266,7 @@ export async function endRoutine() {
   display.clear();
 
   display.gotoxy(25, 3);
+  display.col(Color.White);
   display.bak(Color.Blue);
 
   display.writeln('ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ');

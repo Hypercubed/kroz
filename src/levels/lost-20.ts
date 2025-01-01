@@ -33,4 +33,8 @@ const map = `
 --~~-~--~-~--~~-~~--~--~-D-D-++-L-WW-D-D-~--~--~-~~-~--~~-~~-~--
 -~--~-~~-~-~~--~--~~-~~--D-D-++ñLñWW-D-D--~~-~~-~--~-~~--~--~-~-`;
 
-export default { id, map };
+export default {
+  id,
+  map,
+  // HideOpenWall:=true;
+};

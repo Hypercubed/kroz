@@ -14,27 +14,27 @@ import { Timer } from './world';
 let stats: Stats;
 let gui: dat.GUI;
 
-const PT = 5;
-const ST = PT / 4;
-const MT = PT / 3;
-const FT = PT / 2;
+const PT = TIME_SCALE;
+const ST = TIME_SCALE / 4;
+const MT = TIME_SCALE / 3;
+const FT = TIME_SCALE / 2;
 
 // Dummy entities used for the scheduler
-const PlayerActor = { type: Tile.Player, getSpeed: () => PT };
+const PlayerActor = { type: Tile.Player, getSpeed: () => 1 };
 const SlowActor = {
   type: Tile.Slow,
   getSpeed: () => {
-    if (world.state.T[Timer.SlowTime] > 0) return (ST / 5) * TIME_SCALE;
-    if (world.state.T[Timer.SpeedTime] > 0) return PT * TIME_SCALE;
-    return ST * TIME_SCALE;
+    if (world.state.T[Timer.SlowTime] > 0) return ST / 5;
+    if (world.state.T[Timer.SpeedTime] > 0) return PT;
+    return ST;
   },
 };
 const MediumActor = {
   type: Tile.Medium,
   getSpeed: () => {
-    if (world.state.T[Timer.SlowTime] > 0) return (MT / 5) * TIME_SCALE;
-    if (world.state.T[Timer.SpeedTime] > 0) return PT * TIME_SCALE;
-    return MT * TIME_SCALE;
+    if (world.state.T[Timer.SlowTime] > 0) return MT / 5;
+    if (world.state.T[Timer.SpeedTime] > 0) return PT;
+    return MT;
   },
 };
 const FastActor = {

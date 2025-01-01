@@ -11,6 +11,7 @@ import lost26 from './levels/lost-26.ts';
 import lost30 from './levels/lost-30.ts';
 // import lost33 from './levels/lost-33.ts';
 import lost42 from './levels/lost-42.ts';
+import lost75 from './levels/lost-75.ts';
 
 // KINGDOM OF KROZ
 import kingdom1 from './levels/kingdom-1.ts';
@@ -40,4 +41,5 @@ export const LEVELS: Level[] = [
   lost30 as Level,
   // lost33 as Level, // Needs WallVanish
   lost42 as Level,
+  lost75 as Level,
 ];

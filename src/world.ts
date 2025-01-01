@@ -545,6 +545,11 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     case Tile.Tome:
       // Tome_Message;
+      // Tome_Effects
+
+      state.PF[31][6] = Tile.Stairs;
+      drawTile(31, 6, Tile.Stairs);
+
       addScore(block);
       await screen.flash(block);
       await screen.flash('Congratulations, Adventurer, you finally did it!!!');
@@ -1105,11 +1110,19 @@ async function hit(x: number, y: number, ch: string) {
     case Tile.Stop:
       state.PF[x][y] = Tile.Floor;
       break;
+    case Tile.Rock:
+      if (30 * Math.random() < state.whipPower) {
+        sound.play(130, 50);
+        state.PF[x][y] = Tile.Floor;
+      } else {
+        sound.play(130, 25);
+        sound.play(90, 50);
+      }
+      break;
     case Tile.MBlock:
     case Tile.ZBlock:
     case Tile.GBlock: {
-      const w = state.whipPower;
-      if (6 * Math.random() < w) {
+      if (6 * Math.random() < state.whipPower) {
         sound.play(130, 50);
         state.PF[x][y] = Tile.Floor;
       } else {
@@ -1120,7 +1133,6 @@ async function hit(x: number, y: number, ch: string) {
     }
     case Tile.Wall:
     case Tile.Statue:
-    case Tile.Rock:
     // TBD
     // eslint-disable-next-line no-fallthrough
     default:
