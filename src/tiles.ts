@@ -432,6 +432,7 @@ export const TileMessage: Record<number, string> = {
   [Tile.Statue]: 'Statues are very dangerous...they drain your Gems!',
   [Tile.WallVanish]:
     'Yikes!  A trap has made many of the wall sections invisible!',
+  [Tile.Z]: 'Super Kroz Bonus -- 10,000 points!',
   [Tile.OWall1]: 'A Solid Wall blocks your way.',
   [Tile.OSpell1]: 'Magic has been released is this chamber!',
   [Tile.CSpell1]: 'New Walls have magically appeared!',

@@ -3,18 +3,15 @@ import { HEIGHT, WIDTH } from './constants';
 import { TileColor, Tile } from './tiles';
 import { Color, ColorCodes } from './colors';
 
-// Display.Rect.cache = true;
+Display.Rect.cache = true;
 
 const rotDisplay = new Display({
   width: WIDTH,
   height: HEIGHT,
-  // fontFamily: 'ModernDOS9x16, monospace',
-  fontFamily: 'IBM_VGA_8x16, monospace',
-  // fontFamily: 'AppleII, monospace'
+  fontFamily: 'IBM_VGA, monospace',
   bg: ColorCodes[Color.Blue], // background
   fg: ColorCodes[Color.White], // foreground
   fontSize: 64, // canvas fontsize,
-  // forceSquareRatio: true,
 });
 
 const state = {

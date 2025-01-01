@@ -12,15 +12,15 @@ export const map = `
    3   # ##nugg * * *     ñ4444444444  RRRRR   river## # # # # #
   3 3  # ###gem + + +     ò5555555555  /////   forest# # # # # #
  ####### ##door D D D     ó6666666666  ♣♣♣♣♣   tree### #X#X#X#X#
-         ##tele T T T     :::::::::::  VVVVV   lava### #2#2#2#2#
+         ##tele T T T      ::::::::::  VVVVV   lava### #2#2#2#2#
          ###key K K K                  =====   pit#### # # # # #
          #power Q Q Q                  XXXXX   block## # # # # #
  #######                                               # # # # #
   2 2  #                      P                        # # # # #
    2   #                                               #X#X#X#X#
   2 2  #                  XXXXXXXXXXX                  #3#3#3#3#
- #######                  XXXXXXXXXXX                  # # # # #
-         ###zap % % %     XXXXXXXXXXX   0 0 0   rock## # # # # #
+ #######                  XXXXXXXXXXX   0 0 0   rock## # # # # #
+         ###zap % % %     XXXXXXXXXXX   R L =          # # # # #
          ##slow S S S     XXXXXXXXXXX   < [ | " kroz## # # # # #
          #speed F F F     XXXXXXXXXXX                  # # # # #
  ####### #freez Z Z Z          B        U U U   tunnel #X#X#X#X#

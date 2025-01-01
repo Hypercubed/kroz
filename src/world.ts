@@ -54,25 +54,8 @@ const SPELL_DURATION = {
 
 export const state = getDefaultState();
 
-const levelStartState = {
-  levelIndex: 0,
-  score: 0,
-  gems: 20,
-  whips: 0,
-  teleports: 0,
-  keys: 0,
-  whipPower: 2,
-};
-
-const saveState = {
-  levelIndex: 0,
-  score: 0,
-  gems: 20,
-  whips: 0,
-  teleports: 0,
-  keys: 0,
-  whipPower: 2,
-};
+const levelStartState = {} as typeof state;
+const saveState = {} as typeof state;
 
 function getDefaultState() {
   return {
@@ -103,6 +86,7 @@ function getDefaultState() {
     teleports: 0,
     keys: 0,
     whipPower: 2,
+    bonus: 0,
 
     actionActive: false,
     paused: false,
@@ -263,6 +247,7 @@ async function save() {
   }
 
   if (answer.toLowerCase() === 'y') {
+    // Don't need deep copy now, but might later
     Object.assign(saveState, levelStartState);
   }
 }
@@ -277,6 +262,7 @@ async function restore() {
   }
 
   if (answer.toLowerCase() === 'y') {
+    // Don't need deep copy now, but might later
     Object.assign(state, saveState);
     loadLevel();
   }
@@ -773,10 +759,32 @@ async function tryPlayerMove(dx: number, dy: number) {
       await flashTileMessage(block);
       break;
     case Tile.K:
+      go(state.player, x, y);
+      sound.grab();
+      if (state.bonus === 0) state.bonus = 1;
+      break;
     case Tile.R:
+      go(state.player, x, y);
+      sound.grab();
+      if (state.bonus === 1) state.bonus = 2;
+      break;
     case Tile.O:
+      go(state.player, x, y);
+      sound.grab();
+      if (state.bonus === 2) state.bonus = 3;
+      break;
     case Tile.Z:
       go(state.player, x, y);
+      sound.grab();
+      if (state.bonus === 3) {
+        for (let i = 10; i < 45; i++) {
+          for (let j = 1; j < 13; j++) {
+            await sound.play(i * i * j, j + 1, 100);
+          }
+        }
+        addScore(block);
+        flashTileMessage(block);
+      }
       break;
     case Tile.OWall1:
     case Tile.OWall2:
@@ -798,13 +806,17 @@ async function tryPlayerMove(dx: number, dy: number) {
           const block = state.PF?.[x]?.[y] ?? Tile.Floor;
           if (block === s) {
             for (let i = 60; i > 0; i--) {
-              drawTile(x, y, Tile.Wall, RNG.getUniformInt(0, 14));
+              drawTile(
+                x,
+                y,
+                RNG.getItem(['▄', '▌', '▐', '▀']) as string,
+                RNG.getUniformInt(0, 14),
+              );
               sound.play(i * 40, 5, 10);
               if (i % 5 === 0) await delay(1);
             }
 
             drawTile(x, y, Tile.Wall);
-            // await delay(8);
             state.PF[x][y] = Tile.Floor;
             drawTile(x, y);
           }
@@ -832,7 +844,7 @@ async function tryPlayerMove(dx: number, dy: number) {
 
         // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST5.MOV#L1366
         switch (rb) {
-          case Tile.Floor:
+          case Tile.Floor: // TODO: Other floor-ish tiles
             nogo = false;
             await sound.blockMove();
             state.PF[rx][ry] = Tile.Rock;
@@ -840,10 +852,18 @@ async function tryPlayerMove(dx: number, dy: number) {
             renderPlayfield();
             await flashTileMessage(Tile.Rock, true);
             break;
+          // TODO: Mobs (kills + score)
+          // TODO: EWall
           case Tile.Stairs:
+          case Tile.Pit:
             nogo = false;
-            await sound.blockMove(); // TODO: change sound
+            await sound.blockMove();
             go(state.player, x, y);
+            renderPlayfield();
+            drawTile(rx, ry, Tile.Rock);
+            for (let i = 130; i > 5; i--) {
+              await sound.play(i * 8, 16, 100);
+            }
             renderPlayfield();
             await flashTileMessage(Tile.Rock, true);
             break;
@@ -1273,6 +1293,9 @@ function addScore(block: Tile) {
     case Tile.Amulet:
       state.score += 2500;
       break;
+    case Tile.Z:
+      state.score += 1000;
+      break;
     // case Tile.Border:
     //   if (state.score > state.level) state.score -= Math.floor(state.levelIndex/ 2);
     //   break;
@@ -1382,7 +1405,7 @@ export async function renderTitle() {
 
   display.gotoxy(9, 16);
   display.writeln(
-    `Use the cursor keys to move yourself (%c{${TileColor[Tile.Player][0]}}${TileChar[Tile.Player]}%c{${ColorCodes[Color.LightGreen]}}) through the caverns.`,
+    `Use the cursor keys to move yourself (%c{${ColorCodes[Color.Yellow]}}☻%c{${ColorCodes[Color.LightGreen]}}) through the caverns.`,
     Color.LightGreen,
   );
   display.writeCenter(

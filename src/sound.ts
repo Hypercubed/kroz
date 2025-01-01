@@ -1,5 +1,5 @@
 import { RNG } from 'rot-js';
-import { delay } from './utils';
+import { clamp, delay } from './utils';
 
 const SILENT = false;
 
@@ -17,7 +17,7 @@ export function play(frequency: number, duration: number, volume: number = 1) {
   const gainNode = audioContext.createGain();
 
   oscillator.type = 'sine';
-  oscillator.frequency.value = frequency;
+  oscillator.frequency.value = clamp(frequency, -24000, 24000);
   oscillator.connect(gainNode);
   gainNode.connect(audioContext.destination);
 
@@ -75,10 +75,9 @@ export async function openDoor() {
 }
 
 export async function blockMove() {
-  for (let x = 1; x < 65; x++) {
-    play(RNG.getUniformInt(0, 1000) + 1000, 16, 10);
+  for (let i = 150; i > 35; i--) {
+    await play(i, 16, 50);
   }
-  await delay(50);
 }
 
 export async function blockedWall() {
