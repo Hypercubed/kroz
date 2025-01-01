@@ -7,36 +7,38 @@
     <base href="/kroz/" />
     <link
       rel="preload"
-      href="ModernDOS9x16.ttf"
+      href="WebPlus_IBM_VGA_8x16.woff"
       as="font"
       crossorigin="anonymous"
     />
-    <script type="module" crossorigin src="/kroz/assets/index-BPivmU_K.js"></script>
-    <link rel="stylesheet" crossorigin href="/kroz/assets/index-CAHjAtr2.css">
+    <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <script type="module" crossorigin src="/kroz/assets/index-G1ymF0n0.js"></script>
+    <link rel="stylesheet" crossorigin href="/kroz/assets/index-6DdM9TTe.css">
   </head>
   <body>
     <div id="app"></div>
     <div id="instructions">
       <details>
         <summary>Controls</summary>
-        <p>You move by using the arrow keys, number pad, or keys below:</p>
+        <p>You move by using the arrow keys or keys below:</p>
+
+        <pre>
+          u i o    7 8 9
+           \|/      \|/
+          j- -k    4- -6
+           /|\      /|\
+          n m ,    1 2 3
+        </pre>
+
+        <p>Note: in some levels you must be able to move diagonally!</p>
+
+        During the game, there are two action keys that use (and consume) your possessions:
 
         <ul>
-          <li>U: Up-left</li>
-          <li>I: Up
-          <li>O: Up-right</li>
-          <li>J: Left</li>
-          <li>L: Right</li>
-          <li>N: Down-left</li>
-          <li>M: Down</li>
-          <li>,: Down-right</li>
-        </ul>
-
-
-        During the game, there are two non-movement action keys:
-
-        <ul>
-          <li>W: Whip</li>
+          <li>w or 5: Whip</li>
           <li>T: Teleport</li>
         </ul>
       </details>
