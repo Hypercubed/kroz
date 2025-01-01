@@ -36,6 +36,7 @@ import { Color, ColorCodes } from './colors';
 import { mod } from 'rot-js/lib/util';
 import { delay } from './utils';
 import { Level, LEVELS } from './levels';
+import dedent from 'ts-dedent';
 
 export const enum Timer {
   SlowTime = 4,
@@ -1366,17 +1367,28 @@ export async function renderTitle() {
 
   display.clear(Color.Blue);
 
-  display.gotoxy(2, 8);
-  display.writeln(`
-In the mystical Kingdom of Kroz, where ASCII characters come to life and
-danger lurks around every corner, a new chapter unfolds. You, a brave
-archaeologist, have heard whispers of the legendary Magical Amulet of Kroz,
-an artifact of immense power long thought lost to time.
+  display.gotoxy(2, 5);
+  display.writeln(dedent`
+    In the mystical Kingdom of Kroz, where ASCII characters come to life and
+    danger lurks around every corner, a new chapter unfolds. You, a brave
+    archaeologist, have heard whispers of the legendary Magical Amulet of Kroz,
+    an artifact of immense power long thought lost to time.
 
-Will you be the one to uncover the secrets of the forsaken caverns? Can you
-retrieve the Magical Amulet and restore glory to the Kingdom of Kroz? The
-adventure awaits, brave explorer!
+    Will you be the one to uncover the secrets of the forsaken caverns? Can you
+    retrieve the Magical Amulet and restore glory to the Kingdom of Kroz? The
+    adventure awaits, brave explorer!
+
   `);
+
+  display.gotoxy(9, 16);
+  display.writeln(
+    `Use the cursor keys to move yourself (%c{${TileColor[Tile.Player][0]}}${TileChar[Tile.Player]}%c{${ColorCodes[Color.LightGreen]}}) through the caverns.`,
+    Color.LightGreen,
+  );
+  display.writeCenter(
+    `Use your whip (press W) to destroy all nearby creatures.`,
+    Color.LightGreen,
+  );
 
   display.gotoxy(0, HEIGHT - 1);
   display.writeCenter(

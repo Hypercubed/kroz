@@ -37,9 +37,13 @@
     "lil-gui": "^0.20.0",
     "mini-signals": "^2.0.0",
     "rot-js": "^2.2.1",
-    "stats.js": "^0.17.0"
+    "stats.js": "^0.17.0",
+    "ts-dedent": "^2.2.0"
   },
   "lint-staged": {
-    "*.ts": ["prettier --write", "eslint --cache --fix"]
+    "*.ts": [
+      "prettier --write",
+      "eslint --cache --fix"
+    ]
   }
 }
