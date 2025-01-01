@@ -49,6 +49,7 @@ const FastActor = {
 export async function start() {
   controls.start();
 
+  await screen.introScreen();
   await world.renderTitle();
 
   world.loadLevel(); // Don't wait
@@ -67,55 +68,59 @@ export async function start() {
   // }
 
   if (DEBUG) {
-    stats = new Stats();
-    stats.showPanel(0);
-    document.body.appendChild(stats.dom);
+    if (!stats) {
+      stats = new Stats();
+      stats.showPanel(0);
+      document.body.appendChild(stats.dom);
+    }
 
-    gui = new dat.GUI({ closeFolders: true });
+    if (!gui) {
+      gui = new dat.GUI({ closeFolders: true });
 
-    const timers = {
-      get SlowTime() {
-        return world.state.T[Timer.SlowTime];
-      },
-      set SlowTime(v: number) {
-        world.state.T[Timer.SlowTime] = v;
-      },
-      get Invisible() {
-        return world.state.T[Timer.Invisible];
-      },
-      set Invisible(v: number) {
-        world.state.T[Timer.Invisible] = v;
-      },
-      get SpeedTime() {
-        return world.state.T[Timer.SpeedTime];
-      },
-      set SpeedTime(v: number) {
-        world.state.T[Timer.SpeedTime] = v;
-      },
-      get FreezeTime() {
-        return world.state.T[Timer.FreezeTime];
-      },
-      set FreezeTime(v: number) {
-        world.state.T[Timer.FreezeTime] = v;
-      },
-    };
+      const timers = {
+        get SlowTime() {
+          return world.state.T[Timer.SlowTime];
+        },
+        set SlowTime(v: number) {
+          world.state.T[Timer.SlowTime] = v;
+        },
+        get Invisible() {
+          return world.state.T[Timer.Invisible];
+        },
+        set Invisible(v: number) {
+          world.state.T[Timer.Invisible] = v;
+        },
+        get SpeedTime() {
+          return world.state.T[Timer.SpeedTime];
+        },
+        set SpeedTime(v: number) {
+          world.state.T[Timer.SpeedTime] = v;
+        },
+        get FreezeTime() {
+          return world.state.T[Timer.FreezeTime];
+        },
+        set FreezeTime(v: number) {
+          world.state.T[Timer.FreezeTime] = v;
+        },
+      };
 
-    const t = gui.addFolder('Timers');
-    t.add(timers, 'SlowTime', 0, 400, 1).listen();
-    t.add(timers, 'Invisible', 0, 400, 1).listen();
-    t.add(timers, 'SpeedTime', 0, 400, 1).listen();
-    t.add(timers, 'FreezeTime', 0, 400, 1).listen();
+      const t = gui.addFolder('Timers');
+      t.add(timers, 'SlowTime', 0, 400, 1).listen();
+      t.add(timers, 'Invisible', 0, 400, 1).listen();
+      t.add(timers, 'SpeedTime', 0, 400, 1).listen();
+      t.add(timers, 'FreezeTime', 0, 400, 1).listen();
 
-    const o = gui.addFolder('Objects');
-    o.add(world.state, 'gems', 0, 400, 1).listen();
-    o.add(world.state, 'whips', 0, 400, 1).listen();
-    o.add(world.state, 'keys', 0, 400, 1).listen();
-    o.add(world.state, 'teleports', 0, 400, 1).listen();
-    o.add(world.state, 'whipPower', 2, 7, 1).listen();
+      const o = gui.addFolder('Objects');
+      o.add(world.state, 'gems', 0, 400, 1).listen();
+      o.add(world.state, 'whips', 0, 400, 1).listen();
+      o.add(world.state, 'keys', 0, 400, 1).listen();
+      o.add(world.state, 'teleports', 0, 400, 1).listen();
+      o.add(world.state, 'whipPower', 2, 7, 1).listen();
 
-    const p = gui.addFolder('Player');
-    p.add(world.state.player, 'x', 0, XSize, 1).listen();
-    p.add(world.state.player, 'y', 0, YSize, 1).listen();
+      const p = gui.addFolder('Player');
+      p.add(world.state.player, 'x', 0, XSize, 1).listen();
+      p.add(world.state.player, 'y', 0, YSize, 1).listen();
+    }
   }
 
   screen.fullRender();

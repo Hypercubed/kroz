@@ -18,6 +18,7 @@ import {
 import {
   DEBUG,
   FLOOR_CHAR,
+  HEIGHT,
   TIME_SCALE,
   TITLE,
   WIDTH,
@@ -34,9 +35,9 @@ import { Action } from './controls';
 import { Color, ColorCodes } from './colors';
 import { mod } from 'rot-js/lib/util';
 import { delay } from './utils';
-import { LEVELS } from './levels';
+import { Level, LEVELS } from './levels';
 
-export enum Timer {
+export const enum Timer {
   SlowTime = 4,
   Invisible = 5,
   SpeedTime = 6,
@@ -51,6 +52,26 @@ const SPELL_DURATION = {
 };
 
 export const state = getDefaultState();
+
+const levelStartState = {
+  levelIndex: 0,
+  score: 0,
+  gems: 20,
+  whips: 0,
+  teleports: 0,
+  keys: 0,
+  whipPower: 2,
+};
+
+const saveState = {
+  levelIndex: 0,
+  score: 0,
+  gems: 20,
+  whips: 0,
+  teleports: 0,
+  keys: 0,
+  whipPower: 2,
+};
 
 function getDefaultState() {
   return {
@@ -73,8 +94,8 @@ function getDefaultState() {
       0,
     ], // Timers
 
-    level: DEBUG ? 0 : 1,
-    levelId: DEBUG ? 'debug' : 'Lost1',
+    levelIndex: DEBUG ? 0 : 1,
+    level: null as null | Level,
     score: 0,
     gems: 20,
     whips: 0,
@@ -103,23 +124,25 @@ export function resetState() {
 }
 
 export function loadLevel() {
-  const level = LEVELS[state.level];
-  state.levelId = level.id;
-  readLevelMap(level.map);
+  state.level = LEVELS[state.levelIndex];
+  readLevelMap(state.level.map);
 
   state.T = state.T.map(() => 0); // Reset timers
+
+  Object.assign(levelStartState, state);
+
   renderPlayfield();
   screen.renderStats();
 }
 
 export async function nextLevel() {
-  state.level = mod(state.level + 1, LEVELS.length);
+  state.levelIndex = mod(state.levelIndex + 1, LEVELS.length);
   loadLevel();
   await screen.flashMessage('Press any key to begin this level.');
 }
 
 async function prevLevel() {
-  state.level = mod(state.level - 1, LEVELS.length);
+  state.levelIndex = mod(state.levelIndex - 1, LEVELS.length);
   loadLevel();
   await screen.flashMessage('Press any key to begin this level.');
 }
@@ -231,16 +254,50 @@ export async function entitiesAction(t?: EntityType) {
   }
 }
 
+async function save() {
+  let answer = '';
+
+  while (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
+    answer = await screen.flashMessage('Are you sure you want to SAVE? (Y/N)');
+  }
+
+  if (answer.toLowerCase() === 'y') {
+    Object.assign(saveState, levelStartState);
+  }
+}
+
+async function restore() {
+  let answer = '';
+
+  while (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
+    answer = await screen.flashMessage(
+      'Are you sure you want to RESTORE? (Y/N)',
+    );
+  }
+
+  if (answer.toLowerCase() === 'y') {
+    Object.assign(state, saveState);
+    loadLevel();
+  }
+}
+
 export async function playerAction() {
   const actionState = controls.pollActions();
 
-  if (actionState[Action.FreeItems]) await doPlayerAction(Action.FreeItems);
-  if (actionState[Action.NextLevel]) await doPlayerAction(Action.NextLevel);
-  if (actionState[Action.PrevLevel]) await doPlayerAction(Action.PrevLevel);
+  // Move these?
+  if (actionState[Action.FreeItems])
+    return await doPlayerAction(Action.FreeItems);
+  if (actionState[Action.NextLevel])
+    return await doPlayerAction(Action.NextLevel);
+  if (actionState[Action.PrevLevel])
+    return await doPlayerAction(Action.PrevLevel);
   // if (actionState[Action.HideFound]) await doPlayerAction(Action.Teleport); // TBD
-  if (actionState[Action.ResetFound]) state.foundSet = new Set();
-  if (actionState[Action.Pause]) pause();
-  if (actionState[Action.Quit]) quit();
+  if (actionState[Action.ResetFound]) return (state.foundSet = new Set());
+  if (actionState[Action.Pause]) return pause();
+  if (actionState[Action.Quit]) return quit();
+
+  if (actionState[Action.Save]) return save();
+  if (actionState[Action.Restore]) return restore();
 
   if (actionState[Action.North] && actionState[Action.West])
     return await doPlayerAction(Action.Northwest);
@@ -391,9 +448,10 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.Slow:
     case Tile.Medium:
     case Tile.Fast:
+      state.gems -= block;
       killAt(x, y);
-      go(state.player, x, y);
       addScore(block);
+      go(state.player, x, y);
       break;
     case Tile.Block:
     case Tile.ZBlock:
@@ -409,7 +467,7 @@ async function tryPlayerMove(dx: number, dy: number) {
       await flashTileMessage(Tile.Whip, true);
       break;
     case Tile.Stairs:
-      if (state.level === LEVELS.length - 1) {
+      if (state.levelIndex === LEVELS.length - 1) {
         go(state.player, x, y);
         await endRoutine();
         return;
@@ -1171,13 +1229,13 @@ function addScore(block: Tile) {
       state.score++;
       break;
     case Tile.Stairs:
-      state.score += state.level * 5;
+      state.score += state.levelIndex * 5;
       break;
     case Tile.Chest:
-      state.score += 10 + Math.floor(state.level / 2);
+      state.score += 10 + Math.floor(state.levelIndex / 2);
       break;
     case Tile.Gem:
-      state.score += Math.floor(state.level / 2) + 1;
+      state.score += Math.floor(state.levelIndex / 2) + 1;
       break;
     case Tile.Invisible:
       state.score += 25;
@@ -1206,7 +1264,7 @@ function addScore(block: Tile) {
       state.score += 5000;
       break;
     case Tile.Tablet:
-      state.score += state.level + 250;
+      state.score += state.levelIndex + 250;
       break;
     case Tile.Chance:
       state.score += 100;
@@ -1215,7 +1273,7 @@ function addScore(block: Tile) {
       state.score += 2500;
       break;
     // case Tile.Border:
-    //   if (state.score > state.level) state.score -= Math.floor(state.level / 2);
+    //   if (state.score > state.level) state.score -= Math.floor(state.levelIndex/ 2);
     //   break;
   }
 
@@ -1246,7 +1304,7 @@ async function pause() {
 
 // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L45
 async function tabletMessage() {
-  switch (state.levelId) {
+  switch (state.level!.id) {
     case 'Debug':
     case 'Lost30':
       await prayer();
@@ -1303,56 +1361,34 @@ async function prayer() {
 }
 
 export async function renderTitle() {
-  // display.col(RNG.getUniformInt(1, 16));
-  // display.gotoxy(1, 5);
-  // display.writeln('     ÛÛÛ     ÛÛÛ     ÛÛÛÛÛÛÛÛÛÛ         ÛÛÛÛÛÛÛÛÛÛÛ        ÛÛÛÛÛÛÛÛÛÛÛÛÛ  (R)');
-  // display.writeln('     ÛÛÛ±±  ÛÛÛ±±±   ÛÛÛ±±±±±ÛÛÛ±      ÛÛÛ±±±±±±±ÛÛÛ±        ±±±±±±ÛÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±± ÛÛÛ±±±    ÛÛÛ±±   ÛÛÛ±±     ÛÛÛ±±     ÛÛÛ±±            ÛÛÛ±±±±');
-  // display.writeln('     ÛÛÛ±±ÛÛÛ±±±     ÛÛÛ±±   ÛÛÛ±±    ÛÛÛ±±±      ÛÛÛ±           ÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±ÛÛÛ±±±      ÛÛÛÛÛÛÛÛÛÛ±±±    ÛÛÛ±±       ÛÛÛ±±         ÛÛÛ±±±');
-  // display.writeln('     ÛÛÛÛÛÛ±±±       ÛÛÛ±±ÛÛÛ±±±±     ÛÛÛ±±       ÛÛÛ±±        ÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±ÛÛÛ±        ÛÛÛ±± ÛÛÛ±        ÛÛÛ±      ÛÛÛ±±±       ÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±±ÛÛÛ±       ÛÛÛ±±  ÛÛÛ±       ÛÛÛ±±     ÛÛÛ±±      ÛÛÛÛ±±±');
-  // display.writeln('     ÛÛÛ±± ÛÛÛ±      ÛÛÛ±±   ÛÛÛ±       ÛÛÛÛÛÛÛÛÛÛÛ±±±     ÛÛÛÛÛÛÛÛÛÛÛÛÛ');
-  // display.writeln('     ÛÛÛ±±  ÛÛÛ±       ±±±     ±±±        ±±±±±±±±±±±        ±±±±±±±±±±±±±');
-  // display.writeln('     ÛÛÛ±±   ÛÛÛ±');
-  // display.writeln('     ÛÛÛ±±    ÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛÛ');
-  // display.writeln('       ±±±      ±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
-
   display.bak(Color.Blue);
   display.col(Color.LightCyan);
 
-  display.gotoxy(1, 9);
-  display.writeln(
-    '  Revitalized from the Fountain of Youth you uncovered in your last adventure',
-  );
-  display.writeln(
-    "  through Kroz,  you decide it's time once again to explore the vast mystical",
-  );
-  display.writeln(
-    '  kingdom.  From your last journey through the underground world of Kroz, you',
-  );
-  display.writeln(
-    '  noticed a new tunnel that requires further investigation.  What new mystery',
-  );
-  display.writeln(
-    '  awaits below?  Your adrenaline level rises as you decend the secret tunnels',
-  );
-  display.writeln(
-    '               that lead into the heart of Kroz.  One more time...',
-  );
+  display.clear(Color.Blue);
 
-  // display.gotoxy(23);
-  // display.writeln('But only if you can reach it alive!');
+  display.gotoxy(2, 8);
+  display.writeln(`
+In the mystical Kingdom of Kroz, where ASCII characters come to life and
+danger lurks around every corner, a new chapter unfolds. You, a brave
+archaeologist, have heard whispers of the legendary Magical Amulet of Kroz,
+an artifact of immense power long thought lost to time.
 
-  display.drawText(27, 25, 'Press any key to continue.', Color.LightGreen);
+Will you be the one to uncover the secrets of the forsaken caverns? Can you
+retrieve the Magical Amulet and restore glory to the Kingdom of Kroz? The
+adventure awaits, brave explorer!
+  `);
+
+  display.gotoxy(0, HEIGHT - 1);
+  display.writeCenter(
+    'Press any key to begin your decent into Kroz.',
+    Color.HighIntensityWhite,
+  );
 
   const x = WIDTH / 2 - TITLE.length / 2;
-
   const readkey = controls.readkey();
   while (!readkey()) {
     display.drawText(x, 3, TITLE, RNG.getUniformInt(0, 16), Color.Red);
-    await delay(50);
+    await delay(500);
   }
 }
 
@@ -1409,7 +1445,7 @@ export async function endRoutine() {
     await sound.play(i * 8 + 100, 20);
   }
 
-  display.clear();
+  display.clear(Color.Blue);
 
   display.gotoxy(25, 3);
   display.col(Color.White);

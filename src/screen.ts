@@ -2,7 +2,7 @@ import * as display from './display';
 import * as world from './world';
 import * as controls from './controls';
 
-import { FLOOR_CHAR, XBot, XTop, YBot, YTop } from './constants';
+import { FLOOR_CHAR, HEIGHT, TITLE, XBot, XTop, YBot, YTop } from './constants';
 import { RNG } from 'rot-js';
 import { Color } from './colors';
 import { delay } from './utils';
@@ -44,7 +44,7 @@ export function renderStats() {
   display.drawText(
     x,
     4,
-    pad(world.state.level.toString(), width, size),
+    pad(world.state.levelIndex.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
@@ -73,7 +73,7 @@ export function renderStats() {
 }
 
 export function fullRender() {
-  display.clear();
+  display.clear(Color.Blue);
   renderBorder();
   renderScreen();
   world.renderPlayfield();
@@ -117,6 +117,65 @@ export async function flashMessage(msg: string): Promise<string> {
   world.state.paused = false;
 
   return readkey();
+}
+
+export async function introScreen() {
+  const readkey = controls.readkey();
+  while (!readkey()) {
+    display.col(RNG.getUniformInt(1, 15));
+
+    display.clear(Color.Black);
+
+    display.gotoxy(5, 5);
+    display.writeln(
+      '███     ███     ██████████         ███████████        █████████████  (R)',
+    );
+    display.writeln(
+      '███░░  ███░░░   ███░░░░░███░      ███░░░░░░░███░        ░░░░░░████░░░',
+    );
+    display.writeln(
+      '███░░ ███░░░    ███░░   ███░░     ███░░     ███░░            ███░░░░',
+    );
+    display.writeln(
+      '███░░███░░░     ███░░   ███░░    ███░░░      ███░           ███░░░',
+    );
+    display.writeln(
+      '███░███░░░      ██████████░░░    ███░░       ███░░         ███░░░',
+    );
+    display.writeln(
+      '██████░░░       ███░░███░░░░     ███░░       ███░░        ███░░░',
+    );
+    display.writeln(
+      '███░███░        ███░░ ███░        ███░      ███░░░       ███░░░',
+    );
+    display.writeln(
+      '███░░███░       ███░░  ███░       ███░░     ███░░      ████░░░',
+    );
+    display.writeln(
+      '███░░ ███░      ███░░   ███░       ███████████░░░     █████████████',
+    );
+    display.writeln(
+      '███░░  ███░       ░░░     ░░░        ░░░░░░░░░░░        ░░░░░░░░░░░░░',
+    );
+    display.writeln('███░░   ███░');
+    display.writeln(
+      '███░░    ███████████████████████████████████████████████████████████',
+    );
+    display.writeln(
+      '  ░░░      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░',
+    );
+    display.writeln('');
+    display.writeCenter(TITLE, Color.Yellow);
+    display.writeln('');
+    display.writeCenter(
+      'Original Level Design (C) 1990 Scott Miller',
+      Color.Yellow,
+    );
+
+    display.gotoxy(0, HEIGHT - 1);
+    display.writeCenter('Press any key to continue.', Color.HighIntensityWhite);
+    await delay(500);
+  }
 }
 
 function pad(s: string, n: number, r: number) {

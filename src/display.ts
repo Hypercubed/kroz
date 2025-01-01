@@ -3,7 +3,7 @@ import { HEIGHT, WIDTH } from './constants';
 import { TileColor, Tile } from './tiles';
 import { Color, ColorCodes } from './colors';
 
-Display.Rect.cache = true;
+// Display.Rect.cache = true;
 
 const rotDisplay = new Display({
   width: WIDTH,
@@ -39,16 +39,21 @@ export function col(fg: Color | string) {
   state.fg = fg;
 }
 
-export function write(s: string) {
-  return rotDisplay.drawText(
-    state.x,
-    state.y,
-    `%c{${state.fg}}%b{${state.bg}}` + s,
-  );
+export function writeln(
+  s: string,
+  fg: string | Color = state.fg,
+  bg: string | Color = state.bg,
+) {
+  state.y += drawText(state.x, state.y, s, fg, bg);
 }
 
-export function writeln(s: string) {
-  state.y += write(s);
+export function writeCenter(
+  s: string,
+  fg: string | Color = state.fg,
+  bg: string | Color = state.bg,
+) {
+  const x = Math.floor((WIDTH - s.length) / 2);
+  state.y += drawText(x, state.y, s, fg, bg);
 }
 
 export function print(x: number, y: number, s: string) {
@@ -56,7 +61,10 @@ export function print(x: number, y: number, s: string) {
   writeln(s);
 }
 
-export function clear() {
+export function clear(bg: string | Color = state.bg) {
+  if (typeof bg === 'number') bg = ColorCodes[bg];
+  rotDisplay.setOptions({ bg });
+  state.bg = bg;
   rotDisplay.clear();
 }
 
@@ -112,7 +120,7 @@ export function drawText(
 
   if (typeof bg === 'number') bg = ColorCodes[(bg % 16) as Color];
   if (typeof fg === 'number') fg = ColorCodes[(fg % 16) as Color];
-  rotDisplay.drawText(x, y, `%c{${fg}}%b{${bg}}` + s);
+  return rotDisplay.drawText(x, y, `%c{${fg}}%b{${bg}}` + s);
 }
 
 export function getContainer() {

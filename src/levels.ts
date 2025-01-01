@@ -20,7 +20,7 @@ import kingdom1 from './levels/kingdom-1.ts';
 import caverns2 from './levels/caverns-2.ts';
 import caverns4 from './levels/caverns-4.ts';
 
-interface Level {
+export interface Level {
   id: string;
   map: string;
   name?: string;

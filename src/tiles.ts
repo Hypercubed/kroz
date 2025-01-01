@@ -1,7 +1,7 @@
 import { Color } from './colors';
 import { FLOOR_CHAR } from './constants';
 
-export enum Tile {
+export const enum Tile {
   Floor = 0,
   Slow = 1,
   Medium = 2,

@@ -12,7 +12,7 @@ export const map = `
    3   # ##nugg * * *     ñ4444444444  RRRRR   river## # # # # #
   3 3  # ###gem + + +     ò5555555555  /////   forest# # # # # #
  ####### ##door D D D     ó6666666666  ♣♣♣♣♣   tree### #X#X#X#X#
-         ##tele T T T                  VVVVV   lava### #2#2#2#2#
+         ##tele T T T     :::::::::::  VVVVV   lava### #2#2#2#2#
          ###key K K K                  =====   pit#### # # # # #
          #power Q Q Q                  XXXXX   block## # # # # #
  #######                                               # # # # #

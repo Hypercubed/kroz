@@ -6,7 +6,7 @@ import { DEBUG } from './constants';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let gamepad: any = null;
 
-export enum Action {
+export enum Action { // cannot be const enum
   North = 1,
   South,
   East,
@@ -24,6 +24,8 @@ export enum Action {
   HideFound,
   Pause,
   Quit,
+  Save,
+  Restore,
 }
 
 // Tracks the current state of joystick actions
@@ -67,6 +69,10 @@ const KEY_BINDING: Record<string, Action | null> = {
   p: Action.Pause,
   P: Action.Pause,
   Escape: Action.Quit,
+  s: Action.Save,
+  S: Action.Save,
+  r: Action.Restore,
+  R: Action.Restore,
 };
 
 const GAMEPAD_BINDING: Record<string, Action | null> = {

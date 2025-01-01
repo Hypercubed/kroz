@@ -1,6 +1,6 @@
 export const DEBUG = import.meta.env.DEV;
 
-export const TITLE = 'The Underground Empire of Kroz';
+export const TITLE = 'The Forgotton Adventures of Kroz';
 
 export const WIDTH = 80;
 export const HEIGHT = 25;
