@@ -6,10 +6,12 @@ import * as controls from './controls';
 import * as display from './display';
 import * as world from './world';
 import * as screen from './screen';
+import * as state from './state';
 
 import { Tile } from './tiles';
 import { DEBUG, TIME_SCALE, XSize, YSize } from './constants';
-import { Timer } from './world';
+import { Timer } from './state';
+import { Color } from './colors';
 
 let stats: Stats;
 let gui: dat.GUI;
@@ -24,42 +26,51 @@ const PlayerActor = { type: Tile.Player, getSpeed: () => 1 };
 const SlowActor = {
   type: Tile.Slow,
   getSpeed: () => {
-    if (world.state.T[Timer.SlowTime] > 0) return ST / 5;
-    if (world.state.T[Timer.SpeedTime] > 0) return PT;
+    if (state.state.T[Timer.SlowTime] > 0) return ST / 5;
+    if (state.state.T[Timer.SpeedTime] > 0) return PT;
     return ST;
   },
 };
 const MediumActor = {
   type: Tile.Medium,
   getSpeed: () => {
-    if (world.state.T[Timer.SlowTime] > 0) return MT / 5;
-    if (world.state.T[Timer.SpeedTime] > 0) return PT;
+    if (state.state.T[Timer.SlowTime] > 0) return MT / 5;
+    if (state.state.T[Timer.SpeedTime] > 0) return PT;
     return MT;
   },
 };
 const FastActor = {
   type: Tile.Fast,
   getSpeed: () => {
-    if (world.state.T[Timer.SlowTime] > 0) return (FT / 5) * TIME_SCALE;
-    if (world.state.T[Timer.SpeedTime] > 0) return PT * TIME_SCALE;
+    if (state.state.T[Timer.SlowTime] > 0) return (FT / 5) * TIME_SCALE;
+    if (state.state.T[Timer.SpeedTime] > 0) return PT * TIME_SCALE;
     return FT * TIME_SCALE;
   },
 };
 
-export async function start() {
+export function init() {
+  const container = display.getContainer()!;
+  const app = document.getElementById('app')!;
+  app.appendChild(container);
   controls.start();
+}
+
+export async function start() {
+  display.clear(Color.Black);
+  state.resetState();
 
   await screen.introScreen();
   await world.renderTitle();
 
   world.loadLevel(); // Don't wait
-  screen.fullRender();
+  fullRender();
   await world.flashPlayer();
-  screen.fastRender();
+  fastRender();
   await screen.flashMessage('Press any key to begin this level.');
+  controls.clearActions();
 
   // for (let i = 0; i < 80; i++) {
-  //   display.gotoxy(world.state.player.x + XBot, world.state.player.y + YBot);
+  //   display.gotoxy(state.state.player.x + XBot, state.state.player.y + YBot);
   //   display.col(RNG.getUniformInt(0, 15));
   //   display.bak(RNG.getUniformInt(0, 8));
   //   display.write(TileChar[Tile.Player]);
@@ -75,32 +86,36 @@ export async function start() {
     }
 
     if (!gui) {
-      gui = new dat.GUI({ closeFolders: true });
+      gui = new dat.GUI({
+        closeFolders: true,
+        title: 'Debug',
+        container: document.getElementById('instructions')!,
+      });
 
       const timers = {
         get SlowTime() {
-          return world.state.T[Timer.SlowTime];
+          return state.state.T[Timer.SlowTime];
         },
         set SlowTime(v: number) {
-          world.state.T[Timer.SlowTime] = v;
+          state.state.T[Timer.SlowTime] = v;
         },
         get Invisible() {
-          return world.state.T[Timer.Invisible];
+          return state.state.T[Timer.Invisible];
         },
         set Invisible(v: number) {
-          world.state.T[Timer.Invisible] = v;
+          state.state.T[Timer.Invisible] = v;
         },
         get SpeedTime() {
-          return world.state.T[Timer.SpeedTime];
+          return state.state.T[Timer.SpeedTime];
         },
         set SpeedTime(v: number) {
-          world.state.T[Timer.SpeedTime] = v;
+          state.state.T[Timer.SpeedTime] = v;
         },
         get FreezeTime() {
-          return world.state.T[Timer.FreezeTime];
+          return state.state.T[Timer.FreezeTime];
         },
         set FreezeTime(v: number) {
-          world.state.T[Timer.FreezeTime] = v;
+          state.state.T[Timer.FreezeTime] = v;
         },
       };
 
@@ -111,19 +126,19 @@ export async function start() {
       t.add(timers, 'FreezeTime', 0, 400, 1).listen();
 
       const o = gui.addFolder('Objects');
-      o.add(world.state, 'gems', 0, 400, 1).listen();
-      o.add(world.state, 'whips', 0, 400, 1).listen();
-      o.add(world.state, 'keys', 0, 400, 1).listen();
-      o.add(world.state, 'teleports', 0, 400, 1).listen();
-      o.add(world.state, 'whipPower', 2, 7, 1).listen();
+      o.add(state.state, 'gems', 0, 400, 1).listen();
+      o.add(state.state, 'whips', 0, 400, 1).listen();
+      o.add(state.state, 'keys', 0, 400, 1).listen();
+      o.add(state.state, 'teleports', 0, 400, 1).listen();
+      o.add(state.state, 'whipPower', 2, 7, 1).listen();
 
       const p = gui.addFolder('Player');
-      p.add(world.state.player, 'x', 0, XSize, 1).listen();
-      p.add(world.state.player, 'y', 0, YSize, 1).listen();
+      p.add(state.state.player, 'x', 0, XSize, 1).listen();
+      p.add(state.state.player, 'y', 0, YSize, 1).listen();
     }
   }
 
-  screen.fullRender();
+  fullRender();
   await run();
 }
 
@@ -142,13 +157,13 @@ async function run() {
   let previousTime = 0;
 
   const raf = async (currentTime: number) => {
-    if (world.state.gems < 0) {
+    if (state.state.gems < 0) {
       await world.dead();
       reset();
       return;
     }
 
-    if (world.state.done) {
+    if (state.state.done) {
       reset();
       return;
     }
@@ -163,12 +178,13 @@ async function run() {
 
       await world.effects();
       await world.playerAction(); // Player acts every tick
+      controls.clearActions(); // Clear was pressed actions after player acts
 
       const current = scheduler.next();
       await world.entitiesAction(current.type);
     }
 
-    screen.fastRender(); // TODO: can we only render blink elements?
+    fastRender(); // TODO: can we only render blink elements?
 
     stats?.end();
     requestAnimationFrame(raf);
@@ -177,7 +193,20 @@ async function run() {
 }
 
 function reset() {
-  display.clear();
-  world.resetState();
+  display.clear(Color.Black);
+  state.resetState();
   start();
+}
+
+export function fullRender() {
+  display.clear(Color.Blue);
+  screen.renderBorder();
+  screen.renderScreen();
+  world.renderPlayfield();
+  screen.renderStats();
+}
+
+export function fastRender() {
+  world.renderPlayfield();
+  screen.renderStats();
 }

@@ -4,6 +4,7 @@ import * as controls from './controls';
 import * as display from './display';
 import * as sound from './sound';
 import * as screen from './screen';
+import * as state from './state';
 
 import {
   TileChar,
@@ -35,15 +36,9 @@ import { Action } from './controls';
 import { Color, ColorCodes } from './colors';
 import { mod } from 'rot-js/lib/util';
 import { delay } from './utils';
-import { Level, LEVELS } from './levels';
+import { LEVELS } from './levels';
 import dedent from 'ts-dedent';
-
-export const enum Timer {
-  SlowTime = 4,
-  Invisible = 5,
-  SpeedTime = 6,
-  FreezeTime = 7,
-}
+import { Timer } from './state';
 
 const SPELL_DURATION = {
   [Timer.SlowTime]: 70 * TIME_SCALE,
@@ -52,88 +47,31 @@ const SPELL_DURATION = {
   [Timer.FreezeTime]: 55 * TIME_SCALE,
 };
 
-export const state = getDefaultState();
-
-const levelStartState = {} as typeof state;
-const saveState = {} as typeof state;
-
-function getDefaultState() {
-  return {
-    player: new Entity(Tile.Player, 0, 0),
-    entities: [] as Entity[],
-
-    PF: [] as (Tile | string)[][],
-    foundSet: new Set(),
-
-    T: [
-      0,
-      0,
-      0,
-      0,
-      Timer.SlowTime, // 4 - Slow Time
-      Timer.Invisible, // 5 - Invisible
-      Timer.SpeedTime, // 6 - Speed Time
-      Timer.FreezeTime, // 7 - Freeze Time
-      0,
-      0,
-    ], // Timers
-
-    levelIndex: DEBUG ? 0 : 1,
-    level: null as null | Level,
-    score: 0,
-    gems: 20,
-    whips: 0,
-    teleports: 0,
-    keys: 0,
-    whipPower: 2,
-    bonus: 0,
-
-    actionActive: false,
-    paused: false,
-    done: false,
-
-    // TODO:
-    // hideGems
-    // hideStairs
-    // HideMBlock
-    // HideCreate
-    // TreeRate ??
-    // HideOpenWall
-    // LavaFlow
-    // LavaRate
-  };
-}
-
-export function resetState() {
-  Object.assign(state, getDefaultState());
-}
-
 export function loadLevel() {
-  state.level = LEVELS[state.levelIndex];
-  readLevelMap(state.level.map);
+  state.state.level = LEVELS[state.state.levelIndex];
+  readLevelMap(state.state.level.map);
 
-  state.T = state.T.map(() => 0); // Reset timers
-
-  Object.assign(levelStartState, state);
+  state.state.T = state.state.T.map(() => 0); // Reset timers
+  state.storeLevelStartState();
 
   renderPlayfield();
   screen.renderStats();
 }
 
 export async function nextLevel() {
-  state.levelIndex = mod(state.levelIndex + 1, LEVELS.length);
+  state.state.levelIndex = mod(state.state.levelIndex + 1, LEVELS.length);
   loadLevel();
   await screen.flashMessage('Press any key to begin this level.');
 }
 
 async function prevLevel() {
-  state.levelIndex = mod(state.levelIndex - 1, LEVELS.length);
+  state.state.levelIndex = mod(state.state.levelIndex - 1, LEVELS.length);
   loadLevel();
   await screen.flashMessage('Press any key to begin this level.');
 }
 
 export async function effects() {
-  state.T = state.T.map((t) => (t > 0 ? t - 1 : 0));
+  state.state.T = state.state.T.map((t) => (t > 0 ? t - 1 : 0));
 
   // TODO: Creature generation
   // Lava Flow
@@ -147,7 +85,7 @@ async function mobAction(e: Entity) {
   if (
     e.x === -1 ||
     e.y === -1 ||
-    state.PF[e.x][e.y] !== (e.type as unknown as Tile) // Killed
+    state.state.PF[e.x][e.y] !== (e.type as unknown as Tile) // Killed
   ) {
     e.kill();
     return;
@@ -155,17 +93,17 @@ async function mobAction(e: Entity) {
 
   let dx = 0;
   let dy = 0;
-  if (state.player.x < e.x) dx = -1;
-  if (state.player.x > e.x) dx = 1;
-  if (state.player.y < e.y) dy = -1;
-  if (state.player.y > e.y) dy = 1;
+  if (state.state.player.x < e.x) dx = -1;
+  if (state.state.player.x > e.x) dx = 1;
+  if (state.state.player.y < e.y) dy = -1;
+  if (state.state.player.y > e.y) dy = 1;
 
   const x = e.x + dx;
   const y = e.y + dy;
 
   if (x < 0 || x >= XSize || y < 0 || y >= YSize) return;
 
-  const block = state.PF?.[x]?.[y] ?? Tile.Floor;
+  const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
 
   switch (block) {
     case Tile.Floor: // Breaks
@@ -182,16 +120,16 @@ async function mobAction(e: Entity) {
     case Tile.MBlock:
     case Tile.ZBlock:
     case Tile.GBlock:
-      state.PF[e.x][e.y] = Tile.Floor;
-      state.PF[x][y] = Tile.Floor;
+      state.state.PF[e.x][e.y] = Tile.Floor;
+      state.state.PF[x][y] = Tile.Floor;
       e.kill();
       addScore(block);
       sound.play(800, 18);
       sound.play(400, 20);
       break;
     case Tile.Player: // Damage + Kills
-      state.gems--;
-      state.PF[e.x][e.y] = Tile.Floor;
+      state.state.gems--;
+      state.state.PF[e.x][e.y] = Tile.Floor;
       e.kill();
       addScore(block);
       break;
@@ -228,10 +166,10 @@ export async function entitiesAction(t?: EntityType) {
     return;
   }
 
-  if (state.T[Timer.FreezeTime] > 0) return;
+  if (state.state.T[Timer.FreezeTime] > 0) return;
 
-  for (let i = 0; i < state.entities.length; i++) {
-    const e = state.entities[i];
+  for (let i = 0; i < state.state.entities.length; i++) {
+    const e = state.state.entities[i];
     if (t && e.type !== t) continue;
 
     if (e.x === -1 || e.y === -1) continue; // dead
@@ -247,8 +185,7 @@ async function save() {
   }
 
   if (answer.toLowerCase() === 'y') {
-    // Don't need deep copy now, but might later
-    Object.assign(saveState, levelStartState);
+    state.saveLevelStartState();
   }
 }
 
@@ -263,54 +200,76 @@ async function restore() {
 
   if (answer.toLowerCase() === 'y') {
     // Don't need deep copy now, but might later
-    Object.assign(state, saveState);
+    state.restoreLevelStartState();
     loadLevel();
   }
 }
 
 export async function playerAction() {
-  const actionState = controls.pollActions();
-
-  // Move these?
-  if (actionState[Action.FreeItems])
-    return await doPlayerAction(Action.FreeItems);
-  if (actionState[Action.NextLevel])
+  // Debug Actions
+  if (controls.wasActionDeactivated(Action.NextLevel))
     return await doPlayerAction(Action.NextLevel);
-  if (actionState[Action.PrevLevel])
+  if (controls.wasActionDeactivated(Action.PrevLevel))
     return await doPlayerAction(Action.PrevLevel);
-  // if (actionState[Action.HideFound]) await doPlayerAction(Action.Teleport); // TBD
-  if (actionState[Action.ResetFound]) return (state.foundSet = new Set());
-  if (actionState[Action.Pause]) return pause();
-  if (actionState[Action.Quit]) return quit();
+  if (controls.wasActionDeactivated(Action.FreeItems))
+    return await doPlayerAction(Action.FreeItems);
 
-  if (actionState[Action.Save]) return save();
-  if (actionState[Action.Restore]) return restore();
+  // Player Actions
+  // TODO: HideFound
+  if (controls.wasActionDeactivated(Action.ResetFound))
+    return (state.state.foundSet = new Set());
 
-  if (actionState[Action.North] && actionState[Action.West])
-    return await doPlayerAction(Action.Northwest);
-  if (actionState[Action.North] && actionState[Action.East])
-    return await doPlayerAction(Action.Northeast);
-  if (actionState[Action.South] && actionState[Action.West])
-    return await doPlayerAction(Action.Southwest);
-  if (actionState[Action.South] && actionState[Action.East])
-    return await doPlayerAction(Action.Southeast);
+  // Game Actions
+  if (controls.wasActionDeactivated(Action.Pause)) return pause();
+  if (controls.wasActionDeactivated(Action.Quit)) return quit();
+  if (controls.wasActionDeactivated(Action.Save)) return save();
+  if (controls.wasActionDeactivated(Action.Restore)) return restore();
 
-  if (actionState[Action.North]) return await doPlayerAction(Action.North);
-  if (actionState[Action.South]) return await doPlayerAction(Action.South);
-  if (actionState[Action.West]) return await doPlayerAction(Action.West);
-  if (actionState[Action.East]) return await doPlayerAction(Action.East);
-  if (actionState[Action.Southeast])
-    return await doPlayerAction(Action.Southeast);
-  if (actionState[Action.Southwest])
-    return await doPlayerAction(Action.Southwest);
-  if (actionState[Action.Northeast])
-    return await doPlayerAction(Action.Northeast);
-  if (actionState[Action.Northwest])
-    return await doPlayerAction(Action.Northwest);
+  // Whip can happen at any time (no return)
+  if (controls.wasActionActive(Action.Whip)) await doPlayerAction(Action.Whip);
 
-  if (actionState[Action.Whip]) return await doPlayerAction(Action.Whip);
-  if (actionState[Action.Teleport])
+  if (controls.wasActionActive(Action.Teleport))
     return await doPlayerAction(Action.Teleport);
+
+  // Player Diagonal Movement
+  if (
+    controls.wasActionActive(Action.North) &&
+    controls.wasActionActive(Action.West)
+  )
+    return await doPlayerAction(Action.Northwest);
+  if (
+    controls.wasActionActive(Action.North) &&
+    controls.wasActionActive(Action.East)
+  )
+    return await doPlayerAction(Action.Northeast);
+  if (
+    controls.wasActionActive(Action.South) &&
+    controls.wasActionActive(Action.West)
+  )
+    return await doPlayerAction(Action.Southwest);
+  if (
+    controls.wasActionActive(Action.South) &&
+    controls.wasActionActive(Action.East)
+  )
+    return await doPlayerAction(Action.Southeast);
+  if (controls.wasActionActive(Action.Southeast))
+    return await doPlayerAction(Action.Southeast);
+  if (controls.wasActionActive(Action.Southwest))
+    return await doPlayerAction(Action.Southwest);
+  if (controls.wasActionActive(Action.Northeast))
+    return await doPlayerAction(Action.Northeast);
+  if (controls.wasActionActive(Action.Northwest))
+    return await doPlayerAction(Action.Northwest);
+
+  // Player Movement
+  if (controls.wasActionActive(Action.North))
+    return await doPlayerAction(Action.North);
+  if (controls.wasActionActive(Action.South))
+    return await doPlayerAction(Action.South);
+  if (controls.wasActionActive(Action.West))
+    return await doPlayerAction(Action.West);
+  if (controls.wasActionActive(Action.East))
+    return await doPlayerAction(Action.East);
 }
 
 async function doPlayerAction(action: Action) {
@@ -318,10 +277,10 @@ async function doPlayerAction(action: Action) {
 
   switch (action) {
     case Action.FreeItems:
-      state.gems = Infinity;
-      state.whips = Infinity;
-      state.teleports = Infinity;
-      state.keys = Infinity;
+      state.state.gems = Infinity;
+      state.state.whips = Infinity;
+      state.state.teleports = Infinity;
+      state.state.keys = Infinity;
       screen.renderStats();
       break;
     case Action.NextLevel:
@@ -363,19 +322,19 @@ async function doPlayerAction(action: Action) {
       _tryPlayerMove = true;
       break;
     case Action.Whip:
-      if (state.whips < 1) {
+      if (state.state.whips < 1) {
         sound.noneSound();
       } else {
-        state.whips--;
+        state.state.whips--;
         await playerWhip();
       }
       _tryPlayerMove = true;
       break;
     case Action.Teleport:
-      if (state.teleports < 1) {
+      if (state.state.teleports < 1) {
         await sound.noneSound();
       } else {
-        state.teleports--;
+        state.state.teleports--;
         await playerTeleport();
       }
       _tryPlayerMove = true;
@@ -385,7 +344,7 @@ async function doPlayerAction(action: Action) {
 }
 
 function readLevelMap(level: string) {
-  state.entities = [];
+  state.state.entities = [];
 
   const lines = level.split('\n').filter((line) => line.length > 0);
   for (let y = 0; y < lines.length; y++) {
@@ -395,18 +354,18 @@ function readLevelMap(level: string) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const block = (MapLookup as any)[char];
 
-      state.PF[x] = state.PF[x] || [];
-      state.PF[x][y] = block ?? char;
+      state.state.PF[x] = state.state.PF[x] || [];
+      state.state.PF[x][y] = block ?? char;
 
       switch (block) {
         case Tile.Player:
-          state.player.x = x;
-          state.player.y = y;
+          state.state.player.x = x;
+          state.state.player.y = y;
           break;
         case Tile.Slow:
         case Tile.Medium:
         case Tile.Fast:
-          state.entities.push(new Entity(block, x, y));
+          state.state.entities.push(new Entity(block, x, y));
           break;
       }
     }
@@ -419,26 +378,26 @@ function readLevelMap(level: string) {
 }
 
 async function tryPlayerMove(dx: number, dy: number) {
-  const x = state.player.x + dx;
-  const y = state.player.y + dy;
+  const x = state.state.player.x + dx;
+  const y = state.state.player.y + dy;
 
   if (x < 0 || x > XSize || y < 0 || y > YSize) return;
   // flashTileMessage(16,25,'An Electrified Wall blocks your way.');
 
-  const block = state.PF?.[x]?.[y] || Tile.Floor;
+  const block = state.state.PF?.[x]?.[y] || Tile.Floor;
 
   switch (block) {
     case Tile.Floor:
     case Tile.Stop:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       break;
     case Tile.Slow:
     case Tile.Medium:
     case Tile.Fast:
-      state.gems -= block;
+      state.state.gems -= block;
       killAt(x, y);
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       break;
     case Tile.Block:
     case Tile.ZBlock:
@@ -448,78 +407,79 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     case Tile.Whip:
       sound.grab();
-      state.whips++;
+      state.state.whips++;
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(Tile.Whip, true);
       break;
     case Tile.Stairs:
-      if (state.levelIndex === LEVELS.length - 1) {
-        go(state.player, x, y);
+      if (state.state.levelIndex === LEVELS.length - 1) {
+        go(state.state.player, x, y);
         await endRoutine();
         return;
       }
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(Tile.Stairs, true);
       nextLevel();
       break;
     case Tile.Chest:
-      if (state.keys > 0) {
-        state.keys--;
+      if (state.state.keys > 0) {
+        state.state.keys--;
         const whips = RNG.getUniformInt(2, 5);
         const gems = RNG.getUniformInt(2, 5);
-        state.whips += whips;
-        state.gems += gems;
+        state.state.whips += whips;
+        state.state.gems += gems;
         addScore(block);
-        go(state.player, x, y);
+        go(state.state.player, x, y);
         await screen.flashMessage(
           `You found ${gems} gems and ${whips} whips inside the chest!`,
         );
       }
       break;
     case Tile.SlowTime:
-      state.T[Timer.SpeedTime] = 0; // Reset Speed Time
-      state.T[Timer.FreezeTime] = 0;
-      state.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime]; // Slow Time
+      state.state.T[Timer.SpeedTime] = 0; // Reset Speed Time
+      state.state.T[Timer.FreezeTime] = 0;
+      state.state.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime]; // Slow Time
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.Gem:
-      state.gems++;
+      sound.grab();
+      state.state.gems++;
       addScore(block);
-      go(state.player, x, y);
-      flashTileMessage(block, true);
+      go(state.state.player, x, y);
+      await flashTileMessage(block, true);
       break;
     case Tile.Invisible:
-      state.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
+      state.state.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.Teleport:
-      state.teleports++;
+      state.state.teleports++;
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       flashTileMessage(block, true);
       break;
     case Tile.Key:
       sound.grab();
-      state.keys++;
-      go(state.player, x, y);
+      state.state.keys++;
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.Door:
-      if (state.keys < 1) {
+      if (state.state.keys < 1) {
         sound.play(Math.random() * 129 + 30, 150, 100);
         await delay(100);
         await flashTileMessage(block);
       } else {
-        state.keys--;
+        state.state.keys--;
         addScore(block);
         await sound.openDoor();
-        go(state.player, x, y);
+        go(state.state.player, x, y);
         await screen.flashMessage(
           'The Door opens!  (One of your Keys is used.)',
         );
@@ -535,22 +495,22 @@ async function tryPlayerMove(dx: number, dy: number) {
       await flashTileMessage(block, true);
       break;
     case Tile.SpeedTime:
-      state.T[Timer.SlowTime] = 0; // Reset Slow Time
-      state.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime]; // Speed Time
+      state.state.T[Timer.SlowTime] = 0; // Reset Slow Time
+      state.state.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime]; // Speed Time
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.Trap:
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       await playerTeleport();
       break;
     case Tile.Power:
-      state.whipPower++;
+      state.state.whipPower++;
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.Tree:
@@ -560,23 +520,23 @@ async function tryPlayerMove(dx: number, dy: number) {
       await flashTileMessage(block, true);
       break;
     case Tile.Bomb: {
-      go(state.player, x, y);
+      go(state.state.player, x, y);
 
       const d = 4;
-      const x1 = Math.max(state.player.x - d, XBot);
-      const x2 = Math.min(state.player.x + d, XTop);
-      const y1 = Math.max(state.player.y - d, YBot);
-      const y2 = Math.min(state.player.y + d, YTop);
+      const x1 = Math.max(state.state.player.x - d, XBot);
+      const x2 = Math.min(state.state.player.x + d, XTop);
+      const y1 = Math.max(state.state.player.y - d, YBot);
+      const y2 = Math.min(state.state.player.y + d, YTop);
 
       for (let x = x1; x <= x2; x++) {
         for (let y = y1; y <= y2; y++) {
-          const block = (state.PF?.[x]?.[y] as number) ?? Tile.Floor;
+          const block = (state.state.PF?.[x]?.[y] as number) ?? Tile.Floor;
           if (BOMBABLES.includes(block as number)) {
             if (block >= 1 && block <= 4) {
               addScore(block);
               await killAt(x, y);
             }
-            state.PF[x][y] = Tile.Floor;
+            state.state.PF[x][y] = Tile.Floor;
           }
         }
       }
@@ -585,21 +545,21 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     }
     case Tile.Lava:
-      state.gems -= 10;
+      state.state.gems -= 10;
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.Pit:
-      go(state.player, x, y);
-      if (!DEBUG) state.gems = -1; // dead
+      go(state.state.player, x, y);
+      if (!DEBUG) state.state.gems = -1; // dead
       await flashTileMessage(block);
       break;
     case Tile.Tome:
       // Tome_Message;
       // Tome_Effects
 
-      state.PF[31][6] = Tile.Stairs;
+      state.state.PF[31][6] = Tile.Stairs;
       drawTile(31, 6, Tile.Stairs);
 
       addScore(block);
@@ -610,13 +570,13 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     case Tile.Nugget:
       sound.grab();
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       addScore(block);
       await flashTileMessage(block, true);
       break;
     case Tile.Freeze:
-      state.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
-      go(state.player, x, y);
+      state.state.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.Tunnel:
@@ -624,11 +584,11 @@ async function tryPlayerMove(dx: number, dy: number) {
       // Find a random tunnel exit
       // Find a random empty space near exit
       // Move player to exit
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.Quake:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
 
       for (let i = 0; i < 2500; i++) {
         sound.play(RNG.getUniformInt(0, i), 5, 100);
@@ -640,9 +600,9 @@ async function tryPlayerMove(dx: number, dy: number) {
         do {
           const x = RNG.getUniformInt(0, XSize);
           const y = RNG.getUniformInt(0, YSize);
-          const block = state.PF?.[x]?.[y] ?? Tile.Floor;
+          const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
           if (ROCKABLES.includes(block as number)) {
-            state.PF[x][y] = Tile.Rock;
+            state.state.PF[x][y] = Tile.Rock;
             drawTile(x, y, Tile.Rock);
             break;
           }
@@ -662,38 +622,38 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     case Tile.IWall:
       sound.blockedWall();
-      state.PF[x][y] = Tile.Wall;
+      state.state.PF[x][y] = Tile.Wall;
       drawTile(x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.IBlock:
       sound.blockedWall();
-      state.PF[x][y] = Tile.Block;
+      state.state.PF[x][y] = Tile.Block;
       drawTile(x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.IDoor:
       sound.blockedWall();
-      state.PF[x][y] = Tile.Door;
+      state.state.PF[x][y] = Tile.Door;
       drawTile(x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.Zap: {
-      go(state.player, x, y);
+      go(state.state.player, x, y);
 
       let t = 0;
       let k = 0;
       while (t < 500 && k < 40) {
         t++;
-        const n = RNG.getUniformInt(0, state.entities.length);
-        const e = state.entities[n];
+        const n = RNG.getUniformInt(0, state.state.entities.length);
+        const e = state.state.entities[n];
         if (!e || e.x === -1 || e.y === -1) continue; // dead
         await killAt(e.x, e.y);
         await delay(20);
         k++;
       }
 
-      state.score += Math.floor(k / 3 + 2);
+      state.state.score += Math.floor(k / 3 + 2);
       renderPlayfield();
       screen.renderStats();
 
@@ -703,7 +663,7 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.Create:
     case Tile.Generator:
       addScore(block);
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.MBlock:
@@ -711,30 +671,30 @@ async function tryPlayerMove(dx: number, dy: number) {
       await flashTileMessage(block, true);
       break;
     case Tile.ShowGems:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block);
       break;
     case Tile.Tablet:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       sound.grab();
       addScore(block);
       await flashTileMessage(block, true);
       await tabletMessage();
       break;
     case Tile.BlockSpell: {
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       for (let x = 0; x <= XSize; x++) {
         for (let y = 0; y <= YSize; y++) {
-          if (state.PF[x][y] === Tile.ZBlock) {
+          if (state.state.PF[x][y] === Tile.ZBlock) {
             sound.play(200, 60, 100);
             for (let i = 20; i > 0; i--) {
               drawTile(x, y, Tile.Block, RNG.getUniformInt(0, 15));
               await delay(3);
             }
-            state.PF[x][y] = Tile.Floor;
+            state.state.PF[x][y] = Tile.Floor;
             drawTile(x, y);
-          } else if (state.PF[x][y] === Tile.BlockSpell) {
-            state.PF[x][y] = Tile.Block;
+          } else if (state.state.PF[x][y] === Tile.BlockSpell) {
+            state.state.PF[x][y] = Tile.Block;
             drawTile(x, y);
           }
         }
@@ -745,38 +705,38 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.Chance: {
       addScore(block);
       const g = RNG.getUniformInt(14, 18);
-      state.gems += g;
-      go(state.player, x, y);
+      state.state.gems += g;
+      go(state.state.player, x, y);
       await screen.flashMessage(`You found a Pouch containing ${g} Gems!`);
       break;
     }
     case Tile.Statue:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block);
       break;
     case Tile.WallVanish:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(block);
       break;
     case Tile.K:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       sound.grab();
-      if (state.bonus === 0) state.bonus = 1;
+      if (state.state.bonus === 0) state.state.bonus = 1;
       break;
     case Tile.R:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       sound.grab();
-      if (state.bonus === 1) state.bonus = 2;
+      if (state.state.bonus === 1) state.state.bonus = 2;
       break;
     case Tile.O:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       sound.grab();
-      if (state.bonus === 2) state.bonus = 3;
+      if (state.state.bonus === 2) state.state.bonus = 3;
       break;
     case Tile.Z:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       sound.grab();
-      if (state.bonus === 3) {
+      if (state.state.bonus === 3) {
         for (let i = 10; i < 45; i++) {
           for (let j = 1; j < 13; j++) {
             await sound.play(i * i * j, j + 1, 100);
@@ -795,7 +755,7 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.OSpell1:
     case Tile.OSpell2:
     case Tile.OSpell3: {
-      go(state.player, x, y);
+      go(state.state.player, x, y);
 
       let s = Tile.OWall1;
       if (block === Tile.OSpell2) s = Tile.OWall2;
@@ -803,7 +763,7 @@ async function tryPlayerMove(dx: number, dy: number) {
 
       for (let x = 0; x <= XSize; x++) {
         for (let y = 0; y <= YSize; y++) {
-          const block = state.PF?.[x]?.[y] ?? Tile.Floor;
+          const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
           if (block === s) {
             for (let i = 60; i > 0; i--) {
               drawTile(
@@ -817,7 +777,7 @@ async function tryPlayerMove(dx: number, dy: number) {
             }
 
             drawTile(x, y, Tile.Wall);
-            state.PF[x][y] = Tile.Floor;
+            state.state.PF[x][y] = Tile.Floor;
             drawTile(x, y);
           }
         }
@@ -829,26 +789,26 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.CSpell1:
     case Tile.CSpell2:
     case Tile.CSpell3:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(Tile.CSpell1, true);
       break;
     case Tile.Rock: {
       let nogo = false;
 
-      const rx = state.player.x + dx * 2;
-      const ry = state.player.y + dy * 2;
+      const rx = state.state.player.x + dx * 2;
+      const ry = state.state.player.y + dy * 2;
       if (rx < 0 || rx > XSize || ry < 0 || ry > YSize) nogo = true;
 
       if (!nogo) {
-        const rb = state.PF?.[rx]?.[ry] ?? Tile.Floor; // TODO: other cases
+        const rb = state.state.PF?.[rx]?.[ry] ?? Tile.Floor; // TODO: other cases
 
         // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST5.MOV#L1366
         switch (rb) {
           case Tile.Floor: // TODO: Other floor-ish tiles
             nogo = false;
             await sound.blockMove();
-            state.PF[rx][ry] = Tile.Rock;
-            go(state.player, x, y);
+            state.state.PF[rx][ry] = Tile.Rock;
+            go(state.state.player, x, y);
             renderPlayfield();
             await flashTileMessage(Tile.Rock, true);
             break;
@@ -858,7 +818,7 @@ async function tryPlayerMove(dx: number, dy: number) {
           case Tile.Pit:
             nogo = false;
             await sound.blockMove();
-            go(state.player, x, y);
+            go(state.state.player, x, y);
             renderPlayfield();
             drawTile(rx, ry, Tile.Rock);
             for (let i = 130; i > 5; i--) {
@@ -881,14 +841,14 @@ async function tryPlayerMove(dx: number, dy: number) {
     }
     case Tile.EWall:
       addScore(block);
-      state.gems--;
+      state.state.gems--;
       sound.noise();
       await flashTileMessage(Tile.EWall, true);
       break;
     case Tile.CWall1:
     case Tile.CWall2:
     case Tile.CWall3:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       break;
     case Tile.Trap2:
     case Tile.Trap3:
@@ -902,7 +862,7 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.Trap11:
     case Tile.Trap12:
     case Tile.Trap13:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       break;
     case Tile.TBlind:
     case Tile.TBlock:
@@ -911,10 +871,10 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.TRock:
     case Tile.TTree:
     case Tile.TWhip:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       break;
     case Tile.Rope:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await flashTileMessage(Tile.Rope, true);
       break;
     case Tile.Message:
@@ -931,21 +891,22 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.DropRope3:
     case Tile.DropRope4:
     case Tile.DropRope5:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       break;
     case Tile.Amulet:
-      go(state.player, x, y);
+      go(state.state.player, x, y);
       await gotAmulet();
       break;
     default:
+      sound.blockedWall();
       break;
   }
 }
 
 async function flashTileMessage(msg: number, once: boolean = false) {
   if (once) {
-    if (state.foundSet.has(msg)) return '';
-    state.foundSet.add(msg);
+    if (state.state.foundSet.has(msg)) return '';
+    state.state.foundSet.add(msg);
   }
 
   const str = TileMessage[msg];
@@ -955,13 +916,13 @@ async function flashTileMessage(msg: number, once: boolean = false) {
 }
 
 async function killAt(x: number, y: number) {
-  const block = state.PF?.[x]?.[y] ?? Tile.Floor;
+  const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
 
-  state.PF[x][y] = Tile.Floor;
+  state.state.PF[x][y] = Tile.Floor;
 
   if (block === Tile.Slow || block === Tile.Medium || block === Tile.Fast) {
-    for (let i = 0; i < state.entities.length; i++) {
-      const m = state.entities[i];
+    for (let i = 0; i < state.state.entities.length; i++) {
+      const m = state.state.entities[i];
       if (m.x === x && m.y === y) {
         await m.kill();
       }
@@ -977,15 +938,17 @@ function go(e: Entity, x: number, y: number) {
 
   e.move(x, y);
 
-  state.PF[px][py] = Tile.Floor;
-  state.PF[x][y] = e.type;
+  state.state.PF[px][py] = Tile.Floor;
+  state.state.PF[x][y] = e.type;
 
   renderPlayfield();
 }
 
 async function playerWhip() {
-  const PX = state.player.x;
-  const PY = state.player.y;
+  display.bak(TileColor[Tile.Floor][1]!);
+
+  const PX = state.state.player.x;
+  const PY = state.state.player.y;
 
   sound.play(70, 50 * 8, 100);
   if (PY > 0 && PX > 0) await hit(PX - 1, PY - 1, '\\');
@@ -999,20 +962,22 @@ async function playerWhip() {
 }
 
 export async function flashPlayer() {
-  for (let i = 0; i < 80; i++) {
-    drawTile(
-      state.player.x,
-      state.player.y,
-      Tile.Player,
-      RNG.getUniformInt(0, 15),
-      RNG.getUniformInt(0, 8),
-    );
-    await delay(1);
-    sound.play(i / 2, 1000, 30);
+  for (let i = 0; i < 160; i++) {
+    if (i % 5 === 0) {
+      drawTile(
+        state.state.player.x,
+        state.state.player.y,
+        Tile.Player,
+        RNG.getUniformInt(0, 15),
+        RNG.getUniformInt(0, 8),
+      );
+      await delay();
+    }
+    sound.play(i / 2, 80, 10);
   }
 
   // for (let i = 0; i < 250; i++) {
-  //   drawTile(state.player.x, state.player.y, Tile.Player, RNG.getUniformInt(0, 15), RNG.getUniformInt(0, 15));
+  //   drawTile(state.state.player.x, state.state.player.y, Tile.Player, RNG.getUniformInt(0, 15), RNG.getUniformInt(0, 15));
   //   await sound.play(20, 1, 100);
   // }
 }
@@ -1020,14 +985,14 @@ export async function flashPlayer() {
 async function playerTeleport() {
   await flashPlayer();
 
-  state.PF[state.player.x][state.player.y] = Tile.Floor;
-  drawTile(state.player.x, state.player.y);
+  state.state.PF[state.state.player.x][state.state.player.y] = Tile.Floor;
+  drawTile(state.state.player.x, state.state.player.y);
 
   // const t = Date.now();
   // while (Date.now() - t < 3000) {
   //   const x = RNG.getUniformInt(0, XSize);
   //   const y = RNG.getUniformInt(0, YSize);
-  //   const block = state.PF?.[x]?.[y] ?? Tile.Floor;
+  //   const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
   //   if ([Tile.Floor].indexOf(block as Tile) > -1) {
   //     drawTile(x, y, Tile.Player);
   //     await sound.play(20, 10, 100);
@@ -1038,7 +1003,7 @@ async function playerTeleport() {
   for (let i = 0; i < 700; i++) {
     const x = RNG.getUniformInt(0, XSize);
     const y = RNG.getUniformInt(0, YSize);
-    const block = state.PF?.[x]?.[y] ?? Tile.Floor;
+    const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
     if (VISUAL_TELEPORTABLES.indexOf(block as Tile) > -1) {
       drawTile(x, y, '☺', RNG.getUniformInt(0, 15), RNG.getUniformInt(0, 7));
       await sound.play(20, 10, 100);
@@ -1049,11 +1014,11 @@ async function playerTeleport() {
   while (true) {
     const x = RNG.getUniformInt(0, XSize);
     const y = RNG.getUniformInt(0, YSize);
-    const block = state.PF?.[x]?.[y] ?? Tile.Floor;
+    const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
     if (block === Tile.Floor) {
-      state.PF[x][y] = Tile.Player;
-      state.player.x = x;
-      state.player.y = y;
+      state.state.PF[x][y] = Tile.Player;
+      state.state.player.x = x;
+      state.state.player.y = y;
       renderPlayfield();
       break;
     }
@@ -1062,13 +1027,16 @@ async function playerTeleport() {
 
 // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER/LOST4.TIT#L399
 async function hit(x: number, y: number, ch: string) {
-  const thing = state.PF?.[x]?.[y] ?? Tile.Floor;
+  const thing = state.state.PF?.[x]?.[y] ?? Tile.Floor;
+
+  const bg = TileColor[thing as Tile]?.[1] ?? TileColor[Tile.Floor][1]!;
 
   display.drawOver(
     x + XBot,
     y + YBot,
     ch,
     ColorCodes[RNG.getUniformInt(0, 15) as Color],
+    bg,
   );
 
   switch (thing) {
@@ -1083,10 +1051,10 @@ async function hit(x: number, y: number, ch: string) {
     case Tile.Tree:
     case Tile.Message: {
       // Destroy?
-      const w = state.whipPower;
+      const w = state.state.whipPower;
       if (6 * Math.random() < w) {
         sound.play(130, 50);
-        state.PF[x][y] = Tile.Floor;
+        state.state.PF[x][y] = Tile.Floor;
       } else {
         sound.play(130, 25);
         sound.play(90, 50);
@@ -1102,13 +1070,14 @@ async function hit(x: number, y: number, ch: string) {
     case Tile.R:
     case Tile.O:
     case Tile.Z: // Break
-      state.PF[x][y] = Tile.Floor;
+      state.state.PF[x][y] = Tile.Floor;
       sound.play(400, 50);
+      // TODO: Generator special case
       break;
+    case Tile.Quake:
     case Tile.IBlock:
     case Tile.IWall:
     case Tile.IDoor:
-    case Tile.Quake:
     case Tile.Trap2:
     case Tile.Trap3:
     case Tile.Trap4:
@@ -1122,14 +1091,14 @@ async function hit(x: number, y: number, ch: string) {
     case Tile.Trap10:
     case Tile.Trap11:
     case Tile.Trap12:
-    case Tile.Trap13: // Break
+    case Tile.Trap13:
     case Tile.Stop:
-      state.PF[x][y] = Tile.Floor;
+      // No break, no effect
       break;
     case Tile.Rock:
-      if (30 * Math.random() < state.whipPower) {
+      if (30 * Math.random() < state.state.whipPower) {
         sound.play(130, 50);
-        state.PF[x][y] = Tile.Floor;
+        state.state.PF[x][y] = Tile.Floor;
       } else {
         sound.play(130, 25);
         sound.play(90, 50);
@@ -1138,9 +1107,9 @@ async function hit(x: number, y: number, ch: string) {
     case Tile.MBlock:
     case Tile.ZBlock:
     case Tile.GBlock: {
-      if (6 * Math.random() < state.whipPower) {
+      if (6 * Math.random() < state.state.whipPower) {
         sound.play(130, 50);
-        state.PF[x][y] = Tile.Floor;
+        state.state.PF[x][y] = Tile.Floor;
       } else {
         sound.play(130, 25);
         sound.play(90, 50);
@@ -1149,8 +1118,7 @@ async function hit(x: number, y: number, ch: string) {
     }
     case Tile.Wall:
     case Tile.Statue:
-    // TBD
-    // eslint-disable-next-line no-fallthrough
+      break;
     default:
       break;
   }
@@ -1159,30 +1127,30 @@ async function hit(x: number, y: number, ch: string) {
 }
 
 export function renderPlayfield() {
-  for (let x = 0; x < state.PF.length; x++) {
-    for (let y = 0; y < state.PF[x].length; y++) {
+  for (let x = 0; x < state.state.PF.length; x++) {
+    for (let y = 0; y < state.state.PF[x].length; y++) {
       // Skip entities, will be rendered later
-      const b = state.PF[x][y] || Tile.Floor;
+      const b = state.state.PF[x][y] || Tile.Floor;
       if (b === Tile.Player) continue;
       if (b === Tile.Slow || b === Tile.Medium || b === Tile.Fast) continue;
 
-      drawTile(x, y, state.PF[x][y] || Tile.Floor);
+      drawTile(x, y, state.state.PF[x][y] || Tile.Floor);
     }
   }
 
   const floorColor = TileColor[Tile.Floor][1]!;
 
-  for (let i = 0; i < state.entities.length; i++) {
-    const e = state.entities[i];
+  for (let i = 0; i < state.state.entities.length; i++) {
+    const e = state.state.entities[i];
     if (e.x === -1 || e.y === -1) continue; // dead
     drawTile(e.x, e.y, e.getChar(), TileColor[e.type][0]!, floorColor);
   }
 
   drawTile(
-    state.player.x,
-    state.player.y,
-    state.player.getChar(),
-    TileColor[state.player.type][0]!,
+    state.state.player.x,
+    state.state.player.y,
+    state.state.player.getChar(),
+    TileColor[state.state.player.type][0]!,
     floorColor,
   );
 }
@@ -1216,7 +1184,7 @@ export function drawTile(
 
   switch (block) {
     case Tile.Stairs:
-      fg = typeof fg === 'number' && !state.paused ? fg | 16 : fg; // add blink
+      fg = typeof fg === 'number' && !state.state.paused ? fg | 16 : fg; // add blink
       break;
   }
 
@@ -1228,7 +1196,7 @@ function addScore(block: Tile) {
     case Tile.Slow:
     case Tile.Medium:
     case Tile.Fast:
-      state.score += block;
+      state.state.score += block;
       break;
     case Tile.Block:
     case Tile.ZBlock:
@@ -1242,62 +1210,62 @@ function addScore(block: Tile) {
     case Tile.OWall2:
     case Tile.OWall3:
     case Tile.EWall:
-      if (state.score > 2) state.score -= 2;
+      if (state.state.score > 2) state.state.score -= 2;
       break;
     case Tile.Whip:
     case Tile.SlowTime:
     case Tile.Bomb:
-      state.score++;
+      state.state.score++;
       break;
     case Tile.Stairs:
-      state.score += state.levelIndex * 5;
+      state.state.score += state.state.levelIndex * 5;
       break;
     case Tile.Chest:
-      state.score += 10 + Math.floor(state.levelIndex / 2);
+      state.state.score += 10 + Math.floor(state.state.levelIndex / 2);
       break;
     case Tile.Gem:
-      state.score += Math.floor(state.levelIndex / 2) + 1;
+      state.state.score += Math.floor(state.state.levelIndex / 2) + 1;
       break;
     case Tile.Invisible:
-      state.score += 25;
+      state.state.score += 25;
       break;
     case Tile.Nugget:
-      state.score += 50;
+      state.state.score += 50;
       break;
     case Tile.Door:
-      state.score += 10;
+      state.state.score += 10;
       break;
     case Tile.Teleport:
     case Tile.Freeze:
-      state.score += 2;
+      state.state.score += 2;
       break;
     case Tile.SpeedTime:
     case Tile.Power:
-      state.score += 5;
+      state.state.score += 5;
       break;
     case Tile.Trap:
-      if (state.score > 5) state.score -= 5;
+      if (state.state.score > 5) state.state.score -= 5;
       break;
     case Tile.Lava:
-      if (state.score > 100) state.score += 100;
+      if (state.state.score > 100) state.state.score += 100;
       break;
     case Tile.Tome:
-      state.score += 5000;
+      state.state.score += 5000;
       break;
     case Tile.Tablet:
-      state.score += state.levelIndex + 250;
+      state.state.score += state.state.levelIndex + 250;
       break;
     case Tile.Chance:
-      state.score += 100;
+      state.state.score += 100;
       break;
     case Tile.Amulet:
-      state.score += 2500;
+      state.state.score += 2500;
       break;
     case Tile.Z:
-      state.score += 1000;
+      state.state.score += 1000;
       break;
     // case Tile.Border:
-    //   if (state.score > state.level) state.score -= Math.floor(state.levelIndex/ 2);
+    //   if (state.state.score > state.state.level) state.state.score -= Math.floor(state.state.levelIndex/ 2);
     //   break;
   }
 
@@ -1307,7 +1275,7 @@ function addScore(block: Tile) {
 export async function dead() {
   display.drawText(XTop / 2 - 7, 0, 'You have died.', Color.Black, Color.Red);
   await screen.flashMessage('Press any key to continue.');
-  state.done = true;
+  state.state.done = true;
 }
 
 async function quit() {
@@ -1318,7 +1286,7 @@ async function quit() {
   }
 
   if (answer.toLowerCase() === 'y') {
-    state.done = true;
+    state.state.done = true;
   }
 }
 
@@ -1328,7 +1296,7 @@ async function pause() {
 
 // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L45
 async function tabletMessage() {
-  switch (state.level!.id) {
+  switch (state.state.level!.id) {
     case 'Debug':
     case 'Lost30':
       await prayer();
@@ -1339,9 +1307,9 @@ async function tabletMessage() {
       // Replace River with Nugget
       for (let x = 0; x <= XSize; x++) {
         for (let y = 0; y <= YSize; y++) {
-          if (state.PF[x][y] === Tile.River) {
+          if (state.state.PF[x][y] === Tile.River) {
             await sound.play(x * y, 50, 10);
-            state.PF[x][y] = Tile.Nugget;
+            state.state.PF[x][y] = Tile.Nugget;
             drawTile(x, y, Tile.Nugget);
           }
         }
@@ -1359,9 +1327,9 @@ async function tabletMessage() {
       // Clears River with Block
       for (let x = 0; x <= XSize; x++) {
         for (let y = 0; y <= YSize; y++) {
-          if (state.PF[x][y] === Tile.River) {
+          if (state.state.PF[x][y] === Tile.River) {
             await sound.play(x * y, 50, 10);
-            state.PF[x][y] = Tile.Block;
+            state.state.PF[x][y] = Tile.Block;
             drawTile(x, y, Tile.Block);
           }
         }
@@ -1420,11 +1388,11 @@ export async function renderTitle() {
   );
 
   const x = WIDTH / 2 - TITLE.length / 2;
-  const readkey = controls.readkey();
-  while (!readkey()) {
+
+  await controls.repeatUntilKeyPressed(async () => {
     display.drawText(x, 3, TITLE, RNG.getUniformInt(0, 16), Color.Red);
     await delay(500);
-  }
+  });
 }
 
 export async function endRoutine() {
@@ -1438,26 +1406,32 @@ export async function endRoutine() {
   await screen.flashMessage('You are magically transported from Kroz!');
 
   // Check for infinite items
-  const gems = (state.gems = isFinite(state.gems) ? state.gems : 150);
-  const whips = (state.whips = isFinite(state.whips) ? state.whips : 20);
-  const teleports = (state.teleports = isFinite(state.teleports)
-    ? state.teleports
+  const gems = (state.state.gems = isFinite(state.state.gems)
+    ? state.state.gems
+    : 150);
+  const whips = (state.state.whips = isFinite(state.state.whips)
+    ? state.state.whips
+    : 20);
+  const teleports = (state.state.teleports = isFinite(state.state.teleports)
+    ? state.state.teleports
     : 10);
-  const keys = (state.keys = isFinite(state.keys) ? state.keys : 5);
+  const keys = (state.state.keys = isFinite(state.state.keys)
+    ? state.state.keys
+    : 5);
 
   await screen.flashMessage('Your Gems are worth 100 points each...');
 
   for (let i = 0; i < gems; i++) {
-    state.gems--;
-    state.score += 10;
+    state.state.gems--;
+    state.state.score += 10;
     screen.renderStats();
     await sound.play(i * 8 + 100, 20);
   }
 
   await screen.flashMessage('Your Whips are worth 100 points each...');
   for (let i = 0; i < whips; i++) {
-    state.whips--;
-    state.score += 10;
+    state.state.whips--;
+    state.state.score += 10;
     screen.renderStats();
     await sound.play(i * 8 + 100, 20);
   }
@@ -1466,16 +1440,16 @@ export async function endRoutine() {
     'Your Teleport Scrolls are worth 200 points each...',
   );
   for (let i = 0; i < teleports; i++) {
-    state.teleports--;
-    state.score += 20;
+    state.state.teleports--;
+    state.state.score += 20;
     screen.renderStats();
     await sound.play(i * 8 + 100, 20);
   }
 
   await screen.flashMessage('Your Keys are worth 10,000 points each....');
   for (let i = 0; i < keys; i++) {
-    state.keys--;
-    state.score += 1000;
+    state.state.keys--;
+    state.state.score += 1000;
     screen.renderStats();
     await sound.play(i * 8 + 100, 20);
   }
@@ -1525,7 +1499,7 @@ export async function endRoutine() {
   display.writeln('');
 
   await screen.flashMessage('Press any key, Adventurer.');
-  state.done = true;
+  state.state.done = true;
 }
 
 async function gotAmulet() {

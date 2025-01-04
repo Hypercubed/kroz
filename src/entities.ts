@@ -1,8 +1,9 @@
+import * as sound from './sound';
+import * as state from './state';
+
 import { TileChar, Tile } from './tiles';
 import { FLOOR_CHAR } from './constants';
-import * as sound from './sound';
-import * as world from './world';
-import { Timer } from './world';
+import { Timer } from './state';
 
 export type EntityType = Tile.Player | Tile.Slow | Tile.Medium | Tile.Fast;
 
@@ -41,9 +42,9 @@ export class Entity {
   }
 
   getChar() {
-    // TODO: remove dependencey on world.state
+    // TODO: remove dependencey on state.state
     if (this.type === Tile.Player)
-      return world.state.T[Timer.Invisible] > 0
+      return state.state.T[Timer.Invisible] > 0
         ? FLOOR_CHAR
         : TileChar[this.type];
     return this.ch;

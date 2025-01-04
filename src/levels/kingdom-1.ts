@@ -36,3 +36,5 @@ WW     ########+++++        #######         WWWWW########1    WW
 L2  +  X      #kingdom#of#kroz#ii#by#scott#miller#      X  +  2L`;
 
 export default { id, name, map };
+
+// TODO: ShootRight

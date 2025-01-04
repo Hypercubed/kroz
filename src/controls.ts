@@ -2,6 +2,10 @@
 // @ts-ignore
 import { default as gameControl } from 'gamecontroller.js/src/gamecontrol.js';
 import { DEBUG } from './constants';
+import { MiniSignal } from 'mini-signals';
+import { delay } from './utils';
+
+const keyPressed = new MiniSignal<[string]>();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let gamepad: any = null;
@@ -28,11 +32,8 @@ export enum Action { // cannot be const enum
   Restore,
 }
 
-// Tracks the current state of joystick actions
-export const actionState: Partial<Record<Action, boolean>> = {};
-
-// Tracks the current state of keyboard actions
-export const actionBuffer: Partial<Record<Action, boolean>> = {};
+export const keyState: Partial<Record<string, number>> = {};
+export const actionState: Partial<Record<Action, number>> = {};
 
 const KEY_BINDING: Record<string, Action | null> = {
   ArrowUp: Action.North,
@@ -102,16 +103,21 @@ function enableGamepadControls() {
     gamepad!.axeThreshold = [0.5, 0.5];
 
     for (const [key, action] of Object.entries(GAMEPAD_BINDING)) {
-      gamepad.before(key, () => {
-        if (!action) return;
+      if (!action) return;
 
-        actionState[action] = true;
-        // actionBuffer[action] = true;
+      gamepad.before(key, () => {
+        keyState[key] = actionState[action] = 0b011;
       });
 
       gamepad.after(key, () => {
-        if (!action) return;
-        actionState[action] = false;
+        // Dispatch keyPressed event if key was pressed since last clearKeys
+        if ((keyState[key] || 0) & 0b11) keyPressed.dispatch(key);
+
+        keyState[key]! &= ~0b001;
+        keyState[key]! |= 0b100;
+
+        actionState[action]! &= ~0b001;
+        actionState[action]! |= 0b100;
       });
     }
   });
@@ -121,53 +127,94 @@ export function disableGamepadControls() {
   gameControl.off('connect');
 }
 
-// Note: when held down, the keydown event will fire repeatedly
 function keydownListener(event: KeyboardEvent) {
+  const action = KEY_BINDING[event.key];
+  keyState[event.key] = 0b010; // don't track down, since keydown will fire repeatedly when a key is held
+
+  if (!action) return;
+  event.preventDefault();
+  actionState[action] = 0b010;
+}
+
+function keyupListener(event: KeyboardEvent) {
+  // Dispatch keyPressed event if key was pressed since last clearKeys
+  if ((keyState[event.key] || 0) & 0b11) keyPressed.dispatch(event.key);
+
+  keyState[event.key]! &= ~0b001;
+  keyState[event.key]! |= 0b100;
+
   const action = KEY_BINDING[event.key];
   if (!action) return;
   event.preventDefault();
-  actionBuffer[action] = true;
+  actionState[action]! &= ~0b001;
+  actionState[action]! |= 0b100;
 }
 
 export function start() {
   enableGamepadControls();
   window.addEventListener('keydown', keydownListener);
+  window.addEventListener('keyup', keyupListener);
 }
 
 export function stop() {
   disableGamepadControls();
   window.removeEventListener('keydown', keydownListener);
+  window.removeEventListener('keyup', keydownListener);
 }
 
 export function clearKeys() {
-  for (const key in actionBuffer) {
-    actionBuffer[key as unknown as Action] = false;
+  for (const key in keyState) {
+    if (!keyState[key]) continue;
+    keyState[key]! = 0;
   }
 }
 
-export function pollActions() {
-  const actions: Partial<Record<Action, boolean>> = {};
-
-  for (const key in Action) {
-    if (!isNaN(Number(key))) {
-      const action = key as unknown as Action;
-      actions[action] = !!actionBuffer[action] || !!actionState[action];
-      actionBuffer[action] = false;
-    }
+export function clearActions() {
+  for (const key in actionState) {
+    const action = key as unknown as Action;
+    if (!actionState[action]) continue;
+    actionState[action]! &= ~0b110;
   }
-  return actions;
 }
 
-export function readkey() {
-  let key: string = '';
-  document.addEventListener(
-    'keydown',
-    (ev) => {
-      ev.preventDefault();
-      clearKeys();
-      key = ev.key;
-    },
-    { once: true },
-  );
-  return () => key;
+// true if action key is active
+export function isActionActive(action: Action) {
+  return !!(actionState[action]! & 0b001);
+}
+
+// true if action key was activated frame
+export function wasActionActivated(action: Action) {
+  return !!(actionState[action]! & 0b010);
+}
+
+// true if action key was active this frame
+export function wasActionActive(action: Action) {
+  return !!(actionState[action]! & 0b011);
+}
+
+// true if action key was inactivated this frame
+export function wasActionDeactivated(action: Action) {
+  return !!(actionState[action]! & 0b100);
+}
+
+export async function waitForKeypress() {
+  clearKeys(); // clear any keys that were pressed before
+
+  return new Promise<string>((resolve) => {
+    const ref = keyPressed.add((key: string) => {
+      keyPressed.detach(ref);
+      resolve(key);
+    });
+  });
+}
+
+export async function repeatUntilKeyPressed(
+  cb: () => void | Promise<void>,
+  d = 50,
+) {
+  const waitFor = waitForKeypress();
+  do {
+    await cb?.();
+  } while (!(await Promise.race([waitFor, delay(d)])));
+  return waitFor;
 }

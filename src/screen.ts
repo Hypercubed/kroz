@@ -1,5 +1,5 @@
 import * as display from './display';
-import * as world from './world';
+import * as state from './state';
 import * as controls from './controls';
 
 import { FLOOR_CHAR, HEIGHT, TITLE, XBot, XTop, YBot, YTop } from './constants';
@@ -23,36 +23,36 @@ export function renderScreen() {
 // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST1.LEV#L328
 export function renderStats() {
   const whipStr =
-    world.state.whipPower > 2
-      ? `${world.state.whips}+${world.state.whipPower - 2}`
-      : world.state.whips.toString();
+    state.state.whipPower > 2
+      ? `${state.state.whips}+${state.state.whipPower - 2}`
+      : state.state.whips.toString();
 
   const width = 4;
   const size = 7;
 
   const gc =
-    !world.state.paused && world.state.gems < 10 ? Color.Red | 16 : Color.Red;
+    !state.state.paused && state.state.gems < 10 ? Color.Red | 16 : Color.Red;
 
   const x = 69;
 
   display.drawText(
     x,
     1,
-    pad((world.state.score * 10).toString(), width + 1, size),
+    pad((state.state.score * 10).toString(), width + 1, size),
     Color.Red,
     Color.Grey,
   );
   display.drawText(
     x,
     4,
-    pad(world.state.levelIndex.toString(), width, size),
+    pad(state.state.levelIndex.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
   display.drawText(
     x,
     7,
-    pad(world.state.gems.toString(), width + 1, size),
+    pad(state.state.gems.toString(), width + 1, size),
     gc,
     Color.Grey,
   );
@@ -60,30 +60,17 @@ export function renderStats() {
   display.drawText(
     x,
     13,
-    pad(world.state.teleports.toString(), width, size),
+    pad(state.state.teleports.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
   display.drawText(
     x,
     16,
-    pad(world.state.keys.toString(), width, size),
+    pad(state.state.keys.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
-}
-
-export function fullRender() {
-  display.clear(Color.Blue);
-  renderBorder();
-  renderScreen();
-  world.renderPlayfield();
-  renderStats();
-}
-
-export function fastRender() {
-  world.renderPlayfield();
-  renderStats();
 }
 
 export function renderBorder() {
@@ -106,23 +93,18 @@ export async function flashMessage(msg: string): Promise<string> {
   const x = (XTop - msg.length) / 2;
   const y = YTop + 1;
 
-  world.state.paused = true;
-  const readkey = controls.readkey();
-  while (!readkey()) {
+  state.state.paused = true;
+
+  const key = await controls.repeatUntilKeyPressed(() => {
     display.drawText(x, y, msg, RNG.getUniformInt(1, 15), Color.Black);
-    await delay(50);
-  }
+  });
   renderBorder();
-  controls.clearKeys();
-
-  world.state.paused = false;
-
-  return readkey();
+  state.state.paused = false;
+  return key;
 }
 
 export async function introScreen() {
-  const readkey = controls.readkey();
-  while (!readkey()) {
+  return controls.repeatUntilKeyPressed(async () => {
     display.col(RNG.getUniformInt(1, 15));
 
     display.clear(Color.Black);
@@ -154,7 +136,7 @@ export async function introScreen() {
     display.gotoxy(0, HEIGHT - 1);
     display.writeCenter('Press any key to continue.', Color.HighIntensityWhite);
     await delay(500);
-  }
+  });
 }
 
 function pad(s: string, n: number, r: number) {

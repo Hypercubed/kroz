@@ -7,6 +7,13 @@ body {
   font-family: IBM_VGA, monospace;
 }
 
+.fork-me {
+  position: fixed;
+  top: 0;
+  right: 0;
+  border: 0;
+}
+
 canvas {
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
@@ -18,21 +25,34 @@ canvas {
   background-color: #242424;
 }
 
+#app {
+  width: calc(100vw - 60px);
+  min-height: calc(var(--w) * 0.6);
+}
+
 #app,
-canvas {
+#app canvas {
   margin: 0 auto;
   text-align: center;
 }
 
-canvas {
-  width: 90%;
+#app canvas {
+  margin-top: 30px;
+  width: 100%;
 }
 
 #instructions {
+  position: relative;
   margin: 20px auto;
-  width: 600px;
+  width: 70%;
 
   & ul {
     list-style-type: none;
   }
+}
+
+.lil-gui.root {
+  position: absolute;
+  top: -20px;
+  right: 0;
 }

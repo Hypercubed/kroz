@@ -1,51 +1,42 @@
+/* eslint-disable no-sparse-arrays */
 import { RNG } from 'rot-js';
-import { clamp, delay } from './utils';
+import { delay } from './utils';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { ZZFX } from 'zzfx';
 
 const SILENT = false;
 
-const audioContext = new (window.AudioContext ||
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).webkitAudioContext)();
-
-const VOLUME = 0.005;
-// const VOLUME_CURVE = [1.0, 0.61, 0.37, 0.22, 0.14, 0.08, 0.05, 0.0];
+ZZFX.volume = 0.005;
 
 export function play(frequency: number, duration: number, volume: number = 1) {
   if (SILENT) return delay(duration);
 
-  const oscillator = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
-
-  oscillator.type = 'sine';
-  oscillator.frequency.value = clamp(frequency, -24000, 24000);
-  oscillator.connect(gainNode);
-  gainNode.connect(audioContext.destination);
-
-  oscillator.start();
-  gainNode.gain.setValueAtTime(volume * VOLUME, audioContext.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(
-    0.001,
-    audioContext.currentTime + duration / 1000,
+  ZZFX.play(
+    ...[
+      volume, // volume
+      0, // randomness
+      frequency, // frequency
+      0, // attack
+      duration / 1000, // sustain
+      0, //duration / 1000, // release
+    ],
   );
-  // gainNode.gain.setValueCurveAtTime(VOLUME_CURVE.map((v) => v * VOLUME * volume), audioContext.currentTime, duration / 1000);
 
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      oscillator.stop();
-      // audioContext.close();
-      resolve();
-    }, duration);
-  });
+  return delay(duration);
 }
 
 export async function grab() {
+  // TODO: Replace with square wave?
   for (let x = 1; x <= 65; x++) {
-    play(Math.random() * 1000 + 1000, 1000);
+    play(RNG.getUniformInt(1000, 2000), 1);
   }
-  await delay(59);
+  await delay(0);
 }
 
 export async function blocked() {
+  // TODO: Replace with square wave?
   for (let x = 150; x >= 35; x--) {
     await play(x, 1);
   }
@@ -60,11 +51,11 @@ export async function noneSound() {
 
 export async function footStep() {
   for (let x = 1; x <= 23; x++) {
-    play(Math.random() * 550 + 350, 120);
+    play(RNG.getUniformInt(350, 900), 120);
   }
   await delay(120);
   for (let x = 1; x <= 30; x++) {
-    play(Math.random() * 50 + 150, 50);
+    play(RNG.getUniformInt(150, 200), 50);
   }
 }
 
@@ -80,10 +71,11 @@ export async function blockMove() {
   }
 }
 
+const blockedWallSample = ZZFX.buildSamples(
+  ...[10, 0, 40, , 0.1, 0, , 0, , , , , , 1],
+);
 export async function blockedWall() {
-  for (let x = 1; x <= 2000; x++) {
-    play(RNG.getUniformInt(0, x * 2 + 200) + x, 50);
-  }
+  ZZFX.playSamples(blockedWallSample);
 }
 
 export async function noise() {

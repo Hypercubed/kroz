@@ -1,11 +1,12 @@
-import './style.css';
-
-import * as display from './display';
 import * as engine from './engine';
 
-window.addEventListener('DOMContentLoaded', () => {
-  const container = display.getContainer()!;
-  const app = document.getElementById('app')!;
-  app.appendChild(container);
+function go() {
+  engine.init();
   engine.start();
-});
+}
+
+try {
+  document.fonts.ready.then(go);
+} catch {
+  window.addEventListener('DOMContentLoaded', go);
+}

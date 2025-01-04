@@ -3,16 +3,7 @@ import { HEIGHT, WIDTH } from './constants';
 import { TileColor, Tile } from './tiles';
 import { Color, ColorCodes } from './colors';
 
-Display.Rect.cache = true;
-
-const rotDisplay = new Display({
-  width: WIDTH,
-  height: HEIGHT,
-  fontFamily: 'IBM_VGA, monospace',
-  bg: ColorCodes[Color.Blue], // background
-  fg: ColorCodes[Color.White], // foreground
-  fontSize: 64, // canvas fontsize,
-});
+let rotDisplay: Display;
 
 const state = {
   x: 0,
@@ -20,6 +11,19 @@ const state = {
   bg: 'black',
   fg: 'white',
 };
+
+export function init() {
+  Display.Rect.cache = true;
+
+  rotDisplay = new Display({
+    width: WIDTH,
+    height: HEIGHT,
+    fontFamily: 'IBM_VGA, monospace',
+    bg: ColorCodes[Color.Blue], // background
+    fg: ColorCodes[Color.White], // foreground
+    fontSize: 64, // canvas fontsize,
+  });
+}
 
 export function gotoxy(x: number, y: number = state.y) {
   state.x = x;
@@ -121,5 +125,6 @@ export function drawText(
 }
 
 export function getContainer() {
+  if (!rotDisplay) init();
   return rotDisplay.getContainer();
 }

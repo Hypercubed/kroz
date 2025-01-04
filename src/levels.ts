@@ -43,3 +43,19 @@ export const LEVELS: Level[] = [
   lost42 as Level,
   lost75 as Level,
 ];
+
+// Possible levels to add:
+// - caverns-9
+// - caverns-11
+// - caverns-14
+// - final crusade of kroz - 1
+// - dungeon of kroz - 1
+// - dungeon of kroz - 3
+// - temple of kroz - 1
+// - kingdom - 1
+// - kingdom - 4
+// - kingdom - 5
+// - kingdom - 7
+// - kingdom - 21
+// - kingdom - 25
+// - castle of kroz - 1
