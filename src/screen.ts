@@ -139,6 +139,51 @@ export async function introScreen() {
   });
 }
 
+export async function instructionsScreen() {
+  display.clear(Color.Black);
+
+
+  display.gotoxy(0, 0);
+  display.writeCenter(TITLE, Color.Yellow);
+  display.writeCenter('INSTRUCTIONS', Color.HighIntensityWhite);
+  display.writeCenter('------------', Color.HighIntensityWhite);
+  display.writeln('');
+
+  display.col(Color.LightBlue);
+  display.writeln(dedent`
+    The dungeons contain dozens of treasures,  spells,  traps and other mysteries.
+  Touching an object for the first time will reveal a little of its identity,  but
+  it will be left to you to decide how best to use it or avoid it.                
+    When a creature touches you it will vanish,  taking with it a few of your gems
+  that you have collected. If you have no gems then the creature will instead take
+  your life!  Whips can be used to kill nearby creatures, but they are better used
+  to smash through crumbled walls and forest terrain.`);
+  display.writeln('');
+
+  display.gotoxy(3);
+  display.writeln(dedent`
+    You can use these        u i o    7 8 9
+    cursor keys to            \\|/      \\|/     w or 5: Whip
+    move your man,           j- -k    4- -6         T: Teleport
+    and the four              /|\\      /|\\
+    normal cursor keys       n m ,    1 2 3`);
+
+  display.gotoxy(0);
+  display.writeln('');
+  display.writeln(dedent`
+    It's a good idea to save (S) your game at every new level,  therefore,  if you
+    die you can easily restore (R) the game at that level and try again.`);
+
+  display.gotoxy(2);
+  display.writeln('');
+  display.writeln('Have fun and good-luck...');
+
+  display.gotoxy(0, HEIGHT - 1);
+  display.writeCenter('Press any key to continue.', Color.HighIntensityWhite);
+
+  await controls.waitForKeypress();
+}
+
 function pad(s: string, n: number, r: number) {
   return s.padStart(n, FLOOR_CHAR).padEnd(r, FLOOR_CHAR);
 }

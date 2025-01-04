@@ -45,3 +45,5 @@ export default {
 // Reveal gems
 // Creature create spell
 // Magic has been released
+// needs ô - CSpell1
+// ñ is invisible?

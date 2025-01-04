@@ -40,19 +40,3 @@ canvas {
   margin-top: 30px;
   width: 100%;
 }
-
-#instructions {
-  position: relative;
-  margin: 20px auto;
-  width: 70%;
-
-  & ul {
-    list-style-type: none;
-  }
-}
-
-.lil-gui.root {
-  position: absolute;
-  top: -20px;
-  right: 0;
-}

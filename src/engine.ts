@@ -61,6 +61,7 @@ export async function start() {
 
   await screen.introScreen();
   await world.renderTitle();
+  await screen.instructionsScreen();
 
   world.loadLevel(); // Don't wait
   fullRender();
@@ -88,8 +89,7 @@ export async function start() {
     if (!gui) {
       gui = new dat.GUI({
         closeFolders: true,
-        title: 'Debug',
-        container: document.getElementById('instructions')!,
+        title: 'Debug'
       });
 
       const timers = {

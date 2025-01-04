@@ -35,6 +35,14 @@ export enum Action { // cannot be const enum
 export const keyState: Partial<Record<string, number>> = {};
 export const actionState: Partial<Record<Action, number>> = {};
 
+// Bitfields
+// 0b1111|
+//   ||||
+//   |||+-> active
+//   ||+--> activated this frame
+//   |+---> deactivated this frame
+//   +----> activated last frame
+
 const KEY_BINDING: Record<string, Action | null> = {
   ArrowUp: Action.North,
   ArrowDown: Action.South,
@@ -128,12 +136,14 @@ export function disableGamepadControls() {
 }
 
 function keydownListener(event: KeyboardEvent) {
+  if (event.repeat) return; // Ignore repeated keydown events, repeat is handled by keyup
+
   const action = KEY_BINDING[event.key];
-  keyState[event.key] = 0b010; // don't track down, since keydown will fire repeatedly when a key is held
+  keyState[event.key] = 0b011;
 
   if (!action) return;
   event.preventDefault();
-  actionState[action] = 0b010;
+  actionState[action] = 0b011;
 }
 
 function keyupListener(event: KeyboardEvent) {
@@ -169,11 +179,18 @@ export function clearKeys() {
   }
 }
 
+export function flushAll() {
+  for (const prop in actionState) { if (Object.prototype.hasOwnProperty.call(actionState, prop)) { delete actionState[prop as unknown as Action]; } }
+  for (const prop in keyState) { if (Object.prototype.hasOwnProperty.call(keyState, prop)) { delete keyState[prop]; } }
+}
+
 export function clearActions() {
   for (const key in actionState) {
     const action = key as unknown as Action;
     if (!actionState[action]) continue;
-    actionState[action]! &= ~0b110;
+    const wasPressed = !!(actionState[action]! & 0b010);
+    actionState[action]! &= ~0b1110;
+    if (wasPressed) actionState[action]! |= 0b1000;
   }
 }
 
@@ -189,7 +206,7 @@ export function wasActionActivated(action: Action) {
 
 // true if action key was active this frame
 export function wasActionActive(action: Action) {
-  return !!(actionState[action]! & 0b011);
+  return !!(actionState[action]! & 0b011) && !(actionState[action]! & 0b1000);
 }
 
 // true if action key was inactivated this frame
@@ -198,7 +215,7 @@ export function wasActionDeactivated(action: Action) {
 }
 
 export async function waitForKeypress() {
-  clearKeys(); // clear any keys that were pressed before
+  flushAll(); // clear any keys that were pressed before
 
   return new Promise<string>((resolve) => {
     const ref = keyPressed.add((key: string) => {

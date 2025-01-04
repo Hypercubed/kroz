@@ -17,7 +17,6 @@ import {
   TileMessage,
 } from './tiles';
 import {
-  DEBUG,
   FLOOR_CHAR,
   HEIGHT,
   TIME_SCALE,
@@ -35,7 +34,7 @@ import { Action } from './controls';
 
 import { Color, ColorCodes } from './colors';
 import { mod } from 'rot-js/lib/util';
-import { delay } from './utils';
+import { clamp, delay } from './utils';
 import { LEVELS } from './levels';
 import dedent from 'ts-dedent';
 import { Timer } from './state';
@@ -59,12 +58,14 @@ export function loadLevel() {
 }
 
 export async function nextLevel() {
+  controls.flushAll();
   state.state.levelIndex = mod(state.state.levelIndex + 1, LEVELS.length);
   loadLevel();
   await screen.flashMessage('Press any key to begin this level.');
 }
 
 async function prevLevel() {
+  controls.flushAll();
   state.state.levelIndex = mod(state.state.levelIndex - 1, LEVELS.length);
   loadLevel();
   await screen.flashMessage('Press any key to begin this level.');
@@ -207,17 +208,25 @@ async function restore() {
 
 export async function playerAction() {
   // Debug Actions
-  if (controls.wasActionDeactivated(Action.NextLevel))
-    return await doPlayerAction(Action.NextLevel);
-  if (controls.wasActionDeactivated(Action.PrevLevel))
-    return await doPlayerAction(Action.PrevLevel);
-  if (controls.wasActionDeactivated(Action.FreeItems))
-    return await doPlayerAction(Action.FreeItems);
+  if (controls.wasActionDeactivated(Action.NextLevel)) return await nextLevel();
+
+  if (controls.wasActionDeactivated(Action.PrevLevel)) return await prevLevel();
+
+  if (controls.wasActionDeactivated(Action.FreeItems)) {
+    state.state.gems = Infinity;
+    state.state.whips = Infinity;
+    state.state.teleports = Infinity;
+    state.state.keys = Infinity;
+    screen.renderStats();
+    return;
+  }
 
   // Player Actions
   // TODO: HideFound
-  if (controls.wasActionDeactivated(Action.ResetFound))
-    return (state.state.foundSet = new Set());
+  if (controls.wasActionDeactivated(Action.ResetFound)) {
+    state.state.foundSet = new Set();
+    return;
+  }
 
   // Game Actions
   if (controls.wasActionDeactivated(Action.Pause)) return pause();
@@ -226,121 +235,56 @@ export async function playerAction() {
   if (controls.wasActionDeactivated(Action.Restore)) return restore();
 
   // Whip can happen at any time (no return)
-  if (controls.wasActionActive(Action.Whip)) await doPlayerAction(Action.Whip);
+  if (controls.wasActionActive(Action.Whip)) {
+    if (state.state.whips < 1) {
+      sound.noneSound();
+    } else {
+      state.state.whips--;
+      await playerWhip();
+    }
+  }
 
-  if (controls.wasActionActive(Action.Teleport))
-    return await doPlayerAction(Action.Teleport);
-
-  // Player Diagonal Movement
-  if (
-    controls.wasActionActive(Action.North) &&
-    controls.wasActionActive(Action.West)
-  )
-    return await doPlayerAction(Action.Northwest);
-  if (
-    controls.wasActionActive(Action.North) &&
-    controls.wasActionActive(Action.East)
-  )
-    return await doPlayerAction(Action.Northeast);
-  if (
-    controls.wasActionActive(Action.South) &&
-    controls.wasActionActive(Action.West)
-  )
-    return await doPlayerAction(Action.Southwest);
-  if (
-    controls.wasActionActive(Action.South) &&
-    controls.wasActionActive(Action.East)
-  )
-    return await doPlayerAction(Action.Southeast);
-  if (controls.wasActionActive(Action.Southeast))
-    return await doPlayerAction(Action.Southeast);
-  if (controls.wasActionActive(Action.Southwest))
-    return await doPlayerAction(Action.Southwest);
-  if (controls.wasActionActive(Action.Northeast))
-    return await doPlayerAction(Action.Northeast);
-  if (controls.wasActionActive(Action.Northwest))
-    return await doPlayerAction(Action.Northwest);
+  if (controls.wasActionActive(Action.Teleport)) {
+    if (state.state.teleports < 1) {
+      await sound.noneSound();
+    } else {
+      state.state.teleports--;
+      await playerTeleport();
+    }
+  }
 
   // Player Movement
-  if (controls.wasActionActive(Action.North))
-    return await doPlayerAction(Action.North);
-  if (controls.wasActionActive(Action.South))
-    return await doPlayerAction(Action.South);
-  if (controls.wasActionActive(Action.West))
-    return await doPlayerAction(Action.West);
-  if (controls.wasActionActive(Action.East))
-    return await doPlayerAction(Action.East);
-}
+  let dx = 0;
+  let dy = 0;
 
-async function doPlayerAction(action: Action) {
-  let _tryPlayerMove = false;
+  if (controls.wasActionActive(Action.North)) dy--;
+  if (controls.wasActionActive(Action.South)) dy++;
+  if (controls.wasActionActive(Action.West)) dx--;
+  if (controls.wasActionActive(Action.East)) dx++;
 
-  switch (action) {
-    case Action.FreeItems:
-      state.state.gems = Infinity;
-      state.state.whips = Infinity;
-      state.state.teleports = Infinity;
-      state.state.keys = Infinity;
-      screen.renderStats();
-      break;
-    case Action.NextLevel:
-      await nextLevel();
-      break;
-    case Action.PrevLevel:
-      await prevLevel();
-      break;
-    case Action.North:
-      await tryPlayerMove(0, -1);
-      _tryPlayerMove = true;
-      break;
-    case Action.South:
-      await tryPlayerMove(0, +1);
-      _tryPlayerMove = true;
-      break;
-    case Action.West:
-      await tryPlayerMove(-1, 0);
-      _tryPlayerMove = true;
-      break;
-    case Action.East:
-      await tryPlayerMove(+1, 0);
-      _tryPlayerMove = true;
-      break;
-    case Action.Southeast:
-      await tryPlayerMove(+1, +1);
-      _tryPlayerMove = true;
-      break;
-    case Action.Southwest:
-      await tryPlayerMove(-1, +1);
-      _tryPlayerMove = true;
-      break;
-    case Action.Northeast:
-      await tryPlayerMove(+1, -1);
-      _tryPlayerMove = true;
-      break;
-    case Action.Northwest:
-      await tryPlayerMove(-1, -1);
-      _tryPlayerMove = true;
-      break;
-    case Action.Whip:
-      if (state.state.whips < 1) {
-        sound.noneSound();
-      } else {
-        state.state.whips--;
-        await playerWhip();
-      }
-      _tryPlayerMove = true;
-      break;
-    case Action.Teleport:
-      if (state.state.teleports < 1) {
-        await sound.noneSound();
-      } else {
-        state.state.teleports--;
-        await playerTeleport();
-      }
-      _tryPlayerMove = true;
-      break;
+  if (controls.wasActionActive(Action.Southeast)) {
+    dx++;
+    dy++;
   }
-  return _tryPlayerMove;
+  if (controls.wasActionActive(Action.Southwest)) {
+    dx--;
+    dy++;
+  }
+  if (controls.wasActionActive(Action.Northeast)) {
+    dx++;
+    dy--;
+  }
+  if (controls.wasActionActive(Action.Northwest)) {
+    dx--;
+    dy--;
+  }
+
+  dx = clamp(dx, -1, 1);
+  dy = clamp(dy, -1, 1);
+
+  if (dx !== 0 || dy !== 0) {
+    await tryPlayerMove(dx, dy);
+  }
 }
 
 function readLevelMap(level: string) {
@@ -552,7 +496,7 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     case Tile.Pit:
       go(state.state.player, x, y);
-      if (!DEBUG) state.state.gems = -1; // dead
+      state.state.gems = -1; // dead
       await flashTileMessage(block);
       break;
     case Tile.Tome:

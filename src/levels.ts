@@ -4,8 +4,8 @@ import debug from './levels/debug.ts';
 import lost1 from './levels/lost-1.ts';
 import lost2 from './levels/lost-2.ts';
 import lost4 from './levels/lost-4.ts';
-import lost11 from './levels/lost-11.ts';
-import lost20 from './levels/lost-20.ts';
+// import lost11 from './levels/lost-11.ts';
+// import lost20 from './levels/lost-20.ts';
 // import lost22 from './levels/lost-22.ts';
 import lost26 from './levels/lost-26.ts';
 import lost30 from './levels/lost-30.ts';
@@ -18,7 +18,7 @@ import kingdom1 from './levels/kingdom-1.ts';
 
 // Caverns of Kroz 2
 import caverns2 from './levels/caverns-2.ts';
-import caverns4 from './levels/caverns-4.ts';
+// import caverns4 from './levels/caverns-4.ts';
 
 export interface Level {
   id: string;
@@ -32,13 +32,13 @@ export const LEVELS: Level[] = [
   lost2 as Level,
   lost4 as Level,
   caverns2 as Level,
-  caverns4 as Level,
+  // caverns4 as Level, // Need a keys
   kingdom1 as Level,
-  lost11 as Level,
-  lost20 as Level, // Needs MBlocks
+  // lost11 as Level, // Need a keys
+  // lost20 as Level, // Need a keys, Needs MBlocks
   // lost22 as Level, // Needs MBlocks
   lost26 as Level,
-  lost30 as Level,
+  lost30 as Level, // Need whips
   // lost33 as Level, // Needs WallVanish
   lost42 as Level,
   lost75 as Level,
