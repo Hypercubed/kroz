@@ -1,6 +1,5 @@
 import { Display } from 'rot-js';
 import { HEIGHT, WIDTH } from './constants';
-import { TileColor, Tile } from './tiles';
 import { Color, ColorCodes } from './colors';
 
 let rotDisplay: Display;
@@ -69,7 +68,7 @@ export function clear(bg: string | Color = state.bg) {
   rotDisplay.clear();
 }
 
-function getColors(fg: string | Color, bg: string | Color) {
+export function getColors(fg: string | Color, bg: string | Color) {
   // Blinking
   if (typeof fg === 'number' && fg > 15) {
     const v = 500;
@@ -86,23 +85,11 @@ function getColors(fg: string | Color, bg: string | Color) {
 export function draw(
   x: number,
   y: number,
-  ch: string | string[] | null,
-  fg: string | Color = state.fg,
-  bg: string | Color = state.bg,
-) {
-  [fg, bg] = getColors(fg, bg);
-  rotDisplay.draw(x, y, ch, fg, bg);
-}
-
-export function drawOver(
-  x: number,
-  y: number,
   ch: string | null,
   fg: string | Color = state.fg,
   bg: string | Color = state.bg,
 ) {
   [fg, bg] = getColors(fg, bg);
-  bg = bg ?? rotDisplay._data[`${x},${y}`]?.[4] ?? TileColor[Tile.Floor];
   rotDisplay.draw(x, y, ch, fg, bg);
 }
 

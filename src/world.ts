@@ -578,7 +578,7 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.IBlock:
       sound.blockedWall();
       state.state.PF[x][y] = Tile.Block;
-      drawTile(x, y);
+      drawTile(x, y, Tile.Block);
       await flashTileMessage(block, true);
       break;
     case Tile.IDoor:
@@ -641,10 +641,10 @@ async function tryPlayerMove(dx: number, dy: number) {
               await delay(3);
             }
             state.state.PF[x][y] = Tile.Floor;
-            drawTile(x, y);
+            drawTile(x, y, Tile.Floor);
           } else if (state.state.PF[x][y] === Tile.BlockSpell) {
-            state.state.PF[x][y] = Tile.Block;
-            drawTile(x, y);
+            state.state.PF[x][y] = Tile.Floor;
+            drawTile(x, y, Tile.Floor);
           }
         }
       }
@@ -969,18 +969,8 @@ async function playerTeleport() {
   state.state.PF[state.state.player.x][state.state.player.y] = Tile.Floor;
   drawTile(state.state.player.x, state.state.player.y);
 
-  // const t = Date.now();
-  // while (Date.now() - t < 3000) {
-  //   const x = RNG.getUniformInt(0, XSize);
-  //   const y = RNG.getUniformInt(0, YSize);
-  //   const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
-  //   if ([Tile.Floor].indexOf(block as Tile) > -1) {
-  //     drawTile(x, y, Tile.Player);
-  //     await sound.play(20, 10, 100);
-  //     drawTile(x, y, block);
-  //   }
-  // }
-
+  // Animation
+  const startTime = Date.now();
   for (let i = 0; i < 700; i++) {
     const x = RNG.getUniformInt(0, XSize);
     const y = RNG.getUniformInt(0, YSize);
@@ -990,8 +980,10 @@ async function playerTeleport() {
       await sound.play(20, 10, 100);
       drawTile(x, y, block);
     }
+    if (Date.now() - startTime > 1500) break;
   }
 
+  // Teleport
   while (true) {
     const x = RNG.getUniformInt(0, XSize);
     const y = RNG.getUniformInt(0, YSize);
@@ -1010,15 +1002,7 @@ async function playerTeleport() {
 async function hit(x: number, y: number, ch: string) {
   const thing = state.state.PF?.[x]?.[y] ?? Tile.Floor;
 
-  const bg = TileColor[thing as Tile]?.[1] ?? TileColor[Tile.Floor][1]!;
-
-  display.drawOver(
-    x + XBot,
-    y + YBot,
-    ch,
-    ColorCodes[RNG.getUniformInt(0, 15) as Color],
-    bg,
-  );
+  drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
 
   switch (thing) {
     case Tile.Slow:
@@ -1103,8 +1087,9 @@ async function hit(x: number, y: number, ch: string) {
     default:
       break;
   }
+
   screen.renderStats();
-  await delay(10);
+  await delay(25);
 }
 
 export function renderPlayfield() {
@@ -1167,6 +1152,19 @@ export function drawTile(
     case Tile.Stairs:
       fg = typeof fg === 'number' && !state.state.paused ? fg | 16 : fg; // add blink
       break;
+  }
+
+  display.draw(x + XBot, y + YBot, ch, fg, bg);
+}
+
+function drawOver(x: number, y: number, ch: string, fg: string | Color) {
+  const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
+
+  let bg: number;
+  if ((block >= 'a' && block <= 'z') || block === '!') {
+    bg = Color.Brown;
+  } else {
+    bg = TileColor[block as unknown as Tile]?.[1] ?? TileColor[Tile.Floor][1]!;
   }
 
   display.draw(x + XBot, y + YBot, ch, fg, bg);
