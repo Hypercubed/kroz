@@ -111,7 +111,7 @@ function enableGamepadControls() {
     gamepad!.axeThreshold = [0.5, 0.5];
 
     for (const [key, action] of Object.entries(GAMEPAD_BINDING)) {
-      if (!action) return;
+      if (!action) continue;
 
       gamepad.before(key, () => {
         keyState[key] = actionState[action] = 0b011;
