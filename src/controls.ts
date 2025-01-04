@@ -180,8 +180,16 @@ export function clearKeys() {
 }
 
 export function flushAll() {
-  for (const prop in actionState) { if (Object.prototype.hasOwnProperty.call(actionState, prop)) { delete actionState[prop as unknown as Action]; } }
-  for (const prop in keyState) { if (Object.prototype.hasOwnProperty.call(keyState, prop)) { delete keyState[prop]; } }
+  for (const prop in actionState) {
+    if (Object.prototype.hasOwnProperty.call(actionState, prop)) {
+      delete actionState[prop as unknown as Action];
+    }
+  }
+  for (const prop in keyState) {
+    if (Object.prototype.hasOwnProperty.call(keyState, prop)) {
+      delete keyState[prop];
+    }
+  }
 }
 
 export function clearActions() {

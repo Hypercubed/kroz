@@ -89,7 +89,7 @@ export async function start() {
     if (!gui) {
       gui = new dat.GUI({
         closeFolders: true,
-        title: 'Debug'
+        title: 'Debug',
       });
 
       const timers = {

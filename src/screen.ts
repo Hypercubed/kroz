@@ -142,7 +142,6 @@ export async function introScreen() {
 export async function instructionsScreen() {
   display.clear(Color.Black);
 
-
   display.gotoxy(0, 0);
   display.writeCenter(TITLE, Color.Yellow);
   display.writeCenter('INSTRUCTIONS', Color.HighIntensityWhite);

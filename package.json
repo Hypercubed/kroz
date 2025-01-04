@@ -13,8 +13,7 @@
     "fix": "npm-run-all fix:**",
     "fix:lint": "eslint ./src/ --fix",
     "fix:prettier": "prettier ./src/ --write",
-    "publish": "npm run build && gh-pages -d dist",
-    "prepare": "husky"
+    "publish": "npm run build && gh-pages -d dist"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
