@@ -18,7 +18,7 @@ import kingdom1 from './levels/kingdom-1.ts';
 
 // Caverns of Kroz 2
 import caverns2 from './levels/caverns-2.ts';
-// import caverns4 from './levels/caverns-4.ts';
+import caverns4 from './levels/caverns-4.ts';
 
 export interface Level {
   id: string;
@@ -32,9 +32,9 @@ export const LEVELS: Level[] = [
   lost2 as Level,
   lost4 as Level,
   caverns2 as Level,
-  // caverns4 as Level, // Need a keys
+  caverns4 as Level,
   kingdom1 as Level,
-  // lost11 as Level, // Need a keys
+  // lost11 as Level, Need more keys
   // lost20 as Level, // Need a keys, Needs MBlocks
   // lost22 as Level, // Needs MBlocks
   lost26 as Level,

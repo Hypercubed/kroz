@@ -10,6 +10,13 @@ export const enum Timer {
   FreezeTime = 7,
 }
 
+const enum Difficulty {
+  Novice = 8,
+  Experienced = 5,
+  Advanced = 2,
+  Cheat = 9,
+}
+
 export const state = getDefaultState();
 
 const levelStartState = {} as typeof state;
@@ -46,7 +53,8 @@ function getDefaultState() {
     whipPower: 2,
     bonus: 0,
 
-    actionActive: false,
+    difficulty: Difficulty.Novice,
+
     paused: false,
     done: false,
 

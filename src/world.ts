@@ -301,6 +301,12 @@ function readLevelMap(level: string) {
       state.state.PF[x] = state.state.PF[x] || [];
       state.state.PF[x][y] = block ?? char;
 
+      switch (char) {
+        case 'Ã':
+          state.state.PF[x][y] = '!';
+          break;
+      }
+
       switch (block) {
         case Tile.Player:
           state.state.player.x = x;
@@ -367,20 +373,19 @@ async function tryPlayerMove(dx: number, dy: number) {
       await flashTileMessage(Tile.Stairs, true);
       nextLevel();
       break;
-    case Tile.Chest:
-      if (state.state.keys > 0) {
-        state.state.keys--;
-        const whips = RNG.getUniformInt(2, 5);
-        const gems = RNG.getUniformInt(2, 5);
-        state.state.whips += whips;
-        state.state.gems += gems;
-        addScore(block);
-        go(state.state.player, x, y);
-        await screen.flashMessage(
-          `You found ${gems} gems and ${whips} whips inside the chest!`,
-        );
-      }
+    case Tile.Chest: {
+      go(state.state.player, x, y);
+      // TODO: Sound
+      const whips = RNG.getUniformInt(2, 5);
+      const gems = RNG.getUniformInt(2, state.state.difficulty + 2);
+      state.state.whips += whips;
+      state.state.gems += gems;
+      addScore(block);
+      await screen.flashMessage(
+        `You found ${gems} gems and ${whips} whips inside the chest!`,
+      );
       break;
+    }
     case Tile.SlowTime:
       state.state.T[Timer.SpeedTime] = 0; // Reset Speed Time
       state.state.T[Timer.FreezeTime] = 0;
@@ -1150,7 +1155,7 @@ export function drawTile(
       bg ??
       TileColor[block as unknown as Tile]?.[1] ??
       TileColor[Tile.Floor][1]!;
-  } else if (block >= 'a' && block <= 'z') {
+  } else if ((block >= 'a' && block <= 'z') || block === '!') {
     ch = block.toUpperCase();
     fg = fg ?? Color.HighIntensityWhite;
     bg = bg ?? Color.Brown;
