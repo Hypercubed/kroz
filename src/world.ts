@@ -318,7 +318,7 @@ function readLevelMap(level: string) {
   // Randomize
   TileColor[Tile.Floor][0] = Color.White;
   TileColor[Tile.Floor][1] = Color.Black;
-  TileColor[Tile.Gem] = [RNG.getUniformInt(1, 16), null];
+  TileColor[Tile.Gem] = [RNG.getUniformInt(1, 15), null];
 }
 
 async function tryPlayerMove(dx: number, dy: number) {
@@ -719,23 +719,45 @@ async function tryPlayerMove(dx: number, dy: number) {
               sound.play(i * 40, 5, 10);
               if (i % 5 === 0) await delay(1);
             }
-
-            drawTile(x, y, Tile.Wall);
             state.state.PF[x][y] = Tile.Floor;
-            drawTile(x, y);
+            drawTile(x, y, Tile.Floor);
           }
         }
       }
 
-      await flashTileMessage(Tile.OSpell1, true);
+      await flashTileMessage(block, true);
       break;
     }
     case Tile.CSpell1:
     case Tile.CSpell2:
-    case Tile.CSpell3:
+    case Tile.CSpell3: {
       go(state.state.player, x, y);
-      await flashTileMessage(Tile.CSpell1, true);
+
+      const s = block - Tile.CSpell1 + Tile.CWall1;
+
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
+          const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
+          if (block === s) {
+            for (let i = 60; i > 0; i--) {
+              drawTile(
+                x,
+                y,
+                RNG.getItem(['▄', '▌', '▐', '▀']) as string,
+                RNG.getUniformInt(0, 14),
+              );
+              sound.play(i * 40, 5, 10);
+              if (i % 5 === 0) await delay(1);
+            }
+            state.state.PF[x][y] = Tile.Wall;
+            drawTile(x, y, Tile.Wall);
+          }
+        }
+      }
+
+      await flashTileMessage(block, true);
       break;
+    }
     case Tile.Rock: {
       let nogo = false;
 
@@ -876,15 +898,25 @@ async function killAt(x: number, y: number) {
   renderPlayfield();
 }
 
+let replacement = Tile.Floor;
+
 function go(e: Entity, x: number, y: number) {
   const px = e.x;
   const py = e.y;
 
   e.move(x, y);
 
-  state.state.PF[px][py] = Tile.Floor;
-  state.state.PF[x][y] = e.type;
+  if (e.type === Tile.Player) {
+    state.state.PF[px][py] = replacement;
+    const b = state.state.PF[x][y] as Tile;
+    replacement = [Tile.CWall1, Tile.CWall2, Tile.CWall3, Tile.Rope].includes(b)
+      ? b
+      : Tile.Floor;
+  } else {
+    state.state.PF[px][py] = Tile.Floor;
+  }
 
+  state.state.PF[x][y] = e.type;
   renderPlayfield();
 }
 

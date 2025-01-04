@@ -9,10 +9,10 @@ export const map = `
                                                        #1#1#1#1#
  ####### ##whip W W W                  ~~~~~   ewall## # # # # #
   3 3  # #chest C C C                  #####   wall### # # # # #
-   3   # ##nugg * * *     ñ4444444444  RRRRR   river## # # # # #
-  3 3  # ###gem + + +     ò5555555555  /////   forest# # # # # #
- ####### ##door D D D     ó6666666666  ♣♣♣♣♣   tree### #X#X#X#X#
-         ##tele T T T      ::::::::::  VVVVV   lava### #2#2#2#2#
+   3   # ##nugg * * *   ñ4444499999ö   RRRRR   river## # # # # #
+  3 3  # ###gem + + +   ò5555588888õ   /////   forest# # # # # #
+ ####### ##door D D D   ó6666677777ô   ♣♣♣♣♣   tree### #X#X#X#X#
+         ##tele T T T    :::::#####    VVVVV   lava### #2#2#2#2#
          ###key K K K                  =====   pit#### # # # # #
          #power Q Q Q                  XXXXX   block## # # # # #
  #######                                               # # # # #
