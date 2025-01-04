@@ -39,6 +39,8 @@ import { LEVELS } from './levels';
 import dedent from 'ts-dedent';
 import { Timer } from './state';
 
+const GenFactor = 17; // 1 in 17 chance of generating a creature
+
 const SPELL_DURATION = {
   [Timer.SlowTime]: 70 * TIME_SCALE,
   [Timer.Invisible]: 75 * TIME_SCALE,
@@ -49,10 +51,7 @@ const SPELL_DURATION = {
 export function loadLevel() {
   state.state.level = LEVELS[state.state.levelIndex];
   readLevelMap(state.state.level.map);
-
-  state.state.T = state.state.T.map(() => 0); // Reset timers
   state.storeLevelStartState();
-
   renderPlayfield();
   screen.renderStats();
 }
@@ -74,12 +73,57 @@ async function prevLevel() {
 export async function effects() {
   state.state.T = state.state.T.map((t) => (t > 0 ? t - 1 : 0));
 
-  // TODO: Creature generation
+  // Statue Gem Drain
+  if (
+    state.state.T[Timer.StatueGemDrain] > 0 &&
+    RNG.getUniformInt(0, 18) === 0
+  ) {
+    state.state.gems--;
+    await sound.play(3800, 40);
+    screen.renderStats();
+  }
+
+  // Creature generation
+  const sNum = state.state.entities.reduce((acc, e) => {
+    if (e.type === Tile.Slow) return acc + 1;
+    return acc;
+  }, 0);
+
+  if (
+    state.state.genNum > 0 &&
+    sNum < 995 &&
+    RNG.getUniformInt(0, GenFactor) === 0
+  ) {
+    await generateCreatures();
+  }
+
+  // TODO:
   // Lava Flow
-  // Gravity
-  // MagitEWalls
+  // Gravity?
+  // MagitEWalls 55 <-> 66
   // Evaporate
   // TreeGrow
+}
+
+async function generateCreatures() {
+  let done = false;
+  do {
+    const x = RNG.getUniformInt(0, XSize);
+    const y = RNG.getUniformInt(0, YSize);
+    if (state.state.PF[x][y] === Tile.Floor) {
+      state.state.entities.push(new Entity(Tile.Slow, x, y));
+      state.state.PF[x][y] = Tile.Slow;
+
+      for (let i = 5; i < 70; i++) {
+        sound.play(i * 8, 1);
+      }
+      await delay(50);
+
+      done = true;
+    }
+
+    renderPlayfield();
+  } while (!done && RNG.getUniformInt(0, 50) !== 0);
 }
 
 async function mobAction(e: Entity) {
@@ -289,6 +333,9 @@ export async function playerAction() {
 
 function readLevelMap(level: string) {
   state.state.entities = [];
+  state.state.T = state.state.T.map(() => 0); // Reset timers
+
+  state.state.genNum = 0;
 
   const lines = level.split('\n').filter((line) => line.length > 0);
   for (let y = 0; y < lines.length; y++) {
@@ -316,6 +363,13 @@ function readLevelMap(level: string) {
         case Tile.Medium:
         case Tile.Fast:
           state.state.entities.push(new Entity(block, x, y));
+          break;
+        case Tile.Generator:
+          state.state.genNum++;
+          break;
+        // case Tile.MBlock
+        case Tile.Statue:
+          state.state.T[Timer.StatueGemDrain] = 32000;
           break;
       }
     }
@@ -609,10 +663,25 @@ async function tryPlayerMove(dx: number, dy: number) {
       await flashTileMessage(block, true);
       break;
     }
-    case Tile.Create:
+    case Tile.Create: {
+      go(state.state.player, x, y);
+      const SNum = state.state.entities.reduce((acc, e) => {
+        if (e.type === Tile.Slow) return acc + 1;
+        return acc;
+      }, 0);
+      if (SNum < 945) {
+        for (let i = 0; i < 45; i++) {
+          await generateCreatures();
+        }
+      }
+
+      addScore(block);
+      await flashTileMessage(block, true);
+      break;
+    }
     case Tile.Generator:
       addScore(block);
-      go(state.state.player, x, y);
+      // go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
     case Tile.MBlock:
@@ -660,7 +729,7 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     }
     case Tile.Statue:
-      go(state.state.player, x, y);
+      sound.blocked();
       await flashTileMessage(block);
       break;
     case Tile.WallVanish:
@@ -777,7 +846,7 @@ async function tryPlayerMove(dx: number, dy: number) {
         switch (rb) {
           case Tile.Floor: // TODO: Other floor-ish tiles
             nogo = false;
-            await sound.blockMove();
+            await sound.moveRock();
             state.state.PF[rx][ry] = Tile.Rock;
             go(state.state.player, x, y);
             renderPlayfield();
@@ -788,7 +857,7 @@ async function tryPlayerMove(dx: number, dy: number) {
           case Tile.Stairs:
           case Tile.Pit:
             nogo = false;
-            await sound.blockMove();
+            await sound.moveRock();
             go(state.state.player, x, y);
             renderPlayfield();
             drawTile(rx, ry, Tile.Rock);
@@ -822,7 +891,6 @@ async function tryPlayerMove(dx: number, dy: number) {
       go(state.state.player, x, y);
       break;
     case Tile.Trap2:
-    case Tile.Trap3:
     case Tile.Trap4:
     case Tile.Trap5:
     case Tile.Trap6:
@@ -835,6 +903,19 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.Trap13:
       go(state.state.player, x, y);
       break;
+    case Tile.Trap3: {
+      // Clears out the Trap3
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
+          const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
+          if (block === Tile.Trap3) {
+            state.state.PF[x][y] = Tile.Floor;
+            drawTile(x, y, Tile.Floor);
+          }
+        }
+      }
+      break;
+    }
     case Tile.TBlind:
     case Tile.TBlock:
     case Tile.TGem:
@@ -1030,7 +1111,6 @@ async function hit(x: number, y: number, ch: string) {
     case Tile.SpeedTime:
     case Tile.Trap:
     case Tile.Power:
-    case Tile.Generator:
     case Tile.K:
     case Tile.R:
     case Tile.O:
@@ -1081,8 +1161,28 @@ async function hit(x: number, y: number, ch: string) {
       }
       break;
     }
-    case Tile.Wall:
     case Tile.Statue:
+      // TODO: Sound
+      if (50 * Math.random() < state.state.whipPower) {
+        // TODO: Sound
+        state.state.PF[x][y] = Tile.Floor;
+        addScore(thing);
+        state.state.T[Timer.StatueGemDrain] = -1;
+        await screen.flashMessage(
+          `You've destroyed the Statue!  Your Gems are now safe.`,
+        );
+      } else {
+        sound.play(130, 25);
+        sound.play(90, 50);
+      }
+      break;
+    case Tile.Generator:
+      // TODO: Sound
+      addScore(thing);
+      state.state.PF[x][y] = Tile.Floor;
+      state.state.genNum--;
+      break;
+    case Tile.Wall:
       break;
     default:
       break;
@@ -1236,6 +1336,9 @@ function addScore(block: Tile) {
       break;
     case Tile.Chance:
       state.state.score += 100;
+      break;
+    case Tile.Statue:
+      state.state.score += 10;
       break;
     case Tile.Amulet:
       state.state.score += 2500;

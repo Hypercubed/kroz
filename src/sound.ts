@@ -65,7 +65,8 @@ export async function openDoor() {
   }
 }
 
-export async function blockMove() {
+// Moving a rock sound
+export async function moveRock() {
   for (let i = 150; i > 35; i--) {
     await play(i, 16, 50);
   }

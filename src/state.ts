@@ -8,6 +8,7 @@ export const enum Timer {
   Invisible = 5,
   SpeedTime = 6,
   FreezeTime = 7,
+  StatueGemDrain = 9,
 }
 
 const enum Difficulty {
@@ -51,7 +52,8 @@ function getDefaultState() {
     teleports: 0,
     keys: 0,
     whipPower: 2,
-    bonus: 0,
+    bonus: 0, // Bonus count for K R O Z
+    genNum: 0, // Number for creature generators
 
     difficulty: Difficulty.Novice,
 

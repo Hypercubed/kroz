@@ -16,7 +16,7 @@ export const map = `
          ###key K K K                  =====   pit#### # # # # #
          #power Q Q Q                  XXXXX   block## # # # # #
  #######                                               # # # # #
-  2 2  #                      P                        # # # # #
+  2 2  # create ] ] ]         P                        # # # # #
    2   #                                               #X#X#X#X#
   2 2  #                  XXXXXXXXXXX                  #3#3#3#3#
  #######                  XXXXXXXXXXX   0 0 0   rock## # # # # #
@@ -25,10 +25,13 @@ export const map = `
          #speed F F F     XXXXXXXXXXX                  # # # # #
  ####### #freez Z Z Z          B        U U U   tunnel #X#X#X#X#
   1 1  # ###inv I I I     ###bomb####                  #########
-   1   # tablet ! ! !     #XG1 2 3GX#   . . .   traps#          
+   1   # tablet ! ! !     #X]1 2 3AX#   . . .   traps#          
   1 1  # #amule ƒ ƒ ƒ     XXXXXXXXXXX   & & &   show##  S       
  ####### ##tome A A A     XDZ/EWLCSVX   E E E   quake#    F     
                           XXXXXXXXXXX   T T T               Z   
 `;
+
+// ###gen G G G
+// statue > > >
 
 export default { id, map };
