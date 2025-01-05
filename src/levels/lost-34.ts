@@ -35,4 +35,5 @@ const map = `
 export default {
   id: 'Lost34',
   map,
+  // HideLevel:=true;
 };

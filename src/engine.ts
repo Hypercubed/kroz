@@ -9,7 +9,7 @@ import * as screen from './screen';
 import * as state from './state';
 
 import { Tile } from './tiles';
-import { DEBUG, TIME_SCALE, XSize, YSize } from './constants';
+import { DEBUG, TICK_RATE_SCALE, TIME_SCALE, XSize, YSize } from './constants';
 import { Timer } from './state';
 import { Color } from './colors';
 
@@ -69,15 +69,6 @@ export async function start() {
   fastRender();
   await screen.flashMessage('Press any key to begin this level.');
   controls.clearActions();
-
-  // for (let i = 0; i < 80; i++) {
-  //   display.gotoxy(state.state.player.x + XBot, state.state.player.y + YBot);
-  //   display.col(RNG.getUniformInt(0, 15));
-  //   display.bak(RNG.getUniformInt(0, 8));
-  //   display.write(TileChar[Tile.Player]);
-  //   await delay(1);
-  //   sound.play(i / 2, 1000, 30);
-  // }
 
   if (DEBUG) {
     if (!stats) {
@@ -151,7 +142,7 @@ async function run() {
   scheduler.add(FastActor, true);
 
   // Game loop
-  const speed = 16 * 8;
+  const speed = 16 * TICK_RATE_SCALE; // 16 * 8;
 
   let dt = 0;
   let previousTime = 0;

@@ -3,7 +3,8 @@
 0123456789012345678901234567890123456789012345678901234567890123
 */
 
-export const id = 'Debug';
+import { FLOOR_CHAR } from '../constants';
+import { Tile, TileChar } from '../tiles';
 
 export const map = `
                                                        #1#1#1#1#
@@ -17,7 +18,7 @@ export const map = `
          #power Q Q Q                  XXXXX   block## # # # # #
  #######                                               # # # # #
   2 2  # create ] ] ]         P                        # # # # #
-   2   #                                               #X#X#X#X#
+   2   # showge & & &                                  #X#X#X#X#
   2 2  #                  XXXXXXXXXXX                  #3#3#3#3#
  #######                  XXXXXXXXXXX   0 0 0   rock## # # # # #
          ###zap % % %     XXXXXXXXXXX   R L =          # # # # #
@@ -34,4 +35,8 @@ export const map = `
 // ###gen G G G
 // statue > > >
 
-export default { id, map };
+async function onLevelStart() {
+  TileChar[Tile.Gem] = FLOOR_CHAR; // HideGems
+}
+
+export default { id: 'Debug', map, onLevelStart };

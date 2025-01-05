@@ -6,8 +6,6 @@
 0123456789012345678901234567890123456789012345678901234567890123
 */
 
-export const id = 'Lost1';
-
 export const map = `
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 //♣//////////////♣//♣////////♣////////♣///♣/♣♣/♣♣/♣/♣♣/♣♣♣♣♣♣♣/♣
@@ -34,7 +32,7 @@ export const map = `
 #by#scott#miller#♣///♣/////♣/♣////♣////♣////♣//♣//♣/♣//♣/♣♣///♣ü
 `;
 
-export default { id, map };
+export default { id: 'Lost1', map };
 
 // TODO:
 // Tile.Message

@@ -520,3 +520,11 @@ export const VISUAL_TELEPORTABLES = [
   ...CSPELLS,
   ...TBLOCKS,
 ];
+
+const tileCharsDefault = structuredClone(TileChar);
+const tileColorsDefault = structuredClone(TileColor);
+
+export function reset() {
+  Object.assign(TileChar, tileCharsDefault);
+  Object.assign(TileColor, tileColorsDefault);
+}

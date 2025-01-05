@@ -1,6 +1,9 @@
 // Lost Adventures of Kroz, Level 4 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { FLOOR_CHAR } from '../constants';
+import { TileChar, Tile } from '../tiles';
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
@@ -34,15 +37,16 @@ const map = `
 111111111111111@                1 ##LLWWWD@         1   1    1 1
 `;
 
+async function onLevelStart() {
+  TileChar[Tile.Gem] = FLOOR_CHAR; // HideGems
+}
+
 export default {
   id: 'Lost4',
   map,
-  // HideGems:=true;
+  onLevelStart,
 };
 
 // TODO:
-// HideGems
-// Reveal gems
-// Creature create spell
 // Magic has been released?
 // ZBlock?

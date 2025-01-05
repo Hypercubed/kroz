@@ -1,12 +1,13 @@
 // Lost Adventures of Kroz, Level 26 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { FLOOR_CHAR } from '../constants';
+import { TileChar, Tile } from '../tiles';
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
 */
-
-export const id = 'Lost26';
 
 const map = `
 ::::::::::::::::::::::::::::::::::::::::::::::::####amulet####::
@@ -34,8 +35,13 @@ const map = `
 #was#hereÃ#:::::::::::::::::::::::::::::::::::::::::::::::::::::
 `;
 
+async function onLevelStart() {
+  TileChar[Tile.Create] = FLOOR_CHAR;
+  TileChar[Tile.Gem] = FLOOR_CHAR;
+}
+
 export default {
-  id,
+  id: 'Lost26',
   map,
-  // HideGems:=true; HideCreate:=true;
+  onLevelStart,
 };

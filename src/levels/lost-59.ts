@@ -1,6 +1,9 @@
 // Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { FLOOR_CHAR } from '../constants';
+import { TileChar, Tile } from '../tiles';
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
@@ -32,9 +35,15 @@ MMMM(                                                      )MMMM
 ##########K]-WWWWWWñ          00C00         D-D--K-K]K##########
 `;
 
+async function onLevelStart() {
+  TileChar[Tile.Create] = FLOOR_CHAR;
+  TileChar[Tile.MBlock] = FLOOR_CHAR;
+}
+
 export default {
   id: 'Lost59',
   map,
+  onLevelStart,
   // LavaFlow:=true;LavaRate:=140;
-  // HideCreate:=true;HideOpenWall:=true;HideTrap:=true;HideMBlock:=true;
+  // HideOpenWall:=true;HideTrap:=true
 };

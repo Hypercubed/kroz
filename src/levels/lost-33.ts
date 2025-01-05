@@ -1,6 +1,9 @@
 // Lost Adventures of Kroz, Level 33 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { FLOOR_CHAR } from '../constants';
+import { TileChar, Tile, TileColor } from '../tiles';
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
@@ -34,8 +37,14 @@ L---N-----##X###  CC  555555-----------------#####X##1111#######
 ################################################################
 `;
 
+async function onLevelStart() {
+  TileChar[Tile.Stairs] = FLOOR_CHAR; // HideGems
+  TileColor[Tile.Stairs] = TileColor[Tile.Floor];
+}
+
 export default {
-  id,
+  id: 'Lost33',
   map,
-  // HideStairs:=true; HideOpenWall:=true;
+  onLevelStart,
+  // HideOpenWall:=true;
 };

@@ -6,8 +6,6 @@
 0123456789012345678901234567890123456789012345678901234567890123
 */
 
-export const id = 'Caverns2';
-
 const map = `
 LXXX2    2     2        2   2  2  2   2    2 2    2  2    2    +
 +XXX  2     2      2        2          2  2    2     2      XXX 
@@ -33,4 +31,4 @@ XXXX2  2    2  2  2      2    2     2  2  2  2    2         XTX
 XXXX 2   2 2    2   2  2    2   2       2       2   2   2   XXX 
 CXXX   2    2  2 2    2 2     2    2  2  2   2    2  2    2    +`;
 
-export default { id, map };
+export default { id: 'Caverns2', map };

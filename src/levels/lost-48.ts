@@ -36,5 +36,3 @@ export default {
   id: 'Lost48',
   map,
 };
-
-// TODO: Tunnel

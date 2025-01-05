@@ -1,15 +1,8 @@
-import { Display } from 'rot-js';
+import { default as Display } from 'rot-js/lib/display/display';
 import { HEIGHT, WIDTH } from './constants';
 import { Color, ColorCodes } from './colors';
 
 let rotDisplay: Display;
-
-const state = {
-  x: 0,
-  y: 0,
-  bg: 'black',
-  fg: 'white',
-};
 
 export function init() {
   Display.Rect.cache = true;
@@ -18,57 +11,32 @@ export function init() {
     width: WIDTH,
     height: HEIGHT,
     fontFamily: 'IBM_VGA, monospace',
-    bg: ColorCodes[Color.Blue], // background
+    bg: ColorCodes[Color.Black], // background
     fg: ColorCodes[Color.White], // foreground
     fontSize: 64, // canvas fontsize,
   });
 }
 
-export function gotoxy(x: number, y: number = state.y) {
-  state.x = x;
-  state.y = y;
-}
-
-export function bak(bg: Color | string) {
-  if (typeof bg === 'number') bg = ColorCodes[bg];
-  state.bg = bg;
-}
-
-export function col(fg: Color | string) {
-  if (typeof fg === 'number') fg = ColorCodes[fg];
-  state.fg = fg;
-}
-
-export function writeln(
-  s: string,
-  fg: string | Color = state.fg,
-  bg: string | Color = state.bg,
-) {
-  state.y += drawText(state.x, state.y, s, fg, bg);
-}
-
 export function writeCenter(
+  y: number,
   s: string,
-  fg: string | Color = state.fg,
-  bg: string | Color = state.bg,
+  fg: string | Color = rotDisplay.getOptions().fg,
+  bg: string | Color = rotDisplay.getOptions().bg,
 ) {
   const x = Math.floor((WIDTH - s.length) / 2);
-  state.y += drawText(x, state.y, s, fg, bg);
+  drawText(x, y, s, fg, bg);
 }
 
-export function print(x: number, y: number, s: string) {
-  gotoxy(x, y);
-  writeln(s);
-}
-
-export function clear(bg: string | Color = state.bg) {
+export function clear(bg: string | Color = rotDisplay.getOptions().bg) {
   if (typeof bg === 'number') bg = ColorCodes[bg];
   rotDisplay.setOptions({ bg });
-  state.bg = bg;
   rotDisplay.clear();
 }
 
-export function getColors(fg: string | Color, bg: string | Color) {
+export function getColors(
+  fg: string | Color,
+  bg: string | Color = rotDisplay.getOptions().bg,
+) {
   // Blinking
   if (typeof fg === 'number' && fg > 15) {
     const v = 500;
@@ -86,8 +54,8 @@ export function draw(
   x: number,
   y: number,
   ch: string | null,
-  fg: string | Color = state.fg,
-  bg: string | Color = state.bg,
+  fg: string | Color = rotDisplay.getOptions().fg,
+  bg: string | Color = rotDisplay.getOptions().bg,
 ) {
   [fg, bg] = getColors(fg, bg);
   rotDisplay.draw(x, y, ch, fg, bg);
@@ -97,8 +65,8 @@ export function drawText(
   x: number,
   y: number,
   s: string,
-  fg: string | Color = state.fg,
-  bg: string | Color = state.bg,
+  fg: string | Color = rotDisplay.getOptions().fg,
+  bg: string | Color = rotDisplay.getOptions().bg,
 ) {
   if (typeof fg === 'number' && fg > 15) {
     const v = 500;

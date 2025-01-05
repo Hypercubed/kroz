@@ -1,3 +1,8 @@
+import { default as RNG } from 'rot-js/lib/rng';
+
+import * as state from './state.ts';
+import * as tiles from './tiles.ts';
+
 import debug from './levels/debug.ts';
 
 // Lost Adventures of Kroz
@@ -27,11 +32,17 @@ import lost52 from './levels/lost-52.ts';
 import lost59 from './levels/lost-59.ts';
 import lost61 from './levels/lost-61.ts';
 import lost64 from './levels/lost-64.ts';
+import { MapLookup, Tile, TileColor } from './tiles.ts';
+import { FLOOR_CHAR } from './constants.ts';
+import { Entity } from './entities.ts';
+import { Timer } from './state.ts';
 
 export interface Level {
   id: string;
   map: string;
   name?: string;
+  onLevelStart?: () => Promise<void>;
+  onLevelEnd?: () => Promise<void>;
 }
 
 export const LEVELS: Level[] = [
@@ -79,3 +90,68 @@ export const LEVELS: Level[] = [
 // - kingdom - 21
 // - kingdom - 25
 // - castle of kroz - 1
+
+export function readLevelMap(level: string) {
+  state.state.entities = [];
+  state.state.T = state.state.T.map(() => 0); // Reset timers
+
+  state.state.genNum = 0;
+
+  const lines = level.split('\n').filter((line) => line.length > 0);
+  for (let y = 0; y < lines.length; y++) {
+    const line = lines[y];
+    for (let x = 0; x < line.length; x++) {
+      const char = line.charAt(x) ?? FLOOR_CHAR;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const block = (MapLookup as any)[char];
+
+      state.state.PF[x] = state.state.PF[x] || [];
+      state.state.PF[x][y] = block ?? char;
+
+      switch (char) {
+        case 'Ã':
+          state.state.PF[x][y] = '!';
+          break;
+        case 'ú':
+          state.state.PF[x][y] = '·';
+          break;
+        case 'ù':
+          state.state.PF[x][y] = '∙';
+          break;
+        case 'ï':
+          state.state.PF[x][y] = '∩';
+          break;
+      }
+
+      switch (block) {
+        case Tile.Player:
+          state.state.player.x = x;
+          state.state.player.y = y;
+          break;
+        case Tile.Slow:
+        case Tile.Medium:
+        case Tile.Fast:
+          state.state.entities.push(new Entity(block, x, y));
+          break;
+        case Tile.Generator:
+          state.state.genNum++;
+          break;
+        // case Tile.MBlock
+        case Tile.Statue:
+          state.state.T[Timer.StatueGemDrain] = 32000;
+          break;
+      }
+    }
+  }
+
+  // Randomize (move to level start?)
+  TileColor[Tile.Gem] = [RNG.getUniformInt(1, 15), null];
+}
+
+export function loadLevel() {
+  state.state.level?.onLevelEnd?.();
+  state.state.level = LEVELS[state.state.levelIndex];
+  tiles.reset();
+  state.state.level?.onLevelStart?.();
+  readLevelMap(state.state.level.map);
+}

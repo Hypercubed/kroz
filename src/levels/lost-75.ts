@@ -1,6 +1,9 @@
 // Lost Adventures of Kroz, Level 75 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { FLOOR_CHAR } from '../constants';
+import { TileChar, Tile } from '../tiles';
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
@@ -32,10 +35,15 @@ RRRRRRR 2         2        $$33333$$       ]      F     2RRRRRRR
 K777777777777C#"#E  2     555D]!]D555     2    40#CYXXYYOOYYXX]K
 `;
 
+async function onLevelStart() {
+  TileChar[Tile.Create] = FLOOR_CHAR;
+}
+
 export default {
   id: 'Lost75',
   map,
-  // MagicEWalls:=true;HideCreate:=true;EvapoRate:=22;
+  onLevelStart,
+  // MagicEWalls:=true;EvapoRate:=22;
 };
 
 // ú -> ·

@@ -1,6 +1,9 @@
 // Lost Adventures of Kroz, Level 30 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { FLOOR_CHAR } from '../constants';
+import { TileChar, Tile } from '../tiles';
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
@@ -34,10 +37,14 @@ MMMMM##                     RRRRRRRR                    DDDD77ôô
 ]]K]]##“                   RRRRRRK]                     DDDD77ô!
 `;
 
+async function onLevelStart() {
+  TileChar[Tile.Create] = FLOOR_CHAR;
+}
+
 export default {
   id,
   map,
-  // HideCreate:=true;
+  onLevelStart,
 };
 
 // Needs IWalls

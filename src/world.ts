@@ -5,11 +5,11 @@ import * as display from './display';
 import * as sound from './sound';
 import * as screen from './screen';
 import * as state from './state';
+import * as levels from './levels';
 
 import {
   TileChar,
   TileColor,
-  MapLookup,
   Tile,
   BOMBABLES,
   ROCKABLES,
@@ -17,7 +17,6 @@ import {
   TileMessage,
 } from './tiles';
 import {
-  FLOOR_CHAR,
   HEIGHT,
   TIME_SCALE,
   TITLE,
@@ -48,26 +47,24 @@ const SPELL_DURATION = {
   [Timer.FreezeTime]: 55 * TIME_SCALE,
 };
 
-export function loadLevel() {
-  state.state.level = LEVELS[state.state.levelIndex];
-  readLevelMap(state.state.level.map);
+export async function loadLevel() {
+  levels.loadLevel();
   state.storeLevelStartState();
   renderPlayfield();
   screen.renderStats();
+  await screen.flashMessage('Press any key to begin this level.');
 }
 
 export async function nextLevel() {
   controls.flushAll();
   state.state.levelIndex = mod(state.state.levelIndex + 1, LEVELS.length);
-  loadLevel();
-  await screen.flashMessage('Press any key to begin this level.');
+  await loadLevel();
 }
 
 async function prevLevel() {
   controls.flushAll();
   state.state.levelIndex = mod(state.state.levelIndex - 1, LEVELS.length);
-  loadLevel();
-  await screen.flashMessage('Press any key to begin this level.');
+  await loadLevel();
 }
 
 export async function effects() {
@@ -331,65 +328,6 @@ export async function playerAction() {
   }
 }
 
-function readLevelMap(level: string) {
-  state.state.entities = [];
-  state.state.T = state.state.T.map(() => 0); // Reset timers
-
-  state.state.genNum = 0;
-
-  const lines = level.split('\n').filter((line) => line.length > 0);
-  for (let y = 0; y < lines.length; y++) {
-    const line = lines[y];
-    for (let x = 0; x < line.length; x++) {
-      const char = line.charAt(x) ?? FLOOR_CHAR;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const block = (MapLookup as any)[char];
-
-      state.state.PF[x] = state.state.PF[x] || [];
-      state.state.PF[x][y] = block ?? char;
-
-      switch (char) {
-        case 'Ã':
-          state.state.PF[x][y] = '!';
-          break;
-        case 'ú':
-          state.state.PF[x][y] = '·';
-          break;
-        case 'ù':
-          state.state.PF[x][y] = '∙';
-          break;
-        case 'ï':
-          state.state.PF[x][y] = '∩';
-          break;
-      }
-
-      switch (block) {
-        case Tile.Player:
-          state.state.player.x = x;
-          state.state.player.y = y;
-          break;
-        case Tile.Slow:
-        case Tile.Medium:
-        case Tile.Fast:
-          state.state.entities.push(new Entity(block, x, y));
-          break;
-        case Tile.Generator:
-          state.state.genNum++;
-          break;
-        // case Tile.MBlock
-        case Tile.Statue:
-          state.state.T[Timer.StatueGemDrain] = 32000;
-          break;
-      }
-    }
-  }
-
-  // Randomize
-  TileColor[Tile.Floor][0] = Color.White;
-  TileColor[Tile.Floor][1] = Color.Black;
-  TileColor[Tile.Gem] = [RNG.getUniformInt(1, 15), null];
-}
-
 async function tryPlayerMove(dx: number, dy: number) {
   const x = state.state.player.x + dx;
   const y = state.state.player.y + dy;
@@ -434,7 +372,7 @@ async function tryPlayerMove(dx: number, dy: number) {
       addScore(block);
       go(state.state.player, x, y);
       await flashTileMessage(Tile.Stairs, true);
-      nextLevel();
+      await nextLevel();
       break;
     case Tile.Chest: {
       go(state.state.player, x, y);
@@ -750,6 +688,9 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     case Tile.ShowGems:
       go(state.state.player, x, y);
+      TileChar[Tile.Gem] = '♦';
+      renderPlayfield();
+      // TODO: sound?
       await flashTileMessage(block);
       break;
     case Tile.Tablet:
@@ -1080,8 +1021,6 @@ function go(e: Entity, x: number, y: number) {
 }
 
 async function playerWhip() {
-  display.bak(TileColor[Tile.Floor][1]!);
-
   const PX = state.state.player.x;
   const PY = state.state.player.y;
 
@@ -1330,7 +1269,7 @@ export function drawTile(
       break;
   }
 
-  display.draw(x + XBot, y + YBot, ch, fg, bg);
+  display.draw(x + XBot, y + YBot, ch, fg!, bg!);
 }
 
 function drawOver(x: number, y: number, ch: string, fg: string | Color) {
@@ -1456,6 +1395,28 @@ async function pause() {
 async function tabletMessage() {
   switch (state.state.level!.id) {
     case 'Debug':
+    case 'Lost26': {
+      await screen.flashMessage('No one has ever made it to the 26th level!');
+      await screen.flashMessage(
+        'You have shown exceptional skills to reach this far...',
+      );
+      await screen.flashMessage('Therefore I grant you the power to see...');
+
+      // Show IWalls
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
+          if (state.state.PF[x][y] === Tile.IWall) {
+            await sound.play(x * y, 10, 10);
+            state.state.PF[x][y] = Tile.OWall3;
+            drawTile(x, y, Tile.OWall3);
+          }
+        }
+      }
+
+      await screen.flashMessage('Behold...your path awaits...');
+
+      break;
+    }
     case 'Lost30':
       await prayer();
       await screen.flashMessage(
@@ -1554,13 +1515,12 @@ async function prayer() {
 }
 
 export async function renderTitle() {
-  display.bak(Color.Blue);
-  display.col(Color.LightCyan);
-
   display.clear(Color.Blue);
 
-  display.gotoxy(2, 5);
-  display.writeln(dedent`
+  display.drawText(
+    2,
+    5,
+    dedent`
     In the mystical Kingdom of Kroz, where ASCII characters come to life and
     danger lurks around every corner, a new chapter unfolds. You, a brave
     archaeologist, have heard whispers of the legendary Magical Amulet of Kroz,
@@ -1570,22 +1530,31 @@ export async function renderTitle() {
     retrieve the Magical Amulet and restore glory to the Kingdom of Kroz? The
     adventure awaits, brave explorer!
 
-  `);
+  `,
+    Color.LightCyan,
+    Color.Blue,
+  );
 
-  display.gotoxy(9, 16);
-  display.writeln(
+  display.drawText(
+    9,
+    16,
     `Use the cursor keys to move yourself (%c{${ColorCodes[Color.Yellow]}}☻%c{${ColorCodes[Color.LightGreen]}}) through the caverns.`,
     Color.LightGreen,
-  );
-  display.writeCenter(
-    `Use your whip (press W) to destroy all nearby creatures.`,
-    Color.LightGreen,
+    Color.Blue,
   );
 
-  display.gotoxy(0, HEIGHT - 1);
   display.writeCenter(
+    17,
+    `Use your whip (press W) to destroy all nearby creatures.`,
+    Color.LightGreen,
+    Color.Blue,
+  );
+
+  display.writeCenter(
+    HEIGHT - 1,
     'Press any key to begin your decent into Kroz.',
     Color.HighIntensityWhite,
+    Color.Blue,
   );
 
   const x = WIDTH / 2 - TITLE.length / 2;
@@ -1657,47 +1626,34 @@ export async function endRoutine() {
 
   display.clear(Color.Blue);
 
-  display.gotoxy(25, 3);
-  display.col(Color.White);
-  display.bak(Color.Blue);
+  display.drawText(25, 3, 'ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ', Color.White, Color.Blue);
 
-  display.writeln('ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ');
+  display.drawText(
+    10,
+    5,
+    dedent`
+        Carefully, you place the ancient tome on your table and open
+        to the first page.  You read the book intently, quickly
+        deciphering the archaic writings.
 
-  display.gotoxy(15, 5);
-  display.writeln(
-    '   Carefully, you place the ancient tome on your table and open',
+        You learn of Lord Dullwit, the once powerful and benevolent
+        ruler of Kroz, who sought wealth and education for his people.
+        The magnificent KINGDOM OF KROZ was once a great empire, until
+        it was overthrown by an evil Wizard, who wanted the riches of
+        Kroz for himself.
+
+        Using magic beyond understanding, the Wizard trapped Lord
+        Dullwit and his people in a chamber so deep in Kroz that any
+        hope of escape was fruitless.
+
+        The Wizard then built hundreds of deadly chambers that would
+        stop anyone from ever rescuing the good people of Kroz.
+        Once again your thoughts becomes clear:  To venture into the
+        depths once more and set free the people of Kroz.
+       `,
+    Color.White,
+    Color.Blue,
   );
-  display.writeln(' to the first page.  You read the book intently, quickly');
-  display.writeln(' deciphering the archaic writings.');
-  display.writeln(
-    '   You learn of Lord Dullwit, the once powerful and benevolent',
-  );
-  display.writeln(
-    ' ruler of Kroz, who sought wealth and education for his people.',
-  );
-  display.writeln(
-    ' The magnificent KINGDOM OF KROZ was once a great empire, until',
-  );
-  display.writeln(
-    ' it was overthrown by an evil Wizard, who wanted the riches of',
-  );
-  display.writeln(' Kroz for himself.');
-  display.writeln(
-    '   Using magic beyond understanding, the Wizard trapped Lord',
-  );
-  display.writeln(
-    ' Dullwit and his people in a chamber so deep in Kroz that any',
-  );
-  display.writeln(' hope of escape was fruitless.');
-  display.writeln(
-    '   The Wizard then built hundreds of deadly chambers that would',
-  );
-  display.writeln(' stop anyone from ever rescuing the good people of Kroz.');
-  display.writeln(
-    '   Once again your thoughts becomes clear:  To venture into the',
-  );
-  display.writeln(' depths once more and set free the people of Kroz.');
-  display.writeln('');
 
   await screen.flashMessage('Press any key, Adventurer.');
   state.state.done = true;

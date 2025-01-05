@@ -6,10 +6,6 @@
 0123456789012345678901234567890123456789012345678901234567890123
 */
 
-const id = 'Kingdom1';
-
-const name = 'Welcome to Kroz II';
-
 const map = `
 W W W W             2 2 2 2 2  C  2 2 2 2 2              W W W W
 XXXXXXXXXXXXXXXXXXX###########   ###########XXXXXXXXXXXXXXXXXXXX
@@ -35,6 +31,6 @@ WW     ########+++++        #######         WWWWW########1    WW
 ########¯                    2 2 2                     C########
 L2  +  X      #kingdom#of#kroz#ii#by#scott#miller#      X  +  2L`;
 
-export default { id, name, map };
+export default { id: 'Kingdom1', map };
 
 // TODO: ShootRight

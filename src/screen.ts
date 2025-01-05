@@ -9,15 +9,13 @@ import { delay } from './utils';
 import dedent from 'ts-dedent';
 
 export function renderScreen() {
-  display.col(14);
-  display.bak(Color.Blue);
   const x = 70;
-  display.print(x, 0, 'Score');
-  display.print(x, 3, 'Level');
-  display.print(x, 6, 'Gems');
-  display.print(x, 9, 'Whips');
-  display.print(x - 2, 12, 'Teleports');
-  display.print(x, 15, 'Keys');
+  display.drawText(x, 0, 'Score', Color.Yellow, Color.Blue);
+  display.drawText(x, 3, 'Level', Color.Yellow, Color.Blue);
+  display.drawText(x, 6, 'Gems', Color.Yellow, Color.Blue);
+  display.drawText(x, 9, 'Whips', Color.Yellow, Color.Blue);
+  display.drawText(x - 2, 12, 'Teleports', Color.Yellow, Color.Blue);
+  display.drawText(x, 15, 'Keys', Color.Yellow, Color.Blue);
 }
 
 // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST1.LEV#L328
@@ -73,17 +71,15 @@ export function renderStats() {
   );
 }
 
+// TODO: Border colors change per level
 export function renderBorder() {
-  display.col(Color.LightBlue);
-  display.bak(Color.Black);
-
   for (let x = XBot - 1; x <= XTop + 1; x++) {
-    display.draw(x, 0, '▒');
-    display.draw(x, YTop + 1, '▒');
+    display.draw(x, 0, '▒', Color.LightBlue, Color.Black);
+    display.draw(x, YTop + 1, '▒', Color.LightBlue, Color.Black);
   }
   for (let y = YBot - 1; y <= YTop + 1; y++) {
-    display.draw(0, y, '▒');
-    display.draw(XTop + 1, y, '▒');
+    display.draw(0, y, '▒', Color.LightBlue, Color.Black);
+    display.draw(XTop + 1, y, '▒', Color.LightBlue, Color.Black);
   }
 }
 
@@ -104,13 +100,27 @@ export async function flashMessage(msg: string): Promise<string> {
 }
 
 export async function introScreen() {
+  display.clear(Color.Black);
+
+  display.writeCenter(20, TITLE, Color.Yellow);
+
+  display.writeCenter(
+    21,
+    'Original Level Design (C) 1990 Scott Miller',
+    Color.Yellow,
+  );
+
+  display.writeCenter(
+    HEIGHT - 1,
+    'Press any key to continue.',
+    Color.HighIntensityWhite,
+  );
+
   return controls.repeatUntilKeyPressed(async () => {
-    display.col(RNG.getUniformInt(1, 15));
-
-    display.clear(Color.Black);
-
-    display.gotoxy(5, 5);
-    display.writeln(dedent`
+    display.drawText(
+      5,
+      5,
+      dedent`
       ███     ███     ██████████         ███████████        █████████████  (R)
       ███░░  ███░░░   ███░░░░░███░      ███░░░░░░░███░        ░░░░░░████░░░
       ███░░ ███░░░    ███░░   ███░░     ███░░     ███░░            ███░░░░
@@ -124,17 +134,10 @@ export async function introScreen() {
       ███░░   ███░
       ███░░    ███████████████████████████████████████████████████████████
       ░░░      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-    `);
-    display.writeln('');
-    display.writeCenter(TITLE, Color.Yellow);
-    display.writeln('');
-    display.writeCenter(
-      'Original Level Design (C) 1990 Scott Miller',
-      Color.Yellow,
+    `,
+      RNG.getUniformInt(1, 15),
     );
 
-    display.gotoxy(0, HEIGHT - 1);
-    display.writeCenter('Press any key to continue.', Color.HighIntensityWhite);
     await delay(500);
   });
 }
@@ -142,43 +145,60 @@ export async function introScreen() {
 export async function instructionsScreen() {
   display.clear(Color.Black);
 
-  display.gotoxy(0, 0);
-  display.writeCenter(TITLE, Color.Yellow);
-  display.writeCenter('INSTRUCTIONS', Color.HighIntensityWhite);
-  display.writeCenter('------------', Color.HighIntensityWhite);
-  display.writeln('');
+  display.writeCenter(0, TITLE, Color.Yellow, Color.Black);
+  display.writeCenter(1, 'INSTRUCTIONS', Color.HighIntensityWhite, Color.Black);
+  display.writeCenter(2, '------------', Color.HighIntensityWhite, Color.Black);
 
-  display.col(Color.LightBlue);
-  display.writeln(dedent`
+  display.drawText(
+    0,
+    5,
+    dedent`
     The dungeons contain dozens of treasures,  spells,  traps and other mysteries.
   Touching an object for the first time will reveal a little of its identity,  but
   it will be left to you to decide how best to use it or avoid it.                
     When a creature touches you it will vanish,  taking with it a few of your gems
   that you have collected. If you have no gems then the creature will instead take
   your life!  Whips can be used to kill nearby creatures, but they are better used
-  to smash through crumbled walls and forest terrain.`);
-  display.writeln('');
+  to smash through crumbled walls and forest terrain.`,
+    Color.LightBlue,
+    Color.Black,
+  );
 
-  display.gotoxy(3);
-  display.writeln(dedent`
+  display.drawText(
+    3,
+    13,
+    dedent`
     You can use these        u i o    7 8 9
     cursor keys to            \\|/      \\|/     w or 5: Whip
     move your man,           j- -k    4- -6         T: Teleport
     and the four              /|\\      /|\\
-    normal cursor keys       n m ,    1 2 3`);
+    normal cursor keys       n m ,    1 2 3`,
+    Color.LightBlue,
+    Color.Black,
+  );
 
-  display.gotoxy(0);
-  display.writeln('');
-  display.writeln(dedent`
+  display.drawText(
+    0,
+    19,
+    dedent`
     It's a good idea to save (S) your game at every new level,  therefore,  if you
-    die you can easily restore (R) the game at that level and try again.`);
+    die you can easily restore (R) the game at that level and try again.`,
+    Color.LightBlue,
+    Color.Black,
+  );
 
-  display.gotoxy(2);
-  display.writeln('');
-  display.writeln('Have fun and good-luck...');
-
-  display.gotoxy(0, HEIGHT - 1);
-  display.writeCenter('Press any key to continue.', Color.HighIntensityWhite);
+  display.writeCenter(
+    22,
+    'Have fun and good-luck...',
+    Color.HighIntensityWhite,
+    Color.Black,
+  );
+  display.writeCenter(
+    HEIGHT - 1,
+    'Press any key to continue.',
+    Color.HighIntensityWhite,
+    Color.Black,
+  );
 
   await controls.waitForKeypress();
 }

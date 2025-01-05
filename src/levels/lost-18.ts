@@ -1,6 +1,9 @@
 // Lost Adventures of Kroz, Level 18 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { FLOOR_CHAR } from '../constants';
+import { TileChar, Tile } from '../tiles';
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
@@ -33,9 +36,15 @@ K----------------------------YYY!YYY---------------------------K
 -66666666666666666666666666666666666666666666666666666666666666-
 K----------------------------3333333---------------------------K`;
 
+async function onLevelStart() {
+  TileChar[Tile.Create] = FLOOR_CHAR;
+  TileChar[Tile.MBlock] = FLOOR_CHAR;
+}
+
 export default {
   id: 'Lost18',
   map,
+  onLevelStart,
 };
 
-// HideMBlock:=true;HideCreate:=true;TreeRate:=70;
+// HideMBlock:=true;TreeRate:=70;
