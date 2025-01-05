@@ -37,3 +37,7 @@ export default {
   map,
   // MagicEWalls:=true;HideCreate:=true;EvapoRate:=22;
 };
+
+// ú -> ·
+// ù -> ∙
+// ï -> ∩

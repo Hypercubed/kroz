@@ -352,6 +352,15 @@ function readLevelMap(level: string) {
         case 'Ã':
           state.state.PF[x][y] = '!';
           break;
+        case 'ú':
+          state.state.PF[x][y] = '·';
+          break;
+        case 'ù':
+          state.state.PF[x][y] = '∙';
+          break;
+        case 'ï':
+          state.state.PF[x][y] = '∩';
+          break;
       }
 
       switch (block) {
@@ -582,14 +591,65 @@ async function tryPlayerMove(dx: number, dy: number) {
       go(state.state.player, x, y);
       await flashTileMessage(block, true);
       break;
-    case Tile.Tunnel:
-      // TODO:
-      // Find a random tunnel exit
-      // Find a random empty space near exit
-      // Move player to exit
+    case Tile.Tunnel: {
+      // Player starting position
+      const sx = state.state.player.x;
+      const sy = state.state.player.y;
+
+      // Move into the tunnel
       go(state.state.player, x, y);
+      await delay(350);
+      await sound.footStep();
+      await delay(500);
+      state.state.PF[x][y] = Tile.Tunnel;
+      drawTile(x, y, Tile.Tunnel);
+
+      // Find a random tunnel
+      let tx = x;
+      let ty = y;
+      for (let i = 0; i < 10000; i++) {
+        const a = RNG.getUniformInt(0, XSize);
+        const b = RNG.getUniformInt(0, YSize);
+        const t = state.state.PF?.[a]?.[b] ?? Tile.Floor;
+        if (t === Tile.Tunnel && (a !== tx || b !== ty)) {
+          tx = a;
+          ty = b;
+          go(state.state.player, tx, ty);
+          break;
+        }
+      }
+
+      state.state.PF[x][y] = Tile.Tunnel;
+      drawTile(x, y, Tile.Tunnel);
+
+      // Find a random empty space near exit
+      let ex = sx;
+      let ey = sy;
+      for (let i = 0; i < 100; i++) {
+        const a = RNG.getUniformInt(-1, 1);
+        const b = RNG.getUniformInt(-1, 1);
+        if (tx + a < 0 || tx + a > XSize || ty + b < 0 || ty + b > YSize)
+          continue;
+        const e = state.state.PF?.[tx + a]?.[ty + b] ?? Tile.Floor;
+        if (
+          [
+            0, 32, 33, 37, 39, 55, 56, 57, 67, 224, 225, 226, 227, 227, 229,
+            230, 231,
+          ].includes(e as Tile)
+        ) {
+          ex = tx + a;
+          ey = ty + b;
+          break;
+        }
+      }
+      go(state.state.player, ex, ey);
+
+      state.state.PF[tx][ty] = Tile.Tunnel;
+      drawTile(tx, ty, Tile.Tunnel);
+
       await flashTileMessage(block, true);
       break;
+    }
     case Tile.Quake:
       go(state.state.player, x, y);
 
@@ -892,6 +952,9 @@ async function tryPlayerMove(dx: number, dy: number) {
       break;
     case Tile.Trap2:
     case Tile.Trap4:
+      // TBD
+      go(state.state.player, x, y);
+      break;
     case Tile.Trap5:
     case Tile.Trap6:
     case Tile.Trap7:
@@ -900,9 +963,19 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.Trap10:
     case Tile.Trap11:
     case Tile.Trap12:
-    case Tile.Trap13:
+    case Tile.Trap13: {
       go(state.state.player, x, y);
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
+          const a = state.state.PF?.[x]?.[y] ?? Tile.Floor;
+          if (block === a) {
+            state.state.PF[x][y] = Tile.Floor;
+            drawTile(x, y, Tile.Floor);
+          }
+        }
+      }
       break;
+    }
     case Tile.Trap3: {
       // Clears out the Trap3
       for (let x = 0; x <= XSize; x++) {
@@ -1240,7 +1313,10 @@ export function drawTile(
       bg ??
       TileColor[block as unknown as Tile]?.[1] ??
       TileColor[Tile.Floor][1]!;
-  } else if ((block >= 'a' && block <= 'z') || block === '!') {
+  } else if (
+    (block >= 'a' && block <= 'z') ||
+    ['!', '·', '∙', '∩'].includes(block)
+  ) {
     ch = block.toUpperCase();
     fg = fg ?? Color.HighIntensityWhite;
     bg = bg ?? Color.Brown;
@@ -1420,6 +1496,49 @@ async function tabletMessage() {
       await screen.flashMessage('"...Overcome!"');
 
       break;
+    case 'Lost61':
+      await screen.flashMessage(
+        'Walls that block your progress shall be removed...',
+      );
+      state.state.PF[state.state.player.x][state.state.player.y] = Tile.OSpell1;
+      tryPlayerMove(0, 0);
+      break;
+    case 'Lost64': {
+      await prayer();
+      await screen.flashMessage(
+        '"Tnarg yna rerutnevda ohw sevivrus siht raf..."',
+      );
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
+          if (state.state.PF[x][y] === Tile.CWall1) {
+            await sound.play(x * y, 50, 10);
+            state.state.PF[x][y] = Tile.Nugget;
+            // ArtColor??
+            drawTile(x, y, Tile.Nugget);
+          }
+        }
+      }
+      await screen.flashMessage('"...Dlog!"');
+      break;
+    }
+    case 'Lost75': {
+      await prayer();
+      await screen.flashMessage('"Ttocs Rellim Setalutargnoc Uoy!"');
+      await screen.flashMessage(
+        'Your palms sweat as the words echo through the chamber...',
+      );
+      for (let x = 0; x <= XSize; x++) {
+        for (let y = 0; y <= YSize; y++) {
+          if (state.state.PF[x][y] === Tile.Pit) {
+            await sound.play(x * y, 50, 10);
+            state.state.PF[x][y] = Tile.Rock;
+            drawTile(x, y, Tile.Rock);
+          }
+        }
+      }
+      await screen.flashMessage('...Your eyes widen with anticipation!');
+      break;
+    }
     default:
       break;
   }
@@ -1577,7 +1696,7 @@ export async function endRoutine() {
   display.writeln(
     '   Once again your thoughts becomes clear:  To venture into the',
   );
-  display.writeln(' depths once more and set free the people of Kroz, in:');
+  display.writeln(' depths once more and set free the people of Kroz.');
   display.writeln('');
 
   await screen.flashMessage('Press any key, Adventurer.');

@@ -37,3 +37,5 @@ export default {
   id: 'Lost18',
   map,
 };
+
+// HideMBlock:=true;HideCreate:=true;TreeRate:=70;

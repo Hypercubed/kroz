@@ -23,6 +23,10 @@ import caverns2 from './levels/caverns-2.ts';
 import caverns4 from './levels/caverns-4.ts';
 import lost46 from './levels/lost-46.ts';
 import lost48 from './levels/lost-48.ts';
+import lost52 from './levels/lost-52.ts';
+import lost59 from './levels/lost-59.ts';
+import lost61 from './levels/lost-61.ts';
+import lost64 from './levels/lost-64.ts';
 
 export interface Level {
   id: string;
@@ -40,7 +44,7 @@ export const LEVELS: Level[] = [
   kingdom1,
   // lost11 as Level, Need more keys
   lost18,
-  // lost20 as Level, // Need a keys, Needs MBlocks
+  // lost20 as Level, // Need a keys
   // lost22 as Level, // Needs MBlocks
   lost26,
   lost30, // Need whips
@@ -51,6 +55,12 @@ export const LEVELS: Level[] = [
   lost42, // Needs Tree growth
   lost46,
   lost48,
+  lost52,
+  lost59,
+  lost61,
+  lost64,
+  // lost70,  TBD
+  // lost74,  TBD
   lost75,
 ];
 
