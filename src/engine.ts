@@ -1,4 +1,3 @@
-import { Scheduler } from 'rot-js';
 import { default as Stats } from 'stats.js';
 import * as dat from 'lil-gui';
 
@@ -7,46 +6,14 @@ import * as display from './display';
 import * as world from './world';
 import * as screen from './screen';
 import * as state from './state';
+import * as scheduler from './scheduler';
 
-import { Tile } from './tiles';
-import { DEBUG, TICK_RATE_SCALE, TIME_SCALE, XSize, YSize } from './constants';
+import { DEBUG, CLOCK_SCALE, XSize, YSize } from './constants';
 import { Timer } from './state';
 import { Color } from './colors';
 
 let stats: Stats;
 let gui: dat.GUI;
-
-const PT = TIME_SCALE;
-const ST = TIME_SCALE / 4;
-const MT = TIME_SCALE / 3;
-const FT = TIME_SCALE / 2;
-
-// Dummy entities used for the scheduler
-const PlayerActor = { type: Tile.Player, getSpeed: () => 1 };
-const SlowActor = {
-  type: Tile.Slow,
-  getSpeed: () => {
-    if (state.state.T[Timer.SlowTime] > 0) return ST / 5;
-    if (state.state.T[Timer.SpeedTime] > 0) return PT;
-    return ST;
-  },
-};
-const MediumActor = {
-  type: Tile.Medium,
-  getSpeed: () => {
-    if (state.state.T[Timer.SlowTime] > 0) return MT / 5;
-    if (state.state.T[Timer.SpeedTime] > 0) return PT;
-    return MT;
-  },
-};
-const FastActor = {
-  type: Tile.Fast,
-  getSpeed: () => {
-    if (state.state.T[Timer.SlowTime] > 0) return (FT / 5) * TIME_SCALE;
-    if (state.state.T[Timer.SpeedTime] > 0) return PT * TIME_SCALE;
-    return FT * TIME_SCALE;
-  },
-};
 
 export function init() {
   const container = display.getContainer()!;
@@ -134,15 +101,15 @@ export async function start() {
 }
 
 async function run() {
-  const scheduler = new Scheduler.Speed();
+  scheduler.createScheduler();
 
-  scheduler.add(PlayerActor, true);
-  scheduler.add(SlowActor, true);
-  scheduler.add(MediumActor, true);
-  scheduler.add(FastActor, true);
+  // scheduler.add(PlayerActor, true);
+  // scheduler.add(SlowActor, true);
+  // scheduler.add(MediumActor, true);
+  // scheduler.add(FastActor, true);
 
   // Game loop
-  const speed = 16 * TICK_RATE_SCALE; // 16 * 8;
+  const speed = 16 * CLOCK_SCALE; // 16 * 8;
 
   let dt = 0;
   let previousTime = 0;

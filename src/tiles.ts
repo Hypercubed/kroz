@@ -2,6 +2,7 @@ import { Color } from './colors';
 import { FLOOR_CHAR } from './constants';
 
 export const enum Tile {
+  Border = -1,
   Floor = 0,
   Slow = 1,
   Medium = 2,
@@ -100,6 +101,7 @@ export const enum Tile {
 }
 
 export const TileChar: Record<Tile, string> = {
+  [Tile.Border]: '▒',
   [Tile.Floor]: FLOOR_CHAR,
   [Tile.Slow]: 'Ä',
   [Tile.Medium]: 'Ö',
@@ -230,7 +232,7 @@ export const MapLookup: Record<string, Tile> = {
   E: Tile.Quake,
   ';': Tile.IBlock,
   ':': Tile.IWall,
-  '`': Tile.IDoor,
+  '`': Tile.IDoor, // TODO: Add a seconday char for IDoor
   '-': Tile.Stop,
   '@': Tile.Trap2,
   '%': Tile.Zap,
@@ -297,6 +299,7 @@ export const MapLookup: Record<string, Tile> = {
 };
 
 export const TileColor: Record<Tile, [Color | null, Color | null]> = {
+  [Tile.Border]: [Color.LightBlue, Color.Black],
   [Tile.Floor]: [Color.White, Color.Black],
   [Tile.Slow]: [Color.LightRed, null],
   [Tile.Medium]: [Color.LightBlue, null],
@@ -393,7 +396,8 @@ export const TileColor: Record<Tile, [Color | null, Color | null]> = {
   [Tile.Message]: [Color.Brown, Color.Green],
 };
 
-export const TileMessage: Record<number, string> = {
+export const TileMessage: Partial<Record<Tile, string>> = {
+  [Tile.Border]: 'An Electrified Wall blocks your way.',
   [Tile.Block]: 'A Breakable Wall blocks your way',
   [Tile.Whip]: 'You have found a Whip',
   [Tile.Stairs]: 'Stairs take you to the next lower level.',

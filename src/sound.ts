@@ -79,7 +79,7 @@ export async function blockedWall() {
   ZZFX.playSamples(blockedWallSample);
 }
 
-export async function noise() {
+export async function staticNoise() {
   for (let x = 1; x <= 25; x++) {
     if (Math.random() > 0.5) {
       const r = RNG.getUniformInt(0, 59) + 10;

@@ -1,6 +1,10 @@
 // Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import * as world from '../world';
+import * as screen from '../screen';
+import * as state from '../state';
+
 import { TileChar, Tile } from '../tiles';
 
 /*
@@ -38,10 +42,19 @@ function onLevelStart() {
   TileChar[Tile.Fast] = '☺';
 }
 
+async function tabletMessage() {
+  await screen.flashMessage(
+    'Walls that block your progress shall be removed...',
+  );
+  state.state.PF[state.state.player.x][state.state.player.y] = Tile.OSpell1;
+  world.tryPlayerMove(0, 0);
+}
+
 export default {
   id: 'Lost61',
   map,
   onLevelStart,
+  tabletMessage,
   // Fast:=#1;
 };
 

@@ -1,6 +1,13 @@
 // Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import * as world from '../world';
+import * as screen from '../screen';
+import * as state from '../state';
+import * as sound from '../sound';
+import { XSize, YSize } from '../constants';
+import { Tile } from '../tiles';
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
@@ -34,9 +41,30 @@ LL---V--V-VV-V--VV---D-----D--’--D--”--D--66333333333333333-WWWW
 LL--V-VV-V--V-VV--V--D-----D--”--D--’--D--66YYYYYYYYYYYYYYYYYYYY
 `;
 
+async function tabletMessage() {
+  await world.prayer();
+  await screen.flashMessage(
+    '"Barriers of water, like barriers in life, can always be..."',
+  );
+
+  // Clears River with Block
+  for (let x = 0; x <= XSize; x++) {
+    for (let y = 0; y <= YSize; y++) {
+      if (state.state.PF[x][y] === Tile.River) {
+        await sound.play(x * y, 50, 10);
+        state.state.PF[x][y] = Tile.Block;
+        world.drawTile(x, y, Tile.Block);
+      }
+    }
+  }
+
+  await screen.flashMessage('"...Overcome!"');
+}
+
 export default {
   id,
   map,
+  tabletMessage,
   // TreeRate:=35;
 };
 

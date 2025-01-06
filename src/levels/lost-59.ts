@@ -38,6 +38,12 @@ MMMM(                                                      )MMMM
 async function onLevelStart() {
   TileChar[Tile.Create] = FLOOR_CHAR;
   TileChar[Tile.MBlock] = FLOOR_CHAR;
+
+  TileChar[Tile.OWall1] = FLOOR_CHAR;
+  TileChar[Tile.OWall2] = FLOOR_CHAR;
+  TileChar[Tile.OWall3] = FLOOR_CHAR;
+
+  TileChar[Tile.Trap] = FLOOR_CHAR;
 }
 
 export default {
@@ -45,5 +51,4 @@ export default {
   map,
   onLevelStart,
   // LavaFlow:=true;LavaRate:=140;
-  // HideOpenWall:=true;HideTrap:=true
 };

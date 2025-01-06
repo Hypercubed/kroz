@@ -45,6 +45,7 @@ export default {
   id: 'Lost4',
   map,
   onLevelStart,
+  tabletMessage: 'Adventurer, try the top right corner if you desire.',
 };
 
 // TODO:

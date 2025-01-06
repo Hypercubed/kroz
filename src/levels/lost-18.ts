@@ -45,6 +45,7 @@ export default {
   id: 'Lost18',
   map,
   onLevelStart,
+  tabletMessage: 'Adventurer, check the "Valley of the M"!',
 };
 
-// HideMBlock:=true;TreeRate:=70;
+// TreeRate:=70;

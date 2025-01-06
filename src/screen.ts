@@ -7,6 +7,7 @@ import { RNG } from 'rot-js';
 import { Color } from './colors';
 import { delay } from './utils';
 import dedent from 'ts-dedent';
+import { Tile, TileChar, TileColor } from './tiles';
 
 export function renderScreen() {
   const x = 70;
@@ -16,6 +17,15 @@ export function renderScreen() {
   display.drawText(x, 9, 'Whips', Color.Yellow, Color.Blue);
   display.drawText(x - 2, 12, 'Teleports', Color.Yellow, Color.Blue);
   display.drawText(x, 15, 'Keys', Color.Yellow, Color.Blue);
+
+  const [fg, bg] = display.getColors(Color.HighIntensityWhite, Color.Blue);
+  display.drawText(69, 18, 'OPTIONS', fg, Color.Red);
+  display.drawText(69, 19, `%c{${fg}}W%c{}hip`, Color.White, bg);
+  display.drawText(69, 20, `%c{${fg}}T%c{}eleport`, Color.White, bg);
+  display.drawText(69, 21, `%c{${fg}}P%c{}ause`, Color.White, bg);
+  display.drawText(69, 22, `%c{${fg}}Q%c{}uit`, Color.White, bg);
+  display.drawText(69, 23, `%c{${fg}}S%c{}ave`, Color.White, bg);
+  display.drawText(69, 24, `%c{${fg}}R%c{}estore`, Color.White, bg);
 }
 
 // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST1.LEV#L328
@@ -71,15 +81,17 @@ export function renderStats() {
   );
 }
 
-// TODO: Border colors change per level
 export function renderBorder() {
+  const char = TileChar[Tile.Border];
+  const [fg, bg] = TileColor[Tile.Border];
+
   for (let x = XBot - 1; x <= XTop + 1; x++) {
-    display.draw(x, 0, '▒', Color.LightBlue, Color.Black);
-    display.draw(x, YTop + 1, '▒', Color.LightBlue, Color.Black);
+    display.draw(x, 0, char, fg!, bg!);
+    display.draw(x, YTop + 1, char, fg!, bg!);
   }
   for (let y = YBot - 1; y <= YTop + 1; y++) {
-    display.draw(0, y, '▒', Color.LightBlue, Color.Black);
-    display.draw(XTop + 1, y, '▒', Color.LightBlue, Color.Black);
+    display.draw(0, y, char, fg!, bg!);
+    display.draw(XTop + 1, y, char, fg!, bg!);
   }
 }
 

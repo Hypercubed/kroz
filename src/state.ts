@@ -50,7 +50,7 @@ function getDefaultState() {
     gems: DEBUG ? 250 : 20,
     whips: DEBUG ? 100 : 0,
     teleports: DEBUG ? 50 : 0,
-    keys: DEBUG ? 1 : 0,
+    keys: DEBUG ? 0 : 0,
     whipPower: DEBUG ? 3 : 2,
     bonus: 0, // Bonus count for K R O Z
     genNum: 0, // Number for creature generators

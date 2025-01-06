@@ -35,4 +35,5 @@ LL##(((2(((((((((##############99##############$$$$$$$$$2$$$##MM
 export default {
   id: 'Lost46',
   map,
+  tabletMessage: 'Follow the sequence if you wish to be successful.',
 };

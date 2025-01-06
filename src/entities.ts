@@ -2,13 +2,27 @@ import * as sound from './sound';
 import * as state from './state';
 
 import { TileChar, Tile } from './tiles';
-import { FLOOR_CHAR } from './constants';
+import { FLOOR_CHAR, TIME_SCALE } from './constants';
 import { Timer } from './state';
 
 export type EntityType = Tile.Player | Tile.Slow | Tile.Medium | Tile.Fast;
 
+function getBaseSpeed(t: EntityType) {
+  switch (t) {
+    case Tile.Player:
+      return TIME_SCALE;
+    case Tile.Slow:
+      return TIME_SCALE / 4;
+    case Tile.Medium:
+      return TIME_SCALE / 3;
+    case Tile.Fast:
+      return TIME_SCALE / 2;
+  }
+}
+
 export class Entity {
   ch: string;
+  speed: number;
 
   constructor(
     public readonly type: EntityType,
@@ -18,7 +32,8 @@ export class Entity {
     this.x = x;
     this.y = y;
 
-    this.ch = TileChar[type];
+    this.ch = TileChar[this.type];
+    this.speed = getBaseSpeed(this.type);
   }
 
   move(x: number, y: number) {
@@ -42,11 +57,16 @@ export class Entity {
   }
 
   getChar() {
-    // TODO: remove dependencey on state.state
     if (this.type === Tile.Player)
       return state.state.T[Timer.Invisible] > 0
         ? FLOOR_CHAR
         : TileChar[this.type];
     return this.ch;
+  }
+
+  getSpeed() {
+    if (this.type === Tile.Player)
+      return state.state.T[Timer.SlowTime] > 0 ? 10 : 1;
+    return state.state.T[Timer.SpeedTime] > 0 ? TIME_SCALE : this.speed;
   }
 }

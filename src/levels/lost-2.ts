@@ -37,11 +37,12 @@ LLXXXXXX#XXXXXXXXXXXXX#XXXXXXXXXXXXXX#4XXXXXX##XXXXX#####of#kroz
 
 async function onLevelStart() {
   TileChar[Tile.Stairs] = FLOOR_CHAR; // HideGems
-  TileColor[Tile.Stairs] = TileColor[Tile.Floor];
+  TileColor[Tile.Stairs] = TileColor[Tile.Floor]; // HideStairs
 }
 
 export default {
   id: 'Lost2',
   map,
   onLevelStart,
+  tabletMessage: 'Warning to all Adventurers:  No one returns from Kroz!',
 };

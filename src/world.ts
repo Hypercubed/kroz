@@ -49,7 +49,10 @@ const SPELL_DURATION = {
 
 export async function loadLevel() {
   levels.loadLevel();
+  state.state.T = state.state.T.fill(0);
+  state.state.bonus = 0;
   state.storeLevelStartState();
+  screen.renderBorder();
   renderPlayfield();
   screen.renderStats();
   await screen.flashMessage('Press any key to begin this level.');
@@ -253,11 +256,18 @@ export async function playerAction() {
 
   if (controls.wasActionDeactivated(Action.PrevLevel)) return await prevLevel();
 
+  if (controls.wasActionDeactivated(Action.NextLevelCheat)) {
+    state.state.PF[state.state.player.x + 1][state.state.player.y] =
+      Tile.Stairs;
+    await sound.play(2000, 40, 10);
+    return;
+  }
+
   if (controls.wasActionDeactivated(Action.FreeItems)) {
-    state.state.gems = Infinity;
-    state.state.whips = Infinity;
-    state.state.teleports = Infinity;
-    state.state.keys = Infinity;
+    state.state.gems = 150;
+    state.state.whips = 99;
+    state.state.teleports = 99;
+    state.state.keys = 9;
     screen.renderStats();
     return;
   }
@@ -328,11 +338,16 @@ export async function playerAction() {
   }
 }
 
-async function tryPlayerMove(dx: number, dy: number) {
+export async function tryPlayerMove(dx: number, dy: number) {
   const x = state.state.player.x + dx;
   const y = state.state.player.y + dy;
 
-  if (x < 0 || x > XSize || y < 0 || y > YSize) return;
+  if (x < 0 || x > XSize || y < 0 || y > YSize) {
+    await sound.staticNoise();
+    addScore(Tile.Border);
+    await flashTileMessage(Tile.Border, true);
+    return;
+  }
   // flashTileMessage(16,25,'An Electrified Wall blocks your way.');
 
   const block = state.state.PF?.[x]?.[y] || Tile.Floor;
@@ -883,7 +898,7 @@ async function tryPlayerMove(dx: number, dy: number) {
     case Tile.EWall:
       addScore(block);
       state.state.gems--;
-      sound.noise();
+      sound.staticNoise();
       await flashTileMessage(Tile.EWall, true);
       break;
     case Tile.CWall1:
@@ -969,7 +984,7 @@ async function tryPlayerMove(dx: number, dy: number) {
   }
 }
 
-async function flashTileMessage(msg: number, once: boolean = false) {
+async function flashTileMessage(msg: Tile, once: boolean = false) {
   if (once) {
     if (state.state.foundSet.has(msg)) return '';
     state.state.foundSet.add(msg);
@@ -1077,16 +1092,16 @@ async function playerTeleport() {
   }
 
   // Teleport
+  go(state.state.player, ...findRandomEmptySpace());
+}
+
+function findRandomEmptySpace(): [number, number] {
   while (true) {
     const x = RNG.getUniformInt(0, XSize);
     const y = RNG.getUniformInt(0, YSize);
     const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
     if (block === Tile.Floor) {
-      state.state.PF[x][y] = Tile.Player;
-      state.state.player.x = x;
-      state.state.player.y = y;
-      renderPlayfield();
-      break;
+      return [x, y];
     }
   }
 }
@@ -1287,6 +1302,10 @@ function drawOver(x: number, y: number, ch: string, fg: string | Color) {
 
 function addScore(block: Tile) {
   switch (block) {
+    case Tile.Border:
+      if (state.state.score > state.state.levelIndex)
+        state.state.score -= state.state.levelIndex / 2;
+      break;
     case Tile.Slow:
     case Tile.Medium:
     case Tile.Fast:
@@ -1393,119 +1412,17 @@ async function pause() {
 
 // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L45
 async function tabletMessage() {
-  switch (state.state.level!.id) {
-    case 'Debug':
-    case 'Lost26': {
-      await screen.flashMessage('No one has ever made it to the 26th level!');
-      await screen.flashMessage(
-        'You have shown exceptional skills to reach this far...',
-      );
-      await screen.flashMessage('Therefore I grant you the power to see...');
-
-      // Show IWalls
-      for (let x = 0; x <= XSize; x++) {
-        for (let y = 0; y <= YSize; y++) {
-          if (state.state.PF[x][y] === Tile.IWall) {
-            await sound.play(x * y, 10, 10);
-            state.state.PF[x][y] = Tile.OWall3;
-            drawTile(x, y, Tile.OWall3);
-          }
-        }
-      }
-
-      await screen.flashMessage('Behold...your path awaits...');
-
-      break;
+  const level = state.state.level!;
+  if (level.tabletMessage) {
+    if (typeof level.tabletMessage === 'string') {
+      await screen.flashMessage(level.tabletMessage);
+    } else if (typeof level.tabletMessage === 'function') {
+      await level.tabletMessage();
     }
-    case 'Lost30':
-      await prayer();
-      await screen.flashMessage(
-        '"If goodness is in my heart, that which flows shall..."',
-      );
-
-      // Replace River with Nugget
-      for (let x = 0; x <= XSize; x++) {
-        for (let y = 0; y <= YSize; y++) {
-          if (state.state.PF[x][y] === Tile.River) {
-            await sound.play(x * y, 50, 10);
-            state.state.PF[x][y] = Tile.Nugget;
-            drawTile(x, y, Tile.Nugget);
-          }
-        }
-      }
-
-      await screen.flashMessage('"...Turn to Gold!"');
-
-      break;
-    case 'Lost42':
-      await prayer();
-      await screen.flashMessage(
-        '"Barriers of water, like barriers in life, can always be..."',
-      );
-
-      // Clears River with Block
-      for (let x = 0; x <= XSize; x++) {
-        for (let y = 0; y <= YSize; y++) {
-          if (state.state.PF[x][y] === Tile.River) {
-            await sound.play(x * y, 50, 10);
-            state.state.PF[x][y] = Tile.Block;
-            drawTile(x, y, Tile.Block);
-          }
-        }
-      }
-
-      await screen.flashMessage('"...Overcome!"');
-
-      break;
-    case 'Lost61':
-      await screen.flashMessage(
-        'Walls that block your progress shall be removed...',
-      );
-      state.state.PF[state.state.player.x][state.state.player.y] = Tile.OSpell1;
-      tryPlayerMove(0, 0);
-      break;
-    case 'Lost64': {
-      await prayer();
-      await screen.flashMessage(
-        '"Tnarg yna rerutnevda ohw sevivrus siht raf..."',
-      );
-      for (let x = 0; x <= XSize; x++) {
-        for (let y = 0; y <= YSize; y++) {
-          if (state.state.PF[x][y] === Tile.CWall1) {
-            await sound.play(x * y, 50, 10);
-            state.state.PF[x][y] = Tile.Nugget;
-            // ArtColor??
-            drawTile(x, y, Tile.Nugget);
-          }
-        }
-      }
-      await screen.flashMessage('"...Dlog!"');
-      break;
-    }
-    case 'Lost75': {
-      await prayer();
-      await screen.flashMessage('"Ttocs Rellim Setalutargnoc Uoy!"');
-      await screen.flashMessage(
-        'Your palms sweat as the words echo through the chamber...',
-      );
-      for (let x = 0; x <= XSize; x++) {
-        for (let y = 0; y <= YSize; y++) {
-          if (state.state.PF[x][y] === Tile.Pit) {
-            await sound.play(x * y, 50, 10);
-            state.state.PF[x][y] = Tile.Rock;
-            drawTile(x, y, Tile.Rock);
-          }
-        }
-      }
-      await screen.flashMessage('...Your eyes widen with anticipation!');
-      break;
-    }
-    default:
-      break;
   }
 }
 
-async function prayer() {
+export async function prayer() {
   await screen.flashMessage(
     'On the Ancient Tablet is a short Mantra, a prayer...',
   );

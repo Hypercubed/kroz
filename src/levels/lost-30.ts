@@ -1,7 +1,12 @@
 // Lost Adventures of Kroz, Level 30 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import { FLOOR_CHAR } from '../constants';
+import * as world from '../world';
+import * as screen from '../screen';
+import * as state from '../state';
+import * as sound from '../sound';
+
+import { FLOOR_CHAR, XSize, YSize } from '../constants';
 import { TileChar, Tile } from '../tiles';
 
 /*
@@ -41,10 +46,31 @@ async function onLevelStart() {
   TileChar[Tile.Create] = FLOOR_CHAR;
 }
 
+async function tabletMessage() {
+  await world.prayer();
+  await screen.flashMessage(
+    '"If goodness is in my heart, that which flows shall..."',
+  );
+
+  // Replace River with Nugget
+  for (let x = 0; x <= XSize; x++) {
+    for (let y = 0; y <= YSize; y++) {
+      if (state.state.PF[x][y] === Tile.River) {
+        await sound.play(x * y, 50, 10);
+        state.state.PF[x][y] = Tile.Nugget;
+        world.drawTile(x, y, Tile.Nugget);
+      }
+    }
+  }
+
+  await screen.flashMessage('"...Turn to Gold!"');
+}
+
 export default {
   id,
   map,
   onLevelStart,
+  tabletMessage,
 };
 
 // Needs IWalls

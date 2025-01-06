@@ -1,6 +1,9 @@
 // Lost Adventures of Kroz, Level 20 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { Tile, TileChar } from '../tiles';
+import { FLOOR_CHAR } from '../constants';
+
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
 0123456789012345678901234567890123456789012345678901234567890123
@@ -31,8 +34,14 @@ const map = `
 --~~-~--~-~--~~-~~--~--~-D-D-++-L-WW-D-D-~--~--~-~~-~--~~-~~-~--
 -~--~-~~-~-~~--~--~~-~~--D-D-++ñLñWW-D-D--~~-~~-~--~-~~--~--~-~-`;
 
+async function onLevelStart() {
+  TileChar[Tile.OWall1] = FLOOR_CHAR;
+  TileChar[Tile.OWall2] = FLOOR_CHAR;
+  TileChar[Tile.OWall3] = FLOOR_CHAR;
+}
+
 export default {
   id: 'Lost20',
   map,
-  // HideOpenWall:=true;
+  onLevelStart,
 };

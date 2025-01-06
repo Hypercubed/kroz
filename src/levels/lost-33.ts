@@ -40,11 +40,14 @@ L---N-----##X###  CC  555555-----------------#####X##1111#######
 async function onLevelStart() {
   TileChar[Tile.Stairs] = FLOOR_CHAR; // HideGems
   TileColor[Tile.Stairs] = TileColor[Tile.Floor];
+
+  TileChar[Tile.OWall1] = FLOOR_CHAR;
+  TileChar[Tile.OWall2] = FLOOR_CHAR;
+  TileChar[Tile.OWall3] = FLOOR_CHAR;
 }
 
 export default {
   id: 'Lost33',
   map,
   onLevelStart,
-  // HideOpenWall:=true;
 };

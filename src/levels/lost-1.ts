@@ -32,7 +32,11 @@ export const map = `
 #by#scott#miller#♣///♣/////♣/♣////♣////♣////♣//♣//♣/♣//♣/♣♣///♣ü
 `;
 
-export default { id: 'Lost1', map };
+export default {
+  id: 'Lost1',
+  map,
+  tabletMessage: 'Once again you uncover the hidden tunnel leading to Kroz!',
+};
 
 // TODO:
 // Tile.Message

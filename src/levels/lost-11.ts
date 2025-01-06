@@ -36,6 +36,7 @@ const map = `
 export default {
   id: 'Lost11',
   map,
+  tabletMessage: 'The tunnel below contains a magic spell.',
 };
 
 // Needs MBlocks

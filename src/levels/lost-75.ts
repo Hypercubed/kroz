@@ -1,7 +1,12 @@
 // Lost Adventures of Kroz, Level 75 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import { FLOOR_CHAR } from '../constants';
+import * as screen from '../screen';
+import * as sound from '../sound';
+import * as state from '../state';
+import * as world from '../world';
+
+import { FLOOR_CHAR, XSize, YSize } from '../constants';
 import { TileChar, Tile } from '../tiles';
 
 /*
@@ -39,10 +44,29 @@ async function onLevelStart() {
   TileChar[Tile.Create] = FLOOR_CHAR;
 }
 
+async function tabletMessage() {
+  await world.prayer();
+  await screen.flashMessage('"Ttocs Rellim Setalutargnoc Uoy!"');
+  await screen.flashMessage(
+    'Your palms sweat as the words echo through the chamber...',
+  );
+  for (let x = 0; x <= XSize; x++) {
+    for (let y = 0; y <= YSize; y++) {
+      if (state.state.PF[x][y] === Tile.Pit) {
+        await sound.play(x * y, 50, 10);
+        state.state.PF[x][y] = Tile.Rock;
+        world.drawTile(x, y, Tile.Rock);
+      }
+    }
+  }
+  await screen.flashMessage('...Your eyes widen with anticipation!');
+}
+
 export default {
   id: 'Lost75',
   map,
   onLevelStart,
+  tabletMessage,
   // MagicEWalls:=true;EvapoRate:=22;
 };
 

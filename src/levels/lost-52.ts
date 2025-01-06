@@ -45,6 +45,7 @@ export default {
   id: 'Lost52',
   map,
   onLevelStart,
+  tabletMessage: 'Up 4 steps, then left 16 steps.',
 };
 
 // MakeFloor(0,6,7,0,0);

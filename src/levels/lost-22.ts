@@ -32,4 +32,8 @@ MMMMMMMMMM-----MMMMMMMMMMMMMMMM]MMMMMMMMM-M-MMMMMMMMMMMMMMMM-MMM
 K-222222)MMMMMMMMMMMMMMMMMMMMMMMMMM|MMMMMMM--M-MMMMM-M-MMMMMMMMM
 `;
 
-export default { id: 'Lost22', map };
+export default {
+  id: 'Lost22',
+  map,
+  tabletMessage: 'These walls will seek to entrap you!',
+};

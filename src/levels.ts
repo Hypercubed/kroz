@@ -11,13 +11,15 @@ import lost2 from './levels/lost-2.ts';
 import lost4 from './levels/lost-4.ts';
 // import lost11 from './levels/lost-11.ts';
 import lost18 from './levels/lost-18.ts';
-// import lost20 from './levels/lost-20.ts';
+import lost20 from './levels/lost-20.ts';
 // import lost22 from './levels/lost-22.ts';
 import lost26 from './levels/lost-26.ts';
 import lost30 from './levels/lost-30.ts';
 // import lost33 from './levels/lost-33.ts';
 import lost34 from './levels/lost-34.ts';
 import lost42 from './levels/lost-42.ts';
+import lost70 from './levels/lost-70.ts';
+// import lost74 from './levels/lost-74.ts';
 import lost75 from './levels/lost-75.ts';
 
 // KINGDOM OF KROZ
@@ -43,23 +45,24 @@ export interface Level {
   name?: string;
   onLevelStart?: () => Promise<void>;
   onLevelEnd?: () => Promise<void>;
+  tabletMessage?: (() => Promise<void>) | string;
 }
 
 export const LEVELS: Level[] = [
-  debug, // Most be level 0
+  debug, // Must be level 0
   lost1,
   lost2,
   lost4,
   caverns2,
   caverns4,
   kingdom1,
-  // lost11 as Level, Need more keys
+  // lost11, Need more keys
   lost18,
-  // lost20 as Level, // Need a keys
-  // lost22 as Level, // Needs MBlocks
+  lost20, // Need a keys
+  // lost22, // Needs MBlocks
   lost26,
   lost30, // Need whips
-  // lost33 as Level, // Needs WallVanish
+  // lost33, // Needs WallVanish, Needs to start with a key
   lost34,
   // lost35, // Needs lava flow
   // lost40, // Needs two keys to start
@@ -70,8 +73,8 @@ export const LEVELS: Level[] = [
   lost59,
   lost61,
   lost64,
-  // lost70,  TBD
-  // lost74,  TBD
+  lost70, // TBD
+  // lost74,  // Needs EvapoRate
   lost75,
 ];
 
@@ -108,9 +111,26 @@ export function readLevelMap(level: string) {
       state.state.PF[x] = state.state.PF[x] || [];
       state.state.PF[x][y] = block ?? char;
 
+      // Special cases
+      // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST4.TIT#L328
       switch (char) {
         case 'Ã':
           state.state.PF[x][y] = '!';
+          break;
+        case '´':
+          state.state.PF[x][y] = '.';
+          break;
+        case 'µ':
+          state.state.PF[x][y] = '?';
+          break;
+        case '¶':
+          state.state.PF[x][y] = "'";
+          break;
+        case '·':
+          state.state.PF[x][y] = ',';
+          break;
+        case '¸':
+          state.state.PF[x][y] = ':';
           break;
         case 'ú':
           state.state.PF[x][y] = '·';
@@ -144,8 +164,9 @@ export function readLevelMap(level: string) {
     }
   }
 
-  // Randomize (move to level start?)
+  // Randomize
   TileColor[Tile.Gem] = [RNG.getUniformInt(1, 15), null];
+  TileColor[Tile.Border] = [RNG.getUniformInt(8, 15), RNG.getUniformInt(1, 8)];
 }
 
 export function loadLevel() {

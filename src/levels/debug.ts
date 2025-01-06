@@ -39,4 +39,9 @@ async function onLevelStart() {
   TileChar[Tile.Gem] = FLOOR_CHAR; // HideGems
 }
 
-export default { id: 'Debug', map, onLevelStart };
+export default {
+  id: 'Debug',
+  map,
+  onLevelStart,
+  tabletMessage: 'This is a debug level',
+};

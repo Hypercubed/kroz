@@ -35,4 +35,5 @@ U7777777##RRR----------------RR---------------------------------
 export default {
   id: 'Lost48',
   map,
+  // tabletMessage: TBD
 };

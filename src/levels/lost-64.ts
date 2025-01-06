@@ -1,7 +1,13 @@
 // Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import * as screen from '../screen';
+import * as sound from '../sound';
+import * as state from '../state';
+import * as world from '../world';
+
 import { TileChar, Tile } from '../tiles';
+import { XSize, YSize } from '../constants';
 
 /*
 //♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
@@ -38,8 +44,25 @@ function onLevelStart() {
   TileChar[Tile.Fast] = '☺';
 }
 
+async function tabletMessage() {
+  await world.prayer();
+  await screen.flashMessage('"Tnarg yna rerutnevda ohw sevivrus siht raf..."');
+  for (let x = 0; x <= XSize; x++) {
+    for (let y = 0; y <= YSize; y++) {
+      if (state.state.PF[x][y] === Tile.CWall1) {
+        await sound.play(x * y, 50, 10);
+        state.state.PF[x][y] = Tile.Nugget;
+        // ArtColor??
+        world.drawTile(x, y, Tile.Nugget);
+      }
+    }
+  }
+  await screen.flashMessage('"...Dlog!"');
+}
+
 export default {
   id: 'Lost64',
   map,
   onLevelStart,
+  tabletMessage,
 };
