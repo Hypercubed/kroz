@@ -8,9 +8,9 @@ import * as screen from './screen';
 import * as state from './state';
 import * as scheduler from './scheduler';
 
-import { DEBUG, CLOCK_SCALE, XSize, YSize } from './constants';
+import { DEBUG, CLOCK_SCALE, XSize, YSize } from '../constants';
 import { Timer } from './state';
-import { Color } from './colors';
+import { Color } from '../colors';
 
 let stats: Stats;
 let gui: dat.GUI;

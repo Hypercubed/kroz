@@ -2,12 +2,20 @@ import * as display from './display';
 import * as state from './state';
 import * as controls from './controls';
 
-import { FLOOR_CHAR, HEIGHT, TITLE, XBot, XTop, YBot, YTop } from './constants';
+import {
+  FLOOR_CHAR,
+  HEIGHT,
+  TITLE,
+  XBot,
+  XTop,
+  YBot,
+  YTop,
+} from '../constants';
 import { RNG } from 'rot-js';
-import { Color } from './colors';
-import { delay } from './utils';
+import { Color } from '../colors';
+import { delay } from '../utils';
 import dedent from 'ts-dedent';
-import { Tile, TileChar, TileColor } from './tiles';
+import { Tile, TileChar, TileColor } from '../tiles';
 
 export function renderScreen() {
   const x = 70;

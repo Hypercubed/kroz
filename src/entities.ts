@@ -1,9 +1,9 @@
-import * as sound from './sound';
-import * as state from './state';
+import * as sound from './modules/sound';
+import * as state from './modules/state';
 
 import { TileChar, Tile } from './tiles';
 import { FLOOR_CHAR, TIME_SCALE } from './constants';
-import { Timer } from './state';
+import { Timer } from './modules/state';
 
 export type EntityType = Tile.Player | Tile.Slow | Tile.Medium | Tile.Fast;
 

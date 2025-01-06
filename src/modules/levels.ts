@@ -1,42 +1,42 @@
 import { default as RNG } from 'rot-js/lib/rng';
 
 import * as state from './state.ts';
-import * as tiles from './tiles.ts';
+import * as tiles from '../tiles.ts';
 
-import debug from './levels/debug.ts';
+import debug from '../levels/debug.ts';
 
 // Lost Adventures of Kroz
-import lost1 from './levels/lost-1.ts';
-import lost2 from './levels/lost-2.ts';
-import lost4 from './levels/lost-4.ts';
+import lost1 from '../levels/lost-1.ts';
+import lost2 from '../levels/lost-2.ts';
+import lost4 from '../levels/lost-4.ts';
 // import lost11 from './levels/lost-11.ts';
-import lost18 from './levels/lost-18.ts';
-import lost20 from './levels/lost-20.ts';
+import lost18 from '../levels/lost-18.ts';
+import lost20 from '../levels/lost-20.ts';
 // import lost22 from './levels/lost-22.ts';
-import lost26 from './levels/lost-26.ts';
-import lost30 from './levels/lost-30.ts';
+import lost26 from '../levels/lost-26.ts';
+import lost30 from '../levels/lost-30.ts';
 // import lost33 from './levels/lost-33.ts';
-import lost34 from './levels/lost-34.ts';
-import lost42 from './levels/lost-42.ts';
-import lost70 from './levels/lost-70.ts';
+import lost34 from '../levels/lost-34.ts';
+import lost42 from '../levels/lost-42.ts';
+import lost70 from '../levels/lost-70.ts';
 // import lost74 from './levels/lost-74.ts';
-import lost75 from './levels/lost-75.ts';
+import lost75 from '../levels/lost-75.ts';
 
 // KINGDOM OF KROZ
-import kingdom1 from './levels/kingdom-1.ts';
+import kingdom1 from '../levels/kingdom-1.ts';
 
 // Caverns of Kroz 2
-import caverns2 from './levels/caverns-2.ts';
-import caverns4 from './levels/caverns-4.ts';
-import lost46 from './levels/lost-46.ts';
-import lost48 from './levels/lost-48.ts';
-import lost52 from './levels/lost-52.ts';
-import lost59 from './levels/lost-59.ts';
-import lost61 from './levels/lost-61.ts';
-import lost64 from './levels/lost-64.ts';
-import { MapLookup, Tile, TileColor } from './tiles.ts';
-import { FLOOR_CHAR } from './constants.ts';
-import { Entity } from './entities.ts';
+import caverns2 from '../levels/caverns-2.ts';
+import caverns4 from '../levels/caverns-4.ts';
+import lost46 from '../levels/lost-46.ts';
+import lost48 from '../levels/lost-48.ts';
+import lost52 from '../levels/lost-52.ts';
+import lost59 from '../levels/lost-59.ts';
+import lost61 from '../levels/lost-61.ts';
+import lost64 from '../levels/lost-64.ts';
+import { MapLookup, Tile, TileColor } from '../tiles.ts';
+import { FLOOR_CHAR } from '../constants.ts';
+import { Entity } from '../entities.ts';
 import { Timer } from './state.ts';
 
 export interface Level {

@@ -3,8 +3,8 @@
 0123456789012345678901234567890123456789012345678901234567890123
 */
 
-import { FLOOR_CHAR } from '../constants';
-import { Tile, TileChar } from '../tiles';
+// import { FLOOR_CHAR } from '../constants';
+// import { Tile, TileChar } from '../tiles';
 
 export const map = `
                                                        #1#1#1#1#
@@ -36,7 +36,7 @@ export const map = `
 // statue > > >
 
 async function onLevelStart() {
-  TileChar[Tile.Gem] = FLOOR_CHAR; // HideGems
+  // TileChar[Tile.Gem] = FLOOR_CHAR; // HideGems
 }
 
 export default {

@@ -1,10 +1,10 @@
 // Lost Adventures of Kroz, Level 30 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as world from '../world';
-import * as screen from '../screen';
-import * as state from '../state';
-import * as sound from '../sound';
+import * as world from '../modules/world';
+import * as screen from '../modules/screen';
+import * as state from '../modules/state';
+import * as sound from '../modules/sound';
 
 import { FLOOR_CHAR, XSize, YSize } from '../constants';
 import { TileChar, Tile } from '../tiles';

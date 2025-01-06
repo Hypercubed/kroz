@@ -1,6 +1,6 @@
 /* eslint-disable no-sparse-arrays */
 import { RNG } from 'rot-js';
-import { delay } from './utils';
+import { delay } from '../utils';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

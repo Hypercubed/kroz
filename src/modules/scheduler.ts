@@ -1,7 +1,7 @@
 import { Scheduler, SpeedActor } from 'rot-js';
 import Speed from 'rot-js/lib/scheduler/speed';
-import { Entity } from './entities';
-import { Tile } from './tiles';
+import { Entity } from '../entities';
+import { Tile } from '../tiles';
 
 let scheduler: Speed<SpeedActor>;
 

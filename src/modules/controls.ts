@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { default as gameControl } from 'gamecontroller.js/src/gamecontrol.js';
-import { DEBUG } from './constants';
+import { DEBUG } from '../constants';
 import { MiniSignal } from 'mini-signals';
-import { delay } from './utils';
+import { delay } from '../utils';
 
 const keyPressed = new MiniSignal<[string]>();
 

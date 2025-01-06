@@ -1,10 +1,10 @@
 // Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as screen from '../screen';
-import * as sound from '../sound';
-import * as state from '../state';
-import * as world from '../world';
+import * as screen from '../modules/screen';
+import * as sound from '../modules/sound';
+import * as state from '../modules/state';
+import * as world from '../modules/world';
 
 import { TileChar, Tile } from '../tiles';
 import { XSize, YSize } from '../constants';

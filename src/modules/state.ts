@@ -1,7 +1,7 @@
-import { DEBUG } from './constants';
-import { Entity } from './entities';
+import { DEBUG } from '../constants';
+import { Entity } from '../entities';
 import { Level } from './levels';
-import { Tile } from './tiles';
+import { Tile } from '../tiles';
 
 export const enum Timer {
   SlowTime = 4,
@@ -61,12 +61,7 @@ function getDefaultState() {
     done: false,
 
     // TODO:
-    // hideGems
-    // hideStairs
-    // HideMBlock
-    // HideCreate
     // TreeRate ??
-    // HideOpenWall
     // LavaFlow
     // LavaRate
   };

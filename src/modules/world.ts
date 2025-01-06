@@ -15,7 +15,7 @@ import {
   ROCKABLES,
   VISUAL_TELEPORTABLES,
   TileMessage,
-} from './tiles';
+} from '../tiles';
 import {
   HEIGHT,
   TIME_SCALE,
@@ -27,13 +27,13 @@ import {
   YBot,
   YSize,
   YTop,
-} from './constants';
-import { Entity, EntityType } from './entities';
+} from '../constants';
+import { Entity, EntityType } from '../entities';
 import { Action } from './controls';
 
-import { Color, ColorCodes } from './colors';
+import { Color, ColorCodes } from '../colors';
 import { mod } from 'rot-js/lib/util';
-import { clamp, delay } from './utils';
+import { clamp, delay } from '../utils';
 import { LEVELS } from './levels';
 import dedent from 'ts-dedent';
 import { Timer } from './state';
@@ -51,6 +51,7 @@ export async function loadLevel() {
   levels.loadLevel();
   state.state.T = state.state.T.fill(0);
   state.state.bonus = 0;
+  replacement = 0;
   state.storeLevelStartState();
   screen.renderBorder();
   renderPlayfield();
@@ -384,9 +385,10 @@ export async function tryPlayerMove(dx: number, dy: number) {
         await endRoutine();
         return;
       }
-      addScore(block);
       go(state.state.player, x, y);
+      addScore(block);
       await flashTileMessage(Tile.Stairs, true);
+      sound.footStep();
       await nextLevel();
       break;
     case Tile.Chest: {
@@ -701,13 +703,30 @@ export async function tryPlayerMove(dx: number, dy: number) {
       addScore(block);
       await flashTileMessage(block, true);
       break;
-    case Tile.ShowGems:
+    case Tile.ShowGems: {
       go(state.state.player, x, y);
-      TileChar[Tile.Gem] = '♦';
+      sound.grab();
+
+      for (let i = 0; i < state.state.difficulty * 2 + 5; i++) {
+        let done = false;
+        do {
+          const x = RNG.getUniformInt(0, XSize);
+          const y = RNG.getUniformInt(0, YSize);
+          const block = state.state.PF?.[x]?.[y] ?? Tile.Floor;
+          if (block === Tile.Floor) {
+            sound.play(RNG.getUniformInt(110, 1310), 7, 100);
+            done = true;
+            state.state.PF[x][y] = Tile.Gem;
+            drawTile(x, y, Tile.Gem);
+            await delay(99);
+          }
+        } while (!done && Math.random() > 0.01);
+      }
+
       renderPlayfield();
-      // TODO: sound?
-      await flashTileMessage(block);
+      await flashTileMessage(block, false);
       break;
+    }
     case Tile.Tablet:
       go(state.state.player, x, y);
       sound.grab();
