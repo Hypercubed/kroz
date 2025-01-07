@@ -53,6 +53,7 @@ export async function loadLevel() {
   state.state.bonus = 0;
   replacement = 0;
   state.storeLevelStartState();
+  screen.renderScreen();
   screen.renderBorder();
   renderPlayfield();
   screen.renderStats();
@@ -62,6 +63,9 @@ export async function loadLevel() {
 export async function nextLevel() {
   controls.flushAll();
   state.state.levelIndex = mod(state.state.levelIndex + 1, LEVELS.length);
+  if (state.state.levelIndex % 10 === 0) {
+    await screen.openSourceScreen();
+  }
   await loadLevel();
 }
 

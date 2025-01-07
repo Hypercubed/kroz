@@ -31,6 +31,10 @@ WW     ########+++++        #######         WWWWW########1    WW
 ########¯                    2 2 2                     C########
 L2  +  X      #kingdom#of#kroz#ii#by#scott#miller#      X  +  2L`;
 
-export default { id: 'Kingdom1', map };
+export default {
+  id: 'Kingdom1',
+  map,
+  tabletMessage: `Once again you uncover the hidden tunnel leading to Kroz!`,
+};
 
 // TODO: ShootRight

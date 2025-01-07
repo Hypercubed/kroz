@@ -55,7 +55,6 @@ export default {
   map,
   onLevelStart,
   tabletMessage,
-  // Fast:=#1;
 };
 
 // Need TBlock, TGold, TWhip, TGem

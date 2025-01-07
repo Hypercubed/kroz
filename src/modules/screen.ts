@@ -223,6 +223,79 @@ export async function instructionsScreen() {
   await controls.waitForKeypress();
 }
 
+export async function openSourceScreen() {
+  display.clear(Color.Black);
+
+  display.writeCenter(1, TITLE, Color.Yellow);
+
+  display.drawText(
+    2,
+    4,
+    dedent`
+    The original Kroz games were created by Scott Miller and published
+    by Apogee Software. The original Kroz games were released in the
+    late 1980s and early 1990s.`,
+    Color.White,
+  );
+
+  display.writeCenter(
+    HEIGHT - 1,
+    'Press any key to continue.',
+    Color.HighIntensityWhite,
+    Color.Black,
+  );
+  await controls.waitForKeypress();
+  controls.clearKeys();
+
+  display.drawText(
+    2,
+    9,
+    dedent`
+    This game is a tribute to the original Kroz series of games and completly
+    open-source.  If you enjoy this game you are asked by the author to 
+    please add a star to the github repo at
+    https://github.com/Hypercubed/kroz.`,
+    Color.White,
+  );
+
+  display.writeCenter(
+    HEIGHT - 1,
+    'Press any key to continue.',
+    Color.HighIntensityWhite,
+    Color.Black,
+  );
+  await controls.waitForKeypress();
+  controls.clearKeys();
+
+  display.drawText(
+    2,
+    14,
+    dedent`
+    Better yet, contribute to the game yourself; or maybe fork it and add your
+    own levels.  That might make a nice 7DRL challenge entry.`,
+    Color.White,
+  );
+
+  display.writeCenter(
+    HEIGHT - 1,
+    'Press any key to continue.',
+    Color.HighIntensityWhite,
+    Color.Black,
+  );
+  await controls.waitForKeypress();
+  controls.clearKeys();
+
+  display.drawText(10, 18, 'Thank you and enjoy the game.  -- Hypercubed');
+  display.writeCenter(
+    HEIGHT - 1,
+    'Press any key to continue.',
+    Color.HighIntensityWhite,
+    Color.Black,
+  );
+  await controls.waitForKeypress();
+  controls.clearKeys();
+}
+
 function pad(s: string, n: number, r: number) {
   return s.padStart(n, FLOOR_CHAR).padEnd(r, FLOOR_CHAR);
 }
