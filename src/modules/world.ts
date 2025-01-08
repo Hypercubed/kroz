@@ -53,6 +53,7 @@ export async function loadLevel() {
   state.state.bonus = 0;
   replacement = 0;
   state.storeLevelStartState();
+  display.clear(Color.Blue);
   screen.renderScreen();
   screen.renderBorder();
   renderPlayfield();
@@ -251,7 +252,7 @@ async function restore() {
   if (answer.toLowerCase() === 'y') {
     // Don't need deep copy now, but might later
     state.restoreLevelStartState();
-    loadLevel();
+    await loadLevel();
   }
 }
 

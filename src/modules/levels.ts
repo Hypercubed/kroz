@@ -114,7 +114,7 @@ export const LEVELS: Level[] = [
   caverns4,
   kingdom1,
   kingdom2, // Ends with extra key
-  kingdom4, // Needs a teleport from previous level, Optional shoort left
+  kingdom4, // Needs a teleport from previous level, Optional short left
   kingdom6,
   lost11, // Key from previous level
   kingdom12,
