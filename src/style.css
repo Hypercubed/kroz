@@ -22,21 +22,19 @@ canvas {
 :root {
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #000000;
 }
 
 #app {
   width: calc(100vw - 60px);
   min-height: calc(var(--w) * 0.6);
-}
-
-#app,
-#app canvas {
   margin: 0 auto;
   text-align: center;
 }
 
 #app canvas {
+  aspect-ratio: 16 / 10;
   margin-top: 30px;
-  width: 100%;
+  max-width: calc(100vw - 60px);
+  max-height: calc(100vh - 60px);
 }
