@@ -5,18 +5,7 @@
 
 body {
   font-family: IBM_VGA, monospace;
-}
-
-.fork-me {
-  position: fixed;
-  top: 0;
-  right: 0;
-  border: 0;
-}
-
-canvas {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  overflow: hidden;
 }
 
 :root {
@@ -26,15 +15,27 @@ canvas {
 }
 
 #app {
-  width: calc(100vw - 60px);
-  min-height: calc(var(--w) * 0.6);
+  width: calc(100vw - 10px);
   margin: 0 auto;
   text-align: center;
+  overflow: hidden;
+
+  & canvas {
+    aspect-ratio: 16 / 10;
+    max-width: calc(100vw - 10px);
+    max-height: calc(100vh - 10px);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
 }
 
-#app canvas {
-  aspect-ratio: 16 / 10;
-  margin-top: 30px;
-  max-width: calc(100vw - 60px);
-  max-height: calc(100vh - 60px);
+
+.fork-me img {
+  position: fixed;
+  top: 0;
+  right: 0;
+  border: 0;
+  aspect-ratio: 1;
+  max-width: 10vw;
+  max-height: 10vw;
 }
