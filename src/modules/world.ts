@@ -259,7 +259,6 @@ async function restore() {
 export async function playerAction() {
   // Debug Actions
   if (controls.wasActionDeactivated(Action.NextLevel)) return await nextLevel();
-
   if (controls.wasActionDeactivated(Action.PrevLevel)) return await prevLevel();
 
   if (controls.wasActionDeactivated(Action.NextLevelCheat)) {
@@ -275,6 +274,18 @@ export async function playerAction() {
     state.state.teleports = 99;
     state.state.keys = 9;
     screen.renderStats();
+    return;
+  }
+
+  if (controls.wasActionDeactivated(Action.SlowerClock)) {
+    state.state.clockScale = Math.min(20, state.state.clockScale + 1);
+    console.log('Clock Scale:', state.state.clockScale);
+    return;
+  }
+
+  if (controls.wasActionDeactivated(Action.FasterClock)) {
+    state.state.clockScale = Math.max(1, state.state.clockScale - 1);
+    console.log('Clock Scale:', state.state.clockScale);
     return;
   }
 

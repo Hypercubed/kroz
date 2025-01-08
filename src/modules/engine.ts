@@ -8,7 +8,7 @@ import * as screen from './screen';
 import * as state from './state';
 import * as scheduler from './scheduler';
 
-import { DEBUG, CLOCK_SCALE, XSize, YSize } from '../constants';
+import { DEBUG, XSize, YSize } from '../constants';
 import { Timer } from './state';
 import { Color } from '../colors';
 
@@ -109,7 +109,7 @@ async function run() {
   // scheduler.add(FastActor, true);
 
   // Game loop
-  const speed = 16 * CLOCK_SCALE; // 16 * 8;
+  let speed = 16 * state.state.clockScale;
 
   let dt = 0;
   let previousTime = 0;
@@ -143,6 +143,8 @@ async function run() {
     }
 
     fastRender(); // TODO: can we only render blink elements?
+
+    speed = 16 * state.state.clockScale;
 
     stats?.end();
     requestAnimationFrame(raf);

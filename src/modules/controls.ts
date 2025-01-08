@@ -31,6 +31,8 @@ export enum Action { // cannot be const enum
   Quit,
   Save,
   Restore,
+  SlowerClock,
+  FasterClock,
 }
 
 export const keyState: Partial<Record<string, number>> = {};
@@ -83,6 +85,8 @@ const KEY_BINDING: Record<string, Action | null> = {
   S: Action.Save,
   r: Action.Restore,
   R: Action.Restore,
+  F11: Action.SlowerClock,
+  F12: Action.FasterClock,
 };
 
 const GAMEPAD_BINDING: Record<string, Action | null> = {
@@ -140,6 +144,7 @@ export function disableGamepadControls() {
 }
 
 function keydownListener(event: KeyboardEvent) {
+  // console.log(event.key);
   if (event.repeat) return; // Ignore repeated keydown events, repeat is handled by keyup
 
   const action = KEY_BINDING[event.key];

@@ -1,4 +1,4 @@
-import { DEBUG } from '../constants';
+import { CLOCK_SCALE, DEBUG } from '../constants';
 import { Entity } from '../entities';
 import { Level } from './levels';
 import { Tile } from '../tiles';
@@ -59,6 +59,7 @@ function getDefaultState() {
 
     paused: false,
     done: false,
+    clockScale: CLOCK_SCALE,
 
     // TODO:
     // TreeRate ??
