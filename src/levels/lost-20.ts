@@ -1,13 +1,8 @@
 // Lost Adventures of Kroz, Level 20 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import { Tile, TileChar } from '../tiles';
-import { FLOOR_CHAR } from '../constants';
-
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
+import { Tile, TileChar } from '../data/tiles';
+import { FLOOR_CHAR } from '../data/constants';
 
 const map = `
 <33333333333333333333333333333333333333333333333333333333333333[

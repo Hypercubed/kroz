@@ -1,6 +1,6 @@
 import { default as Display } from 'rot-js/lib/display/display';
-import { HEIGHT, WIDTH } from '../constants';
-import { Color, ColorCodes } from '../colors';
+import { HEIGHT, WIDTH } from '../data/constants';
+import { Color, ColorCodes } from '../data/colors';
 
 let rotDisplay: Display;
 
@@ -15,6 +15,18 @@ export function init() {
     fg: ColorCodes[Color.White], // foreground
     fontSize: 64, // canvas fontsize,
   });
+
+  const originalDrawOver = rotDisplay.drawOver;
+  rotDisplay.drawOver = function (x, y, ch, fg, bg) {
+    originalDrawOver.call(this, x, y, ch, fg, bg);
+    if (this._dirty === true) {
+      return;
+    } // will already redraw everything
+    if (!this._dirty) {
+      this._dirty = {};
+    } // first!
+    this._dirty[`${x},${y}`] = true;
+  };
 }
 
 export function writeCenter(
@@ -59,6 +71,17 @@ export function draw(
 ) {
   [fg, bg] = getColors(fg, bg);
   rotDisplay.draw(x, y, ch, fg, bg);
+}
+
+export function drawOver(
+  x: number,
+  y: number,
+  ch: string | null,
+  fg: string | Color = rotDisplay.getOptions().fg,
+  bg: string | Color = rotDisplay.getOptions().bg,
+) {
+  [fg, bg] = getColors(fg, bg);
+  rotDisplay.drawOver(x, y, ch, fg, bg);
 }
 
 export function drawText(

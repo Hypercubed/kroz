@@ -1,9 +1,9 @@
-import * as sound from './modules/sound';
-import * as state from './modules/state';
+import * as sound from '../modules/sound';
+import * as state from '../modules/state';
 
-import { TileChar, Tile } from './tiles';
-import { FLOOR_CHAR, TIME_SCALE } from './constants';
-import { Timer } from './modules/state';
+import { TileChar, Tile } from '../data/tiles';
+import { FLOOR_CHAR, TIME_SCALE } from '../data/constants';
+import { Timer } from '../modules/state';
 
 export type EntityType = Tile.Player | Tile.Slow | Tile.Medium | Tile.Fast;
 
@@ -58,7 +58,7 @@ export class Entity {
 
   getChar() {
     if (this.type === Tile.Player)
-      return state.state.T[Timer.Invisible] > 0
+      return state.level.T[Timer.Invisible] > 0
         ? FLOOR_CHAR
         : TileChar[this.type];
     return this.ch;
@@ -66,7 +66,7 @@ export class Entity {
 
   getSpeed() {
     if (this.type === Tile.Player)
-      return state.state.T[Timer.SlowTime] > 0 ? 10 : 1;
-    return state.state.T[Timer.SpeedTime] > 0 ? TIME_SCALE : this.speed;
+      return state.level.T[Timer.SlowTime] > 0 ? 10 : 1;
+    return state.level.T[Timer.SpeedTime] > 0 ? TIME_SCALE : this.speed;
   }
 }

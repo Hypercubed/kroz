@@ -4,11 +4,6 @@
 // import { FLOOR_CHAR } from '../constants';
 // import { TileChar, Tile } from '../tiles';
 
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
-
 export const id = 'Lost4';
 
 const map = `
@@ -50,5 +45,4 @@ export default {
 };
 
 // TODO:
-// Magic has been released?
-// ZBlock?
+// ZBlock?  TBlock

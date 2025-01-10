@@ -1,11 +1,6 @@
 // Lost Adventures of Kroz, Level 75 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
-
 const map = `
 ----------àHT66-;K-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX)-- 66111ñ111--
 -66666666666666-66))))))))))))))))))))))))))))))))66 6611111116-

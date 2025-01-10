@@ -1,13 +1,8 @@
 // Lost Adventures of Kroz, Level 75 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import { FLOOR_CHAR } from '../constants';
-import { TileChar, Tile } from '../tiles';
-
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
+import { FLOOR_CHAR } from '../data/constants';
+import { TileChar, Tile } from '../data/tiles';
 
 const map = `
     0             #heat#waveÃ#    @òRRRRR22222222222222222244–\`L

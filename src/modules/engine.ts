@@ -7,10 +7,11 @@ import * as world from './world';
 import * as screen from './screen';
 import * as state from './state';
 import * as scheduler from './scheduler';
+import * as level from './levels';
 
-import { DEBUG, XSize, YSize } from '../constants';
+import { DEBUG, XSize, YSize } from '../data/constants';
 import { Timer } from './state';
-import { Color } from '../colors';
+import { Color } from '../data/colors';
 
 let stats: Stats;
 let gui: dat.GUI;
@@ -30,10 +31,10 @@ export async function start() {
   await world.renderTitle();
   await screen.instructionsScreen();
 
-  world.loadLevel(); // Don't wait
-  fullRender();
+  level.loadLevel(); // Don't wait
+  screen.fullRender();
   await world.flashPlayer();
-  fastRender();
+  screen.fastRender();
   await screen.flashMessage('Press any key to begin this level.');
   controls.clearActions();
 
@@ -52,28 +53,28 @@ export async function start() {
 
       const timers = {
         get SlowTime() {
-          return state.state.T[Timer.SlowTime];
+          return state.level.T[Timer.SlowTime];
         },
         set SlowTime(v: number) {
-          state.state.T[Timer.SlowTime] = v;
+          state.level.T[Timer.SlowTime] = v;
         },
         get Invisible() {
-          return state.state.T[Timer.Invisible];
+          return state.level.T[Timer.Invisible];
         },
         set Invisible(v: number) {
-          state.state.T[Timer.Invisible] = v;
+          state.level.T[Timer.Invisible] = v;
         },
         get SpeedTime() {
-          return state.state.T[Timer.SpeedTime];
+          return state.level.T[Timer.SpeedTime];
         },
         set SpeedTime(v: number) {
-          state.state.T[Timer.SpeedTime] = v;
+          state.level.T[Timer.SpeedTime] = v;
         },
         get FreezeTime() {
-          return state.state.T[Timer.FreezeTime];
+          return state.level.T[Timer.FreezeTime];
         },
         set FreezeTime(v: number) {
-          state.state.T[Timer.FreezeTime] = v;
+          state.level.T[Timer.FreezeTime] = v;
         },
       };
 
@@ -84,45 +85,40 @@ export async function start() {
       t.add(timers, 'FreezeTime', 0, 400, 1).listen();
 
       const o = gui.addFolder('Objects');
-      o.add(state.state, 'gems', 0, 400, 1).listen();
-      o.add(state.state, 'whips', 0, 400, 1).listen();
-      o.add(state.state, 'keys', 0, 400, 1).listen();
-      o.add(state.state, 'teleports', 0, 400, 1).listen();
-      o.add(state.state, 'whipPower', 2, 7, 1).listen();
+      o.add(state.stats, 'gems', 0, 400, 1).listen();
+      o.add(state.stats, 'whips', 0, 400, 1).listen();
+      o.add(state.stats, 'keys', 0, 400, 1).listen();
+      o.add(state.stats, 'teleports', 0, 400, 1).listen();
+      o.add(state.stats, 'whipPower', 2, 7, 1).listen();
 
       const p = gui.addFolder('Player');
-      p.add(state.state.player, 'x', 0, XSize, 1).listen();
-      p.add(state.state.player, 'y', 0, YSize, 1).listen();
+      p.add(state.level.player, 'x', 0, XSize, 1).listen();
+      p.add(state.level.player, 'y', 0, YSize, 1).listen();
     }
   }
 
-  fullRender();
+  screen.fullRender();
   await run();
 }
 
 async function run() {
   scheduler.createScheduler();
 
-  // scheduler.add(PlayerActor, true);
-  // scheduler.add(SlowActor, true);
-  // scheduler.add(MediumActor, true);
-  // scheduler.add(FastActor, true);
-
   // Game loop
-  let speed = 16 * state.state.clockScale;
+  let speed = 16 * state.game.clockScale;
 
   let dt = 0;
   let previousTime = 0;
 
   const raf = async (currentTime: number) => {
-    if (state.state.gems < 0) {
+    if (state.stats.gems < 0) {
       await world.dead();
-      reset();
+      start();
       return;
     }
 
-    if (state.state.done) {
-      reset();
+    if (state.game.done) {
+      start();
       return;
     }
 
@@ -142,31 +138,12 @@ async function run() {
       await world.entitiesAction(current.type);
     }
 
-    fastRender(); // TODO: can we only render blink elements?
+    screen.fastRender(); // TODO: can we only render blink elements?
 
-    speed = 16 * state.state.clockScale;
+    speed = 16 * state.game.clockScale;
 
     stats?.end();
     requestAnimationFrame(raf);
   };
   requestAnimationFrame(raf);
-}
-
-function reset() {
-  display.clear(Color.Black);
-  state.resetState();
-  start();
-}
-
-export function fullRender() {
-  display.clear(Color.Blue);
-  screen.renderBorder();
-  screen.renderScreen();
-  world.renderPlayfield();
-  screen.renderStats();
-}
-
-export function fastRender() {
-  world.renderPlayfield();
-  screen.renderStats();
 }

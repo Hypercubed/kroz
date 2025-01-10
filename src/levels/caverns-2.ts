@@ -1,11 +1,6 @@
 // Caverns of Caverns II, Level 2 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
-
 const map = `
 LXXX2    2     2        2   2  2  2   2    2 2    2  2    2    +
 +XXX  2     2      2        2          2  2    2     2      XXX 

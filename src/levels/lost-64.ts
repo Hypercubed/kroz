@@ -6,13 +6,8 @@ import * as sound from '../modules/sound';
 import * as state from '../modules/state';
 import * as world from '../modules/world';
 
-import { TileChar, Tile } from '../tiles';
-import { XSize, YSize } from '../constants';
-
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
+import { TileChar, Tile } from '../data/tiles';
+import { XSize, YSize } from '../data/constants';
 
 const map = `
 3333333333333333333333333333333333333333333333333333##C33à)))Fàó
@@ -49,11 +44,11 @@ async function tabletMessage() {
   await screen.flashMessage('"Tnarg yna rerutnevda ohw sevivrus siht raf..."');
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      if (state.state.PF[x][y] === Tile.CWall1) {
+      if (state.level.map.get(x, y) === Tile.CWall1) {
         await sound.play(x * y, 50, 10);
-        state.state.PF[x][y] = Tile.Nugget;
+        state.level.map.set(x, y, Tile.Nugget);
         // ArtColor??
-        world.drawTile(x, y, Tile.Nugget);
+        screen.drawTile(x, y, Tile.Nugget);
       }
     }
   }

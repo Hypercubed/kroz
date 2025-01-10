@@ -6,13 +6,8 @@ import * as screen from '../modules/screen';
 import * as state from '../modules/state';
 import * as sound from '../modules/sound';
 
-import { FLOOR_CHAR, XSize, YSize } from '../constants';
-import { TileChar, Tile } from '../tiles';
-
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
+import { FLOOR_CHAR, XSize, YSize } from '../data/constants';
+import { TileChar, Tile } from '../data/tiles';
 
 const map = `
 1111144       ##C######locksmith#shoppe######C##         RRRRRRR
@@ -52,10 +47,10 @@ async function tabletMessage() {
   // Replace River with Nugget
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      if (state.state.PF[x][y] === Tile.River) {
+      if (state.level.map.get(x, y) === Tile.River) {
         await sound.play(x * y, 50, 10);
-        state.state.PF[x][y] = Tile.Nugget;
-        world.drawTile(x, y, Tile.Nugget);
+        state.level.map.set(x, y, Tile.Nugget);
+        screen.drawTile(x, y, Tile.Nugget);
       }
     }
   }

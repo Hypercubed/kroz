@@ -5,12 +5,7 @@ import * as world from '../modules/world';
 import * as screen from '../modules/screen';
 import * as state from '../modules/state';
 
-import { TileChar, Tile } from '../tiles';
-
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
+import { TileChar, Tile } from '../data/tiles';
 
 const map = `
      U--2--U--2--U--2--U--2--U--55-====-===--=====-===--==--=--=
@@ -46,7 +41,7 @@ async function tabletMessage() {
   await screen.flashMessage(
     'Walls that block your progress shall be removed...',
   );
-  state.state.PF[state.state.player.x][state.state.player.y] = Tile.OSpell1;
+  state.level.map.set(state.level.player.x, state.level.player.y, Tile.OSpell1);
   world.tryPlayerMove(0, 0);
 }
 

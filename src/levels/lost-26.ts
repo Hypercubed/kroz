@@ -4,15 +4,9 @@
 import * as screen from '../modules/screen';
 import * as sound from '../modules/sound';
 import * as state from '../modules/state';
-import * as world from '../modules/world';
 
-import { FLOOR_CHAR, XSize, YSize } from '../constants';
-import { TileChar, Tile } from '../tiles';
-
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
+import { FLOOR_CHAR, XSize, YSize } from '../data/constants';
+import { TileChar, Tile } from '../data/tiles';
 
 const map = `
 ::::::::::::::::::::::::::::::::::::::::::::::::####amulet####::
@@ -47,7 +41,7 @@ async function onLevelStart() {
 
 async function tabletMessage() {
   await screen.flashMessage(
-    `No one has ever made it to the ${state.state.levelIndex} level!`,
+    `No one has ever made it to the ${state.stats.levelIndex} level!`,
   );
   await screen.flashMessage(
     'You have shown exceptional skills to reach this far...',
@@ -57,10 +51,10 @@ async function tabletMessage() {
   // Show IWalls
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      if (state.state.PF[x][y] === Tile.IWall) {
+      if (state.level.map.get(x, y) === Tile.IWall) {
         await sound.play(x * y, 1, 10);
-        state.state.PF[x][y] = Tile.OWall3;
-        world.drawTile(x, y, Tile.OWall3);
+        state.level.map.set(x, y, Tile.OWall3);
+        screen.drawTile(x, y, Tile.OWall3);
       }
     }
   }

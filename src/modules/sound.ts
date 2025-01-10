@@ -1,6 +1,6 @@
 /* eslint-disable no-sparse-arrays */
 import { RNG } from 'rot-js';
-import { delay } from '../utils';
+import { delay } from '../utils/utils';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -88,6 +88,14 @@ export async function staticNoise() {
       }
     } else {
       await delay(RNG.getUniformInt(0, 29));
+    }
+  }
+}
+
+export async function bonusSound() {
+  for (let i = 10; i < 45; i++) {
+    for (let j = 1; j < 13; j++) {
+      await play(i * i * j, j + 1, 100);
     }
   }
 }

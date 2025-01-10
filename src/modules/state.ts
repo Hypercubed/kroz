@@ -1,7 +1,11 @@
-import { CLOCK_SCALE, DEBUG } from '../constants';
-import { Entity } from '../entities';
+import * as screen from '../modules/screen.ts';
+import * as levels from '../modules/levels.ts';
+
+import { CLOCK_SCALE, DEBUG } from '../data/constants.ts';
+import { Entity } from '../classes/entities.ts';
 import { Level } from './levels';
-import { Tile } from '../tiles';
+import { Tile } from '../data/tiles.ts';
+import { PlayField } from '../classes/map.ts';
 
 export const enum Timer {
   SlowTime = 4,
@@ -18,62 +22,76 @@ const enum Difficulty {
   Cheat = 9,
 }
 
-export const state = getDefaultState();
-
-const levelStartState = {} as typeof state;
-const saveState = {} as typeof state;
-
-function getDefaultState() {
+function getDefaultStats() {
   return {
-    player: new Entity(Tile.Player, 0, 0),
-    entities: [] as Entity[],
-
-    PF: [] as (Tile | string)[][],
-    foundSet: new Set(),
-
-    T: [
-      0,
-      0,
-      0,
-      0,
-      Timer.SlowTime, // 4 - Slow Time
-      Timer.Invisible, // 5 - Invisible
-      Timer.SpeedTime, // 6 - Speed Time
-      Timer.FreezeTime, // 7 - Freeze Time
-      0,
-      0,
-    ], // Timers
-
     levelIndex: DEBUG ? 0 : 1,
-    level: null as null | Level,
     score: 0,
     gems: DEBUG ? 250 : 20,
     whips: DEBUG ? 100 : 0,
     teleports: DEBUG ? 50 : 0,
     keys: DEBUG ? 0 : 0,
     whipPower: DEBUG ? 3 : 2,
-    bonus: 0, // Bonus count for K R O Z
-    genNum: 0, // Number for creature generators
-
-    difficulty: Difficulty.Novice,
-
-    paused: false,
-    done: false,
-    clockScale: CLOCK_SCALE,
-
-    // TODO:
-    // TreeRate ??
-    // LavaFlow
-    // LavaRate
   };
 }
 
+function getDefaultLevelState() {
+  return {
+    bonus: 0, // Bonus count for K R O Z
+    genNum: 0, // Number for creature generators
+    level: null as null | Level,
+    player: new Entity(Tile.Player, 0, 0),
+    entities: [] as Entity[],
+    map: new PlayField(),
+    replacement: Tile.Floor,
+    T: [
+      0,
+      0,
+      0,
+      0,
+      0, // 4 - Slow Time
+      0, // 5 - Invisible
+      0, // 6 - Speed Time
+      0, // 7 - Freeze Time
+      0,
+      0,
+    ], // Timers
+  };
+}
+
+function getDefaultGameState() {
+  return {
+    difficulty: Difficulty.Novice,
+    clockScale: CLOCK_SCALE,
+    paused: false,
+    done: false,
+    foundSet: new Set<Tile>() as Set<Tile> | true,
+  };
+}
+
+// These are store and restore when saving and loading
+export const stats = getDefaultStats();
+
+// These are reset when starting a new level
+export const level = getDefaultLevelState();
+
+// These are reset when starting a new game
+export const game = getDefaultGameState();
+
+const levelStartState = getDefaultStats();
+const saveState = getDefaultStats();
+
 export function resetState() {
-  Object.assign(state, getDefaultState());
+  Object.assign(stats, getDefaultStats());
+  Object.assign(level, getDefaultLevelState());
+  Object.assign(game, getDefaultGameState());
+}
+
+export function resetLevel() {
+  Object.assign(level, getDefaultLevelState());
 }
 
 export function storeLevelStartState() {
-  Object.assign(levelStartState, state);
+  Object.assign(levelStartState, stats);
 }
 
 export function saveLevelStartState() {
@@ -82,5 +100,33 @@ export function saveLevelStartState() {
 }
 
 export function restoreLevelStartState() {
-  Object.assign(state, saveState);
+  Object.assign(stats, saveState);
+}
+
+export async function save() {
+  let answer = '';
+
+  while (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
+    answer = await screen.flashMessage('Are you sure you want to SAVE? (Y/N)');
+  }
+
+  if (answer.toLowerCase() === 'y') {
+    saveLevelStartState();
+  }
+}
+
+export async function restore() {
+  let answer = '';
+
+  while (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
+    answer = await screen.flashMessage(
+      'Are you sure you want to RESTORE? (Y/N)',
+    );
+  }
+
+  if (answer.toLowerCase() === 'y') {
+    // Don't need deep copy now, but might later
+    restoreLevelStartState();
+    await levels.loadLevel();
+  }
 }

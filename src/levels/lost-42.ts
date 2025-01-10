@@ -5,13 +5,8 @@ import * as world from '../modules/world';
 import * as screen from '../modules/screen';
 import * as state from '../modules/state';
 import * as sound from '../modules/sound';
-import { XSize, YSize } from '../constants';
-import { Tile } from '../tiles';
-
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
+import { XSize, YSize } from '../data/constants';
+import { Tile } from '../data/tiles';
 
 const map = `
 ###########klose#enkounters#of#the#krazy#kubikal#kindÃ##########
@@ -48,10 +43,10 @@ async function tabletMessage() {
   // Clears River with Block
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      if (state.state.PF[x][y] === Tile.River) {
+      if (state.level.map.get(x, y) === Tile.River) {
         await sound.play(x * y, 50, 10);
-        state.state.PF[x][y] = Tile.Block;
-        world.drawTile(x, y, Tile.Block);
+        state.level.map.set(x, y, Tile.Block);
+        screen.drawTile(x, y, Tile.Block);
       }
     }
   }

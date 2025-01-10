@@ -1,11 +1,6 @@
 // KINGDOM OF KROZ II, Level 1 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-/*
-//♣///////♣///♣////////♣////////♣//#the#lost#adventures#of#kroz#
-0123456789012345678901234567890123456789012345678901234567890123
-*/
-
 const map = `
 W W W W             2 2 2 2 2  C  2 2 2 2 2              W W W W
 XXXXXXXXXXXXXXXXXXX###########   ###########XXXXXXXXXXXXXXXXXXXX

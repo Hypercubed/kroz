@@ -450,8 +450,54 @@ export const TileMessage: Partial<Record<Tile, string>> = {
   [Tile.Amulet]: 'YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!',
 };
 
-const MOBS = [Tile.Fast, Tile.Medium, Tile.Slow];
-const TBLOCKS = [
+export const MOBS = [Tile.Fast, Tile.Medium, Tile.Slow]; // 1..3
+export const COLLECTABLES = [Tile.Whip, Tile.Gem, Tile.Teleport]; // 5, 9, 11
+export const SPELLS = [
+  Tile.SlowTime,
+  Tile.Invisible,
+  Tile.SpeedTime,
+  Tile.Freeze,
+]; // 8, 10, 15, 26
+
+export const ITRAPS = [
+  // 33, 37, 39, 67, 224..231
+  Tile.Trap2,
+  Tile.Trap3,
+  Tile.Trap4,
+  Tile.Trap5,
+  Tile.Trap6,
+  Tile.Trap7,
+  Tile.Trap8,
+  Tile.Trap9,
+  Tile.Trap10,
+  Tile.Trap11,
+  Tile.Trap12,
+  Tile.Trap13,
+];
+
+export const TRAPS = [
+  // 16, 33, 37, 39, 67, 224..231
+  Tile.Trap,
+  ...ITRAPS,
+];
+
+const IBLOCKS = [Tile.IBlock, Tile.IWall, Tile.IDoor]; // 29..31
+
+export const KROZ = [
+  // 48..51
+  Tile.K,
+  Tile.R,
+  Tile.O,
+  Tile.Z,
+];
+
+export const OWALLS = [Tile.OWall1, Tile.OWall2, Tile.OWall3]; // 52..54
+export const CWALLS = [Tile.CWall1, Tile.CWall2, Tile.CWall3]; // 55..57
+export const OSPELLS = [Tile.OSpell1, Tile.OSpell2, Tile.OSpell3]; // 58..60
+export const CSPELLS = [Tile.CSpell1, Tile.CSpell2, Tile.CSpell3]; // 61..63
+
+export const TBLOCKS = [
+  // 68..74
   Tile.TBlock,
   Tile.TRock,
   Tile.TGem,
@@ -460,26 +506,14 @@ const TBLOCKS = [
   Tile.TGold,
   Tile.TTree,
 ];
-const ITRAPS = [
-  Tile.Trap2,
-  Tile.Trap3,
-  Tile.MBlock,
-  Tile.Trap4,
-  Tile.Trap5,
-  224,
-  225,
-  226,
-  227,
-  228,
-  229,
-  230,
-  231,
-];
-const IBLOCKS = [Tile.IBlock, Tile.IWall, Tile.IDoor];
-const COLLECTABLES = [Tile.Whip, Tile.Gem, Tile.Teleport];
-const SPELLS = [Tile.SlowTime, Tile.Invisible, Tile.SpeedTime, Tile.Freeze];
-const CWALLS = [Tile.CWall1, Tile.CWall2, Tile.CWall3];
-const CSPELLS = [Tile.CSpell1, Tile.CSpell2, Tile.CSpell3];
+
+export const ROPE_DROP = [
+  Tile.DropRope,
+  Tile.DropRope2,
+  Tile.DropRope3,
+  Tile.DropRope4,
+  Tile.DropRope5,
+]; // 76..80
 
 export const BOMBABLES = [
   ...MOBS,
@@ -487,29 +521,26 @@ export const BOMBABLES = [
   ...IBLOCKS,
   Tile.ZBlock,
   Tile.GBlock,
+  Tile.MBlock,
   ...TBLOCKS,
   Tile.Door,
-  Tile.Trap,
-  ...ITRAPS,
+  ...TRAPS,
   Tile.Forest,
   Tile.Quake,
   Tile.Stop,
   Tile.Create,
   Tile.Generator,
   Tile.Chance,
-  Tile.K,
-  Tile.R,
-  Tile.O,
-  Tile.Z,
+  ...KROZ,
 ];
 
 export const ROCKABLES = [
+  Tile.Floor,
   ...MOBS,
   ...COLLECTABLES,
   ...SPELLS,
   Tile.Chest,
-  Tile.Trap,
-  ...ITRAPS,
+  ...TRAPS,
   Tile.Stop,
 ];
 

@@ -1,7 +1,9 @@
 import { default as RNG } from 'rot-js/lib/rng';
 
 import * as state from './state.ts';
-import * as tiles from '../tiles.ts';
+import * as tiles from '../data/tiles.ts';
+import * as controls from './controls.ts';
+import * as screen from './screen.ts';
 
 import debug from '../levels/debug.ts';
 
@@ -45,17 +47,17 @@ import kingdom12 from '../levels/kingdom-12.ts';
 import caverns2 from '../levels/caverns-2.ts';
 import caverns4 from '../levels/caverns-4.ts';
 
-import { MapLookup, Tile, TileColor } from '../tiles.ts';
-import { FLOOR_CHAR } from '../constants.ts';
-import { Entity } from '../entities.ts';
+import { MapLookup, Tile, TileColor } from '../data/tiles.ts';
+import { FLOOR_CHAR } from '../data/constants.ts';
+import { Entity } from '../classes/entities.ts';
 import { Timer } from './state.ts';
+import { mod } from 'rot-js/lib/util';
 
 export interface Level {
   id: string;
   map: string;
   name?: string;
   onLevelStart?: () => Promise<void>;
-  onLevelEnd?: () => Promise<void>;
   tabletMessage?: (() => Promise<void>) | string;
 }
 
@@ -144,12 +146,7 @@ export const LEVELS: Level[] = [
 // - temple of kroz - 1
 // - castle of kroz - 1
 
-export function readLevelMap(level: string) {
-  state.state.entities = [];
-  state.state.T = state.state.T.map(() => 0); // Reset timers
-
-  state.state.genNum = 0;
-
+function readLevelMap(level: string) {
   const lines = level.split('\n').filter((line) => line.length > 0);
   for (let y = 0; y < lines.length; y++) {
     const line = lines[y];
@@ -158,57 +155,56 @@ export function readLevelMap(level: string) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const block = (MapLookup as any)[char];
 
-      state.state.PF[x] = state.state.PF[x] || [];
-      state.state.PF[x][y] = block ?? char;
+      state.level.map.set(x, y, block ?? char);
 
       // Special cases
       // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST4.TIT#L328
       switch (char) {
         case 'Ã':
-          state.state.PF[x][y] = '!';
+          state.level.map.set(x, y, '!');
           break;
         case '´':
-          state.state.PF[x][y] = '.';
+          state.level.map.set(x, y, '.');
           break;
         case 'µ':
-          state.state.PF[x][y] = '?';
+          state.level.map.set(x, y, '?');
           break;
         case '¶':
-          state.state.PF[x][y] = "'";
+          state.level.map.set(x, y, "'");
           break;
         case '·':
-          state.state.PF[x][y] = ',';
+          state.level.map.set(x, y, ',');
           break;
         case '¸':
-          state.state.PF[x][y] = ':';
+          state.level.map.set(x, y, ':');
           break;
         case 'ú':
-          state.state.PF[x][y] = '·';
+          state.level.map.set(x, y, '·');
           break;
         case 'ù':
-          state.state.PF[x][y] = '∙';
+          state.level.map.set(x, y, '∙');
           break;
         case 'ï':
-          state.state.PF[x][y] = '∩';
+          state.level.map.set(x, y, '∩');
           break;
       }
 
       switch (block) {
         case Tile.Player:
-          state.state.player.x = x;
-          state.state.player.y = y;
+          state.level.player.x = x;
+          state.level.player.y = y;
           break;
         case Tile.Slow:
         case Tile.Medium:
         case Tile.Fast:
-          state.state.entities.push(new Entity(block, x, y));
+          state.level.entities.push(new Entity(block, x, y));
           break;
         case Tile.Generator:
-          state.state.genNum++;
+          state.level.genNum++;
           break;
         // case Tile.MBlock
         case Tile.Statue:
-          state.state.T[Timer.StatueGemDrain] = 32000;
+          state.level.T[Timer.StatueGemDrain] = 32000;
           break;
       }
     }
@@ -219,10 +215,29 @@ export function readLevelMap(level: string) {
   TileColor[Tile.Border] = [RNG.getUniformInt(8, 15), RNG.getUniformInt(1, 8)];
 }
 
-export function loadLevel() {
-  state.state.level?.onLevelEnd?.();
-  state.state.level = LEVELS[state.state.levelIndex];
+export async function loadLevel() {
+  state.resetLevel();
+  state.level.level = LEVELS[state.stats.levelIndex];
   tiles.reset();
-  state.state.level?.onLevelStart?.();
-  readLevelMap(state.state.level.map);
+  state.level.level?.onLevelStart?.();
+  readLevelMap(state.level.level.map);
+  state.storeLevelStartState();
+  screen.fullRender();
+  await screen.flashMessage('Press any key to begin this level.');
+}
+
+export async function nextLevel() {
+  // https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L377C19-L377C72 ??
+  controls.flushAll();
+  state.stats.levelIndex = mod(state.stats.levelIndex + 1, LEVELS.length);
+  if (state.stats.levelIndex % 10 === 0) {
+    await screen.openSourceScreen();
+  }
+  await loadLevel();
+}
+
+export async function prevLevel() {
+  controls.flushAll();
+  state.stats.levelIndex = mod(state.stats.levelIndex - 1, LEVELS.length);
+  await loadLevel();
 }

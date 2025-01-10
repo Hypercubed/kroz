@@ -10,12 +10,12 @@ import {
   XTop,
   YBot,
   YTop,
-} from '../constants';
+} from '../data/constants';
 import { RNG } from 'rot-js';
-import { Color } from '../colors';
-import { delay } from '../utils';
+import { Color } from '../data/colors';
+import { delay } from '../utils/utils';
 import dedent from 'ts-dedent';
-import { Tile, TileChar, TileColor } from '../tiles';
+import { Tile, TileChar, TileColor, TileMessage } from '../data/tiles';
 
 export function renderScreen() {
   const x = 70;
@@ -39,36 +39,36 @@ export function renderScreen() {
 // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST1.LEV#L328
 export function renderStats() {
   const whipStr =
-    state.state.whipPower > 2
-      ? `${state.state.whips}+${state.state.whipPower - 2}`
-      : state.state.whips.toString();
+    state.stats.whipPower > 2
+      ? `${state.stats.whips}+${state.stats.whipPower - 2}`
+      : state.stats.whips.toString();
 
   const width = 4;
   const size = 7;
 
   const gc =
-    !state.state.paused && state.state.gems < 10 ? Color.Red | 16 : Color.Red;
+    !state.game.paused && state.stats.gems < 10 ? Color.Red | 16 : Color.Red;
 
   const x = 69;
 
   display.drawText(
     x,
     1,
-    pad((state.state.score * 10).toString(), width + 1, size),
+    pad((state.stats.score * 10).toString(), width + 1, size),
     Color.Red,
     Color.Grey,
   );
   display.drawText(
     x,
     4,
-    pad(state.state.levelIndex.toString(), width, size),
+    pad(state.stats.levelIndex.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
   display.drawText(
     x,
     7,
-    pad(state.state.gems.toString(), width + 1, size),
+    pad(state.stats.gems.toString(), width + 1, size),
     gc,
     Color.Grey,
   );
@@ -76,14 +76,14 @@ export function renderStats() {
   display.drawText(
     x,
     13,
-    pad(state.state.teleports.toString(), width, size),
+    pad(state.stats.teleports.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
   display.drawText(
     x,
     16,
-    pad(state.state.keys.toString(), width, size),
+    pad(state.stats.keys.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
@@ -101,22 +101,6 @@ export function renderBorder() {
     display.draw(0, y, char, fg!, bg!);
     display.draw(XTop + 1, y, char, fg!, bg!);
   }
-}
-
-export async function flashMessage(msg: string): Promise<string> {
-  if (!msg) return '';
-
-  const x = (XTop - msg.length) / 2;
-  const y = YTop + 1;
-
-  state.state.paused = true;
-
-  const key = await controls.repeatUntilKeyPressed(() => {
-    display.drawText(x, y, msg, RNG.getUniformInt(1, 15), Color.Black);
-  });
-  renderBorder();
-  state.state.paused = false;
-  return key;
 }
 
 export async function introScreen() {
@@ -298,4 +282,128 @@ export async function openSourceScreen() {
 
 function pad(s: string, n: number, r: number) {
   return s.padStart(n, FLOOR_CHAR).padEnd(r, FLOOR_CHAR);
+}
+
+export function renderPlayfield() {
+  for (let x = 0; x < state.level.map.width; x++) {
+    for (let y = 0; y < state.level.map.height; y++) {
+      // Skip entities, will be rendered later
+      const b = state.level.map.get(x, y);
+      if (b === Tile.Player) continue;
+      if (b === Tile.Slow || b === Tile.Medium || b === Tile.Fast) continue;
+
+      drawTile(x, y, state.level.map.get(x, y));
+    }
+  }
+
+  const floorColor = TileColor[Tile.Floor][1]!;
+
+  for (let i = 0; i < state.level.entities.length; i++) {
+    const e = state.level.entities[i];
+    if (e.x === -1 || e.y === -1) continue; // dead
+    drawTile(e.x, e.y, e.getChar(), TileColor[e.type][0]!, floorColor);
+  }
+
+  drawTile(
+    state.level.player.x,
+    state.level.player.y,
+    state.level.player.getChar(),
+    TileColor[state.level.player.type][0]!,
+    floorColor,
+  );
+}
+
+export function drawTile(
+  x: number,
+  y: number,
+  block?: Tile | string,
+  fg?: Color | string,
+  bg?: Color | string,
+) {
+  block ??= state.level.map.get(x, y);
+
+  let ch: string;
+
+  if (isTile(block)) {
+    ch = TileChar[block] ?? block ?? TileChar[Tile.Floor];
+    fg ??=
+      TileColor[block as unknown as Tile]?.[0] ?? TileColor[Tile.Floor][0]!;
+    bg ??=
+      TileColor[block as unknown as Tile]?.[1] ?? TileColor[Tile.Floor][1]!;
+  } else if (
+    (block >= 'a' && block <= 'z') ||
+    ['!', '·', '∙', '∩'].includes(block)
+  ) {
+    ch = block.toUpperCase();
+    fg = fg ?? Color.HighIntensityWhite;
+    bg = bg ?? Color.Brown;
+  } else {
+    ch = block as string;
+  }
+
+  switch (block) {
+    case Tile.Stairs:
+      fg = typeof fg === 'number' && !state.game.paused ? fg | 16 : fg; // add blink
+      break;
+  }
+
+  display.draw(x + XBot, y + YBot, ch, fg!, bg!);
+}
+
+export function drawOver(x: number, y: number, ch: string, fg: string | Color) {
+  const block = state.level.map.get(x, y);
+
+  let bg: number;
+  if ((block >= 'a' && block <= 'z') || block === '!') {
+    bg = Color.Brown;
+  } else {
+    bg = TileColor[block as unknown as Tile]?.[1] ?? TileColor[Tile.Floor][1]!;
+  }
+
+  display.drawOver(x + XBot, y + YBot, ch, fg, bg);
+}
+
+export async function flashTileMessage(msg: Tile, once: boolean = false) {
+  if (once) {
+    if (state.game.foundSet === true || state.game.foundSet.has(msg)) return '';
+    state.game.foundSet.add(msg);
+  }
+
+  const str = TileMessage[msg];
+  if (!str) return '';
+
+  return await flashMessage(str);
+}
+
+export async function flashMessage(msg: string): Promise<string> {
+  if (!msg) return '';
+
+  const x = (XTop - msg.length) / 2;
+  const y = YTop + 1;
+
+  state.game.paused = true;
+
+  const key = await controls.repeatUntilKeyPressed(() => {
+    display.drawText(x, y, msg, RNG.getUniformInt(1, 15), Color.Black);
+  });
+  renderBorder();
+  state.game.paused = false;
+  return key;
+}
+
+export function fullRender() {
+  display.clear(Color.Blue);
+  renderBorder();
+  renderScreen();
+  renderPlayfield();
+  renderStats();
+}
+
+export function fastRender() {
+  renderPlayfield();
+  renderStats();
+}
+
+function isTile(x: unknown): x is Tile {
+  return typeof x === 'number';
 }
