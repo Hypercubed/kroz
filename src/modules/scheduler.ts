@@ -10,7 +10,7 @@ const playerActor = new Actor(Type.Player, 0, 0);
 const slowActor = new Actor(Type.Slow, 0, 0);
 const mediumActor = new Actor(Type.Medium, 0, 0);
 const fastActor = new Actor(Type.Fast, 0, 0);
-// TODO: MBlocks
+const mBlocks = new Actor(Type.MBlock, 0, 0);
 
 export function createScheduler() {
   scheduler = new Scheduler.Speed();
@@ -18,6 +18,7 @@ export function createScheduler() {
   scheduler.add(slowActor, true);
   scheduler.add(mediumActor, true);
   scheduler.add(fastActor, true);
+  scheduler.add(mBlocks, true);
   return scheduler;
 }
 

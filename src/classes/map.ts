@@ -1,6 +1,6 @@
 import { RNG } from 'rot-js';
 import { XSize, YSize } from '../data/constants';
-import { Type, TypeChar } from '../data/tiles';
+import { Type, TypeChar, TypeColor } from '../data/tiles';
 import { Entity } from './entity';
 
 export class PlayField {
@@ -65,6 +65,15 @@ export class PlayField {
   }
 
   hideType(type: Type) {
-    this.replaceEntities(type, new Entity(type, TypeChar[type], null, null));
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        const e = this.get(x, y);
+        if (e?.type === type) {
+          e.ch = TypeChar[Type.Floor];
+          e.fg = TypeColor[Type.Floor][0]!;
+          e.bg = TypeColor[Type.Floor][1]!;
+        }
+      }
+    }
   }
 }

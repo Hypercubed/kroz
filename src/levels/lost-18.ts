@@ -46,5 +46,3 @@ export default {
   onLevelStart,
   tabletMessage: 'Adventurer, check the "Valley of the M"!',
 };
-
-// TreeRate:=70;

@@ -33,8 +33,10 @@ MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM##-:-’-:ó62á    :::
 `;
 
 async function onLevelStart() {
-  state.level.map.hideType(Type.MBlock);
   state.level.evapoRate = 22;
+
+  // HideMBlock
+  state.level.map.hideType(Type.MBlock);
 }
 
 export default {
@@ -42,5 +44,3 @@ export default {
   map,
   onLevelStart,
 };
-
-// TODO: Needs MBlocks

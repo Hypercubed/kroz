@@ -7,7 +7,12 @@ import { Timer } from '../modules/state';
 import { SpeedActor } from 'rot-js';
 import { Entity } from './entity';
 
-export type ActorType = Type.Player | Type.Slow | Type.Medium | Type.Fast;
+export type ActorType =
+  | Type.Player
+  | Type.Slow
+  | Type.Medium
+  | Type.Fast
+  | Type.MBlock;
 
 function getBaseSpeed(t: ActorType) {
   switch (t) {
@@ -18,6 +23,8 @@ function getBaseSpeed(t: ActorType) {
     case Type.Medium:
       return TIME_SCALE / 3;
     case Type.Fast:
+      return TIME_SCALE / 2;
+    case Type.MBlock:
       return TIME_SCALE / 2;
   }
 }
@@ -76,7 +83,9 @@ export class Actor extends Entity implements SpeedActor {
   }
 
   async kill() {
-    await sound.play(200 + 200 * this.type, 25, 100);
+    if (this.type < 3) {
+      await sound.play(200 + 200 * this.type, 25, 100);
+    }
     this.gotoYX(-1, -1);
   }
 

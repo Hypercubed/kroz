@@ -22,6 +22,8 @@ import {
   OSPELLS,
   ROPE_DROP,
   OWALLS,
+  TypeChar,
+  TypeColor,
 } from '../data/tiles.ts';
 import {
   HEIGHT,
@@ -105,6 +107,7 @@ export async function effects() {
     }
   }
 
+  // Evaporate
   if (state.level.evapoRate > 0 && RNG.getUniformInt(0, 9) === 0) {
     const x = RNG.getUniformInt(0, XSize);
     const y = RNG.getUniformInt(0, YSize);
@@ -117,13 +120,7 @@ export async function effects() {
   }
 
   // TODO:
-
-  // https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST.PAS#L592
-  // Move_MBlock
-
   // Lava Flow
-  // Gravity?
-  // Evaporate
   // TreeGrow
 }
 
@@ -161,7 +158,6 @@ async function mobAction(e: Actor) {
     case Type.TWhip:
     case Type.TTree:
       e.move(x, y);
-      screen.renderPlayfield();
       break;
     case Type.Block: // Breaks + Kills
     case Type.MBlock:
@@ -200,11 +196,46 @@ async function mobAction(e: Actor) {
     case Type.ShootLeft:
       sound.grab();
       e.move(x, y);
-      screen.renderPlayfield();
       break;
     default: // Blocked
       e.move(e.x, e.y);
-      screen.renderPlayfield();
+      break;
+  }
+}
+
+async function mBlockAction(e: Actor) {
+  if (
+    e.x === -1 ||
+    e.y === -1 ||
+    state.level.map.getType(e.x, e.y) !== (e.type as unknown as Type) // Killed
+  ) {
+    e.kill();
+    return;
+  } // dead
+
+  let dx = 0;
+  let dy = 0;
+  if (state.level.player.x < e.x) dx = -1;
+  if (state.level.player.x > e.x) dx = 1;
+  if (state.level.player.y < e.y) dy = -1;
+  if (state.level.player.y > e.y) dy = 1;
+
+  const x = e.x + dx;
+  const y = e.y + dy;
+
+  if (x < 0 || x >= XSize || y < 0 || y >= YSize) return;
+
+  const block = state.level.map.getType(x, y);
+
+  switch (block) {
+    case Type.Floor: // Moves
+      e.move(x, y);
+      e.ch = TypeChar[Type.Block]; // MBlocks become visible afer moving
+      e.fg = TypeColor[Type.Block][0] ?? TypeColor[Type.Floor][0];
+      e.bg = TypeColor[Type.Block][1] ?? TypeColor[Type.Floor][1];
+      break;
+    default: // Blocked
+      e.move(e.x, e.y);
       break;
   }
 }
@@ -222,8 +253,14 @@ export async function entitiesAction(t?: ActorType) {
     if (t && e.type !== t) continue;
 
     if (e.x === -1 || e.y === -1) continue; // dead
-    await mobAction(e);
+
+    if (e.type === Type.MBlock) {
+      await mBlockAction(e);
+    } else {
+      await mobAction(e);
+    }
   }
+  screen.renderPlayfield();
 }
 
 export async function playerAction() {
@@ -265,7 +302,6 @@ export async function playerAction() {
   }
 
   // Player Actions
-  // TODO: HideFound
   if (controls.wasActionDeactivated(Action.ResetFound)) {
     state.game.foundSet = new Set();
     await screen.flashMessage('Newly found object descriptions are reset.');
@@ -824,9 +860,9 @@ async function playerWhip() {
     screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
 
     switch (thing) {
-      case Type.Slow:
+      case Type.Slow: // Kill
       case Type.Medium:
-      case Type.Fast: // Kill
+      case Type.Fast:
         killAt(x, y);
         screen.renderPlayfield();
         addScore(thing);
@@ -834,12 +870,27 @@ async function playerWhip() {
       case Type.Block:
       case Type.Forest:
       case Type.Tree:
-      case Type.Message: {
+      case Type.Message:
+      case Type.MBlock:
+      case Type.ZBlock:
+      case Type.GBlock: {
         // Destroy?
         const w = state.stats.whipPower;
         if (6 * Math.random() < w) {
-          sound.play(130, 50);
+          if (thing === Type.MBlock) killAt(x, y);
           state.level.map.setType(x, y, Type.Floor);
+          screen.drawEntity(x, y);
+          screen.drawOver(
+            x,
+            y,
+            ch,
+            ColorCodes[RNG.getUniformInt(0, 15) as Color],
+          );
+          for (let i = 330; i > 20; i--) {
+            // TODO: This sound sucks
+            // sound.play(RNG.getUniformInt(0, i), 10);
+            sound.play(90, 10, 0.5);
+          }
         } else {
           sound.play(130, 25);
           sound.play(90, 50);
@@ -888,18 +939,6 @@ async function playerWhip() {
           sound.play(90, 50);
         }
         break;
-      case Type.MBlock:
-      case Type.ZBlock:
-      case Type.GBlock: {
-        if (6 * Math.random() < state.stats.whipPower) {
-          sound.play(130, 50);
-          state.level.map.setType(x, y, Type.Floor);
-        } else {
-          sound.play(130, 25);
-          sound.play(90, 50);
-        }
-        break;
-      }
       case Type.Statue:
         // TODO: Sound
         if (50 * Math.random() < state.stats.whipPower) {

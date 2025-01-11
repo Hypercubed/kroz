@@ -59,6 +59,7 @@ import { Actor } from '../classes/actors.ts';
 import { Timer } from './state.ts';
 import { mod } from 'rot-js/lib/util';
 import { Entity } from '../classes/entity.ts';
+import lost74 from '../levels/lost-74.ts';
 
 export interface Level {
   id: string;
@@ -140,7 +141,7 @@ export const LEVELS: Level[] = [
   lost61,
   lost64,
   lost70,
-  // lost74,
+  lost74,
   lost75,
 ];
 
@@ -213,16 +214,20 @@ function readLevelMap(level: string) {
         case Type.Player:
           state.level.player.x = x;
           state.level.player.y = y;
+          state.level.map.set(x, y, state.level.player);
           break;
         case Type.Slow:
         case Type.Medium:
         case Type.Fast:
-          state.level.entities.push(new Actor(block, x, y));
+        case Type.MBlock: {
+          const a = new Actor(block, x, y);
+          state.level.entities.push(a);
+          state.level.map.set(x, y, a);
           break;
+        }
         case Type.Generator:
           state.level.genNum++;
           break;
-        // case Type.MBlock
         case Type.Statue:
           state.level.T[Timer.StatueGemDrain] = 32000;
           break;

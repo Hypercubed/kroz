@@ -65,7 +65,3 @@ export default {
   onLevelStart,
   tabletMessage,
 };
-
-// ú -> ·
-// ù -> ∙
-// ï -> ∩
