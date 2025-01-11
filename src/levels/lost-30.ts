@@ -6,8 +6,8 @@ import * as screen from '../modules/screen';
 import * as state from '../modules/state';
 import * as sound from '../modules/sound';
 
-import { FLOOR_CHAR, XSize, YSize } from '../data/constants';
-import { TileChar, Tile } from '../data/tiles';
+import { XSize, YSize } from '../data/constants';
+import { Type } from '../data/tiles';
 
 export const id = 'Lost30';
 
@@ -38,7 +38,7 @@ MMMMM##                     RRRRRRRR                    DDDD77ôô
 `;
 
 async function onLevelStart() {
-  TileChar[Tile.Create] = FLOOR_CHAR;
+  state.level.map.hideType(Type.Create);
 }
 
 async function tabletMessage() {
@@ -50,10 +50,10 @@ async function tabletMessage() {
   // Replace River with Nugget
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      if (state.level.map.get(x, y) === Tile.River) {
+      if (state.level.map.getType(x, y) === Type.River) {
         await sound.play(x * y, 50, 10);
-        state.level.map.set(x, y, Tile.Nugget);
-        screen.drawTile(x, y, Tile.Nugget);
+        state.level.map.setType(x, y, Type.Nugget);
+        screen.drawEntity(x, y);
       }
     }
   }

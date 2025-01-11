@@ -8,7 +8,7 @@ import * as state from './state';
 import * as levels from './levels';
 
 import {
-  Tile,
+  Type,
   BOMBABLES,
   ROCKABLES,
   VISUAL_TELEPORTABLES,
@@ -35,7 +35,7 @@ import {
   YSize,
   YTop,
 } from '../data/constants.ts';
-import { Entity, EntityType } from '../classes/entities.ts';
+import { Actor, ActorType } from '../classes/actors.ts';
 import { Action } from './controls';
 
 import { Color, ColorCodes } from '../data/colors.ts';
@@ -52,6 +52,7 @@ const SPELL_DURATION = {
 };
 
 export async function effects() {
+  // Effect timers
   for (let i = 0; i < state.level.T.length; i++) {
     state.level.T[i] = Math.max(0, state.level.T[i] - 1);
   }
@@ -68,7 +69,7 @@ export async function effects() {
 
   // Creature generation
   const sNum = state.level.entities.reduce((acc, e) => {
-    if (e.type === Tile.Slow) return acc + 1;
+    if (e.type === Type.Slow) return acc + 1;
     return acc;
   }, 0);
 
@@ -80,6 +81,41 @@ export async function effects() {
     await generateCreatures();
   }
 
+  // Magic EWalls
+  if (state.level.magicEwalls && RNG.getUniformInt(0, 7) === 0) {
+    for (let i = 0; i < 100; i++) {
+      const x = RNG.getUniformInt(0, XSize);
+      const y = RNG.getUniformInt(0, YSize);
+      const block = state.level.map.getType(x, y);
+      if (block === Type.CWall1) {
+        state.level.map.setType(x, y, Type.EWall);
+        screen.drawEntity(x, y);
+        break;
+      }
+    }
+    for (let i = 0; i < 100; i++) {
+      const x = RNG.getUniformInt(0, XSize);
+      const y = RNG.getUniformInt(0, YSize);
+      const block = state.level.map.getType(x, y);
+      if (block === Type.EWall) {
+        state.level.map.setType(x, y, Type.CWall1);
+        screen.drawEntity(x, y);
+        break;
+      }
+    }
+  }
+
+  if (state.level.evapoRate > 0 && RNG.getUniformInt(0, 9) === 0) {
+    const x = RNG.getUniformInt(0, XSize);
+    const y = RNG.getUniformInt(0, YSize);
+    const block = state.level.map.getType(x, y);
+    if (block === Type.River) {
+      state.level.map.setType(x, y, Type.Floor);
+      screen.drawEntity(x, y);
+      // TODO: Sound
+    }
+  }
+
   // TODO:
 
   // https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST.PAS#L592
@@ -87,16 +123,15 @@ export async function effects() {
 
   // Lava Flow
   // Gravity?
-  // MagitEWalls 55 <-> 66
   // Evaporate
   // TreeGrow
 }
 
-async function mobAction(e: Entity) {
+async function mobAction(e: Actor) {
   if (
     e.x === -1 ||
     e.y === -1 ||
-    state.level.map.get(e.x, e.y) !== (e.type as unknown as Tile) // Killed
+    state.level.map.getType(e.x, e.y) !== (e.type as unknown as Type) // Killed
   ) {
     e.kill();
     return;
@@ -114,65 +149,68 @@ async function mobAction(e: Entity) {
 
   if (x < 0 || x >= XSize || y < 0 || y >= YSize) return;
 
-  const block = state.level.map.get(x, y);
+  const block = state.level.map.getType(x, y);
 
   switch (block) {
-    case Tile.Floor: // Breaks
-    case Tile.TBlock:
-    case Tile.TRock:
-    case Tile.TGem:
-    case Tile.TBlind:
-    case Tile.TGold:
-    case Tile.TWhip:
-    case Tile.TTree:
-      go(e, x, y);
+    case Type.Floor: // Breaks
+    case Type.TBlock:
+    case Type.TRock:
+    case Type.TGem:
+    case Type.TBlind:
+    case Type.TGold:
+    case Type.TWhip:
+    case Type.TTree:
+      e.move(x, y);
+      screen.renderPlayfield();
       break;
-    case Tile.Block: // Breaks + Kills
-    case Tile.MBlock:
-    case Tile.ZBlock:
-    case Tile.GBlock:
-      state.level.map.set(e.x, e.y, Tile.Floor);
-      state.level.map.set(x, y, Tile.Floor);
+    case Type.Block: // Breaks + Kills
+    case Type.MBlock:
+    case Type.ZBlock:
+    case Type.GBlock:
+      state.level.map.setType(e.x, e.y, Type.Floor);
+      state.level.map.setType(x, y, Type.Floor);
       e.kill();
       addScore(block);
       sound.play(800, 18);
       sound.play(400, 20);
       break;
-    case Tile.Player: // Damage + Kills
+    case Type.Player: // Damage + Kills
       state.stats.gems--;
-      state.level.map.set(e.x, e.y, Tile.Floor);
+      state.level.map.setType(e.x, e.y, Type.Floor);
       e.kill();
       addScore(block);
       break;
-    case Tile.Whip: // Grabs
-    case Tile.Chest:
-    case Tile.SlowTime:
-    case Tile.Gem:
-    case Tile.Invisible:
-    case Tile.Teleport:
-    case Tile.Key:
-    case Tile.SpeedTime:
-    case Tile.Trap:
-    case Tile.Power:
-    case Tile.Freeze:
-    case Tile.Nugget:
-    case Tile.K:
-    case Tile.R:
-    case Tile.O:
-    case Tile.Z:
-    case Tile.ShootRight:
-    case Tile.ShootLeft:
+    case Type.Whip: // Grabs
+    case Type.Chest:
+    case Type.SlowTime:
+    case Type.Gem:
+    case Type.Invisible:
+    case Type.Teleport:
+    case Type.Key:
+    case Type.SpeedTime:
+    case Type.Trap:
+    case Type.Power:
+    case Type.Freeze:
+    case Type.Nugget:
+    case Type.K:
+    case Type.R:
+    case Type.O:
+    case Type.Z:
+    case Type.ShootRight:
+    case Type.ShootLeft:
       sound.grab();
-      go(e, x, y);
+      e.move(x, y);
+      screen.renderPlayfield();
       break;
     default: // Blocked
-      go(e, e.x, e.y);
+      e.move(e.x, e.y);
+      screen.renderPlayfield();
       break;
   }
 }
 
-export async function entitiesAction(t?: EntityType) {
-  if (t === Tile.Player) {
+export async function entitiesAction(t?: ActorType) {
+  if (t === Type.Player) {
     // await playerAction(); // Player acts every tick
     return;
   }
@@ -196,10 +234,10 @@ export async function playerAction() {
     return await levels.prevLevel();
 
   if (controls.wasActionDeactivated(Action.NextLevelCheat)) {
-    state.level.map.set(
+    state.level.map.setType(
       state.level.player.x + 1,
       state.level.player.y,
-      Tile.Stairs,
+      Type.Stairs,
     );
     await sound.play(2000, 40, 10);
     return;
@@ -306,53 +344,59 @@ export async function tryPlayerMove(dx: number, dy: number) {
 
   if (x < 0 || x > XSize || y < 0 || y > YSize) {
     await sound.staticNoise();
-    addScore(Tile.Border);
-    await screen.flashTileMessage(Tile.Border, true);
+    addScore(Type.Border);
+    await screen.flashTypeMessage(Type.Border, true);
     return;
   }
 
-  const block = state.level.map.get(x, y) || Tile.Floor;
+  const block = state.level.map.getType(x, y) || Type.Floor;
 
   switch (block) {
-    case Tile.Floor:
-    case Tile.Stop:
-      go(state.level.player, x, y);
+    case Type.Floor:
+    case Type.Stop:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       break;
-    case Tile.Slow:
-    case Tile.Medium:
-    case Tile.Fast:
+    case Type.Slow:
+    case Type.Medium:
+    case Type.Fast:
       state.stats.gems -= block;
       killAt(x, y);
       addScore(block);
-      go(state.level.player, x, y);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       break;
-    case Tile.Block:
-    case Tile.ZBlock:
-    case Tile.GBlock:
+    case Type.Block:
+    case Type.ZBlock:
+    case Type.GBlock:
       addScore(block);
-      await screen.flashTileMessage(Tile.Block, true);
+      await screen.flashTypeMessage(Type.Block, true);
       break;
-    case Tile.Whip:
+    case Type.Whip:
       sound.grab();
       state.stats.whips++;
       addScore(block);
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(Tile.Whip, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(Type.Whip, true);
       break;
-    case Tile.Stairs:
+    case Type.Stairs:
       if (state.stats.levelIndex === LEVELS.length - 1) {
-        go(state.level.player, x, y);
+        state.level.player.move(x, y);
+        screen.renderPlayfield();
         await endRoutine();
         return;
       }
-      go(state.level.player, x, y);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       addScore(block);
-      await screen.flashTileMessage(Tile.Stairs, true);
+      await screen.flashTypeMessage(Type.Stairs, true);
       sound.footStep();
       await levels.nextLevel();
       break;
-    case Tile.Chest: {
-      go(state.level.player, x, y);
+    case Type.Chest: {
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       // TODO: Sound
       const whips = RNG.getUniformInt(2, 5);
       const gems = RNG.getUniformInt(2, state.game.difficulty + 2);
@@ -364,320 +408,355 @@ export async function tryPlayerMove(dx: number, dy: number) {
       );
       break;
     }
-    case Tile.SlowTime:
+    case Type.SlowTime:
       state.level.T[Timer.SpeedTime] = 0; // Reset Speed Time
       state.level.T[Timer.FreezeTime] = 0;
       state.level.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime]; // Slow Time
       addScore(block);
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Gem:
+    case Type.Gem:
       sound.grab();
       state.stats.gems++;
       addScore(block);
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Invisible:
+    case Type.Invisible:
       state.level.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
       addScore(block);
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Teleport:
+    case Type.Teleport:
       state.stats.teleports++;
       addScore(block);
-      go(state.level.player, x, y);
-      screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      screen.flashTypeMessage(block, true);
       break;
-    case Tile.Key:
+    case Type.Key:
       sound.grab();
       state.stats.keys++;
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Door:
+    case Type.Door:
       if (state.stats.keys < 1) {
         sound.play(Math.random() * 129 + 30, 150, 100);
         await delay(100);
-        await screen.flashTileMessage(block);
+        await screen.flashTypeMessage(block);
       } else {
         state.stats.keys--;
         addScore(block);
         await sound.openDoor();
-        go(state.level.player, x, y);
+        state.level.player.move(x, y);
+        screen.renderPlayfield();
         await screen.flashMessage(
           'The Door opens!  (One of your Keys is used.)',
         );
       }
       break;
-    case Tile.Wall:
+    case Type.Wall:
       sound.blockedWall();
       addScore(block);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.River:
+    case Type.River:
       addScore(block);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.SpeedTime:
+    case Type.SpeedTime:
       state.level.T[Timer.SlowTime] = 0; // Reset Slow Time
       state.level.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime]; // Speed Time
       addScore(block);
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Trap:
+    case Type.Trap:
       addScore(block);
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block, true);
       await playerTeleport();
       break;
-    case Tile.Power:
+    case Type.Power:
       state.stats.whipPower++;
       addScore(block);
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Tree:
-    case Tile.Forest:
+    case Type.Tree:
+    case Type.Forest:
       addScore(block);
       await sound.blocked();
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Bomb: {
-      go(state.level.player, x, y);
+    case Type.Bomb: {
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       playerBomb(x, y);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       screen.renderBorder();
       break;
     }
-    case Tile.Lava:
+    case Type.Lava:
       state.stats.gems -= 10;
       addScore(block);
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Pit:
-      go(state.level.player, x, y);
+    case Type.Pit:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       state.stats.gems = -1; // dead
-      await screen.flashTileMessage(block);
+      await screen.flashTypeMessage(block);
       break;
-    case Tile.Tome:
+    case Type.Tome:
       // Tome_Message;
       // Tome_Effects
 
-      state.level.map.set(31, 6, Tile.Stairs);
-      screen.drawTile(31, 6, Tile.Stairs);
+      state.level.map.setType(31, 6, Type.Stairs);
+      screen.drawType(31, 6, Type.Stairs);
 
       addScore(block);
-      await screen.flashTileMessage(block);
+      await screen.flashTypeMessage(block);
       await screen.flashMessage(
         'Congratulations, Adventurer, you finally did it!!!',
       );
       break;
-    case Tile.Nugget:
+    case Type.Nugget:
       sound.grab();
-      go(state.level.player, x, y);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       addScore(block);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Freeze:
+    case Type.Freeze:
       state.level.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Tunnel: {
+    case Type.Tunnel: {
       // Player starting position
       const sx = state.level.player.x;
       const sy = state.level.player.y;
 
-      go(state.level.player, x, y);
-      playerTunnel(x, y, sx, sy);
-      await screen.flashTileMessage(block, true);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await playerTunnel(x, y, sx, sy);
+      await screen.flashTypeMessage(block, true);
       break;
     }
-    case Tile.Quake:
-      go(state.level.player, x, y);
+    case Type.Quake:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await quakeTrap();
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.IWall:
+    case Type.IWall:
       sound.blockedWall();
-      state.level.map.set(x, y, Tile.Wall);
-      screen.drawTile(x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.map.setType(x, y, Type.Wall);
+      screen.drawEntity(x, y);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.IBlock:
+    case Type.IBlock:
       sound.blockedWall();
-      state.level.map.set(x, y, Tile.Block);
-      screen.drawTile(x, y, Tile.Block);
-      await screen.flashTileMessage(block, true);
+      state.level.map.setType(x, y, Type.Block);
+      screen.drawEntity(x, y);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.IDoor:
+    case Type.IDoor:
       sound.blockedWall();
-      state.level.map.set(x, y, Tile.Door);
-      screen.drawTile(x, y);
-      await screen.flashTileMessage(block, true);
+      state.level.map.setType(x, y, Type.Door);
+      screen.drawEntity(x, y);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.Zap: {
-      go(state.level.player, x, y);
+    case Type.Zap: {
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await zapTrap();
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
     }
-    case Tile.Create: {
-      go(state.level.player, x, y);
+    case Type.Create: {
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await createTrap();
       addScore(block);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
     }
-    case Tile.Generator:
+    case Type.Generator:
       addScore(block);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.MBlock:
+    case Type.MBlock:
       addScore(block);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Tile.ShowGems: {
-      go(state.level.player, x, y);
+    case Type.ShowGems: {
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       sound.grab();
-      showGemsSpell();
-      await screen.flashTileMessage(block, false);
+      await showGemsSpell();
+      await screen.flashTypeMessage(block, false);
       break;
     }
-    case Tile.Tablet:
-      go(state.level.player, x, y);
+    case Type.Tablet:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       sound.grab();
       addScore(block);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       await tabletMessage();
       break;
-    case Tile.BlockSpell: {
-      go(state.level.player, x, y);
+    case Type.BlockSpell: {
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await blockSpell();
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
     }
-    case Tile.Chance: {
+    case Type.Chance: {
       addScore(block);
       const g = RNG.getUniformInt(14, 18);
       state.stats.gems += g;
-      go(state.level.player, x, y);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await screen.flashMessage(`You found a Pouch containing ${g} Gems!`);
       break;
     }
-    case Tile.Statue:
+    case Type.Statue:
       sound.blocked();
-      await screen.flashTileMessage(block);
+      await screen.flashTypeMessage(block);
       break;
-    case Tile.WallVanish:
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(block);
+    case Type.WallVanish:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(block);
       break;
-    case Tile.K:
-    case Tile.R:
-    case Tile.O:
-    case Tile.Z:
-      go(state.level.player, x, y);
+    case Type.K:
+    case Type.R:
+    case Type.O:
+    case Type.Z:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       sound.grab();
       await krozBonus(block);
       break;
-    case Tile.OWall1:
-    case Tile.OWall2:
-    case Tile.OWall3:
+    case Type.OWall1:
+    case Type.OWall2:
+    case Type.OWall3:
       sound.blockedWall();
-      await screen.flashTileMessage(Tile.OWall1, true);
+      await screen.flashTypeMessage(Type.OWall1, true);
       break;
-    case Tile.OSpell1:
-    case Tile.OSpell2:
-    case Tile.OSpell3: {
-      go(state.level.player, x, y);
+    case Type.OSpell1:
+    case Type.OSpell2:
+    case Type.OSpell3: {
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await oSpell(block);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
     }
-    case Tile.CSpell1:
-    case Tile.CSpell2:
-    case Tile.CSpell3: {
-      go(state.level.player, x, y);
+    case Type.CSpell1:
+    case Type.CSpell2:
+    case Type.CSpell3: {
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await cSpell(block);
-      await screen.flashTileMessage(block, true);
+      await screen.flashTypeMessage(block, true);
       break;
     }
-    case Tile.Rock: {
+    case Type.Rock: {
       await pushRock(x, y, dx, dy);
       break;
     }
-    case Tile.EWall:
+    case Type.EWall:
       addScore(block);
       state.stats.gems--;
       sound.staticNoise();
-      await screen.flashTileMessage(Tile.EWall, true);
+      await screen.flashTypeMessage(Type.EWall, true);
       break;
-    case Tile.CWall1:
-    case Tile.CWall2:
-    case Tile.CWall3:
-      go(state.level.player, x, y);
+    case Type.CWall1:
+    case Type.CWall2:
+    case Type.CWall3:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       break;
-    case Tile.Trap2:
-    case Tile.Trap4:
+    case Type.Trap2:
+    case Type.Trap4:
       // TBD
-      go(state.level.player, x, y);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       break;
-    case Tile.Trap3:
-    case Tile.Trap5:
-    case Tile.Trap6:
-    case Tile.Trap7:
-    case Tile.Trap8:
-    case Tile.Trap9:
-    case Tile.Trap10:
-    case Tile.Trap11:
-    case Tile.Trap12:
-    case Tile.Trap13: {
-      go(state.level.player, x, y);
+    case Type.Trap3:
+    case Type.Trap5:
+    case Type.Trap6:
+    case Type.Trap7:
+    case Type.Trap8:
+    case Type.Trap9:
+    case Type.Trap10:
+    case Type.Trap11:
+    case Type.Trap12:
+    case Type.Trap13: {
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       aTrap(block);
       break;
     }
-    case Tile.TBlock: // 68..74 Triggers
-    case Tile.TRock:
-    case Tile.TGem:
-    case Tile.TBlind:
-    case Tile.TWhip:
-    case Tile.TGold:
-    case Tile.TTree:
+    case Type.TBlock: // 68..74 Triggers
+    case Type.TRock:
+    case Type.TGem:
+    case Type.TBlind:
+    case Type.TWhip:
+    case Type.TGold:
+    case Type.TTree:
       // https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST1.LEV#L1236C1-L1254C23
-      go(state.level.player, x, y);
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await triggers(x, y, block);
       break;
-    case Tile.Rope:
-      go(state.level.player, x, y);
-      await screen.flashTileMessage(Tile.Rope, true);
+    case Type.Rope:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(Type.Rope, true);
       break;
-    case Tile.Message: {
+    case Type.Message: {
       await messageInTheTree();
       break;
     }
-    case Tile.ShootRight:
-      go(state.level.player, x, y);
+    case Type.ShootRight:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await shoot(x, y, 1);
       break;
-    case Tile.ShootLeft:
-      go(state.level.player, x, y);
+    case Type.ShootLeft:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await shoot(x, y, -1);
       break;
-    case Tile.DropRope:
-    case Tile.DropRope2:
-    case Tile.DropRope3:
-    case Tile.DropRope4:
-    case Tile.DropRope5:
-      go(state.level.player, x, y);
+    case Type.DropRope:
+    case Type.DropRope2:
+    case Type.DropRope3:
+    case Type.DropRope4:
+    case Type.DropRope5:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       break;
-    case Tile.Amulet:
-      go(state.level.player, x, y);
+    case Type.Amulet:
+      state.level.player.move(x, y);
+      screen.renderPlayfield();
       await gotAmulet();
       break;
     default:
@@ -687,11 +766,11 @@ export async function tryPlayerMove(dx: number, dy: number) {
 }
 
 async function killAt(x: number, y: number) {
-  const block = state.level.map.get(x, y);
+  const block = state.level.map.getType(x, y);
 
-  state.level.map.set(x, y, Tile.Floor);
+  state.level.map.setType(x, y, Type.Floor);
 
-  if (block === Tile.Slow || block === Tile.Medium || block === Tile.Fast) {
+  if (block === Type.Slow || block === Type.Medium || block === Type.Fast) {
     for (let i = 0; i < state.level.entities.length; i++) {
       const m = state.level.entities[i];
       if (m.x === x && m.y === y) {
@@ -701,39 +780,14 @@ async function killAt(x: number, y: number) {
   }
 }
 
-function go(e: Entity, x: number, y: number) {
-  const px = e.x;
-  const py = e.y;
-
-  e.move(x, y);
-
-  if (e.type === Tile.Player) {
-    state.level.map.set(px, py, state.level.replacement);
-    const b = state.level.map.get(x, y) as Tile;
-    state.level.replacement = [
-      Tile.CWall1,
-      Tile.CWall2,
-      Tile.CWall3,
-      Tile.Rope,
-    ].includes(b)
-      ? b
-      : Tile.Floor;
-  } else {
-    state.level.map.set(px, py, Tile.Floor);
-  }
-
-  state.level.map.set(x, y, e.type);
-  screen.renderPlayfield();
-}
-
 async function generateCreatures() {
   let done = false;
   do {
     const x = RNG.getUniformInt(0, XSize);
     const y = RNG.getUniformInt(0, YSize);
-    if (state.level.map.get(x, y) === Tile.Floor) {
-      state.level.entities.push(new Entity(Tile.Slow, x, y));
-      state.level.map.set(x, y, Tile.Slow);
+    if (state.level.map.getType(x, y) === Type.Floor) {
+      state.level.entities.push(new Actor(Type.Slow, x, y));
+      state.level.map.setType(x, y, Type.Slow);
 
       for (let i = 5; i < 70; i++) {
         sound.play(i * 8, 1);
@@ -752,103 +806,105 @@ async function playerWhip() {
   const PY = state.level.player.y;
 
   sound.play(70, 50 * 8, 100);
-  if (PY > 0 && PX > 0) await hit(PX - 1, PY - 1, '\\');
-  if (PX > 0) await hit(PX - 1, PY, '-');
-  if (PY < YSize && PX > 0) await hit(PX - 1, PY + 1, '/');
-  if (PY < YSize) await hit(PX, PY + 1, '❘');
-  if (PY < YSize && PX < XSize) await hit(PX + 1, PY + 1, '\\');
-  if (PX < XSize) await hit(PX + 1, PY, '-');
-  if (PY > 0 && PX < XSize) await hit(PX + 1, PY - 1, '/');
-  if (PY > 0) await hit(PX, PY - 1, '❘');
+  await hit(PX - 1, PY - 1, '\\');
+  await hit(PX - 1, PY, '-');
+  await hit(PX - 1, PY + 1, '/');
+  await hit(PX, PY + 1, '❘');
+  await hit(PX + 1, PY + 1, '\\');
+  await hit(PX + 1, PY, '-');
+  await hit(PX + 1, PY - 1, '/');
+  await hit(PX, PY - 1, '❘');
 
   // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER/LOST4.TIT#L399
   async function hit(x: number, y: number, ch: string) {
-    const thing = state.level.map.get(x, y);
+    if (x < 0 || x >= XSize || y < 0 || y >= YSize) return;
+
+    const thing = state.level.map.getType(x, y);
 
     screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
 
     switch (thing) {
-      case Tile.Slow:
-      case Tile.Medium:
-      case Tile.Fast: // Kill
+      case Type.Slow:
+      case Type.Medium:
+      case Type.Fast: // Kill
         killAt(x, y);
         screen.renderPlayfield();
         addScore(thing);
         break;
-      case Tile.Block:
-      case Tile.Forest:
-      case Tile.Tree:
-      case Tile.Message: {
+      case Type.Block:
+      case Type.Forest:
+      case Type.Tree:
+      case Type.Message: {
         // Destroy?
         const w = state.stats.whipPower;
         if (6 * Math.random() < w) {
           sound.play(130, 50);
-          state.level.map.set(x, y, Tile.Floor);
+          state.level.map.setType(x, y, Type.Floor);
         } else {
           sound.play(130, 25);
           sound.play(90, 50);
         }
         break;
       }
-      case Tile.Invisible:
-      case Tile.SpeedTime:
-      case Tile.Trap:
-      case Tile.Power:
-      case Tile.K:
-      case Tile.R:
-      case Tile.O:
-      case Tile.Z: // Break
-        state.level.map.set(x, y, Tile.Floor);
+      case Type.Invisible:
+      case Type.SpeedTime:
+      case Type.Trap:
+      case Type.Power:
+      case Type.K:
+      case Type.R:
+      case Type.O:
+      case Type.Z: // Break
+        state.level.map.setType(x, y, Type.Floor);
         sound.play(400, 50);
         // TODO: Generator special case
         break;
-      case Tile.Quake:
-      case Tile.IBlock:
-      case Tile.IWall:
-      case Tile.IDoor:
-      case Tile.Trap2:
-      case Tile.Trap3:
-      case Tile.Trap4:
-      case Tile.ShowGems:
-      case Tile.BlockSpell:
-      case Tile.Trap5:
-      case Tile.Trap6:
-      case Tile.Trap7:
-      case Tile.Trap8:
-      case Tile.Trap9:
-      case Tile.Trap10:
-      case Tile.Trap11:
-      case Tile.Trap12:
-      case Tile.Trap13:
-      case Tile.Stop:
+      case Type.Quake:
+      case Type.IBlock:
+      case Type.IWall:
+      case Type.IDoor:
+      case Type.Trap2:
+      case Type.Trap3:
+      case Type.Trap4:
+      case Type.ShowGems:
+      case Type.BlockSpell:
+      case Type.Trap5:
+      case Type.Trap6:
+      case Type.Trap7:
+      case Type.Trap8:
+      case Type.Trap9:
+      case Type.Trap10:
+      case Type.Trap11:
+      case Type.Trap12:
+      case Type.Trap13:
+      case Type.Stop:
         // No break, no effect
         break;
-      case Tile.Rock:
+      case Type.Rock:
         if (30 * Math.random() < state.stats.whipPower) {
           sound.play(130, 50);
-          state.level.map.set(x, y, Tile.Floor);
+          state.level.map.setType(x, y, Type.Floor);
         } else {
           sound.play(130, 25);
           sound.play(90, 50);
         }
         break;
-      case Tile.MBlock:
-      case Tile.ZBlock:
-      case Tile.GBlock: {
+      case Type.MBlock:
+      case Type.ZBlock:
+      case Type.GBlock: {
         if (6 * Math.random() < state.stats.whipPower) {
           sound.play(130, 50);
-          state.level.map.set(x, y, Tile.Floor);
+          state.level.map.setType(x, y, Type.Floor);
         } else {
           sound.play(130, 25);
           sound.play(90, 50);
         }
         break;
       }
-      case Tile.Statue:
+      case Type.Statue:
         // TODO: Sound
         if (50 * Math.random() < state.stats.whipPower) {
           // TODO: Sound
-          state.level.map.set(x, y, Tile.Floor);
+          state.level.map.setType(x, y, Type.Floor);
           addScore(thing);
           state.level.T[Timer.StatueGemDrain] = -1;
           await screen.flashMessage(
@@ -859,13 +915,13 @@ async function playerWhip() {
           sound.play(90, 50);
         }
         break;
-      case Tile.Generator:
+      case Type.Generator:
         // TODO: Sound
         addScore(thing);
-        state.level.map.set(x, y, Tile.Floor);
+        state.level.map.setType(x, y, Type.Floor);
         state.level.genNum--;
         break;
-      case Tile.Wall:
+      case Type.Wall:
         break;
       default:
         break;
@@ -879,10 +935,10 @@ async function playerWhip() {
 export async function flashPlayer() {
   for (let i = 0; i < 160; i++) {
     if (i % 5 === 0) {
-      screen.drawTile(
+      screen.drawType(
         state.level.player.x,
         state.level.player.y,
-        Tile.Player,
+        Type.Player,
         RNG.getUniformInt(0, 15),
         RNG.getUniformInt(0, 8),
       );
@@ -895,17 +951,21 @@ export async function flashPlayer() {
 async function playerTeleport() {
   await flashPlayer();
 
-  state.level.map.set(state.level.player.x, state.level.player.y, Tile.Floor);
-  screen.drawTile(state.level.player.x, state.level.player.y);
+  state.level.map.setType(
+    state.level.player.x,
+    state.level.player.y,
+    Type.Floor,
+  );
+  screen.drawEntity(state.level.player.x, state.level.player.y);
 
   // Animation
   const startTime = Date.now();
   for (let i = 0; i < 700; i++) {
     const x = RNG.getUniformInt(0, XSize);
     const y = RNG.getUniformInt(0, YSize);
-    const block = state.level.map.get(x, y);
-    if (VISUAL_TELEPORTABLES.indexOf(block as Tile) > -1) {
-      screen.drawTile(
+    const block = state.level.map.getType(x, y);
+    if (VISUAL_TELEPORTABLES.indexOf(block as Type) > -1) {
+      screen.drawType(
         x,
         y,
         '☺',
@@ -913,96 +973,96 @@ async function playerTeleport() {
         RNG.getUniformInt(0, 7),
       );
       await sound.play(20, 10, 100);
-      screen.drawTile(x, y, block);
+      screen.drawType(x, y, block);
     }
     if (Date.now() - startTime > 1500) break;
   }
 
   // Teleport
-  go(state.level.player, ...state.level.map.findRandomEmptySpace());
+  state.level.player.move(...state.level.map.findRandomEmptySpace());
 }
 
-function addScore(block: Tile) {
+function addScore(block: Type) {
   switch (block) {
-    case Tile.Border:
+    case Type.Border:
       if (state.stats.score > state.stats.levelIndex)
         state.stats.score -= state.stats.levelIndex / 2;
       break;
-    case Tile.Slow:
-    case Tile.Medium:
-    case Tile.Fast:
+    case Type.Slow:
+    case Type.Medium:
+    case Type.Fast:
       state.stats.score += block;
       break;
-    case Tile.Block:
-    case Tile.ZBlock:
-    case Tile.GBlock:
-    case Tile.Wall:
-    case Tile.River:
-    case Tile.Tree:
-    case Tile.Forest:
-    case Tile.MBlock:
-    case Tile.OWall1:
-    case Tile.OWall2:
-    case Tile.OWall3:
-    case Tile.EWall:
+    case Type.Block:
+    case Type.ZBlock:
+    case Type.GBlock:
+    case Type.Wall:
+    case Type.River:
+    case Type.Tree:
+    case Type.Forest:
+    case Type.MBlock:
+    case Type.OWall1:
+    case Type.OWall2:
+    case Type.OWall3:
+    case Type.EWall:
       if (state.stats.score > 2) state.stats.score -= 2;
       break;
-    case Tile.Whip:
-    case Tile.SlowTime:
-    case Tile.Bomb:
+    case Type.Whip:
+    case Type.SlowTime:
+    case Type.Bomb:
       state.stats.score++;
       break;
-    case Tile.Stairs:
+    case Type.Stairs:
       state.stats.score += state.stats.levelIndex * 5;
       break;
-    case Tile.Chest:
+    case Type.Chest:
       state.stats.score += 10 + Math.floor(state.stats.levelIndex / 2);
       break;
-    case Tile.Gem:
+    case Type.Gem:
       state.stats.score += Math.floor(state.stats.levelIndex / 2) + 1;
       break;
-    case Tile.Invisible:
+    case Type.Invisible:
       state.stats.score += 25;
       break;
-    case Tile.Nugget:
+    case Type.Nugget:
       state.stats.score += 50;
       break;
-    case Tile.Door:
+    case Type.Door:
       state.stats.score += 10;
       break;
-    case Tile.Teleport:
-    case Tile.Freeze:
+    case Type.Teleport:
+    case Type.Freeze:
       state.stats.score += 2;
       break;
-    case Tile.SpeedTime:
-    case Tile.Power:
+    case Type.SpeedTime:
+    case Type.Power:
       state.stats.score += 5;
       break;
-    case Tile.Trap:
+    case Type.Trap:
       if (state.stats.score > 5) state.stats.score -= 5;
       break;
-    case Tile.Lava:
+    case Type.Lava:
       if (state.stats.score > 100) state.stats.score += 100;
       break;
-    case Tile.Tome:
+    case Type.Tome:
       state.stats.score += 5000;
       break;
-    case Tile.Tablet:
+    case Type.Tablet:
       state.stats.score += state.stats.levelIndex + 250;
       break;
-    case Tile.Chance:
+    case Type.Chance:
       state.stats.score += 100;
       break;
-    case Tile.Statue:
+    case Type.Statue:
       state.stats.score += 10;
       break;
-    case Tile.Amulet:
+    case Type.Amulet:
       state.stats.score += 2500;
       break;
-    case Tile.Z:
+    case Type.Z:
       state.stats.score += 1000;
       break;
-    // case Tile.Border:
+    // case Type.Border:
     //   if (state.stats.score > state.level.level) state.stats.score -= Math.floor(state.stats.levelIndex/ 2);
     //   break;
   }
@@ -1201,27 +1261,27 @@ export async function endRoutine() {
 async function shoot(x: number, y: number, dx: number) {
   x += dx;
   while (x >= 0 && x <= XSize) {
-    const block = state.level.map.get(x, y);
+    const block = state.level.map.getType(x, y);
     if (
       typeof block !== 'number' ||
       [
-        Tile.Block,
-        Tile.Stairs,
-        Tile.Door,
-        Tile.Wall,
-        Tile.Lava,
-        Tile.Tunnel,
-        Tile.IDoor,
-        Tile.Generator,
-        Tile.MBlock,
-        Tile.Tablet,
-        Tile.ZBlock,
-        Tile.Statue,
+        Type.Block,
+        Type.Stairs,
+        Type.Door,
+        Type.Wall,
+        Type.Lava,
+        Type.Tunnel,
+        Type.IDoor,
+        Type.Generator,
+        Type.MBlock,
+        Type.Tablet,
+        Type.ZBlock,
+        Type.Statue,
         ...OWALLS,
-        Tile.GBlock,
-        Tile.Rock,
-        Tile.EWall,
-        Tile.Amulet,
+        Type.GBlock,
+        Type.Rock,
+        Type.EWall,
+        Type.Amulet,
       ].includes(block)
     ) {
       // These objects stop the Spear
@@ -1236,35 +1296,35 @@ async function shoot(x: number, y: number, dx: number) {
 
     if (
       ![
-        Tile.Floor,
-        Tile.River,
-        Tile.Pit,
-        Tile.Quake,
-        Tile.IBlock,
-        Tile.IWall,
-        Tile.Stop,
-        Tile.Trap2,
-        Tile.Trap3,
-        Tile.Trap4,
-        Tile.Trap5,
-        Tile.ShowGems,
-        Tile.BlockSpell,
-        Tile.WallVanish,
+        Type.Floor,
+        Type.River,
+        Type.Pit,
+        Type.Quake,
+        Type.IBlock,
+        Type.IWall,
+        Type.Stop,
+        Type.Trap2,
+        Type.Trap3,
+        Type.Trap4,
+        Type.Trap5,
+        Type.ShowGems,
+        Type.BlockSpell,
+        Type.WallVanish,
         ...CWALLS,
         ...CSPELLS,
         ...TBLOCKS,
-        Tile.Rope,
+        Type.Rope,
       ].includes(block as number)
     ) {
       // These objects are ignored
       await sound.play(300, 10, 10);
-      if (block === Tile.Slow || block === Tile.Medium || block === Tile.Fast) {
+      if (block === Type.Slow || block === Type.Medium || block === Type.Fast) {
         await killAt(x, y);
       }
-      state.level.map.set(x, y, Tile.Floor);
+      state.level.map.setType(x, y, Type.Floor);
     }
 
-    screen.drawTile(x, y);
+    screen.drawEntity(x, y);
     x += dx;
   }
   screen.renderPlayfield();
@@ -1277,7 +1337,7 @@ async function gotAmulet() {
       await sound.play(x * x * y, y + 1, 100);
     }
   }
-  addScore(Tile.Amulet);
+  addScore(Type.Amulet);
   await screen.flashMessage(
     'You have found the Amulet of Yendor -- 25,000 points!',
   );
@@ -1307,7 +1367,7 @@ async function playerBomb(x: number, y: number) {
     for (let x = x1; x <= x2; x++) {
       for (let y = y1; y <= y2; y++) {
         screen.drawOver(x, y, '█', Color.LightRed);
-        const block = (state.level.map.get(x, y) as number) ?? Tile.Floor;
+        const block = (state.level.map.getType(x, y) as number) ?? Type.Floor;
         if (BOMBABLES.includes(block as number)) {
           if (block >= 1 && block <= 4) {
             addScore(block);
@@ -1329,9 +1389,9 @@ async function playerBomb(x: number, y: number) {
 
   for (let x = x1; x <= x2; x++) {
     for (let y = y1; y <= y2; y++) {
-      const block = (state.level.map.get(x, y) as number) ?? Tile.Floor;
+      const block = (state.level.map.getType(x, y) as number) ?? Type.Floor;
       if (BOMBABLES.includes(block as number)) {
-        state.level.map.set(x, y, Tile.Floor);
+        state.level.map.setType(x, y, Type.Floor);
       }
     }
   }
@@ -1342,8 +1402,8 @@ async function playerTunnel(x: number, y: number, sx: number, sy: number) {
   await delay(350);
   await sound.footStep();
   await delay(500);
-  state.level.map.set(x, y, Tile.Tunnel);
-  screen.drawTile(x, y, Tile.Tunnel);
+  state.level.map.setType(x, y, Type.Tunnel);
+  screen.drawEntity(x, y);
 
   // Find a random tunnel
   let tx = x;
@@ -1351,17 +1411,17 @@ async function playerTunnel(x: number, y: number, sx: number, sy: number) {
   for (let i = 0; i < 10000; i++) {
     const a = RNG.getUniformInt(0, XSize);
     const b = RNG.getUniformInt(0, YSize);
-    const t = state.level.map.get(a, b) ?? Tile.Floor;
-    if (t === Tile.Tunnel && (a !== tx || b !== ty)) {
+    const t = state.level.map.getType(a, b) ?? Type.Floor;
+    if (t === Type.Tunnel && (a !== tx || b !== ty)) {
       tx = a;
       ty = b;
-      go(state.level.player, tx, ty);
+      state.level.player.move(tx, ty);
       break;
     }
   }
 
-  state.level.map.set(x, y, Tile.Tunnel);
-  screen.drawTile(x, y, Tile.Tunnel);
+  state.level.map.setType(x, y, Type.Tunnel);
+  screen.drawEntity(x, y);
 
   // Find a random empty space near exit
   let ex = sx;
@@ -1370,22 +1430,21 @@ async function playerTunnel(x: number, y: number, sx: number, sy: number) {
     const a = RNG.getUniformInt(-1, 1);
     const b = RNG.getUniformInt(-1, 1);
     if (tx + a < 0 || tx + a > XSize || ty + b < 0 || ty + b > YSize) continue;
-    const e = state.level.map.get(tx + a, ty + b) ?? Tile.Floor;
+    const e = state.level.map.getType(tx + a, ty + b) ?? Type.Floor;
     if (
       [
         0, 32, 33, 37, 39, 55, 56, 57, 67, 224, 225, 226, 227, 227, 229, 230,
         231,
-      ].includes(e as Tile)
+      ].includes(e as Type)
     ) {
       ex = tx + a;
       ey = ty + b;
       break;
     }
   }
-  go(state.level.player, ex, ey);
-
-  state.level.map.set(tx, ty, Tile.Tunnel);
-  screen.drawTile(tx, ty, Tile.Tunnel);
+  state.level.player.move(ex, ey);
+  state.level.map.setType(tx, ty, Type.Tunnel);
+  screen.drawEntity(tx, ty);
 }
 
 async function quakeTrap() {
@@ -1399,10 +1458,10 @@ async function quakeTrap() {
     do {
       const x = RNG.getUniformInt(0, XSize);
       const y = RNG.getUniformInt(0, YSize);
-      const block = state.level.map.get(x, y);
+      const block = state.level.map.getType(x, y);
       if (ROCKABLES.includes(block as number)) {
-        state.level.map.set(x, y, Tile.Rock);
-        screen.drawTile(x, y, Tile.Rock);
+        state.level.map.setType(x, y, Type.Rock);
+        screen.drawEntity(x, y);
         break;
       }
     } while (Math.random() > 0.01);
@@ -1439,7 +1498,7 @@ async function zapTrap() {
 
 async function createTrap() {
   const SNum = state.level.entities.reduce((acc, e) => {
-    if (e.type === Tile.Slow) return acc + 1;
+    if (e.type === Type.Slow) return acc + 1;
     return acc;
   }, 0);
   if (SNum < 945) {
@@ -1455,12 +1514,12 @@ async function showGemsSpell() {
     do {
       const x = RNG.getUniformInt(0, XSize);
       const y = RNG.getUniformInt(0, YSize);
-      const block = state.level.map.get(x, y);
-      if (block === Tile.Floor) {
+      const block = state.level.map.getType(x, y);
+      if (block === Type.Floor) {
         sound.play(RNG.getUniformInt(110, 1310), 7, 100);
         done = true;
-        state.level.map.set(x, y, Tile.Gem);
-        screen.drawTile(x, y, Tile.Gem);
+        state.level.map.setType(x, y, Type.Gem);
+        screen.drawEntity(x, y);
         await delay(99);
       }
     } while (!done && Math.random() > 0.01);
@@ -1471,44 +1530,44 @@ async function showGemsSpell() {
 async function blockSpell() {
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      if (state.level.map.get(x, y) === Tile.ZBlock) {
+      if (state.level.map.getType(x, y) === Type.ZBlock) {
         sound.play(200, 60, 100);
         for (let i = 20; i > 0; i--) {
-          screen.drawTile(x, y, Tile.Block, RNG.getUniformInt(0, 15));
+          screen.drawType(x, y, Type.Block, RNG.getUniformInt(0, 15));
           await delay(3);
         }
-        state.level.map.set(x, y, Tile.Floor);
-        screen.drawTile(x, y, Tile.Floor);
-      } else if (state.level.map.get(x, y) === Tile.BlockSpell) {
-        state.level.map.set(x, y, Tile.Floor);
-        screen.drawTile(x, y, Tile.Floor);
+        state.level.map.setType(x, y, Type.Floor);
+        screen.drawEntity(x, y);
+      } else if (state.level.map.getType(x, y) === Type.BlockSpell) {
+        state.level.map.setType(x, y, Type.Floor);
+        screen.drawEntity(x, y);
       }
     }
   }
 }
 
-async function krozBonus(block: Tile) {
-  if (block === Tile.K && state.level.bonus === 0) state.level.bonus = 1;
-  if (block === Tile.R && state.level.bonus === 1) state.level.bonus = 2;
-  if (block === Tile.O && state.level.bonus === 2) state.level.bonus = 3;
-  if (block === Tile.Z && state.level.bonus === 3) {
+async function krozBonus(block: Type) {
+  if (block === Type.K && state.level.bonus === 0) state.level.bonus = 1;
+  if (block === Type.R && state.level.bonus === 1) state.level.bonus = 2;
+  if (block === Type.O && state.level.bonus === 2) state.level.bonus = 3;
+  if (block === Type.Z && state.level.bonus === 3) {
     await sound.bonusSound();
     addScore(block);
-    await screen.flashTileMessage(block);
+    await screen.flashTypeMessage(block);
   }
 }
 
-async function oSpell(block: Tile) {
-  let s = Tile.OWall1;
-  if (block === Tile.OSpell2) s = Tile.OWall2;
-  if (block === Tile.OSpell3) s = Tile.OWall3;
+async function oSpell(block: Type) {
+  let s = Type.OWall1;
+  if (block === Type.OSpell2) s = Type.OWall2;
+  if (block === Type.OSpell3) s = Type.OWall3;
 
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      const block = state.level.map.get(x, y);
+      const block = state.level.map.getType(x, y);
       if (block === s) {
         for (let i = 60; i > 0; i--) {
-          screen.drawTile(
+          screen.drawType(
             x,
             y,
             RNG.getItem(['▄', '▌', '▐', '▀']) as string,
@@ -1517,22 +1576,22 @@ async function oSpell(block: Tile) {
           sound.play(i * 40, 5, 10);
           if (i % 5 === 0) await delay(1);
         }
-        state.level.map.set(x, y, Tile.Floor);
-        screen.drawTile(x, y, Tile.Floor);
+        state.level.map.setType(x, y, Type.Floor);
+        screen.drawEntity(x, y);
       }
     }
   }
 }
 
-async function cSpell(block: Tile) {
-  const s = block - Tile.CSpell1 + Tile.CWall1;
+async function cSpell(block: Type) {
+  const s = block - Type.CSpell1 + Type.CWall1;
 
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      const block = state.level.map.get(x, y);
+      const block = state.level.map.getType(x, y);
       if (block === s) {
         for (let i = 60; i > 0; i--) {
-          screen.drawTile(
+          screen.drawType(
             x,
             y,
             RNG.getItem(['▄', '▌', '▐', '▀']) as string,
@@ -1541,8 +1600,8 @@ async function cSpell(block: Tile) {
           sound.play(i * 40, 5, 10);
           if (i % 5 === 0) await delay(1);
         }
-        state.level.map.set(x, y, Tile.Wall);
-        screen.drawTile(x, y, Tile.Wall);
+        state.level.map.setType(x, y, Type.Wall);
+        screen.drawEntity(x, y);
       }
     }
   }
@@ -1556,28 +1615,29 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
   if (rx < 0 || rx > XSize || ry < 0 || ry > YSize) nogo = true;
 
   if (!nogo) {
-    const rb = state.level.map.get(rx, ry); // TODO: other cases
+    const rb = state.level.map.getType(rx, ry); // TODO: other cases
 
     async function moveRock() {
       nogo = false;
       await sound.moveRock();
-      state.level.map.set(rx, ry, Tile.Rock);
-      go(state.level.player, x, y);
+      state.level.map.setType(rx, ry, Type.Rock);
+      state.level.player.move(x, y);
       screen.renderPlayfield();
-      await screen.flashTileMessage(Tile.Rock, true);
+      screen.renderPlayfield();
+      await screen.flashTypeMessage(Type.Rock, true);
     }
 
     // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST5.MOV#L1366
     if (
       [
-        Tile.Floor,
-        Tile.Stop,
-        Tile.ShowGems,
-        Tile.BlockSpell,
-        Tile.WallVanish,
+        Type.Floor,
+        Type.Stop,
+        Type.ShowGems,
+        Type.BlockSpell,
+        Type.WallVanish,
         ...CWALLS,
         ...CSPELLS,
-        Tile.Trap5,
+        Type.Trap5,
         ...TBLOCKS,
         ...ITRAPS,
       ].includes(rb as number)
@@ -1586,48 +1646,49 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
     } else if (
       [
         ...COLLECTABLES,
-        Tile.Chest,
-        Tile.SlowTime,
-        Tile.Invisible,
-        Tile.Key,
-        Tile.Trap,
-        Tile.Power,
-        Tile.Bomb,
-        Tile.Freeze,
-        Tile.Nugget,
-        Tile.Zap,
-        Tile.Create,
-        Tile.Tablet,
-        Tile.Chance,
+        Type.Chest,
+        Type.SlowTime,
+        Type.Invisible,
+        Type.Key,
+        Type.Trap,
+        Type.Power,
+        Type.Bomb,
+        Type.Freeze,
+        Type.Nugget,
+        Type.Zap,
+        Type.Create,
+        Type.Tablet,
+        Type.Chance,
         ...KROZ,
         ...OSPELLS,
         ...ROPE_DROP,
-        Tile.ShootRight,
-        Tile.ShootLeft,
+        Type.ShootRight,
+        Type.ShootLeft,
       ].includes(rb as number)
     ) {
       await moveRock();
       await sound.grab();
     } else if (MOBS.includes(rb as number)) {
       await moveRock();
-      addScore(rb as Tile);
+      addScore(rb as Type);
       await sound.play(600, 20);
-    } else if (rb === Tile.EWall) {
+    } else if (rb === Type.EWall) {
       await moveRock();
-      state.level.map.set(rx, ry, Tile.Floor);
+      state.level.map.setType(rx, ry, Type.Floor);
       sound.play(90, 10, 10);
       await screen.flashMessage('The Boulder is vaporized!'); // TODO: show once
-    } else if ([Tile.Stairs, Tile.Pit].includes(rb as number)) {
+    } else if ([Type.Stairs, Type.Pit].includes(rb as number)) {
       nogo = false;
       await sound.moveRock();
-      go(state.level.player, x, y);
+      state.level.player.move(x, y);
       screen.renderPlayfield();
-      screen.drawTile(rx, ry, Tile.Rock);
+      screen.renderPlayfield();
+      screen.drawType(rx, ry, Type.Rock);
       for (let i = 130; i > 5; i--) {
         await sound.play(i * 8, 16, 100);
       }
       screen.renderPlayfield();
-      await screen.flashTileMessage(Tile.Rock, true);
+      await screen.flashTypeMessage(Type.Rock, true);
     }
   }
 
@@ -1636,13 +1697,13 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
   }
 }
 
-function aTrap(block: Tile) {
+function aTrap(block: Type) {
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      const a = state.level.map.get(x, y);
+      const a = state.level.map.getType(x, y);
       if (block === a) {
-        state.level.map.set(x, y, Tile.Floor);
-        screen.drawTile(x, y, Tile.Floor);
+        state.level.map.setType(x, y, Type.Floor);
+        screen.drawEntity(x, y);
       }
     }
   }
@@ -1670,36 +1731,36 @@ async function messageInTheTree() {
 }
 
 const B = [
-  Tile.Floor,
-  Tile.Stop,
+  Type.Floor,
+  Type.Stop,
   ...ITRAPS,
-  Tile.ShowGems,
-  Tile.WallVanish,
+  Type.ShowGems,
+  Type.WallVanish,
   ...TBLOCKS,
 ];
-async function triggers(x: number, y: number, block: Tile) {
-  let t = Tile.Floor;
+async function triggers(x: number, y: number, block: Type) {
+  let t = Type.Floor;
   switch (block) {
-    case Tile.TBlock:
-      t = Tile.Block;
+    case Type.TBlock:
+      t = Type.Block;
       break;
-    case Tile.TRock:
-      t = Tile.Rock;
+    case Type.TRock:
+      t = Type.Rock;
       break;
-    case Tile.TGem:
-      t = Tile.Gem;
+    case Type.TGem:
+      t = Type.Gem;
       break;
-    case Tile.TBlind:
-      t = Tile.Invisible;
+    case Type.TBlind:
+      t = Type.Invisible;
       break;
-    case Tile.TWhip:
-      t = Tile.Whip;
+    case Type.TWhip:
+      t = Type.Whip;
       break;
-    case Tile.TGold:
-      t = Tile.Nugget;
+    case Type.TGold:
+      t = Type.Nugget;
       break;
-    case Tile.TTree:
-      t = Tile.Tree;
+    case Type.TTree:
+      t = Type.Tree;
       break;
   }
 
@@ -1715,10 +1776,10 @@ async function triggers(x: number, y: number, block: Tile) {
       for (let dy = -1; dy <= 1; dy++) {
         if (dx === 0 && dy === 0) continue;
 
-        const b = state.level.map.get(x + dx, y + dy);
-        if (B.includes(b as Tile)) {
-          screen.drawTile(x + dx, y + dy, t, fg, bg);
-          if (place) state.level.map.set(x + dx, y + dy, t);
+        const b = state.level.map.getType(x + dx, y + dy);
+        if (B.includes(b as Type)) {
+          screen.drawType(x + dx, y + dy, t, fg, bg);
+          if (place) state.level.map.setType(x + dx, y + dy, t);
         }
         await delay(5);
       }

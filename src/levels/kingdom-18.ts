@@ -6,7 +6,7 @@ import * as screen from '../modules/screen';
 import * as state from '../modules/state';
 import * as sound from '../modules/sound';
 import { XSize, YSize } from '../data/constants';
-import { Tile } from '../data/tiles';
+import { Type } from '../data/tiles';
 
 const map = `
 ###########klose#enkounters#of#the#krazy#kubikal#kindÃ##########
@@ -42,10 +42,10 @@ async function tabletMessage() {
   // Clears River with Block
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      if (state.level.map.get(x, y) === Tile.River) {
+      if (state.level.map.getType(x, y) === Type.River) {
         await sound.play(x * y, 50, 10);
-        state.level.map.set(x, y, Tile.Block);
-        screen.drawTile(x, y, Tile.Block);
+        state.level.map.setType(x, y, Type.Block);
+        screen.drawEntity(x, y);
       }
     }
   }

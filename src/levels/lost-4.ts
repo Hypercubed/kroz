@@ -1,8 +1,9 @@
 // Lost Adventures of Kroz, Level 4 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-// import { FLOOR_CHAR } from '../constants';
-// import { TileChar, Tile } from '../tiles';
+import * as state from '../modules/state';
+
+import { Type } from '../data/tiles';
 
 export const id = 'Lost4';
 
@@ -33,8 +34,7 @@ const map = `
 `;
 
 async function onLevelStart() {
-  // Bug: Revealed gems are also hidden
-  // TileChar[Tile.Gem] = FLOOR_CHAR; // HideGems
+  state.level.map.hideType(Type.Gem);
 }
 
 export default {

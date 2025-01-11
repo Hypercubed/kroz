@@ -31,5 +31,3 @@ export default {
   map,
   tabletMessage: `Once again you uncover the hidden tunnel leading to Kroz!`,
 };
-
-// TODO: ShootRight

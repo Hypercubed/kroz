@@ -15,7 +15,8 @@ import { RNG } from 'rot-js';
 import { Color } from '../data/colors';
 import { delay } from '../utils/utils';
 import dedent from 'ts-dedent';
-import { Tile, TileChar, TileColor, TileMessage } from '../data/tiles';
+import { Type, TypeChar, TypeColor, TypeMessage } from '../data/tiles';
+import { Entity } from '../classes/entity';
 
 export function renderScreen() {
   const x = 70;
@@ -90,8 +91,8 @@ export function renderStats() {
 }
 
 export function renderBorder() {
-  const char = TileChar[Tile.Border];
-  const [fg, bg] = TileColor[Tile.Border];
+  const char = TypeChar[Type.Border];
+  const [fg, bg] = TypeColor[Type.Border];
 
   for (let x = XBot - 1; x <= XTop + 1; x++) {
     display.draw(x, 0, char, fg!, bg!);
@@ -288,48 +289,51 @@ export function renderPlayfield() {
   for (let x = 0; x < state.level.map.width; x++) {
     for (let y = 0; y < state.level.map.height; y++) {
       // Skip entities, will be rendered later
-      const b = state.level.map.get(x, y);
-      if (b === Tile.Player) continue;
-      if (b === Tile.Slow || b === Tile.Medium || b === Tile.Fast) continue;
+      const e = state.level.map.get(x, y) || new Entity(Type.Floor);
+      if (e.type === Type.Player) continue;
+      if (
+        e.type === Type.Slow ||
+        e.type === Type.Medium ||
+        e.type === Type.Fast
+      )
+        continue;
 
-      drawTile(x, y, state.level.map.get(x, y));
+      drawEntity(x, y, e);
     }
   }
-
-  const floorColor = TileColor[Tile.Floor][1]!;
 
   for (let i = 0; i < state.level.entities.length; i++) {
     const e = state.level.entities[i];
     if (e.x === -1 || e.y === -1) continue; // dead
-    drawTile(e.x, e.y, e.getChar(), TileColor[e.type][0]!, floorColor);
+    drawEntity(e.x, e.y, e);
   }
 
-  drawTile(
-    state.level.player.x,
-    state.level.player.y,
-    state.level.player.getChar(),
-    TileColor[state.level.player.type][0]!,
-    floorColor,
-  );
+  drawEntity(state.level.player.x, state.level.player.y, state.level.player);
 }
 
-export function drawTile(
+export function drawEntity(x: number, y: number, entity?: Entity | null) {
+  entity ??= state.level.map.get(x, y);
+  if (!entity) return;
+  display.draw(x + XBot, y + YBot, entity.getChar(), entity.fg!, entity.bg!);
+}
+
+export function drawType(
   x: number,
   y: number,
-  block?: Tile | string,
+  block?: Type | string,
   fg?: Color | string,
   bg?: Color | string,
 ) {
-  block ??= state.level.map.get(x, y);
+  block ??= state.level.map.getType(x, y);
 
   let ch: string;
 
-  if (isTile(block)) {
-    ch = TileChar[block] ?? block ?? TileChar[Tile.Floor];
+  if (isType(block)) {
+    ch = TypeChar[block] ?? block ?? TypeChar[Type.Floor];
     fg ??=
-      TileColor[block as unknown as Tile]?.[0] ?? TileColor[Tile.Floor][0]!;
+      TypeColor[block as unknown as Type]?.[0] ?? TypeColor[Type.Floor][0]!;
     bg ??=
-      TileColor[block as unknown as Tile]?.[1] ?? TileColor[Tile.Floor][1]!;
+      TypeColor[block as unknown as Type]?.[1] ?? TypeColor[Type.Floor][1]!;
   } else if (
     (block >= 'a' && block <= 'z') ||
     ['!', '·', '∙', '∩'].includes(block)
@@ -342,7 +346,7 @@ export function drawTile(
   }
 
   switch (block) {
-    case Tile.Stairs:
+    case Type.Stairs:
       fg = typeof fg === 'number' && !state.game.paused ? fg | 16 : fg; // add blink
       break;
   }
@@ -351,25 +355,25 @@ export function drawTile(
 }
 
 export function drawOver(x: number, y: number, ch: string, fg: string | Color) {
-  const block = state.level.map.get(x, y);
+  const block = state.level.map.getType(x, y);
 
   let bg: number;
   if ((block >= 'a' && block <= 'z') || block === '!') {
     bg = Color.Brown;
   } else {
-    bg = TileColor[block as unknown as Tile]?.[1] ?? TileColor[Tile.Floor][1]!;
+    bg = TypeColor[block as unknown as Type]?.[1] ?? TypeColor[Type.Floor][1]!;
   }
 
   display.drawOver(x + XBot, y + YBot, ch, fg, bg);
 }
 
-export async function flashTileMessage(msg: Tile, once: boolean = false) {
+export async function flashTypeMessage(msg: Type, once: boolean = false) {
   if (once) {
     if (state.game.foundSet === true || state.game.foundSet.has(msg)) return '';
     state.game.foundSet.add(msg);
   }
 
-  const str = TileMessage[msg];
+  const str = TypeMessage[msg];
   if (!str) return '';
 
   return await flashMessage(str);
@@ -404,6 +408,6 @@ export function fastRender() {
   renderStats();
 }
 
-function isTile(x: unknown): x is Tile {
+function isType(x: unknown): x is Type {
   return typeof x === 'number';
 }

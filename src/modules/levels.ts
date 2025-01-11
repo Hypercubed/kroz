@@ -47,11 +47,18 @@ import kingdom12 from '../levels/kingdom-12.ts';
 import caverns2 from '../levels/caverns-2.ts';
 import caverns4 from '../levels/caverns-4.ts';
 
-import { MapLookup, Tile, TileColor } from '../data/tiles.ts';
+import {
+  ChanceChance,
+  MapLookup,
+  Type,
+  TypeChar,
+  TypeColor,
+} from '../data/tiles.ts';
 import { FLOOR_CHAR } from '../data/constants.ts';
-import { Entity } from '../classes/entities.ts';
+import { Actor } from '../classes/actors.ts';
 import { Timer } from './state.ts';
 import { mod } from 'rot-js/lib/util';
+import { Entity } from '../classes/entity.ts';
 
 export interface Level {
   id: string;
@@ -101,7 +108,7 @@ export interface Level {
 //   lost61,
 //   lost64,
 //   lost70, // TBD
-//   // lost74,  // Needs EvapoRate
+//   // lost74,  // Needs MBlocks
 //   lost75
 // ];
 
@@ -133,6 +140,7 @@ export const LEVELS: Level[] = [
   lost61,
   lost64,
   lost70,
+  // lost74,
   lost75,
 ];
 
@@ -155,55 +163,67 @@ function readLevelMap(level: string) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const block = (MapLookup as any)[char];
 
-      state.level.map.set(x, y, block ?? char);
+      state.level.map.setType(x, y, block ?? char);
 
       // Special cases
       // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST4.TIT#L328
       switch (char) {
         case 'Ã':
-          state.level.map.set(x, y, '!');
+          state.level.map.setType(x, y, '!');
           break;
         case '´':
-          state.level.map.set(x, y, '.');
+          state.level.map.setType(x, y, '.');
           break;
         case 'µ':
-          state.level.map.set(x, y, '?');
+          state.level.map.setType(x, y, '?');
           break;
         case '¶':
-          state.level.map.set(x, y, "'");
+          state.level.map.setType(x, y, "'");
           break;
         case '·':
-          state.level.map.set(x, y, ',');
+          state.level.map.setType(x, y, ',');
           break;
         case '¸':
-          state.level.map.set(x, y, ':');
+          state.level.map.setType(x, y, ':');
           break;
         case 'ú':
-          state.level.map.set(x, y, '·');
+          state.level.map.setType(x, y, '·');
           break;
         case 'ù':
-          state.level.map.set(x, y, '∙');
+          state.level.map.setType(x, y, '∙');
           break;
         case 'ï':
-          state.level.map.set(x, y, '∩');
+          state.level.map.setType(x, y, '∩');
           break;
       }
 
+      // Special cases
+      if (
+        ChanceChance[block as keyof typeof ChanceChance] &&
+        Math.random() < ChanceChance[block as keyof typeof ChanceChance]
+      ) {
+        state.level.map.set(
+          x,
+          y,
+          new Entity(block, TypeChar[Type.Chance], ...TypeColor[Type.Chance]),
+        );
+      }
+
       switch (block) {
-        case Tile.Player:
+        case Type.Player:
           state.level.player.x = x;
           state.level.player.y = y;
           break;
-        case Tile.Slow:
-        case Tile.Medium:
-        case Tile.Fast:
-          state.level.entities.push(new Entity(block, x, y));
+        case Type.Slow:
+        case Type.Medium:
+        case Type.Fast:
+          state.level.entities.push(new Actor(block, x, y));
           break;
-        case Tile.Generator:
+        case Type.Generator:
           state.level.genNum++;
           break;
-        // case Tile.MBlock
-        case Tile.Statue:
+        // case Type.MBlock
+        case Type.Statue:
           state.level.T[Timer.StatueGemDrain] = 32000;
           break;
       }
@@ -211,16 +231,16 @@ function readLevelMap(level: string) {
   }
 
   // Randomize
-  TileColor[Tile.Gem] = [RNG.getUniformInt(1, 15), null];
-  TileColor[Tile.Border] = [RNG.getUniformInt(8, 15), RNG.getUniformInt(1, 8)];
+  TypeColor[Type.Gem] = [RNG.getUniformInt(1, 15), null];
+  TypeColor[Type.Border] = [RNG.getUniformInt(8, 15), RNG.getUniformInt(1, 8)];
 }
 
 export async function loadLevel() {
   state.resetLevel();
   state.level.level = LEVELS[state.stats.levelIndex];
   tiles.reset();
-  state.level.level?.onLevelStart?.();
   readLevelMap(state.level.level.map);
+  state.level.level?.onLevelStart?.();
   state.storeLevelStartState();
   screen.fullRender();
   await screen.flashMessage('Press any key to begin this level.');

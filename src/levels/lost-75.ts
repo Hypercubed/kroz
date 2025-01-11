@@ -6,8 +6,8 @@ import * as sound from '../modules/sound';
 import * as state from '../modules/state';
 import * as world from '../modules/world';
 
-import { FLOOR_CHAR, XSize, YSize } from '../data/constants';
-import { TileChar, Tile } from '../data/tiles';
+import { XSize, YSize } from '../data/constants';
+import { Type } from '../data/tiles';
 
 const map = `
 ñö22222229       &#the#sacred#chamber#of#kroz#&2      82222222õò
@@ -36,7 +36,9 @@ K777777777777C#"#E  2     555D]!]D555     2    40#CYXXYYOOYYXX]K
 `;
 
 async function onLevelStart() {
-  TileChar[Tile.Create] = FLOOR_CHAR;
+  state.level.magicEwalls = true;
+  state.level.evapoRate = 22;
+  state.level.map.hideType(Type.Create);
 }
 
 async function tabletMessage() {
@@ -47,10 +49,10 @@ async function tabletMessage() {
   );
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      if (state.level.map.get(x, y) === Tile.Pit) {
+      if (state.level.map.getType(x, y) === Type.Pit) {
         await sound.play(x * y, 50, 10);
-        state.level.map.set(x, y, Tile.Rock);
-        screen.drawTile(x, y, Tile.Rock);
+        state.level.map.setType(x, y, Type.Rock);
+        screen.drawEntity(x, y);
       }
     }
   }
@@ -62,7 +64,6 @@ export default {
   map,
   onLevelStart,
   tabletMessage,
-  // MagicEWalls:=true;EvapoRate:=22;
 };
 
 // ú -> ·

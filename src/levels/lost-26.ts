@@ -5,8 +5,8 @@ import * as screen from '../modules/screen';
 import * as sound from '../modules/sound';
 import * as state from '../modules/state';
 
-import { FLOOR_CHAR, XSize, YSize } from '../data/constants';
-import { TileChar, Tile } from '../data/tiles';
+import { XSize, YSize } from '../data/constants';
+import { Type } from '../data/tiles';
 
 const map = `
 ::::::::::::::::::::::::::::::::::::::::::::::::####amulet####::
@@ -35,8 +35,8 @@ const map = `
 `;
 
 async function onLevelStart() {
-  TileChar[Tile.Create] = FLOOR_CHAR;
-  TileChar[Tile.Gem] = FLOOR_CHAR;
+  state.level.map.hideType(Type.Create);
+  state.level.map.hideType(Type.Gem);
 }
 
 async function tabletMessage() {
@@ -51,10 +51,10 @@ async function tabletMessage() {
   // Show IWalls
   for (let x = 0; x <= XSize; x++) {
     for (let y = 0; y <= YSize; y++) {
-      if (state.level.map.get(x, y) === Tile.IWall) {
+      if (state.level.map.getType(x, y) === Type.IWall) {
         await sound.play(x * y, 1, 10);
-        state.level.map.set(x, y, Tile.OWall3);
-        screen.drawTile(x, y, Tile.OWall3);
+        state.level.map.setType(x, y, Type.OWall3);
+        screen.drawEntity(x, y);
       }
     }
   }

@@ -1,8 +1,9 @@
 // Lost Adventures of Kroz, Level 18 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import { FLOOR_CHAR } from '../data/constants';
-import { TileChar, Tile } from '../data/tiles';
+import * as state from '../modules/state';
+
+import { Type } from '../data/tiles';
 
 export const id = 'Lost18';
 
@@ -32,8 +33,11 @@ K----------------------------YYY!YYY---------------------------K
 K----------------------------3333333---------------------------K`;
 
 async function onLevelStart() {
-  TileChar[Tile.Create] = FLOOR_CHAR;
-  TileChar[Tile.MBlock] = FLOOR_CHAR;
+  // HideCreate
+  state.level.map.hideType(Type.Create);
+
+  // HideMBlock
+  state.level.map.hideType(Type.MBlock);
 }
 
 export default {

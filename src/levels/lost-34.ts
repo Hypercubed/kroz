@@ -1,6 +1,10 @@
 // Lost Adventures of Kroz, Level 33 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { Entity } from '../classes/entity';
+import { XSize, YSize } from '../data/constants';
+import * as state from '../modules/state';
+
 const map = `
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~W-----------E----~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,8 +31,20 @@ const map = `
 ~~~~LLLL~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 `;
 
+async function onLevelStart() {
+  // HideLevel
+  for (let x = 0; x <= XSize; x++) {
+    for (let y = 0; y <= YSize; y++) {
+      const e = state.level.map.get(x, y)!;
+      if (e) {
+        state.level.map.set(x, y, new Entity(e.type, e.ch, null, null));
+      }
+    }
+  }
+}
+
 export default {
   id: 'Lost34',
   map,
-  // HideLevel:=true;
+  onLevelStart,
 };

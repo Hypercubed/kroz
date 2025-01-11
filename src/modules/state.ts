@@ -2,9 +2,9 @@ import * as screen from '../modules/screen.ts';
 import * as levels from '../modules/levels.ts';
 
 import { CLOCK_SCALE, DEBUG } from '../data/constants.ts';
-import { Entity } from '../classes/entities.ts';
+import { Actor } from '../classes/actors.ts';
 import { Level } from './levels';
-import { Tile } from '../data/tiles.ts';
+import { Type } from '../data/tiles.ts';
 import { PlayField } from '../classes/map.ts';
 
 export const enum Timer {
@@ -38,11 +38,16 @@ function getDefaultLevelState() {
   return {
     bonus: 0, // Bonus count for K R O Z
     genNum: 0, // Number for creature generators
+    magicEwalls: false, // Magic Ewalls
+    evapoRate: 0, // Evaporation rate (TODO)
+    treeRate: 0, // Tree rate (TODO)
+    lavaRate: 0, // Lava rate (TODO)
+    lavaFlow: false, // Lava flow (TODO)
     level: null as null | Level,
-    player: new Entity(Tile.Player, 0, 0),
-    entities: [] as Entity[],
+    player: new Actor(Type.Player, 0, 0),
+    entities: [] as Actor[],
     map: new PlayField(),
-    replacement: Tile.Floor,
+    replacement: Type.Floor,
     T: [
       0,
       0,
@@ -64,7 +69,7 @@ function getDefaultGameState() {
     clockScale: CLOCK_SCALE,
     paused: false,
     done: false,
-    foundSet: new Set<Tile>() as Set<Tile> | true,
+    foundSet: new Set<Type>() as Set<Type> | true,
   };
 }
 
@@ -94,15 +99,6 @@ export function storeLevelStartState() {
   Object.assign(levelStartState, stats);
 }
 
-export function saveLevelStartState() {
-  // Don't need deep copy now, but might later
-  Object.assign(saveState, levelStartState);
-}
-
-export function restoreLevelStartState() {
-  Object.assign(stats, saveState);
-}
-
 export async function save() {
   let answer = '';
 
@@ -111,7 +107,9 @@ export async function save() {
   }
 
   if (answer.toLowerCase() === 'y') {
-    saveLevelStartState();
+    // Don't need deep copy now, but might later
+    Object.assign(saveState, levelStartState);
+    localStorage.setItem('Kroz--saveState--v1', JSON.stringify(saveState));
   }
 }
 
@@ -125,8 +123,18 @@ export async function restore() {
   }
 
   if (answer.toLowerCase() === 'y') {
-    // Don't need deep copy now, but might later
-    restoreLevelStartState();
+    let save = saveState;
+
+    const value = localStorage.getItem('Kroz--saveState--v1');
+    if (value) {
+      try {
+        save = JSON.parse(value);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    Object.assign(stats, save);
     await levels.loadLevel();
   }
 }

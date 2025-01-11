@@ -31,5 +31,3 @@ export default {
   id: 'Lost70',
   map,
 };
-
-// TBD: ShootLeft

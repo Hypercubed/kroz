@@ -1,8 +1,6 @@
 // Lost Adventures of Kroz, Level 11 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-export const id = 'Lost11';
-
 const map = `
 66666666666666666666----------------------------66WW---I-------K
 -----------D D D-----66666666666666666666666666(6666666666666---

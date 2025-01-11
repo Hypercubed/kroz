@@ -1,8 +1,9 @@
 // Lost Adventures of Kroz, Level 33 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import { FLOOR_CHAR } from '../data/constants';
-import { TileChar, Tile, TileColor } from '../data/tiles';
+import * as state from '../modules/state';
+
+import { Type } from '../data/tiles';
 
 export const id = 'Lost33';
 
@@ -33,12 +34,13 @@ L---N-----##X###  CC  555555-----------------#####X##1111#######
 `;
 
 async function onLevelStart() {
-  TileChar[Tile.Stairs] = FLOOR_CHAR; // HideGems
-  TileColor[Tile.Stairs] = TileColor[Tile.Floor];
+  // HideStairs
+  state.level.map.hideType(Type.Stairs);
 
-  TileChar[Tile.OWall1] = FLOOR_CHAR;
-  TileChar[Tile.OWall2] = FLOOR_CHAR;
-  TileChar[Tile.OWall3] = FLOOR_CHAR;
+  // HideOpenWall
+  state.level.map.hideType(Type.OWall1);
+  state.level.map.hideType(Type.OWall2);
+  state.level.map.hideType(Type.OWall3);
 }
 
 export default {

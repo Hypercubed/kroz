@@ -5,7 +5,8 @@ import * as world from '../modules/world';
 import * as screen from '../modules/screen';
 import * as state from '../modules/state';
 
-import { TileChar, Tile } from '../data/tiles';
+import { TypeChar, Type } from '../data/tiles';
+import { Entity } from '../classes/entity';
 
 const map = `
      U--2--U--2--U--2--U--2--U--55-====-===--=====-===--==--=--=
@@ -34,14 +35,19 @@ FF  22##âââ##ãã333333##3333333--##-===-==-==------=====-==-=--==
 `;
 
 function onLevelStart() {
-  TileChar[Tile.Fast] = '☺';
+  TypeChar[Type.Fast] = '☺';
+  state.level.map.replaceEntities(Type.Fast, new Entity(Type.Fast));
 }
 
 async function tabletMessage() {
   await screen.flashMessage(
     'Walls that block your progress shall be removed...',
   );
-  state.level.map.set(state.level.player.x, state.level.player.y, Tile.OSpell1);
+  state.level.map.setType(
+    state.level.player.x,
+    state.level.player.y,
+    Type.OSpell1,
+  );
   world.tryPlayerMove(0, 0);
 }
 

@@ -1,15 +1,15 @@
 import { Scheduler, SpeedActor } from 'rot-js';
 import Speed from 'rot-js/lib/scheduler/speed';
-import { Entity } from '../classes/entities';
-import { Tile } from '../data/tiles';
+import { Actor } from '../classes/actors';
+import { Type } from '../data/tiles';
 
 let scheduler: Speed<SpeedActor>;
 
 // Dummy entities used for the scheduler
-const playerActor = new Entity(Tile.Player, 0, 0);
-const slowActor = new Entity(Tile.Slow, 0, 0);
-const mediumActor = new Entity(Tile.Medium, 0, 0);
-const fastActor = new Entity(Tile.Fast, 0, 0);
+const playerActor = new Actor(Type.Player, 0, 0);
+const slowActor = new Actor(Type.Slow, 0, 0);
+const mediumActor = new Actor(Type.Medium, 0, 0);
+const fastActor = new Actor(Type.Fast, 0, 0);
 // TODO: MBlocks
 
 export function createScheduler() {

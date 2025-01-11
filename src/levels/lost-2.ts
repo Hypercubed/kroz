@@ -1,8 +1,9 @@
 // Lost Adventures of Kroz, Level 2 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import { FLOOR_CHAR } from '../data/constants';
-import { TileChar, Tile, TileColor } from '../data/tiles';
+import * as state from '../modules/state';
+
+import { Type } from '../data/tiles';
 
 const map = `
 XXXXXXXXXXXXXXXXXXX#XXXXXXXXXXXXXXXXXXXXXXXX#XXXXXXXXX### P ###X
@@ -31,8 +32,11 @@ LLXXXXXX#XXXXXXXXXXXXX#XXXXXXXXXXXXXX#4XXXXXX##XXXXX#####of#kroz
 `;
 
 async function onLevelStart() {
-  TileChar[Tile.Stairs] = FLOOR_CHAR; // HideGems
-  TileColor[Tile.Stairs] = TileColor[Tile.Floor]; // HideStairs
+  // HideGems
+  state.level.map.hideType(Type.Gem);
+
+  // HideStairs
+  state.level.map.hideType(Type.Stairs);
 }
 
 export default {

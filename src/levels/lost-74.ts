@@ -1,8 +1,9 @@
 // Lost Adventures of Kroz, Level 75 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import { FLOOR_CHAR } from '../data/constants';
-import { TileChar, Tile } from '../data/tiles';
+import * as state from '../modules/state';
+
+import { Type } from '../data/tiles';
 
 const map = `
     0             #heat#waveÃ#    @òRRRRR22222222222222222244–\`L
@@ -32,12 +33,14 @@ MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM##-:-’-:ó62á    :::
 `;
 
 async function onLevelStart() {
-  TileChar[Tile.MBlock] = FLOOR_CHAR;
+  state.level.map.hideType(Type.MBlock);
+  state.level.evapoRate = 22;
 }
 
 export default {
   id: 'Lost74',
   map,
   onLevelStart,
-  // tabletMessage: TBD Needs EvapoRate
 };
+
+// TODO: Needs MBlocks
