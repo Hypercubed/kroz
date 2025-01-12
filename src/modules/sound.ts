@@ -99,3 +99,125 @@ export async function bonusSound() {
     }
   }
 }
+
+export async function kill(type: number) {
+  await play(200 + 200 * type, 25, 100);
+}
+
+export async function cheat() {
+  await play(2000, 40, 10);
+}
+
+export async function locked() {
+  await play(Math.random() * 129 + 30, 150, 100);
+}
+
+export async function whip() {
+  await play(70, 50 * 8, 100);
+}
+
+export async function whipHit() {
+  for (let i = 330; i > 20; i--) {
+    // TODO: This sound sucks
+    // sound.play(RNG.getUniformInt(0, i), 10);
+    play(90, 10, 0.5);
+  }
+}
+
+export async function whipBreak() {
+  await play(400, 50);
+}
+
+export async function whipBreakRock() {
+  await play(130, 50);
+}
+
+export async function whipMiss() {
+  play(130, 25);
+  await play(90, 50);
+}
+
+export async function teleport() {
+  await play(20, 10, 100);
+}
+
+export async function spearHit() {
+  await play(300, 10, 10);
+}
+
+export async function amulet() {
+  for (let x = 45; x >= 11; x--) {
+    for (let y = 13; y >= 1; y--) {
+      await play(x * x * y, y + 1, 100);
+    }
+  }
+}
+
+export async function bombFuse() {
+  for (let i = 70; i <= 600; i++) {
+    play(i * 2, 3, 10);
+    if (i % 10 === 0) await delay(1);
+  }
+}
+
+export async function bomb() {
+  await play(30, 10, 10);
+  await delay(20);
+}
+
+export async function quakeTrigger() {
+  for (let i = 0; i < 2500; i++) {
+    play(RNG.getUniformInt(0, i), 5, 100);
+    if (i % 25 === 0) await delay();
+  }
+}
+
+export async function quakeDone() {
+  for (let i = 2500; i > 50; i--) {
+    play(RNG.getUniformInt(0, i), 5, 100);
+    if (i % 25 === 0) await delay();
+  }
+}
+
+export async function quakeRockFall() {
+  for (let i = 0; i < 50; i++) {
+    play(RNG.getUniformInt(0, 200), 50, 100);
+  }
+  await delay(50);
+}
+
+export async function showGem() {
+  await play(RNG.getUniformInt(110, 1310), 7, 100);
+}
+
+export async function blockSpell() {
+  await play(200, 60, 100);
+}
+
+export async function rockCrushMob() {
+  await play(600, 20);
+}
+
+export async function rockVaporized() {
+  await play(90, 10, 10);
+}
+
+export async function rockDropped() {
+  for (let i = 130; i > 5; i--) {
+    await play(i * 8, 16, 100);
+  }
+}
+
+export async function secretMessage() {
+  for (let i = 20; i < 8000; i++) {
+    play(i, 1, 100);
+  }
+  await delay(100);
+}
+
+export async function generateCreature() {
+  for (let i = 5; i < 70; i++) {
+    play(i * 8, 1);
+  }
+  await delay(50);
+}

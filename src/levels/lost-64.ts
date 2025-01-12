@@ -6,9 +6,8 @@ import * as sound from '../modules/sound';
 import * as world from '../modules/world';
 import * as player from '../modules/player';
 
-import { TypeChar, Type } from '../data/tiles';
+import { Type } from '../data/tiles';
 import { XMax, YMax } from '../data/constants';
-import { Entity } from '../classes/entity';
 
 const map = `
 3333333333333333333333333333333333333333333333333333##C33à)))Fàó
@@ -37,8 +36,7 @@ X!~     ççççç          äää~H##(YY++YY((YY++YY((+YYYY+(YYYYYYY((U
 `;
 
 function onLevelStart() {
-  TypeChar[Type.Fast] = '☺';
-  world.level.map.replaceEntities(Type.Fast, new Entity(Type.Fast));
+  world.level.map.updateEntities(Type.Fast, { ch: '☺' });
 }
 
 async function tabletMessage() {

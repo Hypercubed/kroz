@@ -5,8 +5,7 @@ import * as player from '../modules/player';
 import * as screen from '../modules/screen';
 import * as world from '../modules/world';
 
-import { TypeChar, Type } from '../data/tiles';
-import { Entity } from '../classes/entity';
+import { Type } from '../data/tiles';
 
 const map = `
      U--2--U--2--U--2--U--2--U--55-====-===--=====-===--==--=--=
@@ -35,8 +34,7 @@ FF  22##âââ##ãã333333##3333333--##-===-==-==------=====-==-=--==
 `;
 
 function onLevelStart() {
-  TypeChar[Type.Fast] = '☺';
-  world.level.map.replaceEntities(Type.Fast, new Entity(Type.Fast));
+  world.level.map.updateEntities(Type.Fast, { ch: '☺' });
 }
 
 async function tabletMessage() {

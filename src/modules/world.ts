@@ -1,11 +1,13 @@
 import * as screen from './screen.ts';
 import * as levels from './levels.ts';
+import * as sound from './sound.ts';
 
-import { CLOCK_SCALE, DEBUG } from '../data/constants.ts';
-import { Actor } from '../classes/actors.ts';
+import { CLOCK_SCALE, DEBUG, XMax, YMax } from '../data/constants.ts';
+import { Entity } from '../classes/entity.ts';
 import { Level } from './levels.ts';
 import { Type } from '../data/tiles.ts';
 import { PlayField } from '../classes/map.ts';
+import { RNG } from 'rot-js';
 
 export const enum Timer {
   SlowTime = 4,
@@ -44,8 +46,8 @@ function getDefaultLevelState() {
     lavaRate: 0, // Lava rate (TODO)
     lavaFlow: false, // Lava flow (TODO)
     level: null as null | Level,
-    player: new Actor(Type.Player, 0, 0),
-    entities: [] as Actor[],
+    player: new Entity(Type.Player),
+    entities: [] as Entity[],
     map: new PlayField(),
     replacement: Type.Floor,
     T: [
@@ -222,4 +224,45 @@ export function addScore(block: Type) {
   }
 
   screen.renderStats();
+}
+
+export async function killAt(x: number, y: number) {
+  const block = level.map.getType(x, y);
+
+  level.map.setType(x, y, Type.Floor);
+
+  if (block === Type.Slow || block === Type.Medium || block === Type.Fast) {
+    for (let i = 0; i < level.entities.length; i++) {
+      const m = level.entities[i];
+      if (m.x === x && m.y === y) {
+        await kill(m);
+      }
+    }
+  }
+}
+
+export async function kill(e: Entity) {
+  if (typeof e.type === 'number' && e.type < 4) {
+    await sound.kill(e.type);
+  }
+  e.x = -1;
+  e.y = -1;
+}
+
+export async function generateCreatures(n: number = 1) {
+  for (let i = 0; i < n; i++) {
+    let done = false;
+    do {
+      const x = RNG.getUniformInt(0, XMax);
+      const y = RNG.getUniformInt(0, YMax);
+      if (level.map.getType(x, y) === Type.Floor) {
+        level.entities.push(new Entity(Type.Slow, { x, y }));
+        level.map.setType(x, y, Type.Slow);
+        await sound.generateCreature();
+        done = true;
+      }
+
+      screen.renderPlayfield();
+    } while (!done && RNG.getUniformInt(0, 50) !== 0);
+  }
 }

@@ -4,19 +4,48 @@ import Speed from 'rot-js/lib/scheduler/speed';
 import * as world from './world';
 import * as sound from './sound';
 
-import { Actor, ActorType } from '../classes/actors';
 import { Type, TypeChar, TypeColor } from '../data/tiles';
-import { XMax, YMax } from '../data/constants';
+import { TIME_SCALE, XMax, YMax } from '../data/constants';
 import { Timer } from './world';
+import type { Entity } from '../classes/entity';
+
+function getBaseSpeed(t: Type) {
+  switch (t) {
+    case Type.Player:
+      return TIME_SCALE;
+    case Type.Slow:
+      return TIME_SCALE / 4;
+    case Type.Medium:
+      return TIME_SCALE / 3;
+    case Type.Fast:
+      return TIME_SCALE / 2;
+    case Type.MBlock:
+      return TIME_SCALE / 2;
+  }
+}
+
+export class SchedulerActor implements SpeedActor {
+  speed: number;
+
+  constructor(public readonly type: Type) {
+    this.speed = getBaseSpeed(this.type)!;
+  }
+
+  getSpeed() {
+    if (this.type === Type.Player)
+      return world.level.T[Timer.SlowTime] > 0 ? 10 : 1;
+    return world.level.T[Timer.SpeedTime] > 0 ? TIME_SCALE : this.speed;
+  }
+}
 
 let scheduler: Speed<SpeedActor>;
 
 // Dummy entities used for the scheduler
-const playerActor = new Actor(Type.Player, 0, 0);
-const slowActor = new Actor(Type.Slow, 0, 0);
-const mediumActor = new Actor(Type.Medium, 0, 0);
-const fastActor = new Actor(Type.Fast, 0, 0);
-const mBlocks = new Actor(Type.MBlock, 0, 0);
+const playerActor = new SchedulerActor(Type.Player);
+const slowActor = new SchedulerActor(Type.Slow);
+const mediumActor = new SchedulerActor(Type.Medium);
+const fastActor = new SchedulerActor(Type.Fast);
+const mBlocks = new SchedulerActor(Type.MBlock);
 
 export function init() {
   scheduler = new Scheduler.Speed();
@@ -28,18 +57,18 @@ export function init() {
   return scheduler;
 }
 
-export async function tick() {
+export async function update() {
   const current = scheduler.next();
   await entitiesAction(current.type);
 }
 
-async function mobAction(e: Actor) {
+async function mobAction(e: Entity) {
   if (
     e.x === -1 ||
     e.y === -1 ||
     world.level.map.getType(e.x, e.y) !== (e.type as unknown as Type) // Killed
   ) {
-    e.kill();
+    world.kill(e);
     return;
   } // dead
 
@@ -75,7 +104,7 @@ async function mobAction(e: Actor) {
     case Type.GBlock:
       world.level.map.setType(e.x, e.y, Type.Floor);
       world.level.map.setType(x, y, Type.Floor);
-      e.kill();
+      world.kill(e);
       world.addScore(block);
       sound.play(800, 18);
       sound.play(400, 20);
@@ -83,7 +112,7 @@ async function mobAction(e: Actor) {
     case Type.Player: // Damage + Kills
       world.stats.gems--;
       world.level.map.setType(e.x, e.y, Type.Floor);
-      e.kill();
+      world.kill(e);
       world.addScore(block);
       break;
     case Type.Whip: // Grabs
@@ -113,13 +142,13 @@ async function mobAction(e: Actor) {
   }
 }
 
-async function mBlockAction(e: Actor) {
+async function mBlockAction(e: Entity) {
   if (
     e.x === -1 ||
     e.y === -1 ||
     world.level.map.getType(e.x, e.y) !== (e.type as unknown as Type) // Killed
   ) {
-    e.kill();
+    world.kill(e);
     return;
   } // dead
 
@@ -150,7 +179,8 @@ async function mBlockAction(e: Actor) {
   }
 }
 
-async function entitiesAction(t: ActorType) {
+async function entitiesAction(t: Type) {
+  if (t === Type.Player) return;
   if (world.level.T[Timer.FreezeTime] > 0) return;
 
   for (let i = 0; i < world.level.entities.length; i++) {
@@ -167,7 +197,7 @@ async function entitiesAction(t: ActorType) {
   }
 }
 
-function move(e: Actor, x: number, y: number) {
+function move(e: Entity, x: number, y: number) {
   if (e.type === Type.Slow) {
     e.ch = Math.random() > 0.5 ? 'A' : 'Ä';
   } else if (e.type === Type.Medium) {

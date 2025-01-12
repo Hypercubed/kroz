@@ -3,12 +3,10 @@ import * as screen from './screen';
 import * as sound from './sound';
 
 import { XMax, YMax } from '../data/constants';
-import { delay } from '../utils/utils';
 import { RNG } from 'rot-js';
-import { Actor } from '../classes/actors';
 import { Type } from '../data/tiles';
 
-export async function tick() {
+export async function update() {
   // Effect timers
   for (let i = 0; i < world.level.T.length; i++) {
     world.level.T[i] = Math.max(0, world.level.T[i] - 1);
@@ -35,7 +33,7 @@ export async function tick() {
     sNum < 995 &&
     RNG.getUniformInt(0, 17) === 0 // 1 in 17 chance of generating a creature
   ) {
-    await generateCreatures();
+    await world.generateCreatures(1);
   }
 
   // Magic EWalls
@@ -77,25 +75,4 @@ export async function tick() {
   // TODO:
   // Lava Flow
   // TreeGrow
-}
-
-async function generateCreatures() {
-  let done = false;
-  do {
-    const x = RNG.getUniformInt(0, XMax);
-    const y = RNG.getUniformInt(0, YMax);
-    if (world.level.map.getType(x, y) === Type.Floor) {
-      world.level.entities.push(new Actor(Type.Slow, x, y));
-      world.level.map.setType(x, y, Type.Slow);
-
-      for (let i = 5; i < 70; i++) {
-        sound.play(i * 8, 1);
-      }
-      await delay(50);
-
-      done = true;
-    }
-
-    screen.renderPlayfield();
-  } while (!done && RNG.getUniformInt(0, 50) !== 0);
 }

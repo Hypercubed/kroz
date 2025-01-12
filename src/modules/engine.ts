@@ -131,9 +131,9 @@ async function run() {
     if (dt > speed) {
       dt %= speed;
 
-      await player.tick();
-      await mob.tick();
-      await effects.tick();
+      await player.update();
+      await mob.update();
+      await effects.update();
       screen.renderPlayfield();
 
       controls.clearActions(); // Clear was pressed actions after player acts

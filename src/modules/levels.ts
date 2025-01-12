@@ -57,7 +57,6 @@ import {
   TypeColor,
 } from '../data/tiles.ts';
 import { FLOOR_CHAR } from '../data/constants.ts';
-import { Actor } from '../classes/actors.ts';
 import { Timer } from './world.ts';
 import { mod } from 'rot-js/lib/util';
 import { Entity } from '../classes/entity.ts';
@@ -209,7 +208,13 @@ function readLevelMap(level: string) {
         world.level.map.set(
           x,
           y,
-          new Entity(block, TypeChar[Type.Chance], ...TypeColor[Type.Chance]),
+          new Entity(block, {
+            x,
+            y,
+            ch: TypeChar[Type.Chance],
+            fg: TypeColor[Type.Chance][0],
+            bg: TypeColor[Type.Chance][1],
+          }),
         );
       }
 
@@ -223,7 +228,7 @@ function readLevelMap(level: string) {
         case Type.Medium:
         case Type.Fast:
         case Type.MBlock: {
-          const a = new Actor(block, x, y);
+          const a = new Entity(block, { x, y });
           world.level.entities.push(a);
           world.level.map.set(x, y, a);
           break;

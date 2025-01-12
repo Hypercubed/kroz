@@ -37,7 +37,11 @@ async function onLevelStart() {
     for (let y = 0; y <= YMax; y++) {
       const e = world.level.map.get(x, y)!;
       if (e) {
-        world.level.map.set(x, y, new Entity(e.type, e.ch, null, null));
+        world.level.map.set(
+          x,
+          y,
+          new Entity(e.type, { x, y, ch: e.ch, fg: null, bg: null }),
+        );
       }
     }
   }

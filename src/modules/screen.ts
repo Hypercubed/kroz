@@ -292,7 +292,7 @@ export function renderPlayfield() {
   for (let x = 0; x < world.level.map.width; x++) {
     for (let y = 0; y < world.level.map.height; y++) {
       // Skip entities, will be rendered later
-      const e = world.level.map.get(x, y) || new Entity(Type.Floor);
+      const e = world.level.map.get(x, y) || new Entity(Type.Floor, { x, y });
       if (e.type === Type.Player) continue;
       if (
         e.type === Type.Slow ||
@@ -317,7 +317,11 @@ export function renderPlayfield() {
 export function drawEntity(x: number, y: number, entity?: Entity | null) {
   entity ??= world.level.map.get(x, y);
   if (!entity) return;
-  display.draw(x + XBot, y + YBot, entity.getChar(), entity.fg!, entity.bg!);
+
+  let ch = entity.ch;
+  if (entity.type === Type.Player && world.level.T[world.Timer.Invisible] > 0)
+    ch = FLOOR_CHAR;
+  display.draw(x + XBot, y + YBot, ch, entity.fg!, entity.bg!);
 }
 
 export function drawType(

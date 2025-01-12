@@ -37,7 +37,6 @@ import { clamp, delay } from '../utils/utils.ts';
 import { LEVELS } from './levels.ts';
 import dedent from 'ts-dedent';
 import { Timer } from './world.ts';
-import { Actor } from '../classes/actors.ts';
 
 const SPELL_DURATION = {
   [Timer.SlowTime]: 70 * TIME_SCALE,
@@ -46,7 +45,7 @@ const SPELL_DURATION = {
   [Timer.FreezeTime]: 55 * TIME_SCALE,
 };
 
-export async function tick() {
+export async function update() {
   // Debug Actions
   if (controls.wasActionDeactivated(Action.NextLevel))
     return await levels.nextLevel();
@@ -59,7 +58,7 @@ export async function tick() {
       world.level.player.y,
       Type.Stairs,
     );
-    await sound.play(2000, 40, 10);
+    await sound.cheat();
     return;
   }
 
@@ -157,7 +156,7 @@ export async function tick() {
   }
 }
 
-async function tryMove(dx: number, dy: number) {
+export async function tryMove(dx: number, dy: number) {
   const x = world.level.player.x + dx;
   const y = world.level.player.y + dy;
 
@@ -180,7 +179,7 @@ async function tryMove(dx: number, dy: number) {
     case Type.Medium:
     case Type.Fast:
       world.stats.gems -= block;
-      killAt(x, y);
+      world.killAt(x, y);
       world.addScore(block);
       move(x, y);
       screen.renderPlayfield();
@@ -268,7 +267,7 @@ async function tryMove(dx: number, dy: number) {
       break;
     case Type.Door: // Opens door (if has key)
       if (world.stats.keys < 1) {
-        sound.play(Math.random() * 129 + 30, 150, 100);
+        sound.lockedSound();
         await delay(100);
         await screen.flashTypeMessage(block);
       } else {
@@ -592,26 +591,11 @@ async function tryMove(dx: number, dy: number) {
   }
 }
 
-async function killAt(x: number, y: number) {
-  const block = world.level.map.getType(x, y);
-
-  world.level.map.setType(x, y, Type.Floor);
-
-  if (block === Type.Slow || block === Type.Medium || block === Type.Fast) {
-    for (let i = 0; i < world.level.entities.length; i++) {
-      const m = world.level.entities[i];
-      if (m.x === x && m.y === y) {
-        await m.kill();
-      }
-    }
-  }
-}
-
 async function whip() {
   const PX = world.level.player.x;
   const PY = world.level.player.y;
 
-  sound.play(70, 50 * 8, 100);
+  sound.whip();
   await hit(PX - 1, PY - 1, '\\');
   await hit(PX - 1, PY, '-');
   await hit(PX - 1, PY + 1, '/');
@@ -634,7 +618,7 @@ async function whip() {
       case Type.Slow: // Kill
       case Type.Medium:
       case Type.Fast:
-        killAt(x, y);
+        world.killAt(x, y);
         screen.renderPlayfield();
         world.addScore(thing);
         break;
@@ -648,7 +632,7 @@ async function whip() {
         // Destroy?
         const w = world.stats.whipPower;
         if (6 * Math.random() < w) {
-          if (thing === Type.MBlock) killAt(x, y);
+          if (thing === Type.MBlock) world.killAt(x, y);
           world.level.map.setType(x, y, Type.Floor);
           screen.drawEntity(x, y);
           screen.drawOver(
@@ -657,14 +641,9 @@ async function whip() {
             ch,
             ColorCodes[RNG.getUniformInt(0, 15) as Color],
           );
-          for (let i = 330; i > 20; i--) {
-            // TODO: This sound sucks
-            // sound.play(RNG.getUniformInt(0, i), 10);
-            sound.play(90, 10, 0.5);
-          }
+          sound.whipHit();
         } else {
-          sound.play(130, 25);
-          sound.play(90, 50);
+          sound.whipMiss();
         }
         break;
       }
@@ -677,7 +656,7 @@ async function whip() {
       case Type.O:
       case Type.Z: // Break
         world.level.map.setType(x, y, Type.Floor);
-        sound.play(400, 50);
+        sound.whipBreak();
         // TODO: Generator special case
         break;
       case Type.Quake:
@@ -703,11 +682,10 @@ async function whip() {
         break;
       case Type.Rock:
         if (30 * Math.random() < world.stats.whipPower) {
-          sound.play(130, 50);
+          sound.whipBreakRock();
           world.level.map.setType(x, y, Type.Floor);
         } else {
-          sound.play(130, 25);
-          sound.play(90, 50);
+          sound.whipMiss();
         }
         break;
       case Type.Statue:
@@ -721,8 +699,7 @@ async function whip() {
             `You've destroyed the Statue!  Your Gems are now safe.`,
           );
         } else {
-          sound.play(130, 25);
-          sound.play(90, 50);
+          sound.whipMiss();
         }
         break;
       case Type.Generator:
@@ -782,7 +759,7 @@ async function teleport() {
         RNG.getUniformInt(0, 15),
         RNG.getUniformInt(0, 7),
       );
-      await sound.play(20, 10, 100);
+      await sound.teleport();
       screen.drawType(x, y, block);
     }
     if (Date.now() - startTime > 1500) break;
@@ -946,9 +923,9 @@ async function shoot(x: number, y: number, dx: number) {
 
     if (!SPEAR_IGNORE.includes(block as number)) {
       // These objects are ignored
-      await sound.play(300, 10, 10);
+      await sound.spearHit();
       if (block === Type.Slow || block === Type.Medium || block === Type.Fast) {
-        await killAt(x, y);
+        await world.killAt(x, y);
       }
       world.level.map.setType(x, y, Type.Floor);
     }
@@ -961,11 +938,7 @@ async function shoot(x: number, y: number, dx: number) {
 
 async function gotAmulet() {
   await sound.grab();
-  for (let x = 45; x >= 11; x--) {
-    for (let y = 13; y >= 1; y--) {
-      await sound.play(x * x * y, y + 1, 100);
-    }
-  }
+  await sound.amulet();
   world.addScore(Type.Amulet);
   await screen.flashMessage(
     'You have found the Amulet of Yendor -- 25,000 points!',
@@ -979,10 +952,7 @@ async function gotAmulet() {
 }
 
 async function bomb(x: number, y: number) {
-  for (let i = 70; i <= 600; i++) {
-    sound.play(i * 2, 3, 10);
-    if (i % 10 === 0) await delay(1);
-  }
+  sound.bombFuse();
 
   let d = 0;
   for (; d <= 4; ++d) {
@@ -1000,13 +970,12 @@ async function bomb(x: number, y: number) {
         if (BOMBABLES.includes(block as number)) {
           if (block >= 1 && block <= 4) {
             world.addScore(block);
-            killAt(x, y);
+            world.killAt(x, y);
           }
         }
       }
     }
-    await sound.play(30, 10, 10);
-    await delay(20);
+    await sound.bomb();
   }
   await delay(100);
 
@@ -1072,10 +1041,7 @@ async function tunnel(x: number, y: number, sx: number, sy: number) {
 }
 
 async function quakeTrap() {
-  for (let i = 0; i < 2500; i++) {
-    sound.play(RNG.getUniformInt(0, i), 5, 100);
-    if (i % 25 === 0) await delay();
-  }
+  await sound.quakeTrigger();
 
   await delay(50);
   for (let i = 0; i < 50; i++) {
@@ -1089,16 +1055,11 @@ async function quakeTrap() {
         break;
       }
     } while (Math.random() > 0.01);
-    for (let i = 0; i < 50; i++) {
-      sound.play(RNG.getUniformInt(0, 200), 50, 100);
-    }
-    await delay(50);
+
+    await sound.quakeRockFall();
   }
 
-  for (let i = 2500; i > 50; i--) {
-    sound.play(RNG.getUniformInt(0, i), 5, 100);
-    if (i % 25 === 0) await delay();
-  }
+  await sound.quakeDone();
 }
 
 async function zapTrap() {
@@ -1111,7 +1072,7 @@ async function zapTrap() {
     if (!e || e.x === -1 || e.y === -1) continue; // dead
     if (e.type !== Type.Slow && e.type !== Type.Medium && e.type !== Type.Fast)
       continue;
-    await killAt(e.x, e.y);
+    await world.killAt(e.x, e.y);
     screen.renderPlayfield();
     await delay(20);
     k++;
@@ -1128,9 +1089,7 @@ async function createTrap() {
     return acc;
   }, 0);
   if (SNum < 945) {
-    for (let i = 0; i < 45; i++) {
-      await generateCreatures();
-    }
+    await world.generateCreatures(45);
   }
 }
 
@@ -1142,11 +1101,11 @@ async function showGemsSpell() {
       const y = RNG.getUniformInt(0, YMax);
       const block = world.level.map.getType(x, y);
       if (block === Type.Floor) {
-        sound.play(RNG.getUniformInt(110, 1310), 7, 100);
         done = true;
         world.level.map.setType(x, y, Type.Gem);
         screen.drawEntity(x, y);
-        await delay(99);
+        await sound.showGem();
+        await delay(90);
       }
     } while (!done && Math.random() > 0.01);
   }
@@ -1157,10 +1116,10 @@ async function blockSpell() {
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
       if (world.level.map.getType(x, y) === Type.ZBlock) {
-        sound.play(200, 60, 100);
+        sound.blockSpell();
         for (let i = 20; i > 0; i--) {
           screen.drawType(x, y, Type.Block, RNG.getUniformInt(0, 15));
-          await delay(3);
+          await delay(1);
         }
         world.level.map.setType(x, y, Type.Floor);
         screen.drawEntity(x, y);
@@ -1262,11 +1221,11 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
     } else if (MOBS.includes(rb as number)) {
       await moveRock();
       world.addScore(rb as Type);
-      await sound.play(600, 20);
+      await sound.rockCrushMob();
     } else if (rb === Type.EWall) {
       await moveRock();
       world.level.map.setType(rx, ry, Type.Floor);
-      sound.play(90, 10, 10);
+      sound.rockVaporized();
       await screen.flashMessage('The Boulder is vaporized!'); // TODO: show once
     } else if (ROCK_CLIFFABLES.includes(rb as number)) {
       nogo = false;
@@ -1275,9 +1234,7 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
       screen.renderPlayfield();
       screen.renderPlayfield();
       screen.drawType(rx, ry, Type.Rock);
-      for (let i = 130; i > 5; i--) {
-        await sound.play(i * 8, 16, 100);
-      }
+      await sound.rockDropped();
       screen.renderPlayfield();
       await screen.flashTypeMessage(Type.Rock, true);
     }
@@ -1289,10 +1246,7 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
 }
 
 async function secretMessage() {
-  for (let i = 20; i < 8000; i++) {
-    sound.play(i, 1, 100);
-  }
-  await delay(100);
+  await sound.secretMessage();
   await screen.flashMessage(
     'You notice a secret message carved into the old tree...',
   );
@@ -1379,27 +1333,6 @@ async function wallVanish() {
       }
     } while (!done && RNG.getUniformInt(0, 200) !== 0);
   }
-}
-
-async function generateCreatures() {
-  let done = false;
-  do {
-    const x = RNG.getUniformInt(0, XMax);
-    const y = RNG.getUniformInt(0, YMax);
-    if (world.level.map.getType(x, y) === Type.Floor) {
-      world.level.entities.push(new Actor(Type.Slow, x, y));
-      world.level.map.setType(x, y, Type.Slow);
-
-      for (let i = 5; i < 70; i++) {
-        sound.play(i * 8, 1);
-      }
-      await delay(50);
-
-      done = true;
-    }
-
-    screen.renderPlayfield();
-  } while (!done && RNG.getUniformInt(0, 50) !== 0);
 }
 
 function move(x: number, y: number) {

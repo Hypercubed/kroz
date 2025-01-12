@@ -4,7 +4,6 @@
 import * as world from '../modules/world';
 
 import { Type } from '../data/tiles';
-import { Entity } from '../classes/entity';
 import { Color } from '../data/colors';
 
 const map = `
@@ -35,10 +34,11 @@ K0ààààààààààààààààààààààààààààààààààààààà
 
 async function onLevelStart() {
   // Change floor character
-  world.level.map.replaceEntities(
-    Type.Floor,
-    new Entity(Type.Floor, '.', Color.White, Color.Black),
-  );
+  world.level.map.updateEntities(Type.Floor, {
+    ch: '.',
+    fg: Color.White,
+    bg: Color.Black,
+  });
 
   // HideCreate
   world.level.map.hideType(Type.Create);
