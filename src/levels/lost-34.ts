@@ -2,8 +2,8 @@
 // Original Source: 1987-1990 Scott Miller
 
 import { Entity } from '../classes/entity';
-import { XSize, YSize } from '../data/constants';
-import * as state from '../modules/state';
+import { XMax, YMax } from '../data/constants';
+import * as world from '../modules/world';
 
 const map = `
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,11 +33,11 @@ const map = `
 
 async function onLevelStart() {
   // HideLevel
-  for (let x = 0; x <= XSize; x++) {
-    for (let y = 0; y <= YSize; y++) {
-      const e = state.level.map.get(x, y)!;
+  for (let x = 0; x <= XMax; x++) {
+    for (let y = 0; y <= YMax; y++) {
+      const e = world.level.map.get(x, y)!;
       if (e) {
-        state.level.map.set(x, y, new Entity(e.type, e.ch, null, null));
+        world.level.map.set(x, y, new Entity(e.type, e.ch, null, null));
       }
     }
   }

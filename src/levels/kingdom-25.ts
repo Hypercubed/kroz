@@ -1,6 +1,8 @@
 // KINGDOM OF KROZ II, Level 25 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import * as world from '../modules/world';
+
 const map = `
 K¯    -++++++++++++++++#the#sacred#temple#+++++++++++++++-    ®K
  VVVVVV11111111111111111111111111111111111111111111111111♣♣♣♣♣♣ 
@@ -26,8 +28,12 @@ X 1  ##|0<0                   RRRRR                   0[0"## 1 X
 áRRRRRR111111-V V V-2-V V V-V*V*V*V*V-V V V-2-V V V-11111======â
 KááááááááááááVGV‘V V V V V‘V*V*V*V*V*V‘V V V V V‘VGVâââââââââââK`;
 
+async function onLevelStart() {
+  world.level.magicEwalls = true;
+}
+
 export default {
   id: 'Kingdom25',
   map,
-  // MagicEWalls:=true;
+  onLevelStart,
 };

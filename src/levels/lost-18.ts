@@ -1,7 +1,7 @@
 // Lost Adventures of Kroz, Level 18 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 
 import { Type } from '../data/tiles';
 
@@ -34,10 +34,10 @@ K----------------------------3333333---------------------------K`;
 
 async function onLevelStart() {
   // HideCreate
-  state.level.map.hideType(Type.Create);
+  world.level.map.hideType(Type.Create);
 
   // HideMBlock
-  state.level.map.hideType(Type.MBlock);
+  world.level.map.hideType(Type.MBlock);
 }
 
 export default {

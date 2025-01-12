@@ -1,9 +1,9 @@
 import * as sound from '../modules/sound';
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 
 import { TypeChar, Type } from '../data/tiles';
 import { FLOOR_CHAR, TIME_SCALE } from '../data/constants';
-import { Timer } from '../modules/state';
+import { Timer } from '../modules/world';
 import { SpeedActor } from 'rot-js';
 import { Entity } from './entity';
 
@@ -31,8 +31,7 @@ function getBaseSpeed(t: ActorType) {
 
 export class Actor extends Entity implements SpeedActor {
   speed: number;
-
-  private replacement = Type.Floor;
+  replacement = Type.Floor;
 
   constructor(
     public readonly type: ActorType,
@@ -46,52 +45,17 @@ export class Actor extends Entity implements SpeedActor {
     this.speed = getBaseSpeed(this.type);
   }
 
-  move(x: number, y: number) {
-    if (this.type === Type.Player) {
-      sound.footStep();
-    } else if (this.type === Type.Slow) {
-      this.ch = Math.random() > 0.5 ? 'A' : 'Ä';
-    } else if (this.type === Type.Medium) {
-      this.ch = Math.random() > 0.5 ? 'ö' : 'Ö';
-    }
-
-    this.gotoYX(x, y);
-  }
-
-  gotoYX(x: number, y: number) {
-    const px = this.x;
-    const py = this.y;
-
-    state.level.map.setType(px, py, this.replacement);
-
-    if (this.type === Type.Player) {
-      const b = state.level.map.getType(x, y) as Type;
-      this.replacement = [
-        Type.CWall1,
-        Type.CWall2,
-        Type.CWall3,
-        Type.Rope,
-      ].includes(b)
-        ? b
-        : Type.Floor;
-    }
-
-    state.level.map.set(x, y, this);
-
-    this.x = x;
-    this.y = y;
-  }
-
   async kill() {
     if (this.type < 3) {
       await sound.play(200 + 200 * this.type, 25, 100);
     }
-    this.gotoYX(-1, -1);
+    this.x = -1;
+    this.y = -1;
   }
 
   getChar() {
     if (this.type === Type.Player)
-      return state.level.T[Timer.Invisible] > 0
+      return world.level.T[Timer.Invisible] > 0
         ? FLOOR_CHAR
         : TypeChar[this.type];
     return this.ch;
@@ -99,7 +63,7 @@ export class Actor extends Entity implements SpeedActor {
 
   getSpeed() {
     if (this.type === Type.Player)
-      return state.level.T[Timer.SlowTime] > 0 ? 10 : 1;
-    return state.level.T[Timer.SpeedTime] > 0 ? TIME_SCALE : this.speed;
+      return world.level.T[Timer.SlowTime] > 0 ? 10 : 1;
+    return world.level.T[Timer.SpeedTime] > 0 ? TIME_SCALE : this.speed;
   }
 }

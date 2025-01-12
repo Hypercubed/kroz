@@ -1,7 +1,7 @@
 // Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 
 import { Type } from '../data/tiles';
 import { Entity } from '../classes/entity';
@@ -35,16 +35,16 @@ K0ààààààààààààààààààààààààààààààààààààààà
 
 async function onLevelStart() {
   // Change floor character
-  state.level.map.replaceEntities(
+  world.level.map.replaceEntities(
     Type.Floor,
     new Entity(Type.Floor, '.', Color.White, Color.Black),
   );
 
   // HideCreate
-  state.level.map.hideType(Type.Create);
+  world.level.map.hideType(Type.Create);
 
   // HideMBlock
-  state.level.map.hideType(Type.MBlock);
+  world.level.map.hideType(Type.MBlock);
 }
 
 export default {
@@ -53,5 +53,3 @@ export default {
   onLevelStart,
   tabletMessage: 'Up 4 steps, then left 16 steps.',
 };
-
-// MakeFloor(0,6,7,0,0);

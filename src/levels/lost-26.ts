@@ -3,9 +3,9 @@
 
 import * as screen from '../modules/screen';
 import * as sound from '../modules/sound';
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 
-import { XSize, YSize } from '../data/constants';
+import { XMax, YMax } from '../data/constants';
 import { Type } from '../data/tiles';
 
 const map = `
@@ -35,13 +35,13 @@ const map = `
 `;
 
 async function onLevelStart() {
-  state.level.map.hideType(Type.Create);
-  state.level.map.hideType(Type.Gem);
+  world.level.map.hideType(Type.Create);
+  world.level.map.hideType(Type.Gem);
 }
 
 async function tabletMessage() {
   await screen.flashMessage(
-    `No one has ever made it to the ${state.stats.levelIndex} level!`,
+    `No one has ever made it to the ${world.stats.levelIndex} level!`,
   );
   await screen.flashMessage(
     'You have shown exceptional skills to reach this far...',
@@ -49,11 +49,11 @@ async function tabletMessage() {
   await screen.flashMessage('Therefore I grant you the power to see...');
 
   // Show IWalls
-  for (let x = 0; x <= XSize; x++) {
-    for (let y = 0; y <= YSize; y++) {
-      if (state.level.map.getType(x, y) === Type.IWall) {
+  for (let x = 0; x <= XMax; x++) {
+    for (let y = 0; y <= YMax; y++) {
+      if (world.level.map.getType(x, y) === Type.IWall) {
         await sound.play(x * y, 1, 10);
-        state.level.map.setType(x, y, Type.OWall3);
+        world.level.map.setType(x, y, Type.OWall3);
         screen.drawEntity(x, y);
       }
     }
@@ -68,5 +68,3 @@ export default {
   onLevelStart,
   tabletMessage,
 };
-
-// TODO: block trap '’'

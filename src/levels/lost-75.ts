@@ -3,10 +3,10 @@
 
 import * as screen from '../modules/screen';
 import * as sound from '../modules/sound';
-import * as state from '../modules/state';
 import * as world from '../modules/world';
+import * as player from '../modules/player';
 
-import { XSize, YSize } from '../data/constants';
+import { XMax, YMax } from '../data/constants';
 import { Type } from '../data/tiles';
 
 const map = `
@@ -36,22 +36,22 @@ K777777777777C#"#E  2     555D]!]D555     2    40#CYXXYYOOYYXX]K
 `;
 
 async function onLevelStart() {
-  state.level.magicEwalls = true;
-  state.level.evapoRate = 22;
-  state.level.map.hideType(Type.Create);
+  world.level.magicEwalls = true;
+  world.level.evapoRate = 22;
+  world.level.map.hideType(Type.Create);
 }
 
 async function tabletMessage() {
-  await world.prayer();
+  await player.prayer();
   await screen.flashMessage('"Ttocs Rellim Setalutargnoc Uoy!"');
   await screen.flashMessage(
     'Your palms sweat as the words echo through the chamber...',
   );
-  for (let x = 0; x <= XSize; x++) {
-    for (let y = 0; y <= YSize; y++) {
-      if (state.level.map.getType(x, y) === Type.Pit) {
+  for (let x = 0; x <= XMax; x++) {
+    for (let y = 0; y <= YMax; y++) {
+      if (world.level.map.getType(x, y) === Type.Pit) {
         await sound.play(x * y, 50, 10);
-        state.level.map.setType(x, y, Type.Rock);
+        world.level.map.setType(x, y, Type.Rock);
         screen.drawEntity(x, y);
       }
     }

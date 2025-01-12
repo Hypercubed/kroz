@@ -1,6 +1,6 @@
 import { default as RNG } from 'rot-js/lib/rng';
 
-import * as state from './state.ts';
+import * as world from './world.ts';
 import * as tiles from '../data/tiles.ts';
 import * as controls from './controls.ts';
 import * as screen from './screen.ts';
@@ -14,11 +14,13 @@ import lost4 from '../levels/lost-4.ts';
 import lost11 from '../levels/lost-11.ts';
 import lost18 from '../levels/lost-18.ts';
 import lost20 from '../levels/lost-20.ts';
-// import lost22 from './levels/lost-22.ts';
+// import lost22 from '../levels/lost-22.ts';
 import lost26 from '../levels/lost-26.ts';
 import lost30 from '../levels/lost-30.ts';
-// import lost33 from './levels/lost-33.ts';
+// import lost33 from '../levels/lost-33.ts';
+// import lost35 from '../levels/lost-35.ts';
 import lost34 from '../levels/lost-34.ts';
+// import lost40 from '../levels/lost-40.ts';
 import lost42 from '../levels/lost-42.ts';
 import lost70 from '../levels/lost-70.ts';
 import lost46 from '../levels/lost-46.ts';
@@ -27,7 +29,7 @@ import lost52 from '../levels/lost-52.ts';
 import lost59 from '../levels/lost-59.ts';
 import lost61 from '../levels/lost-61.ts';
 import lost64 from '../levels/lost-64.ts';
-// import lost74 from './levels/lost-74.ts';
+// import lost74 from '../levels/lost-74.ts';
 import lost75 from '../levels/lost-75.ts';
 
 // KINGDOM OF KROZ
@@ -56,10 +58,9 @@ import {
 } from '../data/tiles.ts';
 import { FLOOR_CHAR } from '../data/constants.ts';
 import { Actor } from '../classes/actors.ts';
-import { Timer } from './state.ts';
+import { Timer } from './world.ts';
 import { mod } from 'rot-js/lib/util';
 import { Entity } from '../classes/entity.ts';
-import lost74 from '../levels/lost-74.ts';
 
 export interface Level {
   id: string;
@@ -74,15 +75,15 @@ export interface Level {
 //   debug, // Must be level 0
 //   kingdom1,
 //   kingdom2,  // Ends with extra key
-//   kingdom4,  // Needs a teleport from previous level, Optional shoort left
+//   kingdom4,  // Needs a teleport from previous level
 //   kingdom6,
-//   // kingdom10, // Needs boulders to break EWalls
+//   kingdom10,
 //   kingdom12,
 //   kingdom14, // Same as level 46 of Lost Adventures.
-//   // kingdom16, // Similar to level 33 of Lost Adventures (needs more traps)
-//   // kingdom20, // Same as level 22 of Lost Adventures, Needs MBlocks
-//   kingdom22, // Same as level 30 of Lost Adventures
-//   // kingdom25 // Needs MagicEWalls
+//   kingdom16, // Similar to level 33 of Lost Adventures
+//   kingdom20, // Same as level 22 of Lost Adventures
+//   kingdom22, // Same as level 30 of Lost Adventure
+//   kingdom25
 // ];
 
 // LOST ADVENTURES OF KROZ Levels
@@ -91,13 +92,13 @@ export interface Level {
 //   lost1,
 //   lost2,
 //   lost4,
-//   // lost11, Need more keys
+//   lost11, // Need more keys
 //   lost18,
 //   lost20, // Need a keys
-//   // lost22, // Needs MBlocks
+//   lost22,
 //   lost26,
 //   lost30, // Need whips
-//   // lost33, // Needs WallVanish, Needs to start with a key
+//   lost33, // Needs to start with a key
 //   lost34,
 //   // lost35, // Needs lava flow
 //   // lost40, // Needs two keys to start
@@ -109,7 +110,7 @@ export interface Level {
 //   lost61,
 //   lost64,
 //   lost70, // TBD
-//   // lost74,  // Needs MBlocks
+//   lost74,
 //   lost75
 // ];
 
@@ -127,21 +128,23 @@ export const LEVELS: Level[] = [
   kingdom4, // Needs a teleport from previous level, Optional short left
   kingdom6,
   lost11, // Key from previous level
-  kingdom12,
+  kingdom12, // Needs LavaFlow
   lost18,
   lost20, // Need a keys
+  // lost22,
   lost26,
   lost30, // Need whips, Same as Kingdom 22
+  // lost33, // Needs to start with a key
   lost34,
   lost42, // Needs Tree growth
   lost46, // Same as Kingdom 14
-  lost48,
+  lost48, // tabletMessage
   lost52,
-  lost59,
+  lost59, // Needs LavaFlow
   lost61,
   lost64,
   lost70,
-  lost74,
+  // lost74,
   lost75,
 ];
 
@@ -164,37 +167,37 @@ function readLevelMap(level: string) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const block = (MapLookup as any)[char];
 
-      state.level.map.setType(x, y, block ?? char);
+      world.level.map.setType(x, y, block ?? char);
 
       // Special cases
       // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST4.TIT#L328
       switch (char) {
         case 'Ã':
-          state.level.map.setType(x, y, '!');
+          world.level.map.setType(x, y, '!');
           break;
         case '´':
-          state.level.map.setType(x, y, '.');
+          world.level.map.setType(x, y, '.');
           break;
         case 'µ':
-          state.level.map.setType(x, y, '?');
+          world.level.map.setType(x, y, '?');
           break;
         case '¶':
-          state.level.map.setType(x, y, "'");
+          world.level.map.setType(x, y, "'");
           break;
         case '·':
-          state.level.map.setType(x, y, ',');
+          world.level.map.setType(x, y, ',');
           break;
         case '¸':
-          state.level.map.setType(x, y, ':');
+          world.level.map.setType(x, y, ':');
           break;
         case 'ú':
-          state.level.map.setType(x, y, '·');
+          world.level.map.setType(x, y, '·');
           break;
         case 'ù':
-          state.level.map.setType(x, y, '∙');
+          world.level.map.setType(x, y, '∙');
           break;
         case 'ï':
-          state.level.map.setType(x, y, '∩');
+          world.level.map.setType(x, y, '∩');
           break;
       }
 
@@ -203,7 +206,7 @@ function readLevelMap(level: string) {
         ChanceChance[block as keyof typeof ChanceChance] &&
         Math.random() < ChanceChance[block as keyof typeof ChanceChance]
       ) {
-        state.level.map.set(
+        world.level.map.set(
           x,
           y,
           new Entity(block, TypeChar[Type.Chance], ...TypeColor[Type.Chance]),
@@ -212,24 +215,24 @@ function readLevelMap(level: string) {
 
       switch (block) {
         case Type.Player:
-          state.level.player.x = x;
-          state.level.player.y = y;
-          state.level.map.set(x, y, state.level.player);
+          world.level.player.x = x;
+          world.level.player.y = y;
+          world.level.map.set(x, y, world.level.player);
           break;
         case Type.Slow:
         case Type.Medium:
         case Type.Fast:
         case Type.MBlock: {
           const a = new Actor(block, x, y);
-          state.level.entities.push(a);
-          state.level.map.set(x, y, a);
+          world.level.entities.push(a);
+          world.level.map.set(x, y, a);
           break;
         }
         case Type.Generator:
-          state.level.genNum++;
+          world.level.genNum++;
           break;
         case Type.Statue:
-          state.level.T[Timer.StatueGemDrain] = 32000;
+          world.level.T[Timer.StatueGemDrain] = 32000;
           break;
       }
     }
@@ -241,12 +244,13 @@ function readLevelMap(level: string) {
 }
 
 export async function loadLevel() {
-  state.resetLevel();
-  state.level.level = LEVELS[state.stats.levelIndex];
+  world.resetLevel();
+  const level = LEVELS[world.stats.levelIndex];
+  world.level.tabletMessage = level.tabletMessage;
   tiles.reset();
-  readLevelMap(state.level.level.map);
-  state.level.level?.onLevelStart?.();
-  state.storeLevelStartState();
+  readLevelMap(level.map);
+  level?.onLevelStart?.();
+  world.storeLevelStartState();
   screen.fullRender();
   await screen.flashMessage('Press any key to begin this level.');
 }
@@ -254,8 +258,8 @@ export async function loadLevel() {
 export async function nextLevel() {
   // https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L377C19-L377C72 ??
   controls.flushAll();
-  state.stats.levelIndex = mod(state.stats.levelIndex + 1, LEVELS.length);
-  if (state.stats.levelIndex % 10 === 0) {
+  world.stats.levelIndex = mod(world.stats.levelIndex + 1, LEVELS.length);
+  if (world.stats.levelIndex % 10 === 0) {
     await screen.openSourceScreen();
   }
   await loadLevel();
@@ -263,6 +267,6 @@ export async function nextLevel() {
 
 export async function prevLevel() {
   controls.flushAll();
-  state.stats.levelIndex = mod(state.stats.levelIndex - 1, LEVELS.length);
+  world.stats.levelIndex = mod(world.stats.levelIndex - 1, LEVELS.length);
   await loadLevel();
 }

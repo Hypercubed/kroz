@@ -1,5 +1,5 @@
-import { RNG } from 'rot-js';
-import { XSize, YSize } from '../data/constants';
+import { default as RNG } from 'rot-js/lib/rng';
+import { XMax, YMax } from '../data/constants';
 import { Type, TypeChar, TypeColor } from '../data/tiles';
 import { Entity } from './entity';
 
@@ -7,8 +7,8 @@ export class PlayField {
   private PF = [] as Entity[][];
 
   constructor(
-    public width = XSize,
-    public height = YSize,
+    public width = XMax + 1,
+    public height = YMax + 1,
   ) {}
 
   get(x: number, y: number): Entity | null {
@@ -45,8 +45,8 @@ export class PlayField {
 
   findRandomEmptySpace(): [number, number] {
     while (true) {
-      const x = RNG.getUniformInt(0, XSize);
-      const y = RNG.getUniformInt(0, YSize);
+      const x = RNG.getUniformInt(0, XMax);
+      const y = RNG.getUniformInt(0, YMax);
       const block = this.getType(x, y);
       if (block === Type.Floor) {
         return [x, y];
@@ -54,7 +54,10 @@ export class PlayField {
     }
   }
 
-  replaceEntities(type: Type | string, entity: Entity) {
+  replaceEntities(type: Type | string, entity: Entity | Type | string) {
+    if (typeof entity === 'string' || typeof entity === 'number') {
+      entity = new Entity(entity);
+    }
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         if (this.getType(x, y) === type) {

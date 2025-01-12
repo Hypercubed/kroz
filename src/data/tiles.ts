@@ -407,7 +407,7 @@ export const TypeMessage: Partial<Record<Type, string>> = {
   [Type.Invisible]: 'Oh no, a temporary Blindness Potion!',
   [Type.Teleport]: 'You found a Teleport scroll.',
   [Type.Key]: 'Use Keys to unlock doors.',
-  [Type.Door]: 'To pass the Door you need a Key.',
+  [Type.Door]: 'The Door opens!  (One of your Keys is used.)',
   [Type.Wall]: 'A Solid Wall blocks your way.',
   [Type.River]: 'You cannot travel through Water.',
   [Type.SpeedTime]: 'You activated a Speed Creature spell.',
@@ -554,6 +554,94 @@ export const VISUAL_TELEPORTABLES = [
   ...CWALLS,
   ...CSPELLS,
   ...TBLOCKS,
+];
+
+export const TRIGGERABLES = [
+  Type.Floor,
+  Type.Stop,
+  ...ITRAPS,
+  Type.ShowGems,
+  Type.WallVanish,
+  ...TBLOCKS,
+];
+
+export const ROCK_MOVEABLES = [
+  Type.Floor,
+  Type.Stop,
+  Type.ShowGems,
+  Type.BlockSpell,
+  Type.WallVanish,
+  ...CWALLS,
+  ...CSPELLS,
+  ...TBLOCKS,
+  ...ITRAPS,
+];
+
+export const ROCK_CRUSHABLES = [
+  ...COLLECTABLES,
+  Type.Chest,
+  Type.SlowTime,
+  Type.Invisible,
+  Type.Key,
+  Type.Trap,
+  Type.Power,
+  Type.Bomb,
+  Type.Freeze,
+  Type.Nugget,
+  Type.Zap,
+  Type.Create,
+  Type.Tablet,
+  Type.Chance,
+  ...KROZ,
+  ...OSPELLS,
+  ...ROPE_DROP,
+  Type.ShootRight,
+  Type.ShootLeft,
+];
+
+export const ROCK_CLIFFABLES = [Type.Stairs, Type.Pit];
+
+export const TUNNELABLES = [Type.Floor, Type.Stop, ...ITRAPS, ...CWALLS];
+
+export const SPEAR_BLOCKS = [
+  Type.Block,
+  Type.Stairs,
+  Type.Door,
+  Type.Wall,
+  Type.Lava,
+  Type.Tunnel,
+  Type.IDoor,
+  Type.Generator,
+  Type.MBlock,
+  Type.Tablet,
+  Type.ZBlock,
+  Type.Statue,
+  ...OWALLS,
+  Type.GBlock,
+  Type.Rock,
+  Type.EWall,
+  Type.Amulet,
+];
+
+export const SPEAR_IGNORE = [
+  Type.Floor,
+  Type.River,
+  Type.Pit,
+  Type.Quake,
+  Type.IBlock,
+  Type.IWall,
+  Type.Stop,
+  Type.Trap2,
+  Type.Trap3,
+  Type.Trap4,
+  Type.Trap5,
+  Type.ShowGems,
+  Type.BlockSpell,
+  Type.WallVanish,
+  ...CWALLS,
+  ...CSPELLS,
+  ...TBLOCKS,
+  Type.Rope,
 ];
 
 export const ChanceChance = {

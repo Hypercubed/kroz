@@ -1,7 +1,7 @@
 // Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 
 import { Type } from '../data/tiles';
 
@@ -33,18 +33,18 @@ MMMM(                                                      )MMMM
 
 async function onLevelStart() {
   // HideCreate
-  state.level.map.hideType(Type.Create);
+  world.level.map.hideType(Type.Create);
 
   // HideMBlock
-  state.level.map.hideType(Type.MBlock);
+  world.level.map.hideType(Type.MBlock);
 
   //HideOpenWall
-  state.level.map.hideType(Type.OWall1);
-  state.level.map.hideType(Type.OWall2);
-  state.level.map.hideType(Type.OWall3);
+  world.level.map.hideType(Type.OWall1);
+  world.level.map.hideType(Type.OWall2);
+  world.level.map.hideType(Type.OWall3);
 
   //HideTrap
-  state.level.map.hideType(Type.Trap);
+  world.level.map.hideType(Type.Trap);
 }
 
 export default {

@@ -1,4 +1,4 @@
-// Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
+// Lost Adventures of Kroz, Level 48 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
 const map = `
@@ -30,5 +30,4 @@ U7777777##RRR----------------RR---------------------------------
 export default {
   id: 'Lost48',
   map,
-  // tabletMessage: TBD
 };

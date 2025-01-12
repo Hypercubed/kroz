@@ -1,6 +1,9 @@
 // KINGDOM OF KROZ II, Level 6 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import * as world from '../modules/world';
+import { Type } from '../data/tiles';
+
 const map = `
 ---###########RRRRR##W        ############W////1/C//♣//♣♣♣♣♣♣♣♣♣
 -U---------Z###RRRRR##7######   ##KKô   Z##-//////♣///1/♣♣♣♣♣♣U♣
@@ -26,10 +29,16 @@ const map = `
 @###-###RRRR##X--------#RRR##ô##.#--#-#-#---#-######-#####-#---#
 -----##RRRR##%X---U----##RRR#K##--------#111#--------------#111#`;
 
+async function onLevelStart() {
+  // HideOpenWall
+  world.level.map.hideType(Type.OWall1);
+  world.level.map.hideType(Type.OWall2);
+  world.level.map.hideType(Type.OWall3);
+}
+
 export default {
   id: 'Kingdom6',
   map,
   tabletMessage: `A strange magical gravity force is tugging you downward!`,
+  onLevelStart,
 };
-
-// HideOpenWall

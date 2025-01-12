@@ -3,14 +3,15 @@ import * as dat from 'lil-gui';
 
 import * as controls from './controls';
 import * as display from './display';
-import * as world from './world';
+import * as player from './player';
 import * as screen from './screen';
-import * as state from './state';
-import * as scheduler from './scheduler';
+import * as world from './world';
+import * as mob from './mobs';
 import * as level from './levels';
+import * as effects from './effects';
 
-import { DEBUG, XSize, YSize } from '../data/constants';
-import { Timer } from './state';
+import { DEBUG, XMax, YMax } from '../data/constants';
+import { Timer } from './world';
 import { Color } from '../data/colors';
 
 let stats: Stats;
@@ -25,15 +26,15 @@ export function init() {
 
 export async function start() {
   display.clear(Color.Black);
-  state.resetState();
+  world.resetState();
 
   await screen.introScreen();
-  await world.renderTitle();
+  await screen.renderTitle();
   await screen.instructionsScreen();
 
   level.loadLevel(); // Don't wait
   screen.fullRender();
-  await world.flashPlayer();
+  await player.flashPlayer();
   screen.fastRender();
   await screen.flashMessage('Press any key to begin this level.');
   controls.clearActions();
@@ -53,28 +54,28 @@ export async function start() {
 
       const timers = {
         get SlowTime() {
-          return state.level.T[Timer.SlowTime];
+          return world.level.T[Timer.SlowTime];
         },
         set SlowTime(v: number) {
-          state.level.T[Timer.SlowTime] = v;
+          world.level.T[Timer.SlowTime] = v;
         },
         get Invisible() {
-          return state.level.T[Timer.Invisible];
+          return world.level.T[Timer.Invisible];
         },
         set Invisible(v: number) {
-          state.level.T[Timer.Invisible] = v;
+          world.level.T[Timer.Invisible] = v;
         },
         get SpeedTime() {
-          return state.level.T[Timer.SpeedTime];
+          return world.level.T[Timer.SpeedTime];
         },
         set SpeedTime(v: number) {
-          state.level.T[Timer.SpeedTime] = v;
+          world.level.T[Timer.SpeedTime] = v;
         },
         get FreezeTime() {
-          return state.level.T[Timer.FreezeTime];
+          return world.level.T[Timer.FreezeTime];
         },
         set FreezeTime(v: number) {
-          state.level.T[Timer.FreezeTime] = v;
+          world.level.T[Timer.FreezeTime] = v;
         },
       };
 
@@ -85,15 +86,15 @@ export async function start() {
       t.add(timers, 'FreezeTime', 0, 400, 1).listen();
 
       const o = gui.addFolder('Objects');
-      o.add(state.stats, 'gems', 0, 400, 1).listen();
-      o.add(state.stats, 'whips', 0, 400, 1).listen();
-      o.add(state.stats, 'keys', 0, 400, 1).listen();
-      o.add(state.stats, 'teleports', 0, 400, 1).listen();
-      o.add(state.stats, 'whipPower', 2, 7, 1).listen();
+      o.add(world.stats, 'gems', 0, 400, 1).listen();
+      o.add(world.stats, 'whips', 0, 400, 1).listen();
+      o.add(world.stats, 'keys', 0, 400, 1).listen();
+      o.add(world.stats, 'teleports', 0, 400, 1).listen();
+      o.add(world.stats, 'whipPower', 2, 7, 1).listen();
 
       const p = gui.addFolder('Player');
-      p.add(state.level.player, 'x', 0, XSize, 1).listen();
-      p.add(state.level.player, 'y', 0, YSize, 1).listen();
+      p.add(world.level.player, 'x', 0, XMax, 1).listen();
+      p.add(world.level.player, 'y', 0, YMax, 1).listen();
     }
   }
 
@@ -102,22 +103,22 @@ export async function start() {
 }
 
 async function run() {
-  scheduler.createScheduler();
+  mob.init();
 
   // Game loop
-  let speed = 16 * state.game.clockScale;
+  let speed = 16 * world.game.clockScale;
 
   let dt = 0;
   let previousTime = 0;
 
   const raf = async (currentTime: number) => {
-    if (state.stats.gems < 0) {
-      await world.dead();
+    if (world.stats.gems < 0) {
+      await player.dead();
       start();
       return;
     }
 
-    if (state.game.done) {
+    if (world.game.done) {
       start();
       return;
     }
@@ -130,17 +131,17 @@ async function run() {
     if (dt > speed) {
       dt %= speed;
 
-      await world.effects();
-      await world.playerAction(); // Player acts every tick
-      controls.clearActions(); // Clear was pressed actions after player acts
+      await player.tick();
+      await mob.tick();
+      await effects.tick();
+      screen.renderPlayfield();
 
-      const current = scheduler.next();
-      await world.entitiesAction(current.type);
+      controls.clearActions(); // Clear was pressed actions after player acts
     }
 
     screen.fastRender(); // TODO: can we only render blink elements?
 
-    speed = 16 * state.game.clockScale;
+    speed = 16 * world.game.clockScale;
 
     stats?.end();
     requestAnimationFrame(raf);

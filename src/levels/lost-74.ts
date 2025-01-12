@@ -1,7 +1,7 @@
 // Lost Adventures of Kroz, Level 75 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 
 import { Type } from '../data/tiles';
 
@@ -33,10 +33,10 @@ MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM##-:-’-:ó62á    :::
 `;
 
 async function onLevelStart() {
-  state.level.evapoRate = 22;
+  world.level.evapoRate = 22;
 
   // HideMBlock
-  state.level.map.hideType(Type.MBlock);
+  world.level.map.hideType(Type.MBlock);
 }
 
 export default {

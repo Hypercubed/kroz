@@ -1,6 +1,9 @@
 // KINGDOM OF KROZ II, Level 16 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import { Type } from '../data/tiles';
+import * as world from '../modules/world';
+
 const map = `
 ##tunnels#of#kroz###########-P--################################
 ########################X###----######X##-------‘--------##X####
@@ -25,11 +28,19 @@ L---N-----##X###  CC  555555-----------------#####X##1111#######
 ##O#####X###Q######-------N------\`----------------------########
 ##O##OOO###########-------N------\`--------‘-------------##X#####
 ###OO###########################################################`;
+
+async function onLevelStart() {
+  // HideStairs
+  world.level.map.hideType(Type.Stairs);
+
+  // HideOpenWall
+  world.level.map.hideType(Type.OWall1);
+  world.level.map.hideType(Type.OWall2);
+  world.level.map.hideType(Type.OWall3);
+}
+
 export default {
   id: 'Kingdom16',
   map,
+  onLevelStart,
 };
-
-// HideStairs:=true; HideOpenWall:=true;
-
-// Similar to level 33 of Lost Adventures

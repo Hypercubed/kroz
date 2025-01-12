@@ -1,9 +1,9 @@
 // Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as world from '../modules/world';
+import * as player from '../modules/player';
 import * as screen from '../modules/screen';
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 
 import { TypeChar, Type } from '../data/tiles';
 import { Entity } from '../classes/entity';
@@ -36,19 +36,19 @@ FF  22##âââ##ãã333333##3333333--##-===-==-==------=====-==-=--==
 
 function onLevelStart() {
   TypeChar[Type.Fast] = '☺';
-  state.level.map.replaceEntities(Type.Fast, new Entity(Type.Fast));
+  world.level.map.replaceEntities(Type.Fast, new Entity(Type.Fast));
 }
 
 async function tabletMessage() {
   await screen.flashMessage(
     'Walls that block your progress shall be removed...',
   );
-  state.level.map.setType(
-    state.level.player.x,
-    state.level.player.y,
+  world.level.map.setType(
+    world.level.player.x,
+    world.level.player.y,
     Type.OSpell1,
   );
-  world.tryPlayerMove(0, 0);
+  player.tryMove(0, 0);
 }
 
 export default {
@@ -57,5 +57,3 @@ export default {
   onLevelStart,
   tabletMessage,
 };
-
-// Need TBlock, TGold, TWhip, TGem

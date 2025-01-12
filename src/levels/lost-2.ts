@@ -1,7 +1,7 @@
 // Lost Adventures of Kroz, Level 2 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 
 import { Type } from '../data/tiles';
 
@@ -33,10 +33,10 @@ LLXXXXXX#XXXXXXXXXXXXX#XXXXXXXXXXXXXX#4XXXXXX##XXXXX#####of#kroz
 
 async function onLevelStart() {
   // HideGems
-  state.level.map.hideType(Type.Gem);
+  world.level.map.hideType(Type.Gem);
 
   // HideStairs
-  state.level.map.hideType(Type.Stairs);
+  world.level.map.hideType(Type.Stairs);
 }
 
 export default {

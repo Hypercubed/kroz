@@ -9,8 +9,9 @@ export const XBot = 1;
 export const XTop = WIDTH - 16;
 export const YBot = 1;
 export const YTop = HEIGHT - 2;
-export const XSize = 64;
-export const YSize = 23;
+
+export const XMax = 63;
+export const YMax = 22;
 
 export const FLOOR_CHAR = ' ';
 

@@ -1,18 +1,19 @@
 import * as display from './display';
-import * as state from './state';
+import * as world from './world';
 import * as controls from './controls';
 
 import {
   FLOOR_CHAR,
   HEIGHT,
   TITLE,
+  WIDTH,
   XBot,
   XTop,
   YBot,
   YTop,
 } from '../data/constants';
-import { RNG } from 'rot-js';
-import { Color } from '../data/colors';
+import { default as RNG } from 'rot-js/lib/rng';
+import { Color, ColorCodes } from '../data/colors';
 import { delay } from '../utils/utils';
 import dedent from 'ts-dedent';
 import { Type, TypeChar, TypeColor, TypeMessage } from '../data/tiles';
@@ -40,36 +41,36 @@ export function renderScreen() {
 // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST1.LEV#L328
 export function renderStats() {
   const whipStr =
-    state.stats.whipPower > 2
-      ? `${state.stats.whips}+${state.stats.whipPower - 2}`
-      : state.stats.whips.toString();
+    world.stats.whipPower > 2
+      ? `${world.stats.whips}+${world.stats.whipPower - 2}`
+      : world.stats.whips.toString();
 
   const width = 4;
   const size = 7;
 
   const gc =
-    !state.game.paused && state.stats.gems < 10 ? Color.Red | 16 : Color.Red;
+    !world.game.paused && world.stats.gems < 10 ? Color.Red | 16 : Color.Red;
 
   const x = 69;
 
   display.drawText(
     x,
     1,
-    pad((state.stats.score * 10).toString(), width + 1, size),
+    pad((world.stats.score * 10).toString(), width + 1, size),
     Color.Red,
     Color.Grey,
   );
   display.drawText(
     x,
     4,
-    pad(state.stats.levelIndex.toString(), width, size),
+    pad(world.stats.levelIndex.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
   display.drawText(
     x,
     7,
-    pad(state.stats.gems.toString(), width + 1, size),
+    pad(world.stats.gems.toString(), width + 1, size),
     gc,
     Color.Grey,
   );
@@ -77,14 +78,14 @@ export function renderStats() {
   display.drawText(
     x,
     13,
-    pad(state.stats.teleports.toString(), width, size),
+    pad(world.stats.teleports.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
   display.drawText(
     x,
     16,
-    pad(state.stats.keys.toString(), width, size),
+    pad(world.stats.keys.toString(), width, size),
     Color.Red,
     Color.Grey,
   );
@@ -217,9 +218,10 @@ export async function openSourceScreen() {
     2,
     4,
     dedent`
-    The original Kroz games were created by Scott Miller and published
-    by Apogee Software. The original Kroz games were released in the
-    late 1980s and early 1990s.`,
+    Kroz is a series of Roguelike video games created by Scott Miller and 
+    published by Apogee Software in the late 1980s and early 1990s.  In March
+    2009, the whole Kroz series was released as freeware by Apogee, and the
+    source code was released as free software under the GPL license.`,
     Color.White,
   );
 
@@ -236,10 +238,10 @@ export async function openSourceScreen() {
     2,
     9,
     dedent`
-    This game is a tribute to the original Kroz series of games and completly
-    open-source.  If you enjoy this game you are asked by the author to 
-    please add a star to the github repo at
-    https://github.com/Hypercubed/kroz.`,
+    This is a re-implementation the original Kroz series of games in typescript 
+    playable in the browser.  The source code completly open-source.  If you
+    enjoy this game you are asked by the author to please add a star to the
+    github repo at https://github.com/Hypercubed/kroz.`,
     Color.White,
   );
 
@@ -254,10 +256,11 @@ export async function openSourceScreen() {
 
   display.drawText(
     2,
-    14,
+    15,
     dedent`
     Better yet, contribute to the game yourself; or maybe fork it and add your
-    own levels.  That might make a nice 7DRL challenge entry.`,
+    own levels.  That might make a nice 7DRL challenge entry
+    (https://7drl.com/).`,
     Color.White,
   );
 
@@ -270,7 +273,7 @@ export async function openSourceScreen() {
   await controls.waitForKeypress();
   controls.clearKeys();
 
-  display.drawText(10, 18, 'Thank you and enjoy the game.  -- Hypercubed');
+  display.drawText(10, 20, 'Thank you and enjoy the game.  -- Hypercubed');
   display.writeCenter(
     HEIGHT - 1,
     'Press any key to continue.',
@@ -286,10 +289,10 @@ function pad(s: string, n: number, r: number) {
 }
 
 export function renderPlayfield() {
-  for (let x = 0; x < state.level.map.width; x++) {
-    for (let y = 0; y < state.level.map.height; y++) {
+  for (let x = 0; x < world.level.map.width; x++) {
+    for (let y = 0; y < world.level.map.height; y++) {
       // Skip entities, will be rendered later
-      const e = state.level.map.get(x, y) || new Entity(Type.Floor);
+      const e = world.level.map.get(x, y) || new Entity(Type.Floor);
       if (e.type === Type.Player) continue;
       if (
         e.type === Type.Slow ||
@@ -302,17 +305,17 @@ export function renderPlayfield() {
     }
   }
 
-  for (let i = 0; i < state.level.entities.length; i++) {
-    const e = state.level.entities[i];
+  for (let i = 0; i < world.level.entities.length; i++) {
+    const e = world.level.entities[i];
     if (e.x === -1 || e.y === -1) continue; // dead
     drawEntity(e.x, e.y, e);
   }
 
-  drawEntity(state.level.player.x, state.level.player.y, state.level.player);
+  drawEntity(world.level.player.x, world.level.player.y, world.level.player);
 }
 
 export function drawEntity(x: number, y: number, entity?: Entity | null) {
-  entity ??= state.level.map.get(x, y);
+  entity ??= world.level.map.get(x, y);
   if (!entity) return;
   display.draw(x + XBot, y + YBot, entity.getChar(), entity.fg!, entity.bg!);
 }
@@ -324,7 +327,7 @@ export function drawType(
   fg?: Color | string,
   bg?: Color | string,
 ) {
-  block ??= state.level.map.getType(x, y);
+  block ??= world.level.map.getType(x, y);
 
   let ch: string;
 
@@ -347,7 +350,7 @@ export function drawType(
 
   switch (block) {
     case Type.Stairs:
-      fg = typeof fg === 'number' && !state.game.paused ? fg | 16 : fg; // add blink
+      fg = typeof fg === 'number' && !world.game.paused ? fg | 16 : fg; // add blink
       break;
   }
 
@@ -355,7 +358,7 @@ export function drawType(
 }
 
 export function drawOver(x: number, y: number, ch: string, fg: string | Color) {
-  const block = state.level.map.getType(x, y);
+  const block = world.level.map.getType(x, y);
 
   let bg: number;
   if ((block >= 'a' && block <= 'z') || block === '!') {
@@ -369,8 +372,8 @@ export function drawOver(x: number, y: number, ch: string, fg: string | Color) {
 
 export async function flashTypeMessage(msg: Type, once: boolean = false) {
   if (once) {
-    if (state.game.foundSet === true || state.game.foundSet.has(msg)) return '';
-    state.game.foundSet.add(msg);
+    if (world.game.foundSet === true || world.game.foundSet.has(msg)) return '';
+    world.game.foundSet.add(msg);
   }
 
   const str = TypeMessage[msg];
@@ -385,13 +388,13 @@ export async function flashMessage(msg: string): Promise<string> {
   const x = (XTop - msg.length) / 2;
   const y = YTop + 1;
 
-  state.game.paused = true;
+  world.game.paused = true;
 
   const key = await controls.repeatUntilKeyPressed(() => {
     display.drawText(x, y, msg, RNG.getUniformInt(1, 15), Color.Black);
   });
   renderBorder();
-  state.game.paused = false;
+  world.game.paused = false;
   return key;
 }
 
@@ -410,4 +413,55 @@ export function fastRender() {
 
 function isType(x: unknown): x is Type {
   return typeof x === 'number';
+}
+
+export async function renderTitle() {
+  display.clear(Color.Blue);
+
+  display.drawText(
+    2,
+    5,
+    dedent`
+    In the mystical Kingdom of Kroz, where ASCII characters come to life and
+    danger lurks around every corner, a new chapter unfolds. You, a brave
+    archaeologist, have heard whispers of the legendary Magical Amulet of Kroz,
+    an artifact of immense power long thought lost to time.
+
+    Will you be the one to uncover the secrets of the forsaken caverns? Can you
+    retrieve the Magical Amulet and restore glory to the Kingdom of Kroz? The
+    adventure awaits, brave explorer!
+
+  `,
+    Color.LightCyan,
+    Color.Blue,
+  );
+
+  display.drawText(
+    9,
+    16,
+    `Use the cursor keys to move yourself (%c{${ColorCodes[Color.Yellow]}}☻%c{${ColorCodes[Color.LightGreen]}}) through the caverns.`,
+    Color.LightGreen,
+    Color.Blue,
+  );
+
+  display.writeCenter(
+    17,
+    `Use your whip (press W) to destroy all nearby creatures.`,
+    Color.LightGreen,
+    Color.Blue,
+  );
+
+  display.writeCenter(
+    HEIGHT - 1,
+    'Press any key to begin your decent into Kroz.',
+    Color.HighIntensityWhite,
+    Color.Blue,
+  );
+
+  const x = WIDTH / 2 - TITLE.length / 2;
+
+  await controls.repeatUntilKeyPressed(async () => {
+    display.drawText(x, 3, TITLE, RNG.getUniformInt(0, 16), Color.Red);
+    await delay(500);
+  });
 }

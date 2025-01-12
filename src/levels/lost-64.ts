@@ -3,11 +3,11 @@
 
 import * as screen from '../modules/screen';
 import * as sound from '../modules/sound';
-import * as state from '../modules/state';
 import * as world from '../modules/world';
+import * as player from '../modules/player';
 
 import { TypeChar, Type } from '../data/tiles';
-import { XSize, YSize } from '../data/constants';
+import { XMax, YMax } from '../data/constants';
 import { Entity } from '../classes/entity';
 
 const map = `
@@ -38,17 +38,17 @@ X!~     ççççç          äää~H##(YY++YY((YY++YY((+YYYY+(YYYYYYY((U
 
 function onLevelStart() {
   TypeChar[Type.Fast] = '☺';
-  state.level.map.replaceEntities(Type.Fast, new Entity(Type.Fast));
+  world.level.map.replaceEntities(Type.Fast, new Entity(Type.Fast));
 }
 
 async function tabletMessage() {
-  await world.prayer();
+  await player.prayer();
   await screen.flashMessage('"Tnarg yna rerutnevda ohw sevivrus siht raf..."');
-  for (let x = 0; x <= XSize; x++) {
-    for (let y = 0; y <= YSize; y++) {
-      if (state.level.map.getType(x, y) === Type.CWall1) {
+  for (let x = 0; x <= XMax; x++) {
+    for (let y = 0; y <= YMax; y++) {
+      if (world.level.map.getType(x, y) === Type.CWall1) {
         await sound.play(x * y, 50, 10);
-        state.level.map.setType(x, y, Type.Nugget);
+        world.level.map.setType(x, y, Type.Nugget);
         // ArtColor??
         screen.drawEntity(x, y);
       }

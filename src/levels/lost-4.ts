@@ -1,7 +1,7 @@
 // Lost Adventures of Kroz, Level 4 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 
 import { Type } from '../data/tiles';
 
@@ -34,7 +34,7 @@ const map = `
 `;
 
 async function onLevelStart() {
-  state.level.map.hideType(Type.Gem);
+  world.level.map.hideType(Type.Gem);
 }
 
 export default {
@@ -43,6 +43,3 @@ export default {
   onLevelStart,
   tabletMessage: 'Adventurer, try the top right corner if you desire.',
 };
-
-// TODO:
-// ZBlock?  TBlock

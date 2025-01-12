@@ -31,5 +31,3 @@ export default {
   map,
   tabletMessage: 'The tunnel below contains a magic spell.',
 };
-
-// Needs MBlocks

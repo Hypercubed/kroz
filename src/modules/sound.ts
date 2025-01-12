@@ -1,5 +1,5 @@
 /* eslint-disable no-sparse-arrays */
-import { RNG } from 'rot-js';
+import { default as RNG } from 'rot-js/lib/rng';
 import { delay } from '../utils/utils';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -66,7 +66,7 @@ export async function openDoor() {
 }
 
 // Moving a rock sound
-export async function moveRock() {
+export async function pushRock() {
   for (let i = 150; i > 35; i--) {
     await play(i, 16, 50);
   }

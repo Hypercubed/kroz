@@ -1,12 +1,12 @@
 // KINGDOM OF KROZ II, Level 22 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import * as world from '../modules/world';
+import * as player from '../modules/player';
 import * as screen from '../modules/screen';
-import * as state from '../modules/state';
+import * as world from '../modules/world';
 import * as sound from '../modules/sound';
 
-import { FLOOR_CHAR, XSize, YSize } from '../data/constants';
+import { FLOOR_CHAR, XMax, YMax } from '../data/constants';
 import { TypeChar, Type } from '../data/tiles';
 
 const map = `
@@ -39,17 +39,17 @@ async function onLevelStart() {
 }
 
 async function tabletMessage() {
-  await world.prayer();
+  await player.prayer();
   await screen.flashMessage(
     '"If goodness is in my heart, that which flows shall..."',
   );
 
   // Replace River with Nugget
-  for (let x = 0; x <= XSize; x++) {
-    for (let y = 0; y <= YSize; y++) {
-      if (state.level.map.getType(x, y) === Type.River) {
+  for (let x = 0; x <= XMax; x++) {
+    for (let y = 0; y <= YMax; y++) {
+      if (world.level.map.getType(x, y) === Type.River) {
         await sound.play(x * y, 50, 10);
-        state.level.map.setType(x, y, Type.Nugget);
+        world.level.map.setType(x, y, Type.Nugget);
         screen.drawEntity(x, y);
       }
     }
@@ -64,5 +64,3 @@ export default {
   onLevelStart,
   tabletMessage,
 };
-
-// Needs IWalls
