@@ -173,7 +173,6 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Floor: // moves
     case Type.Stop:
       move(x, y);
-      screen.renderPlayfield();
       break;
     case Type.Slow: // moves + Kills + Damage
     case Type.Medium:
@@ -182,7 +181,6 @@ export async function tryMove(dx: number, dy: number) {
       world.killAt(x, y);
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       break;
     case Type.Block: // blocked
     case Type.ZBlock:
@@ -195,18 +193,14 @@ export async function tryMove(dx: number, dy: number) {
       world.stats.whips++;
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(Type.Whip, true);
       break;
     case Type.Stairs: // Next level
+      move(x, y);
       if (world.stats.levelIndex === LEVELS.length - 1) {
-        move(x, y);
-        screen.renderPlayfield();
         await endRoutine();
         return;
       }
-      move(x, y);
-      screen.renderPlayfield();
       world.addScore(block);
       await screen.flashTypeMessage(Type.Stairs, true);
       sound.footStep();
@@ -215,7 +209,6 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Chest: {
       // Collects
       move(x, y);
-      screen.renderPlayfield();
       // TODO: Sound
       const whips = RNG.getUniformInt(2, 5);
       const gems = RNG.getUniformInt(2, world.game.difficulty + 2);
@@ -233,7 +226,6 @@ export async function tryMove(dx: number, dy: number) {
       world.level.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime]; // Slow Time
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(block, true);
       break;
     case Type.Gem: // Collects gem
@@ -241,35 +233,31 @@ export async function tryMove(dx: number, dy: number) {
       world.stats.gems++;
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(block, true);
       break;
     case Type.Invisible: // Triggers Invisible spell
       world.level.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(block, true);
       break;
     case Type.Teleport: // Collects teleport
       world.stats.teleports++;
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       screen.flashTypeMessage(block, true);
       break;
     case Type.Key: // Collects key
       sound.grab();
       world.stats.keys++;
       move(x, y);
-      screen.renderPlayfield();
-      await screen.flashMessage('To pass the Door you need a Key.');
+      await screen.flashTypeMessage(block, true);
       break;
     case Type.Door: // Opens door (if has key)
       if (world.stats.keys < 1) {
-        sound.lockedSound();
+        sound.locked();
         await delay(100);
-        await screen.flashTypeMessage(block);
+        await screen.flashMessage('To pass the Door you need a Key.');
       } else {
         world.stats.keys--;
         world.addScore(block);
@@ -291,13 +279,11 @@ export async function tryMove(dx: number, dy: number) {
       world.level.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime]; // Speed Time
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(block, true);
       break;
     case Type.Trap: // Triggers Teleport Trap
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(block, true);
       await teleport();
       break;
@@ -305,7 +291,6 @@ export async function tryMove(dx: number, dy: number) {
       world.stats.whipPower++;
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(block, true);
       break;
     case Type.Tree: // Blocked
@@ -317,7 +302,6 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Bomb: {
       // Triggers Bomb
       move(x, y);
-      screen.renderPlayfield();
       await bomb(x, y);
       await screen.flashTypeMessage(block, true);
       screen.renderBorder();
@@ -327,12 +311,10 @@ export async function tryMove(dx: number, dy: number) {
       world.stats.gems -= 10;
       world.addScore(block);
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(block, true);
       break;
     case Type.Pit: // Moves + Kills
       move(x, y);
-      screen.renderPlayfield();
       world.stats.gems = -1; // dead
       await screen.flashTypeMessage(block);
       break;
@@ -355,7 +337,6 @@ export async function tryMove(dx: number, dy: number) {
       const sy = world.level.player.y;
 
       move(x, y);
-      screen.renderPlayfield();
       await tunnel(x, y, sx, sy);
       await screen.flashTypeMessage(block, true);
       break;
@@ -363,19 +344,16 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Freeze: // Trigger Freeze spell
       world.level.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(block, true);
       break;
     case Type.Nugget: // Collects nugget
       sound.grab();
       move(x, y);
-      screen.renderPlayfield();
       world.addScore(block);
       await screen.flashTypeMessage(block, true);
       break;
     case Type.Quake: // Triggers Quake
       move(x, y);
-      screen.renderPlayfield();
       await quakeTrap();
       await screen.flashTypeMessage(block, true);
       break;
@@ -399,13 +377,11 @@ export async function tryMove(dx: number, dy: number) {
       break;
     case Type.Trap2: // Triggers Trap2
       move(x, y);
-      screen.renderPlayfield();
       world.level.map.replaceEntities(Type.Trap2, Type.Floor);
       break;
     case Type.Zap: {
       // Triggers Zap spell
       move(x, y);
-      screen.renderPlayfield();
       await zapTrap();
       await screen.flashTypeMessage(block, true);
       break;
@@ -413,7 +389,6 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Create: {
       // Triggers Create spell
       move(x, y);
-      screen.renderPlayfield();
       await createTrap();
       world.addScore(block);
       await screen.flashTypeMessage(block, true);
@@ -432,7 +407,6 @@ export async function tryMove(dx: number, dy: number) {
     case Type.ShowGems: {
       // Triggers Show Gems spell
       move(x, y);
-      screen.renderPlayfield();
       sound.grab();
       await showGemsSpell();
       await screen.flashTypeMessage(block, false);
@@ -440,7 +414,6 @@ export async function tryMove(dx: number, dy: number) {
     }
     case Type.Tablet: // Reads tablet
       move(x, y);
-      screen.renderPlayfield();
       sound.grab();
       world.addScore(block);
       await screen.flashTypeMessage(block, true);
@@ -449,7 +422,6 @@ export async function tryMove(dx: number, dy: number) {
     case Type.BlockSpell: {
       // Triggers Block spell
       move(x, y);
-      screen.renderPlayfield();
       await blockSpell();
       await screen.flashTypeMessage(block, true);
       break;
@@ -460,7 +432,6 @@ export async function tryMove(dx: number, dy: number) {
       const g = RNG.getUniformInt(14, 18);
       world.stats.gems += g;
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashMessage(`You found a Pouch containing ${g} Gems!`);
       break;
     }
@@ -470,7 +441,6 @@ export async function tryMove(dx: number, dy: number) {
       break;
     case Type.WallVanish: // Trigger Wall Vanish
       move(x, y);
-      screen.renderPlayfield();
       await wallVanish();
       await screen.flashTypeMessage(block);
       break;
@@ -479,7 +449,6 @@ export async function tryMove(dx: number, dy: number) {
     case Type.O:
     case Type.Z:
       move(x, y);
-      screen.renderPlayfield();
       sound.grab();
       await krozBonus(block);
       break;
@@ -494,13 +463,11 @@ export async function tryMove(dx: number, dy: number) {
     case Type.CWall2:
     case Type.CWall3:
       move(x, y);
-      screen.renderPlayfield();
       break;
     case Type.OSpell1: // Triggers OSpell
     case Type.OSpell2:
     case Type.OSpell3: {
       move(x, y);
-      screen.renderPlayfield();
       await triggerOSpell(block);
       await screen.flashTypeMessage(block, true);
       break;
@@ -509,7 +476,6 @@ export async function tryMove(dx: number, dy: number) {
     case Type.CSpell2:
     case Type.CSpell3: {
       move(x, y);
-      screen.renderPlayfield();
       await triggerCSpell(block);
       await screen.flashTypeMessage(block, true);
       break;
@@ -537,7 +503,6 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Trap12:
     case Type.Trap13:
       move(x, y);
-      screen.renderPlayfield();
       world.level.map.replaceEntities(block, Type.Floor);
       break;
     case Type.TBlock: // Triggers
@@ -549,12 +514,10 @@ export async function tryMove(dx: number, dy: number) {
     case Type.TTree:
       // https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST1.LEV#L1236C1-L1254C23
       move(x, y);
-      screen.renderPlayfield();
       await triggers(x, y, block);
       break;
     case Type.Rope: // Moves + Rope (Ropes not implemented)
       move(x, y);
-      screen.renderPlayfield();
       await screen.flashTypeMessage(Type.Rope, true);
       break;
     case Type.Message: {
@@ -564,12 +527,10 @@ export async function tryMove(dx: number, dy: number) {
     }
     case Type.ShootRight:
       move(x, y);
-      screen.renderPlayfield();
       await shoot(x, y, 1);
       break;
     case Type.ShootLeft:
       move(x, y);
-      screen.renderPlayfield();
       await shoot(x, y, -1);
       break;
     case Type.DropRope: // NOP
@@ -578,11 +539,9 @@ export async function tryMove(dx: number, dy: number) {
     case Type.DropRope4:
     case Type.DropRope5:
       move(x, y);
-      screen.renderPlayfield();
       break;
     case Type.Amulet:
       move(x, y);
-      screen.renderPlayfield();
       await gotAmulet();
       break;
     default:
@@ -619,7 +578,6 @@ async function whip() {
       case Type.Medium:
       case Type.Fast:
         world.killAt(x, y);
-        screen.renderPlayfield();
         world.addScore(thing);
         break;
       case Type.Block:
@@ -1073,7 +1031,6 @@ async function zapTrap() {
     if (e.type !== Type.Slow && e.type !== Type.Medium && e.type !== Type.Fast)
       continue;
     await world.killAt(e.x, e.y);
-    screen.renderPlayfield();
     await delay(20);
     k++;
   }
@@ -1109,7 +1066,6 @@ async function showGemsSpell() {
       }
     } while (!done && Math.random() > 0.01);
   }
-  screen.renderPlayfield();
 }
 
 async function blockSpell() {
@@ -1208,7 +1164,6 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
       world.level.map.setType(rx, ry, Type.Rock);
       move(x, y);
       screen.renderPlayfield();
-      screen.renderPlayfield();
       await screen.flashTypeMessage(Type.Rock, true);
     }
 
@@ -1231,8 +1186,6 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
       nogo = false;
       await sound.pushRock();
       move(x, y);
-      screen.renderPlayfield();
-      screen.renderPlayfield();
       screen.drawType(rx, ry, Type.Rock);
       await sound.rockDropped();
       screen.renderPlayfield();
@@ -1341,13 +1294,15 @@ function move(x: number, y: number) {
   const p = world.level.player;
 
   world.level.map.setType(p.x, p.y, p.replacement);
+  screen.drawEntity(p.x, p.y);
+
   const b = world.level.map.getType(x, y) as Type;
   p.replacement = [Type.CWall1, Type.CWall2, Type.CWall3, Type.Rope].includes(b)
     ? b
     : Type.Floor;
 
   world.level.map.set(x, y, p);
-
   p.x = x;
   p.y = y;
+  screen.drawEntity(p.x, p.y);
 }

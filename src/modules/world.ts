@@ -230,6 +230,7 @@ export async function killAt(x: number, y: number) {
   const block = level.map.getType(x, y);
 
   level.map.setType(x, y, Type.Floor);
+  screen.drawEntity(x, y);
 
   if (block === Type.Slow || block === Type.Medium || block === Type.Fast) {
     for (let i = 0; i < level.entities.length; i++) {
