@@ -1,4 +1,4 @@
-# Return to the Lost Adventures of Kroz
+# The Forgotton Adventures of Kroz
 
 ## Introduction
 
@@ -6,9 +6,11 @@ This is a text adventure game that is a tribute to the original Kroz series of g
 
 The goal is mimic the original Kroz games, while proving a framework for new features and improvements. This version of Kroz is written in JavaScript (TypeScript) and uses the ROT.js library for the game engine using the [original Kroz source code](https://github.com/tangentforks/kroz) as a reference.
 
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/hypercubed)
+
 ## How to Play
 
-The game is played in the browser. You can play the game by visiting the following URL: https://hypercubed.github.io/kroz/
+The game is played in the browser. You can play the game by visiting the following URL: https://hypercubed.github.io/kroz/ or https://hypercubed.itch.io/the-forgotton-adventures-of-kroz.
 
 ## Screenshots
 
