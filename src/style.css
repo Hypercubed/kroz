@@ -21,9 +21,12 @@ body {
   overflow: hidden;
 
   & canvas {
+    margin-top: 4vh;
     aspect-ratio: 16 / 10;
-    max-width: calc(100vw - 10px);
-    max-height: calc(100vh - 10px);
+    /* min-height: 325px;
+    min-width: 520px; */
+    max-width: 90vw;
+    max-height: 90vh;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
@@ -37,4 +40,28 @@ body {
   aspect-ratio: 1;
   max-width: 10vw;
   max-height: 10vw;
+}
+
+.touch_zone {
+  display: none;
+  position: absolute;
+  width: 50vw;
+  height: 50vh;
+}
+
+.touch_zone--axis {
+  right: 0;
+  top: 0;
+  width: 50vw;
+  height: 100vh;
+}
+
+.touch_zone--button-0 {
+  left: 0;
+  bottom: 0;
+}
+
+.touch_zone--button-1 {
+  left: 0;
+  top: 0;
 }

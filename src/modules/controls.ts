@@ -1,11 +1,16 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { default as gameControl } from 'gamecontroller.js/src/gamecontrol.js';
+
+import nipplejs, { JoystickManagerEventTypes } from 'nipplejs';
+
 import { DEBUG } from '../data/constants';
 import { MiniSignal } from 'mini-signals';
 import { delay } from '../utils/utils';
 
 const keyPressed = new MiniSignal<[string]>();
+const keyDown = new MiniSignal<[string]>();
+const keyUp = new MiniSignal<[string]>();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let gamepad: any = null;
@@ -89,23 +94,48 @@ const KEY_BINDING: Record<string, Action | null> = {
   F12: Action.FasterClock,
 };
 
-const GAMEPAD_BINDING: Record<string, Action | null> = {
-  button0: Action.Whip,
-  button1: Action.Teleport,
-  button4: DEBUG ? Action.PrevLevel : null,
-  button5: DEBUG ? Action.NextLevel : null,
-  button8: Action.Save,
-  button9: Action.Pause,
-  button16: Action.Quit,
-  up: Action.North,
-  down: Action.South,
-  left: Action.West,
-  right: Action.East,
-  button12: Action.North,
-  button13: Action.South,
-  button14: Action.West,
-  button15: Action.East,
+// const GAMEPAD_BINDING: Record<string, Action | null> = {
+//   button0: Action.Whip,
+//   button1: Action.Teleport,
+//   button4: DEBUG ? Action.PrevLevel : null,
+//   button5: DEBUG ? Action.NextLevel : null,
+//   button8: Action.Save,
+//   button9: Action.Pause,
+//   button16: Action.Quit,
+//   up: Action.North,
+//   down: Action.South,
+//   left: Action.West,
+//   right: Action.East,
+//   button12: Action.North,
+//   button13: Action.South,
+//   button14: Action.West,
+//   button15: Action.East,
+// };
+
+const GAMEPAD_BINDING: Record<string, string | null> = {
+  button0: 'w',
+  button1: 't',
+  button4: DEBUG ? 'PageDown' : null,
+  button5: DEBUG ? 'PageUp' : null,
+  button8: 's',
+  button9: 'p',
+  button16: 'Escape',
+  up: 'ArrowUp',
+  down: 'ArrowDown',
+  left: 'ArrowLeft',
+  right: 'ArrowRight',
+  button12: 'ArrowUp',
+  button13: 'ArrowDown',
+  button14: 'ArrowLeft',
+  button15: 'ArrowRight',
 };
+
+// const TOUCH_BINDING = {
+//   'plain:up': Action.North,
+//   'plain:down': Action.South,
+//   'plain:left': Action.West,
+//   'plain:right': Action.East,
+// }
 
 function enableGamepadControls() {
   if (gamepad) return;
@@ -113,28 +143,13 @@ function enableGamepadControls() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   gameControl.on('connect', (_gamepad: any) => {
     if (gamepad) return;
-
     gamepad = _gamepad;
-
     gamepad!.axeThreshold = [0.5, 0.5];
 
-    for (const [key, action] of Object.entries(GAMEPAD_BINDING)) {
-      if (!action) continue;
-
-      gamepad.before(key, () => {
-        keyState[key] = actionState[action] = 0b011;
-      });
-
-      gamepad.after(key, () => {
-        // Dispatch keyPressed event if key was pressed since last clearKeys
-        if ((keyState[key] || 0) & 0b11) keyPressed.dispatch(key);
-
-        keyState[key]! &= ~0b001;
-        keyState[key]! |= 0b100;
-
-        actionState[action]! &= ~0b001;
-        actionState[action]! |= 0b100;
-      });
+    for (const [evt, key] of Object.entries(GAMEPAD_BINDING)) {
+      if (!key) continue;
+      gamepad.before(evt, () => keyDown.dispatch(key));
+      gamepad.after(evt, () => keyUp.dispatch(key));
     }
   });
 }
@@ -143,34 +158,134 @@ export function disableGamepadControls() {
   gameControl.off('connect');
 }
 
+let touch_manager: nipplejs.JoystickManager | null = null;
+let button0: nipplejs.JoystickManager | null = null;
+let button1: nipplejs.JoystickManager | null = null;
+
+const isTouchCapable =
+  'ontouchstart' in window ||
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ((window as any)['DocumentTouch'] &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    document instanceof (window as any).DocumentTouch) ||
+  navigator.maxTouchPoints > 0 ||
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).navigator.msMaxTouchPoints > 0;
+
+export function enableTouchControls() {
+  if (touch_manager || !isTouchCapable) return;
+
+  document.querySelectorAll('.touch_zone').forEach((zone) => {
+    (zone as HTMLDivElement).style.display = 'block';
+  });
+
+  touch_manager = nipplejs.create({
+    zone: document.querySelector('.touch_zone--axis')! as HTMLElement,
+    mode: 'dynamic',
+    threshold: 0.5,
+    dynamicPage: true,
+    position: { left: '50px', bottom: '50px' },
+    restOpacity: 0.3,
+  });
+
+  touch_manager.on('move end' as JoystickManagerEventTypes, (_, output) => {
+    if (output.force < 0.5) return;
+
+    const threshold = 0.3;
+
+    const { x, y } = output.vector || { x: 0, y: 0 };
+
+    if (x > threshold && !isActionActive(Action.East)) {
+      keyDown.dispatch(GAMEPAD_BINDING['right']!);
+    } else if (x < -threshold && !isActionActive(Action.West)) {
+      keyDown.dispatch(GAMEPAD_BINDING['left']!);
+    } else if (Math.abs(x) <= threshold) {
+      keyUp.dispatch(GAMEPAD_BINDING['right']!);
+      keyUp.dispatch(GAMEPAD_BINDING['left']!);
+    }
+
+    if (y > threshold && !isActionActive(Action.North)) {
+      keyDown.dispatch(GAMEPAD_BINDING['up']!);
+    } else if (y < -threshold && !isActionActive(Action.South)) {
+      keyDown.dispatch(GAMEPAD_BINDING['down']!);
+    } else if (Math.abs(y) <= threshold) {
+      keyUp.dispatch(GAMEPAD_BINDING['up']!);
+      keyUp.dispatch(GAMEPAD_BINDING['down']!);
+    }
+  });
+
+  button0 = nipplejs.create({
+    zone: document.querySelector('.touch_zone--button-0')! as HTMLElement,
+    threshold: 0,
+    mode: 'dynamic',
+    lockX: true,
+    lockY: true,
+    dynamicPage: true,
+    restOpacity: 0.3,
+    position: { left: '50px', bottom: '50px' },
+  });
+
+  button0.on('start', () => keyDown.dispatch(GAMEPAD_BINDING['button0']!));
+  button0.on('end', () => keyUp.dispatch(GAMEPAD_BINDING['button0']!));
+
+  button1 = nipplejs.create({
+    zone: document.querySelector('.touch_zone--button-1')! as HTMLElement,
+    threshold: 0,
+    mode: 'dynamic',
+    lockX: true,
+    lockY: true,
+    dynamicPage: true,
+    restOpacity: 0.3,
+    position: { right: '50px', top: '50px' },
+  });
+
+  button1.on('start', () => keyDown.dispatch(GAMEPAD_BINDING['button1']!));
+  button1.on('end', () => keyUp.dispatch(GAMEPAD_BINDING['button1']!));
+}
+
+export function disableTouchControls() {
+  document.querySelectorAll('.touch_zone').forEach((zone) => {
+    (zone as HTMLDivElement).style.display = 'none';
+  });
+
+  // touch_manager?.destroy();
+  // buttonA?.destroy();
+  // buttonB?.destroy();
+}
+
 function keydownListener(event: KeyboardEvent) {
-  // console.log(event.key);
   if (event.repeat) return; // Ignore repeated keydown events, repeat is handled by keyup
-
-  const action = KEY_BINDING[event.key];
-  keyState[event.key] = 0b011;
-
-  if (!action) return;
-  event.preventDefault();
-  actionState[action] = 0b011;
+  if (KEY_BINDING[event.key]) event.preventDefault();
+  keyDown.dispatch(event.key);
 }
 
 function keyupListener(event: KeyboardEvent) {
-  // Dispatch keyPressed event if key was pressed since last clearKeys
-  if ((keyState[event.key] || 0) & 0b11) keyPressed.dispatch(event.key);
+  if (KEY_BINDING[event.key]) event.preventDefault();
+  keyUp.dispatch(event.key);
+}
 
-  keyState[event.key]! &= ~0b001;
-  keyState[event.key]! |= 0b100;
-
-  const action = KEY_BINDING[event.key];
+keyDown.add((key) => {
+  keyState[key] = 0b011;
+  const action = KEY_BINDING[key];
   if (!action) return;
-  event.preventDefault();
+  actionState[action] = 0b011;
+});
+
+keyUp.add((key) => {
+  if ((keyState[key] || 0) & 0b11) keyPressed.dispatch(key);
+
+  keyState[key]! &= ~0b001;
+  keyState[key]! |= 0b100;
+
+  const action = KEY_BINDING[key];
+  if (!action) return;
   actionState[action]! &= ~0b001;
   actionState[action]! |= 0b100;
-}
+});
 
 export function start() {
   enableGamepadControls();
+  enableTouchControls();
   window.addEventListener('keydown', keydownListener);
   window.addEventListener('keyup', keyupListener);
 }
