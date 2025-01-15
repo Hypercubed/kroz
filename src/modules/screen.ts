@@ -18,6 +18,7 @@ import { delay } from '../utils/utils';
 import dedent from 'ts-dedent';
 import { Type, TypeChar, TypeColor, TypeMessage } from '../data/tiles';
 import { Entity } from '../classes/entity';
+import { Position, Renderable } from '../classes/components';
 
 export function renderScreen() {
   const x = 70;
@@ -292,9 +293,15 @@ export function renderPlayfield() {
   for (let x = 0; x < world.level.map.width; x++) {
     for (let y = 0; y < world.level.map.height; y++) {
       // Skip entities, will be rendered later
-      const e = world.level.map.get(x, y) || new Entity(Type.Floor, { x, y });
-      if (e.type === Type.Player) continue;
+      const e = world.level.map.get(x, y);
+
+      if (!e) {
+        drawFloorAt(x, y);
+        continue;
+      }
+
       if (
+        e.type === Type.Player ||
         e.type === Type.Slow ||
         e.type === Type.Medium ||
         e.type === Type.Fast
@@ -307,21 +314,35 @@ export function renderPlayfield() {
 
   for (let i = 0; i < world.level.entities.length; i++) {
     const e = world.level.entities[i];
-    if (e.x === -1 || e.y === -1) continue; // dead
-    drawEntity(e.x, e.y, e);
+    const p = e.get(Position)!;
+    if (p.x === -1 || p.y === -1) continue; // dead
+    drawEntity(p.x, p.y, e);
   }
 
-  drawEntity(world.level.player.x, world.level.player.y, world.level.player);
+  const p = world.level.player.get(Position)!;
+  drawEntity(p.x, p.y, world.level.player);
+}
+
+function drawFloorAt(x: number, y: number) {
+  const [fg, bg] = TypeColor[Type.Floor];
+  display.draw(x, y, FLOOR_CHAR, fg!, bg!);
 }
 
 export function drawEntity(x: number, y: number, entity?: Entity | null) {
   entity ??= world.level.map.get(x, y);
   if (!entity) return;
 
-  let ch = entity.ch;
-  if (entity.type === Type.Player && world.level.T[world.Timer.Invisible] > 0)
-    ch = FLOOR_CHAR;
-  display.draw(x + XBot, y + YBot, ch, entity.fg!, entity.bg!);
+  if (entity.has(Renderable)) {
+    const t = entity.get(Renderable)!;
+    if (!t) return;
+
+    let ch = t.ch;
+    if (entity.type === Type.Player && world.level.T[world.Timer.Invisible] > 0)
+      ch = FLOOR_CHAR;
+    display.draw(x + XBot, y + YBot, ch, t.fg!, t.bg!);
+  } else {
+    drawFloorAt(x, y);
+  }
 }
 
 export function drawType(

@@ -36,7 +36,7 @@ X!~     ççççç          äää~H##(YY++YY((YY++YY((+YYYY+(YYYYYYY((U
 `;
 
 function onLevelStart() {
-  world.level.map.updateEntities(Type.Fast, { ch: '☺' });
+  world.level.map.updateTilesByType(Type.Fast, { ch: '☺' });
 }
 
 async function tabletMessage() {

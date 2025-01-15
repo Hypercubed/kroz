@@ -1,49 +1,38 @@
-import { Color } from '../data/colors';
-import { FLOOR_CHAR } from '../data/constants';
-import { Type, TypeChar, TypeColor } from '../data/tiles';
+import { Type } from '../data/tiles';
 
-export type EntityData = {
-  type: Type | string;
-  x: number;
-  y: number;
-  ch: string;
-  fg: number | null;
-  bg: number | null;
-};
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+interface Component<T> extends Function {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  new (...args: any[]): T;
+}
 
 export class Entity {
-  replacement = Type.Floor;
+  protected _components = new Map<string, object>();
+  protected _tags = new Set<string | symbol>();
 
-  ch: string = FLOOR_CHAR;
-  fg: number | null = TypeColor[Type.Floor][0]!;
-  bg: number | null = TypeColor[Type.Floor][1]!;
-  x = 0;
-  y = 0;
+  constructor(public readonly type: Type | string) {}
 
-  constructor(
-    public readonly type: Type | string,
-    data: Partial<EntityData> = {},
-  ) {
-    const { x, y } = data;
-    let { ch, fg, bg } = data;
-
-    if (fg === null) fg = TypeColor[Type.Floor][0]!;
-    if (bg === null) bg = TypeColor[Type.Floor][1]!;
-
-    if (typeof type === 'string') {
-      ch ??= type.toLocaleUpperCase();
-      fg ??= Color.HighIntensityWhite;
-      bg ??= Color.Brown;
-    } else {
-      ch ??= TypeChar[type];
-      fg ??= TypeColor[type][0] ?? TypeColor[Type.Floor][0]!;
-      bg ??= TypeColor[type][1] ?? TypeColor[Type.Floor][1]!;
+  add<T extends object>(x: T): this;
+  add(x: symbol | string): this;
+  add(x: object | symbol | string): this {
+    if (typeof x === 'symbol' || typeof x === 'string') {
+      this._tags.add(x);
+      return this;
     }
+    this._components.set(x.constructor.name, x);
+    return this;
+  }
 
-    this.ch = ch ?? FLOOR_CHAR;
-    this.fg = fg;
-    this.bg = bg;
-    this.x = x ?? 0;
-    this.y = y ?? 0;
+  get<T extends object>(x: Component<T>): T | undefined {
+    return this._components.get(x.name) as T;
+  }
+
+  has(x: symbol | string): boolean;
+  has<T extends object>(x: Component<T>): boolean;
+  has(x: Component<object> | symbol | string): boolean {
+    if (typeof x === 'symbol' || typeof x === 'string') {
+      return this._tags.has(x);
+    }
+    return this._components.has(x.name);
   }
 }

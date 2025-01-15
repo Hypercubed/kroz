@@ -6,6 +6,7 @@ import * as screen from '../modules/screen';
 import * as world from '../modules/world';
 
 import { Type } from '../data/tiles';
+import { Position } from '../classes/components';
 
 const map = `
      U--2--U--2--U--2--U--2--U--55-====-===--=====-===--==--=--=
@@ -34,18 +35,16 @@ FF  22##âââ##ãã333333##3333333--##-===-==-==------=====-==-=--==
 `;
 
 function onLevelStart() {
-  world.level.map.updateEntities(Type.Fast, { ch: '☺' });
+  world.level.map.updateTilesByType(Type.Fast, { ch: '☺' });
 }
 
 async function tabletMessage() {
   await screen.flashMessage(
     'Walls that block your progress shall be removed...',
   );
-  world.level.map.setType(
-    world.level.player.x,
-    world.level.player.y,
-    Type.OSpell1,
-  );
+
+  const p = world.level.player.get(Position)!;
+  world.level.map.setType(p.x, p.y, Type.OSpell1);
   player.tryMove(0, 0);
 }
 

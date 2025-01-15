@@ -50,7 +50,7 @@ import caverns2 from '../levels/caverns-2.ts';
 import caverns4 from '../levels/caverns-4.ts';
 
 import {
-  ChanceChance,
+  createEntityOfType,
   MapLookup,
   Type,
   TypeChar,
@@ -59,7 +59,14 @@ import {
 import { FLOOR_CHAR } from '../data/constants.ts';
 import { Timer } from './world.ts';
 import { mod } from 'rot-js/lib/util';
-import { Entity } from '../classes/entity.ts';
+import {
+  ChanceProbability,
+  isGenerator,
+  isMobile,
+  isPlayer,
+  Position,
+  Renderable,
+} from '../classes/components.ts';
 
 export interface Level {
   id: string;
@@ -158,93 +165,50 @@ export const LEVELS: Level[] = [
 // - castle of kroz - 1
 
 function readLevelMap(level: string) {
+  const map = world.level.map;
+
   const lines = level.split('\n').filter((line) => line.length > 0);
   for (let y = 0; y < lines.length; y++) {
     const line = lines[y];
     for (let x = 0; x < line.length; x++) {
       const char = line.charAt(x) ?? FLOOR_CHAR;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const block = (MapLookup as any)[char];
+      const block = MapLookup[char];
 
-      world.level.map.setType(x, y, block ?? char);
+      const entity = createEntityOfType(block ?? char);
+      map.set(x, y, entity);
 
-      // Special cases
-      // See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST4.TIT#L328
-      switch (char) {
-        case 'Ã':
-          world.level.map.setType(x, y, '!');
-          break;
-        case '´':
-          world.level.map.setType(x, y, '.');
-          break;
-        case 'µ':
-          world.level.map.setType(x, y, '?');
-          break;
-        case '¶':
-          world.level.map.setType(x, y, "'");
-          break;
-        case '·':
-          world.level.map.setType(x, y, ',');
-          break;
-        case '¸':
-          world.level.map.setType(x, y, ':');
-          break;
-        case 'ú':
-          world.level.map.setType(x, y, '·');
-          break;
-        case 'ù':
-          world.level.map.setType(x, y, '∙');
-          break;
-        case 'ï':
-          world.level.map.setType(x, y, '∩');
-          break;
+      if (entity.type === Type.Statue) {
+        world.level.T[Timer.StatueGemDrain] = 32000;
+      }
+      if (entity.has(isPlayer)) {
+        entity.add(new Position({ x, y }));
+        world.level.player = entity;
+      }
+      if (entity.has(isMobile)) {
+        entity.add(new Position({ x, y }));
+        world.level.entities.push(entity);
+      }
+      if (entity.has(isGenerator)) {
+        world.level.genNum++;
       }
 
-      // Special cases
-      if (
-        ChanceChance[block as keyof typeof ChanceChance] &&
-        Math.random() < ChanceChance[block as keyof typeof ChanceChance]
-      ) {
-        world.level.map.set(
-          x,
-          y,
-          new Entity(block, {
-            x,
-            y,
-            ch: TypeChar[Type.Chance],
-            fg: TypeColor[Type.Chance][0],
-            bg: TypeColor[Type.Chance][1],
-          }),
-        );
-      }
-
-      switch (block) {
-        case Type.Player:
-          world.level.player.x = x;
-          world.level.player.y = y;
-          world.level.map.set(x, y, world.level.player);
-          break;
-        case Type.Slow:
-        case Type.Medium:
-        case Type.Fast:
-        case Type.MBlock: {
-          const a = new Entity(block, { x, y });
-          world.level.entities.push(a);
-          world.level.map.set(x, y, a);
-          break;
+      // TODO: item becomes visible once whipped
+      if (entity.has(ChanceProbability)) {
+        const p = entity.get(ChanceProbability)!.probability;
+        if (Math.random() < p) {
+          const t = entity.get(Renderable)!;
+          t.ch = TypeChar[Type.Chance];
+          t.fg = TypeColor[Type.Chance][0];
+          t.bg = TypeColor[Type.Chance][1];
         }
-        case Type.Generator:
-          world.level.genNum++;
-          break;
-        case Type.Statue:
-          world.level.T[Timer.StatueGemDrain] = 32000;
-          break;
       }
     }
   }
 
+  // Randomize gem colors
+  map.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
+
   // Randomize
-  TypeColor[Type.Gem] = [RNG.getUniformInt(1, 15), null];
   TypeColor[Type.Border] = [RNG.getUniformInt(8, 15), RNG.getUniformInt(1, 8)];
 }
 

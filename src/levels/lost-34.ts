@@ -1,7 +1,7 @@
 // Lost Adventures of Kroz, Level 33 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import { Entity } from '../classes/entity';
+import { Renderable } from '../classes/components';
 import { XMax, YMax } from '../data/constants';
 import * as world from '../modules/world';
 
@@ -37,11 +37,9 @@ async function onLevelStart() {
     for (let y = 0; y <= YMax; y++) {
       const e = world.level.map.get(x, y)!;
       if (e) {
-        world.level.map.set(
-          x,
-          y,
-          new Entity(e.type, { x, y, ch: e.ch, fg: null, bg: null }),
-        );
+        const t = e.get(Renderable)!;
+        t.fg = null;
+        t.bg = null;
       }
     }
   }

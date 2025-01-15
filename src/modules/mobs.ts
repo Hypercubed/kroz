@@ -8,6 +8,15 @@ import { Type, TypeChar, TypeColor } from '../data/tiles';
 import { TIME_SCALE, XMax, YMax } from '../data/constants';
 import { Timer } from './world';
 import type { Entity } from '../classes/entity';
+import {
+  Attacks,
+  Eats,
+  FollowsPlayer,
+  KilledBy,
+  Position,
+  Renderable,
+  Walkable,
+} from '../classes/components';
 
 function getBaseSpeed(t: Type) {
   switch (t) {
@@ -59,153 +68,102 @@ export function init() {
 
 export async function update() {
   const current = scheduler.next();
-  await entitiesAction(current.type);
-}
-
-async function mobAction(e: Entity) {
-  if (
-    e.x === -1 ||
-    e.y === -1 ||
-    world.level.map.getType(e.x, e.y) !== (e.type as unknown as Type) // Killed
-  ) {
-    world.kill(e);
-    return;
-  } // dead
-
-  let dx = 0;
-  let dy = 0;
-  if (world.level.player.x < e.x) dx = -1;
-  if (world.level.player.x > e.x) dx = 1;
-  if (world.level.player.y < e.y) dy = -1;
-  if (world.level.player.y > e.y) dy = 1;
-
-  const x = e.x + dx;
-  const y = e.y + dy;
-
-  if (x < 0 || x > XMax || y < 0 || y > YMax) return;
-
-  const block = world.level.map.getType(x, y);
-
-  // TODO: use lists?
-  switch (block) {
-    case Type.Floor: // Breaks
-    case Type.TBlock:
-    case Type.TRock:
-    case Type.TGem:
-    case Type.TBlind:
-    case Type.TGold:
-    case Type.TWhip:
-    case Type.TTree:
-      move(e, x, y);
-      break;
-    case Type.Block: // Breaks + Kills
-    case Type.MBlock:
-    case Type.ZBlock:
-    case Type.GBlock:
-      world.level.map.setType(e.x, e.y, Type.Floor);
-      world.level.map.setType(x, y, Type.Floor);
-      world.kill(e);
-      world.addScore(block);
-      sound.play(800, 18);
-      sound.play(400, 20);
-      break;
-    case Type.Player: // Damage + Kills
-      world.stats.gems--;
-      world.level.map.setType(e.x, e.y, Type.Floor);
-      world.kill(e);
-      world.addScore(block);
-      break;
-    case Type.Whip: // Grabs
-    case Type.Chest:
-    case Type.SlowTime:
-    case Type.Gem:
-    case Type.Invisible:
-    case Type.Teleport:
-    case Type.Key:
-    case Type.SpeedTime:
-    case Type.Trap:
-    case Type.Power:
-    case Type.Freeze:
-    case Type.Nugget:
-    case Type.K:
-    case Type.R:
-    case Type.O:
-    case Type.Z:
-    case Type.ShootRight:
-    case Type.ShootLeft:
-      sound.grab();
-      move(e, x, y);
-      break;
-    default: // Blocked
-      move(e, e.x, e.y);
-      break;
-  }
-}
-
-async function mBlockAction(e: Entity) {
-  if (
-    e.x === -1 ||
-    e.y === -1 ||
-    world.level.map.getType(e.x, e.y) !== (e.type as unknown as Type) // Killed
-  ) {
-    world.kill(e);
-    return;
-  } // dead
-
-  let dx = 0;
-  let dy = 0;
-  if (world.level.player.x < e.x) dx = -1;
-  if (world.level.player.x > e.x) dx = 1;
-  if (world.level.player.y < e.y) dy = -1;
-  if (world.level.player.y > e.y) dy = 1;
-
-  const x = e.x + dx;
-  const y = e.y + dy;
-
-  if (x < 0 || x > XMax || y < 0 || y > YMax) return;
-
-  const block = world.level.map.getType(x, y);
-
-  switch (block) {
-    case Type.Floor: // Moves
-      move(e, x, y);
-      e.ch = TypeChar[Type.Block]; // MBlocks become visible afer moving
-      e.fg = TypeColor[Type.Block][0] ?? TypeColor[Type.Floor][0];
-      e.bg = TypeColor[Type.Block][1] ?? TypeColor[Type.Floor][1];
-      break;
-    default: // Blocked
-      move(e, e.x, e.y);
-      break;
-  }
-}
-
-async function entitiesAction(t: Type) {
-  if (t === Type.Player) return;
+  if (!current) return;
+  const type = current.type;
+  if (type === Type.Player) return;
   if (world.level.T[Timer.FreezeTime] > 0) return;
 
-  for (let i = 0; i < world.level.entities.length; i++) {
-    const e = world.level.entities[i];
-    if (t && e.type !== t) continue;
-
-    if (e.x === -1 || e.y === -1) continue; // dead
-
-    if (e.type === Type.MBlock) {
-      await mBlockAction(e);
-    } else {
-      await mobAction(e);
-    }
+  for (const e of world.level.entities) {
+    if (e.type === type) await act(e);
   }
 }
 
-function move(e: Entity, x: number, y: number) {
-  if (e.type === Type.Slow) {
-    e.ch = Math.random() > 0.5 ? 'A' : 'Ä';
-  } else if (e.type === Type.Medium) {
-    e.ch = Math.random() > 0.5 ? 'ö' : 'Ö';
+async function act(e: Entity) {
+  const ep = e.get(Position)!;
+  if (ep.isDead()) return;
+
+  if (world.level.map.getType(ep.x, ep.y) !== (e.type as unknown as Type)) {
+    world.kill(e);
+    return;
+  } // dead
+
+  if (e.has(FollowsPlayer)) {
+    let dx = 0;
+    let dy = 0;
+
+    const pp = world.level.player.get(Position)!;
+
+    if (pp.x < ep.x) dx = -1;
+    if (pp.x > ep.x) dx = 1;
+    if (pp.y < ep.y) dy = -1;
+    if (pp.y > ep.y) dy = 1;
+
+    tryMove(e, dx, dy);
+  }
+}
+
+function tryMove(e: Entity, dx: number, dy: number) {
+  const ep = e.get(Position)!;
+
+  const x = ep.x + dx;
+  const y = ep.y + dy;
+
+  if (x < 0 || x > XMax || y < 0 || y > YMax) return;
+
+  const block = world.level.map.get(x, y);
+  if (!block) return;
+
+  if (e.get(Eats)?.has(block.type)) {
+    sound.grab();
+    moveTo(e, x, y);
+    return;
   }
 
-  world.level.map.setType(e.x, e.y, Type.Floor);
+  if (block.get(Walkable)?.has(e.type)) {
+    moveTo(e, x, y);
+
+    if (e.type === Type.MBlock) {
+      const t = e.get(Renderable)!;
+      t.ch = TypeChar[Type.Block]; // MBlocks become visible afer moving
+      t.fg = TypeColor[Type.Block][0] ?? TypeColor[Type.Floor][0];
+      t.bg = TypeColor[Type.Block][1] ?? TypeColor[Type.Floor][1];
+    }
+
+    return;
+  }
+
+  if (e.get(KilledBy)?.has(block.type)) {
+    world.level.map.setType(ep.x, ep.y, Type.Floor);
+    world.level.map.setType(x, y, Type.Floor);
+    world.kill(e);
+    world.addScore(block.type as Type);
+    sound.play(800, 18);
+    sound.play(400, 20);
+    return;
+  }
+
+  if (e.get(Attacks)?.has(block.type)) {
+    world.stats.gems--;
+    world.level.map.setType(ep.x, ep.y, Type.Floor);
+    world.kill(e);
+    world.addScore(block.type as Type);
+    return;
+  }
+
+  // Stay in place
+  moveTo(e, ep.x, ep.y);
+}
+
+function moveTo(e: Entity, x: number, y: number) {
+  if (e.type === Type.Slow) {
+    e.get(Renderable)!.ch = Math.random() > 0.5 ? 'A' : 'Ä';
+  } else if (e.type === Type.Medium) {
+    e.get(Renderable)!.ch = Math.random() > 0.5 ? 'ö' : 'Ö';
+  }
+
+  const p = e.get(Position)!;
+
+  world.level.map.setType(p.x, p.y, Type.Floor);
   world.level.map.set(x, y, e);
-  e.x = x;
-  e.y = y;
+  p.moveTo(x, y);
 }

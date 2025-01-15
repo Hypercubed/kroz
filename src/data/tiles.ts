@@ -1,3 +1,16 @@
+import {
+  Attacks,
+  ChanceProbability,
+  Eats,
+  FollowsPlayer,
+  isGenerator,
+  isMobile,
+  isPlayer,
+  KilledBy,
+  Renderable,
+  Walkable,
+} from '../classes/components';
+import { Entity } from '../classes/entity';
 import { Color } from './colors';
 import { FLOOR_CHAR } from './constants';
 
@@ -661,4 +674,141 @@ const tileColorsDefault = structuredClone(TypeColor);
 export function reset() {
   Object.assign(TypeChar, tileCharsDefault);
   Object.assign(TypeColor, tileColorsDefault);
+}
+
+export function createTileDataForType(type: Type | string) {
+  let fg = TypeColor[Type.Floor][0]!;
+  let bg = TypeColor[Type.Floor][1]!;
+  let ch = FLOOR_CHAR;
+
+  switch (type) {
+    case 'Ã':
+      type = '!';
+      break;
+    case '´':
+      type = '.';
+      break;
+    case 'µ':
+      type = '?';
+      break;
+    case '¶':
+      type = "'";
+      break;
+    case '·':
+      type = ',';
+      break;
+    case '¸':
+      type = ':';
+      break;
+    case 'ú':
+      type = '·';
+      break;
+    case 'ù':
+      type = '∙';
+      break;
+    case 'ï':
+      type = '∩';
+      break;
+  }
+
+  if (typeof type === 'string') {
+    ch = type.toLocaleUpperCase();
+    fg = Color.HighIntensityWhite;
+    bg = Color.Brown;
+  } else {
+    ch = TypeChar[type];
+    fg = TypeColor[type]?.[0] ?? TypeColor[Type.Floor][0]!;
+    bg = TypeColor[type]?.[1] ?? TypeColor[Type.Floor][1]!;
+  }
+
+  fg ??= TypeColor[Type.Floor][0]!;
+  bg ??= TypeColor[Type.Floor][1]!;
+  ch ??= FLOOR_CHAR;
+
+  return { ch, fg, bg };
+}
+
+const MOB_EATS = [
+  Type.Whip,
+  Type.Chest,
+  Type.SlowTime,
+  Type.Gem,
+  Type.Invisible,
+  Type.Teleport,
+  Type.Key,
+  Type.SpeedTime,
+  Type.Trap,
+  Type.Power,
+  Type.Freeze,
+  Type.Nugget,
+  Type.K,
+  Type.R,
+  Type.O,
+  Type.Z,
+  Type.ShootRight,
+  Type.ShootLeft,
+];
+const MOB_WALKABLE = [
+  Type.Floor,
+  Type.TBlock,
+  Type.TRock,
+  Type.TGem,
+  Type.TBlind,
+  Type.TGold,
+  Type.TWhip,
+  Type.TTree,
+  ...MOB_EATS,
+];
+const MOB_KILLED_BY = [Type.Block, Type.MBlock, Type.ZBlock, Type.GBlock];
+
+export function createEntityOfType(type: Type | string) {
+  const entity = new Entity(type);
+
+  // TODO: Don't add Renderable for invisible tiles
+  entity.add(new Renderable(createTileDataForType(type)));
+
+  if (type === Type.Player) {
+    entity.add(isPlayer);
+  }
+
+  if (
+    type === Type.Fast ||
+    type === Type.Medium ||
+    type === Type.Slow ||
+    type === Type.MBlock
+  ) {
+    entity.add(isMobile).add(FollowsPlayer);
+
+    if (type === Type.Fast || type === Type.Medium || type === Type.Slow) {
+      entity
+        .add(new Eats(MOB_EATS))
+        .add(new KilledBy(MOB_KILLED_BY))
+        .add(new Attacks([Type.Player]));
+    }
+  }
+
+  // Adds walkability to tiles
+  if (MOB_WALKABLE.includes(type as Type) || type === Type.Floor) {
+    entity.add(
+      new Walkable([
+        Type.Fast,
+        Type.Medium,
+        Type.Slow,
+        Type.MBlock,
+        Type.Player,
+      ]),
+    );
+  }
+
+  if (ChanceChance[type as keyof typeof ChanceChance]) {
+    entity.add(
+      new ChanceProbability(ChanceChance[type as keyof typeof ChanceChance]),
+    );
+  }
+
+  if (type === Type.Generator) {
+    entity.add(isGenerator);
+  }
+
+  return entity;
 }

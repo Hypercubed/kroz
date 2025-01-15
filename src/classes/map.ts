@@ -1,7 +1,8 @@
 import { default as RNG } from 'rot-js/lib/rng';
 import { XMax, YMax } from '../data/constants';
-import { Type, TypeChar, TypeColor } from '../data/tiles';
-import { Entity, EntityData } from './entity';
+import { createEntityOfType, createTileDataForType, Type } from '../data/tiles';
+import { Entity } from './entity';
+import { Renderable } from './components';
 
 export class PlayField {
   private PF = [] as Entity[][];
@@ -38,9 +39,9 @@ export class PlayField {
     return type ?? Type.Floor;
   }
 
-  setType(x: number, y: number, tile: Type | string) {
-    const entity = new Entity(tile, { x, y });
-    this.set(x, y, entity);
+  // TODO: get rid of this, doesn't work for mobs
+  setType(x: number, y: number, type: Type | string) {
+    this.set(x, y, createEntityOfType(type));
   }
 
   findRandomEmptySpace(): [number, number] {
@@ -54,40 +55,20 @@ export class PlayField {
     }
   }
 
-  replaceEntities(type: Type | string, entity: Entity | Type | string) {
-    for (let x = 0; x < this.width; x++) {
-      for (let y = 0; y < this.height; y++) {
-        if (this.getType(x, y) === type) {
-          if (typeof entity === 'string' || typeof entity === 'number') {
-            entity = new Entity(entity, { x, y });
-          }
-          this.set(x, y, entity);
-        }
-      }
-    }
-  }
-
-  updateEntities(type: Type | string, entity: Partial<EntityData>) {
+  updateTilesByType(type: Type | string, tileData: Partial<Renderable>) {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const e = this.get(x, y);
         if (e?.type === type) {
-          Object.assign(e, entity);
+          const t = e.get(Renderable)!;
+          Object.assign(t, tileData);
         }
       }
     }
   }
 
   hideType(type: Type) {
-    for (let x = 0; x < this.width; x++) {
-      for (let y = 0; y < this.height; y++) {
-        const e = this.get(x, y);
-        if (e?.type === type) {
-          e.ch = TypeChar[Type.Floor];
-          e.fg = TypeColor[Type.Floor][0]!;
-          e.bg = TypeColor[Type.Floor][1]!;
-        }
-      }
-    }
+    // TODO: remove Tile from entity
+    this.updateTilesByType(type, createTileDataForType(Type.Floor));
   }
 }

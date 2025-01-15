@@ -13,6 +13,7 @@ import * as effects from './effects';
 import { DEBUG, XMax, YMax } from '../data/constants';
 import { Timer } from './world';
 import { Color } from '../data/colors';
+import { Position } from '../classes/components';
 
 let stats: Stats;
 let gui: dat.GUI;
@@ -93,8 +94,8 @@ export async function start() {
       o.add(world.stats, 'whipPower', 2, 7, 1).listen();
 
       const p = gui.addFolder('Player');
-      p.add(world.level.player, 'x', 0, XMax, 1).listen();
-      p.add(world.level.player, 'y', 0, YMax, 1).listen();
+      p.add(world.level.player.get(Position)!, 'x', 0, XMax, 1).listen();
+      p.add(world.level.player.get(Position)!, 'y', 0, YMax, 1).listen();
     }
   }
 

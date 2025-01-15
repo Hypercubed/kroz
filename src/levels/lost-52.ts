@@ -34,7 +34,7 @@ K0ààààààààààààààààààààààààààààààààààààààà
 
 async function onLevelStart() {
   // Change floor character
-  world.level.map.updateEntities(Type.Floor, {
+  world.level.map.updateTilesByType(Type.Floor, {
     ch: '.',
     fg: Color.White,
     bg: Color.Black,

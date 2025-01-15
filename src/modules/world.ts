@@ -5,9 +5,10 @@ import * as sound from './sound.ts';
 import { CLOCK_SCALE, DEBUG, XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Level } from './levels.ts';
-import { Type } from '../data/tiles.ts';
+import { createTileDataForType, Type } from '../data/tiles.ts';
 import { PlayField } from '../classes/map.ts';
 import { RNG } from 'rot-js';
+import { Position, Renderable } from '../classes/components.ts';
 
 export const enum Timer {
   SlowTime = 4,
@@ -227,18 +228,13 @@ export function addScore(block: Type) {
 }
 
 export async function killAt(x: number, y: number) {
-  const block = level.map.getType(x, y);
+  const entity = level.map.get(x, y);
 
   level.map.setType(x, y, Type.Floor);
   screen.drawEntity(x, y);
 
-  if (block === Type.Slow || block === Type.Medium || block === Type.Fast) {
-    for (let i = 0; i < level.entities.length; i++) {
-      const m = level.entities[i];
-      if (m.x === x && m.y === y) {
-        await kill(m);
-      }
-    }
+  if (entity && entity.has(Position)) {
+    await kill(entity);
   }
 }
 
@@ -246,8 +242,7 @@ export async function kill(e: Entity) {
   if (typeof e.type === 'number' && e.type < 4) {
     await sound.kill(e.type);
   }
-  e.x = -1;
-  e.y = -1;
+  e.get(Position)?.die();
 }
 
 export async function generateCreatures(n: number = 1) {
@@ -257,8 +252,12 @@ export async function generateCreatures(n: number = 1) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
       if (level.map.getType(x, y) === Type.Floor) {
-        level.entities.push(new Entity(Type.Slow, { x, y }));
-        level.map.setType(x, y, Type.Slow);
+        const entity = new Entity(Type.Slow);
+        entity
+          .add(new Renderable(createTileDataForType(Type.Slow)))
+          .add(new Position({ x, y }));
+        level.entities.push(entity);
+        level.map.set(x, y, entity);
         await sound.generateCreature();
         done = true;
       }

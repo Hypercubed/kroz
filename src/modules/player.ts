@@ -20,6 +20,7 @@ import {
   TUNNELABLES,
   SPEAR_BLOCKS,
   SPEAR_IGNORE,
+  createEntityOfType,
 } from '../data/tiles.ts';
 import {
   TIME_SCALE,
@@ -37,6 +38,7 @@ import { clamp, delay } from '../utils/utils.ts';
 import { LEVELS } from './levels.ts';
 import dedent from 'ts-dedent';
 import { Timer } from './world.ts';
+import { Position } from '../classes/components.ts';
 
 const SPELL_DURATION = {
   [Timer.SlowTime]: 70 * TIME_SCALE,
@@ -53,11 +55,8 @@ export async function update() {
     return await levels.prevLevel();
 
   if (controls.wasActionDeactivated(Action.NextLevelCheat)) {
-    world.level.map.setType(
-      world.level.player.x + 1,
-      world.level.player.y,
-      Type.Stairs,
-    );
+    const p = world.level.player.get(Position)!;
+    world.level.map.setType(p.x + 1, p.y, Type.Stairs);
     await sound.cheat();
     return;
   }
@@ -157,8 +156,9 @@ export async function update() {
 }
 
 export async function tryMove(dx: number, dy: number) {
-  const x = world.level.player.x + dx;
-  const y = world.level.player.y + dy;
+  const p = world.level.player.get(Position)!;
+  const x = p.x + dx;
+  const y = p.y + dy;
 
   if (x < 0 || x > XMax || y < 0 || y > YMax) {
     await sound.staticNoise();
@@ -333,8 +333,9 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Tunnel: {
       // Goes through tunnel
       // Player starting position
-      const sx = world.level.player.x;
-      const sy = world.level.player.y;
+      const p = world.level.player.get(Position)!;
+      const sx = p.x;
+      const sy = p.y;
 
       move(x, y);
       await tunnel(x, y, sx, sy);
@@ -377,7 +378,7 @@ export async function tryMove(dx: number, dy: number) {
       break;
     case Type.Trap2: // Triggers Trap2
       move(x, y);
-      world.level.map.replaceEntities(Type.Trap2, Type.Floor);
+      replaceEntities(Type.Trap2, Type.Floor);
       break;
     case Type.Zap: {
       // Triggers Zap spell
@@ -503,7 +504,7 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Trap12:
     case Type.Trap13:
       move(x, y);
-      world.level.map.replaceEntities(block, Type.Floor);
+      replaceEntities(block, Type.Floor);
       break;
     case Type.TBlock: // Triggers
     case Type.TRock:
@@ -550,9 +551,21 @@ export async function tryMove(dx: number, dy: number) {
   }
 }
 
+function replaceEntities(a: Type | string, b: Type | string) {
+  const map = world.level.map;
+  for (let x = 0; x < map.width; x++) {
+    for (let y = 0; y < map.height; y++) {
+      if (map.getType(x, y) === a) {
+        map.set(x, y, createEntityOfType(b));
+      }
+    }
+  }
+}
+
 async function whip() {
-  const PX = world.level.player.x;
-  const PY = world.level.player.y;
+  const p = world.level.player.get(Position)!;
+  const PX = p.x;
+  const PY = p.y;
 
   sound.whip();
   await hit(PX - 1, PY - 1, '\\');
@@ -678,11 +691,13 @@ async function whip() {
 }
 
 export async function flashPlayer() {
+  const p = world.level.player.get(Position)!;
+
   for (let i = 0; i < 160; i++) {
     if (i % 5 === 0) {
       screen.drawType(
-        world.level.player.x,
-        world.level.player.y,
+        p.x,
+        p.y,
         Type.Player,
         RNG.getUniformInt(0, 15),
         RNG.getUniformInt(0, 8),
@@ -696,12 +711,10 @@ export async function flashPlayer() {
 async function teleport() {
   await flashPlayer();
 
-  world.level.map.setType(
-    world.level.player.x,
-    world.level.player.y,
-    Type.Floor,
-  );
-  screen.drawEntity(world.level.player.x, world.level.player.y);
+  const p = world.level.player.get(Position)!;
+
+  world.level.map.setType(p.x, p.y, Type.Floor);
+  screen.drawEntity(p.x, p.y);
 
   // Animation
   const startTime = Date.now();
@@ -1027,10 +1040,12 @@ async function zapTrap() {
     t++;
     const n = RNG.getUniformInt(0, world.level.entities.length);
     const e = world.level.entities[n];
-    if (!e || e.x === -1 || e.y === -1) continue; // dead
+    if (!e) continue;
+    const p = world.level.player.get(Position)!;
+    if (p.x === -1 || p.y === -1) continue; // dead
     if (e.type !== Type.Slow && e.type !== Type.Medium && e.type !== Type.Fast)
       continue;
-    await world.killAt(e.x, e.y);
+    await world.killAt(p.x, p.y);
     await delay(20);
     k++;
   }
@@ -1151,8 +1166,9 @@ async function triggerCSpell(block: Type) {
 async function pushRock(x: number, y: number, dx: number, dy: number) {
   let nogo = false;
 
-  const rx = world.level.player.x + dx * 2;
-  const ry = world.level.player.y + dy * 2;
+  const p = world.level.player.get(Position)!;
+  const rx = p.x + dx * 2;
+  const ry = p.y + dy * 2;
   if (rx < 0 || rx > XMax || ry < 0 || ry > YMax) nogo = true;
 
   if (!nogo) {
@@ -1291,7 +1307,8 @@ async function wallVanish() {
 function move(x: number, y: number) {
   sound.footStep();
 
-  const p = world.level.player;
+  const e = world.level.player;
+  const p = e.get(Position)!;
 
   world.level.map.setType(p.x, p.y, p.replacement);
   screen.drawEntity(p.x, p.y);
@@ -1301,7 +1318,7 @@ function move(x: number, y: number) {
     ? b
     : Type.Floor;
 
-  world.level.map.set(x, y, p);
+  world.level.map.set(x, y, e);
   p.x = x;
   p.y = y;
   screen.drawEntity(p.x, p.y);
