@@ -1,7 +1,7 @@
 // Lost Adventures of Kroz, Level 26 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import levelData from './lost-26.json';
+import levelData from './lost-26.map.json';
 
 import * as screen from '../../../modules/screen';
 import * as sound from '../../../modules/sound';
@@ -35,7 +35,6 @@ async function tabletMessage() {
 }
 
 export default {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ...readLevelJSON(levelData as unknown as any),
+  ...readLevelJSON(levelData),
   tabletMessage,
 };

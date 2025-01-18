@@ -1,0 +1,38 @@
+{
+  "class": "Caverns4",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzlmEuKwzAMhn2VQpZeuT1CYCAwiy4K6f0vUgci0PzVw44DNpPFhxNbeUi\/LIWsIYSfzDNzyyz7aDFnHpl4YLw3jqlh3N59BV\/eO9PFmHc8rf+7\/kRvPXrB\/ZfikpR5Tiyw0dDu33JP5F3wDpv\/ywB6nK2rpK2k9cTiRMdS3LS5kZjC37yS\/Mf8Ihu6nvuPx9LcSGh6p\/Adjxh0\/WkdcyHCOa3\/wvwKz\/DGV6W91ctL8l\/KEa6\/p+1I2vMYSHrzfOfx4DaS\/l4N5fnRG\/S\/tv5J+5\/fl+xGRfI\/Br8eWvV\/YzH0x\/4t9W3PJjnX13Cm\/rg+Cljrrf6f4LxG\/9H8PuK\/pj\/POR4jTX\/M1XjwOAItua4xBbvel+g\/Mpb+JfudzqUY1fSbuZPdysBYcF+07z1Nf8v\/Xr6W2pH\/Wr2z+h+PSe\/cbqUm\/71vAqxXJf8CkLnS\/oxnSr5o63yPXIlaTaz1I32sVNfWHuk95wNEJRFW",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/..\/..\/tiled\/Curses_1920x900.tsx"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": 1.1,
+  "width": 64
+}

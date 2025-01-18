@@ -29,7 +29,7 @@ import {
   Position,
   Renderable,
 } from '../classes/components.ts';
-import { tileIdToChar } from '../utils/utils.ts';
+import { ensureObject, tileIdToChar } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
 
 export interface Level {
@@ -98,7 +98,7 @@ export async function prevLevel() {
 
 export function readLevelJSON(tilemap: tiled.Map): Level {
   const { layers, properties: _properties } = tilemap;
-  const properties = _properties as unknown as Record<string, unknown>;
+  const properties = ensureObject(_properties);
 
   // TODO:
   // verify encoding and/or compression

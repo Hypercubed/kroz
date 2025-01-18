@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
+    "resolveJsonModule": false,
 
     /* Linting */
     "strict": true,
@@ -20,5 +21,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "src/data/levels/lost/lost-1-bak.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

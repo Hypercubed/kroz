@@ -46,3 +46,14 @@ export function tileIdToChar(tileId: number) {
   // tiled.log(`tileId: ${tileId}, tileId2: ${tileId2}, char: ${char}`);
   return char;
 }
+
+// Converts properties array to object
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function ensureObject(array: unknown): Record<string, any> {
+  if (Array.isArray(array)) {
+    const properties: Record<string, unknown> = {};
+    for (const p of array) properties[p.name] = p.value;
+    return properties;
+  }
+  return array as unknown as Record<string, unknown>;
+}

@@ -1,0 +1,48 @@
+{
+  "class": "Kingdom12",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzVmMtKAzEUhvMq1brwQqU64kqh6EaZgi5qh+pGRBdCQRB0Jb6cTyQ+gAkm8BvOycll4mXx0elc0vPlP5m2M1VKTS1DywVsTxJ40YyBETAuZOSNKZ0\/B3D\/Aq43x64B5zzy\/Etq5urdFZCuT51TN06Mf0vkH1Nzm+CfUn\/o+g2CBdDZc7uE\/PcJ\/0mEv8tN8jfrazNASq7onTOfv+FfA64e6vOxrlj\/mP4P+a8X8M7sj\/U\/ZubMHGsAzj83k1D+e4X4\/rn1Sf6NnT\/HtofvyRGTVQrGv7WvMZ\/PsQZQ\/qXz+1PrP5cBgDX3MXZt\/8MCXF3G+xz8Xd1ue0vF92zsWugD579KeKEfdQy3sf\/78q+dP\/obTgl3aj6oYyb3lZ7zx3EuK\/ufMPkaZoHs3fvQ+IYrxv8oM3+qj5sA7nuH63\/Mn5oDqhcQ6p5Xs\/\/76AXfn1rvoW3\/fSj\/\/+DPZU6tef8cqf9T\/Tsl+1O9HHO\/p\/ylbLnvBHdvkPq\/NKec+\/8OQNXj5z8jMo69D0j5\/0V\/h\/T7JuV3EFd3LgPCvxNwz09i869F7fyl8SX\/FsY98I6dWah9yIf6etaSWt8rEHIYqu\/+w8jx+8rD95XO554RjFX4WZWhIdwN+AwW\/0\/mrCep\/hvNg+ZJs9Tcau40j5pnzb3dv7T73+x1n\/yJLHU=",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "properties": {
+    "LavaFlow": true,
+    "LavaRate": 30,
+    "tabletMessage": "The lava will block a slow Adventurer's path!"
+  },
+  "propertytypes": {
+    "LavaFlow": "bool",
+    "LavaRate": "int",
+    "tabletMessage": "string"
+  },
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/..\/..\/tiled\/Curses_1920x900.tsx"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": 1.1,
+  "width": 64
+}

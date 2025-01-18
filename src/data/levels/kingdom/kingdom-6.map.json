@@ -1,0 +1,46 @@
+{
+  "class": "Kingdom6",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzNmEFLw0AQhfevCOKhSiuJRQ85KLYHoUJFWlrFv+UPFXq3wSwMjzczO3GxHh6bJukm33uzk7TTlNJ00HlAr0T52O6oM0eRa+U5r0HNMC7Evg\/Y9tRzb4UHlt4DHtwZLMyH1aADHJfXnBIPGLf0RuPeCv7a+Vvsmf8lldUBnmN5oHmRmRviw0OQ2+Nn7N5aiK4V9AB5LV8YfyvmZZqNyL5frzdHdYU5l+Zv1UGTuCdN0n2Q+XfDvB1cS\/KX1j3j3wWE\/G3iHpSsB2tdYP4d8M8q8ms5lubPPLB6grYuZD14+Wd+eZ\/R3pcZmoC0+m+Vbc0DrH30Ruafs5esMv\/lCA82lfg1bvTAWw9YE5i\/Vf+Sf0wd\/Db\/Eg+kD54XTYqt\/\/yOMtaDGvU\/Kdgu6ZGy\/uW5EX7Gbr0LMM5HZT8+gycBWT6gF2z9S\/428b7LeL0aGJN\/VBq\/VhNs\/cv+x\/i1evc8iPLfD+MnybD\/fHnUG6g\/dpt+nr1S6EHuZZg\/Pv+QX2N\/NjwYy78exo3gl2OEH72T\/Ji\/xq+xL5P+bKzB39\/zvAI\/m8vL33rvkexLcg7rASXK11zD51r8cvTW\/6Iweyt\/5sEV0an4rf7\/FMg\/4sF\/4pf5s99\/Vv5zokgd4G\/rU+bP3n8s9i9DXi9E\/hW5t7\/OH\/udxb5P\/v+FWg0cCL\/8DhvZcat3avvZXOy+LfYLws\/+Q9VqQL5Dl3iIz0XvO5G5vgHPSipb",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "properties": {
+    "HideOpenWall": true,
+    "tabletMessage": "A strange magical gravity force is tugging you downward!"
+  },
+  "propertytypes": {
+    "HideOpenWall": "bool",
+    "tabletMessage": "string"
+  },
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/..\/..\/tiled\/Curses_1920x900.tsx"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": 1.1,
+  "width": 64
+}

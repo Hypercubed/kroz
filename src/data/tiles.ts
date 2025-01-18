@@ -21,8 +21,8 @@ import { Entity } from '../classes/entity';
 import { Color } from './colors';
 import { FLOOR_CHAR } from './constants';
 
-import tileset from './tiles.json';
-import { tileIdToChar } from '../utils/utils';
+import tileset from './kroz.tileset.json';
+import { ensureObject, tileIdToChar } from '../utils/utils';
 
 export enum Type {
   Border = -1,
@@ -141,16 +141,16 @@ const _TypeMessage: Partial<Record<Type, string>> = {
 };
 
 export function readTileset() {
-  const { tiles, tileproperties } = tileset;
+  if (!tileset.tiles) throw new Error('No tiles found in tileset');
 
-  for (const tileId in tiles) {
-    const tile = tiles[tileId as keyof typeof tiles];
-    const type = +tile.type as Type;
+  for (const tile of tileset.tiles!) {
+    const tileId = tile.id!;
+    const type = +tile.type! as Type;
     const char = tileIdToChar(+tileId);
     _MapLookup[char] = type;
     _TileIdLookup[+tileId] = type;
 
-    const props = tileproperties[tileId as keyof typeof tiles];
+    const props = ensureObject(tile.properties);
     if (props.name !== Type[type]) throw new Error('Tile ID mismatch');
     const fg = props['Tile.fg' as keyof typeof props];
     const bg = props['Tile.bg' as keyof typeof props];

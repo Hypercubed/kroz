@@ -1,9 +1,7 @@
 // Lost Adventures of Kroz, Level 42 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
-import type { Map } from '@kayahr/tiled';
-
-import levelData from './lost-64.json';
+import levelData from './lost-64.map.json';
 
 import * as screen from '../../../modules/screen';
 import * as sound from '../../../modules/sound';
@@ -35,7 +33,7 @@ async function tabletMessage() {
 }
 
 export default {
-  ...levels.readLevelJSON(levelData as unknown as Map),
+  ...levels.readLevelJSON(levelData),
   onLevelStart,
   tabletMessage,
 };

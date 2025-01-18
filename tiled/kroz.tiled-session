@@ -1,9 +1,12 @@
 {
-    "activeFile": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/all-tiles.json",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/levels/Curses_1920x900.tsx": {
+            "scaleInDock": 1
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/levels/Display.tsx": {
             "scaleInDock": 1
         },
@@ -12,7 +15,7 @@
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 768.6474768156088,
-                "y": 480.057810429965
+                "y": 761.2477417800794
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-2.json": {
@@ -23,12 +26,28 @@
                 "y": 413.5982956728251
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-2.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-4.json": {
             "scale": 0.9320638020833333,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 768.1877553871408,
                 "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-4.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/debug.json": {
@@ -39,6 +58,14 @@
                 "y": 563.3333333333333
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/debug.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-1.json": {
             "scale": 0.9320638020833333,
             "selectedLayer": 0,
@@ -47,12 +74,28 @@
                 "y": 413.5982956728251
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-1.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-12.json": {
             "scale": 0.8903296019900497,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 804.1965564209131,
                 "y": 413.89166346523245
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-12.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 654.4736842105264
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-2.json": {
@@ -71,12 +114,28 @@
                 "y": 413.5982956728251
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-4.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 654.4736842105264
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-6.json": {
             "scale": 0.9320638020833333,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 768.1877553871407,
                 "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-6.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1.json": {
@@ -87,12 +146,28 @@
                 "y": 404.5454545454546
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-11.json": {
             "scale": 0.9320638020833333,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 768.1877553871407,
                 "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-11.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-18.json": {
@@ -103,6 +178,14 @@
                 "y": 413.5982956728251
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-18.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-2.json": {
             "scale": 0.9178385416666667,
             "selectedLayer": 0,
@@ -111,12 +194,28 @@
                 "y": 449.4254504184991
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-2.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-20.json": {
             "scale": 0.9320638020833333,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 768.7241993504,
                 "y": 413.5982956728252
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-20.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-22.json": {
@@ -151,6 +250,14 @@
                 "y": 413.5982956728251
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-34.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-4.json": {
             "scale": 0.9320638020833333,
             "selectedLayer": 0,
@@ -167,12 +274,28 @@
                 "y": 551.578947368421
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-42.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-46.json": {
             "scale": 0.9320638020833333,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 768.1877553871408,
                 "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-46.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-48.json": {
@@ -191,6 +314,14 @@
                 "y": 414.43609022556393
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-52.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-59.json": {
             "scale": 0.9320638020833333,
             "selectedLayer": 0,
@@ -207,12 +338,28 @@
                 "y": 414.43609022556393
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-61.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-64.json": {
             "scale": 0.8312499999999999,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 768.1203007518798,
                 "y": 277.2932330827068
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-64.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 414.47368421052636
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-70.json": {
@@ -223,12 +370,28 @@
                 "y": 413.5982956728251
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-70.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1578947368421,
+                "y": 654.4736842105264
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-75.json": {
             "scale": 0.5405598958333333,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 768.6474768156088,
                 "y": 413.4601951102012
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-75.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 714.4736842105264,
+                "y": 414.47368421052636
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/tiles.json": {
@@ -532,27 +695,23 @@
     "map.lastUsedExportFilter": "JSON map files [Tiled 1.1] (*.json)",
     "map.lastUsedFormat": "json1",
     "openFiles": [
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/all-tiles.json",
-        "Display.tsx",
-        "Curses_1920x900.tsx",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/debug.json"
     ],
     "project": "kroz.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/debug.json",
-        "Curses_1920x900.tsx",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-2.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-4.map.json",
         "Display.tsx",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/all-tiles.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-20.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/tiles.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-26.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-59.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-48.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-30.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-2.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-4.json"
+        "Curses_1920x900.tsx",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-34.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-52.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-75.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-64.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-2.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-42.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-12.map.json"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
-    "tileset.lastUsedFormat": "tsx"
+    "tileset.lastUsedFormat": "json"
 }

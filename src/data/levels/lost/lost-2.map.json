@@ -1,0 +1,54 @@
+{
+  "class": "Lost2",
+  "compressionlevel": -1,
+  "editorsettings": {
+    "export": {
+      "format": "json1",
+      "target": "lost-2.json"
+    }
+  },
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzNWLtuwzAM9K+4ENDNQIeu+YMOHbP3GaQPIE2X\/nwpgAYEQg+KOsYZDlFkmuTxSMvJfpqmPQgB6Gs0RkgwEx75M91v3YvO+xL1KcWdBX+E71vCsoG2Fh+yBsiYuRosoNqg9Fq5e+myKNZemtfqNk953RG5SHupeSjsW3LI7Zd6w3PmR4CaCY3urRohfFt7xasGWt01598Iv5FesOZ2rT3fymEZyHMuYFSb0f7oiRcUMUs8refZ1v0gecpz6s7A82YDHrXruwQtP9eqpWUudxXk7LXce94LenoPgRrnFZoZ1tbMQzfNM03aaHin3LX2Vt6IOiA19+Tu1cstn7U+LsHC3fN3UY99aVZzfnp4WnRHv7NqtLX4v\/ScyzpEnAnvhBf+\/sPrJ8KJ12dw3J56ePXryv2X8MWIXD\/42oH3os230F3bZ8jZ9PifUWp\/THi\/EZ6Z+yfhgYHOb4RXvPfeqEHIIHJ9TWpx4r0\/wj+pH8oy",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "properties": {
+    "HideGems": true,
+    "HideStairs": true,
+    "tabletMessage": "Warning to all Adventurers:  No one returns from Kroz!"
+  },
+  "propertytypes": {
+    "HideGems": "bool",
+    "HideStairs": "bool",
+    "tabletMessage": "string"
+  },
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/..\/..\/tiled\/Curses_1920x900.tsx"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": 1.1,
+  "width": 64
+}
