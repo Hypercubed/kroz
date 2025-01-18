@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.1" name="Curses_1920x900" tilewidth="24" tileheight="36" tilecount="256" columns="16">
- <editorsettings>
-  <export target="../src/data/tiles.json" format="json1"/>
- </editorsettings>
+<tileset version="1.11" tiledversion="1.11.1" name="Curses_1920x900" tilewidth="24" tileheight="36" tilecount="256" columns="16">
  <image source="ASCII.png" width="384" height="576"/>
  <tile id="32" type="0">
   <properties>
@@ -16,6 +13,7 @@
   <properties>
    <property name="Tile.ch" value="■"/>
    <property name="Tile.fg" value="LightBlue"/>
+   <property name="message" value="You found an Ancient Tablet of Wisdom...2,500 points!"/>
    <property name="name" value="Tablet"/>
   </properties>
  </tile>
@@ -23,6 +21,7 @@
   <properties>
    <property name="Tile.ch" value="Z"/>
    <property name="Tile.fg" value="Yellow"/>
+   <property name="message" value="Super Kroz Bonus -- 10,000 points!"/>
    <property name="name" value="Z"/>
   </properties>
  </tile>
@@ -31,6 +30,7 @@
    <property name="Tile.bg" value="Brown"/>
    <property name="Tile.ch" value="█"/>
    <property name="Tile.fg" value="Brown"/>
+   <property name="message" value="A Solid Wall blocks your way."/>
    <property name="name" value="Wall"/>
   </properties>
  </tile>
@@ -43,11 +43,13 @@
   <properties>
    <property name="Tile.ch" value="▲"/>
    <property name="Tile.fg" value="LightRed"/>
+   <property name="message" value="A Creature Zap Spell!"/>
    <property name="name" value="Zap"/>
   </properties>
  </tile>
  <tile id="38" type="41">
   <properties>
+   <property name="message" value="Yah Hoo! You discovered a Reveal Gems Scroll!"/>
    <property name="name" value="ShowGems"/>
   </properties>
  </tile>
@@ -65,6 +67,7 @@
   <properties>
    <property name="Tile.ch" value="☼"/>
    <property name="Tile.fg" value="Yellow"/>
+   <property name="message" value="You found a Gold Nugget...500 points!"/>
    <property name="name" value="Nugget"/>
   </properties>
  </tile>
@@ -72,6 +75,7 @@
   <properties>
    <property name="Tile.ch" value="♦"/>
    <property name="Tile.fg" value="Blue"/>
+   <property name="message" value="Gems give you both points and strength."/>
    <property name="name" value="Gem"/>
   </properties>
  </tile>
@@ -84,6 +88,7 @@
   <properties>
    <property name="Tile.ch" value="∙"/>
    <property name="Tile.fg" value="White"/>
+   <property name="message" value="You activated a Teleport trap!"/>
    <property name="name" value="Trap"/>
   </properties>
  </tile>
@@ -92,6 +97,7 @@
    <property name="Tile.bg" value="Green"/>
    <property name="Tile.ch" value="█"/>
    <property name="Tile.fg" value="Green"/>
+   <property name="message" value="You cannot travel through forest terrain."/>
    <property name="name" value="Forest"/>
   </properties>
  </tile>
@@ -99,11 +105,14 @@
   <properties>
    <property name="Tile.ch" value="O"/>
    <property name="Tile.fg" value="White"/>
+   <property name="message" value="You pushed a big Boulder!"/>
    <property name="name" value="Rock"/>
   </properties>
  </tile>
  <tile id="49" type="1">
   <properties>
+   <property name="Attacks.damage" type="int" value="1"/>
+   <property name="Movement.pace" type="int" value="4"/>
    <property name="Tile.ch" value="Ä"/>
    <property name="Tile.fg" value="LightRed"/>
    <property name="name" value="Slow"/>
@@ -111,6 +120,8 @@
  </tile>
  <tile id="50" type="2">
   <properties>
+   <property name="Attacks.damage" type="int" value="2"/>
+   <property name="Movement.pace" type="int" value="3"/>
    <property name="Tile.ch" value="Ö"/>
    <property name="Tile.fg" value="LightBlue"/>
    <property name="name" value="Medium"/>
@@ -118,6 +129,8 @@
  </tile>
  <tile id="51" type="3">
   <properties>
+   <property name="Attacks.damage" type="int" value="3"/>
+   <property name="Movement.pace" type="int" value="2"/>
    <property name="Tile.ch" value="Ω"/>
    <property name="Tile.fg" value="Green"/>
    <property name="name" value="Fast"/>
@@ -128,6 +141,7 @@
    <property name="Tile.bg" value="Brown"/>
    <property name="Tile.ch" value="█"/>
    <property name="Tile.fg" value="Brown"/>
+   <property name="message" value="A Solid Wall blocks your way."/>
    <property name="name" value="OWall1"/>
   </properties>
  </tile>
@@ -169,6 +183,7 @@
  </tile>
  <tile id="59" type="29">
   <properties>
+   <property name="message" value="An Invisible Crumbled Wall blocks your way."/>
    <property name="name" value="IBlock"/>
   </properties>
  </tile>
@@ -183,12 +198,15 @@
   <properties>
    <property name="Tile.ch" value="░"/>
    <property name="Tile.fg" value="White"/>
+   <property name="message" value="* SPLAT!! *"/>
    <property name="name" value="Pit"/>
   </properties>
  </tile>
  <tile id="62" type="46">
   <properties>
    <property name="Tile.ch" value="☺"/>
+   <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="message" value="Statues are very dangerous...they drain your Gems!"/>
    <property name="name" value="Statue"/>
   </properties>
  </tile>
@@ -196,6 +214,7 @@
   <properties>
    <property name="Tile.ch" value="?"/>
    <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="message" value="You found a Pouch containing Gems!"/>
    <property name="name" value="Chance"/>
   </properties>
  </tile>
@@ -208,6 +227,8 @@
   <properties>
    <property name="Tile.bg" value="Magenta"/>
    <property name="Tile.ch" value="■"/>
+   <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="message" value="The Sacred Tome of Kroz is finally yours--50,000 points!"/>
    <property name="name" value="Tome"/>
   </properties>
  </tile>
@@ -215,6 +236,7 @@
   <properties>
    <property name="Tile.ch" value="¥"/>
    <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="message" value="You activated a Magic Bomb!"/>
    <property name="name" value="Bomb"/>
   </properties>
  </tile>
@@ -223,6 +245,7 @@
    <property name="Tile.bg" value="Red"/>
    <property name="Tile.ch" value="C"/>
    <property name="Tile.fg" value="Yellow"/>
+   <property name="message" value="You found gems and whips inside the chest!"/>
    <property name="name" value="Chest"/>
   </properties>
  </tile>
@@ -231,11 +254,13 @@
    <property name="Tile.bg" value="Magenta"/>
    <property name="Tile.ch" value="∞"/>
    <property name="Tile.fg" value="Cyan"/>
+   <property name="message" value="The Door opens!  (One of your Keys is used.)"/>
    <property name="name" value="Door"/>
   </properties>
  </tile>
  <tile id="69" type="28">
   <properties>
+   <property name="message" value="Oh no, you set off an Earthquake trap!"/>
    <property name="name" value="Quake"/>
   </properties>
  </tile>
@@ -243,17 +268,21 @@
   <properties>
    <property name="Tile.ch" value="Θ"/>
    <property name="Tile.fg" value="LightCyan"/>
+   <property name="message" value="You activated a Speed Creature spell."/>
    <property name="name" value="SpeedTime"/>
   </properties>
  </tile>
  <tile id="71" type="36">
   <properties>
    <property name="Tile.ch" value="♠"/>
+   <property name="Tile.fg" value="Yellow"/>
+   <property name="message" value="You have discovered a Creature Generator!"/>
    <property name="name" value="Generator"/>
   </properties>
  </tile>
  <tile id="72" type="44">
   <properties>
+   <property name="message" value="You triggered Exploding Walls!"/>
    <property name="name" value="BlockSpell"/>
   </properties>
  </tile>
@@ -261,6 +290,7 @@
   <properties>
    <property name="Tile.ch" value="¡"/>
    <property name="Tile.fg" value="Green"/>
+   <property name="message" value="Oh no, a temporary Blindness Potion!"/>
    <property name="name" value="Invisible"/>
   </properties>
  </tile>
@@ -268,6 +298,7 @@
   <properties>
    <property name="Tile.ch" value="î"/>
    <property name="Tile.fg" value="LightRed"/>
+   <property name="message" value="Use Keys to unlock doors."/>
    <property name="name" value="Key"/>
   </properties>
  </tile>
@@ -275,18 +306,22 @@
   <properties>
    <property name="Tile.bg" value="White"/>
    <property name="Tile.ch" value="≡"/>
+   <property name="message" value="Stairs take you to the next lower level."/>
    <property name="name" value="Stairs"/>
   </properties>
  </tile>
  <tile id="77" type="38">
   <properties>
+   <property name="Movement.pace" type="int" value="2"/>
    <property name="Tile.ch" value="▓"/>
    <property name="Tile.fg" value="Brown"/>
+   <property name="message" value="A Moving Wall blocks your way."/>
    <property name="name" value="MBlock"/>
   </properties>
  </tile>
  <tile id="78" type="47">
   <properties>
+   <property name="message" value="Yikes!  A trap has made many of the wall sections invisible!"/>
    <property name="name" value="WallVanish"/>
   </properties>
  </tile>
@@ -299,6 +334,7 @@
  </tile>
  <tile id="80" type="40">
   <properties>
+   <property name="Movement.pace" type="int" value="1"/>
    <property name="Tile.bg" value="Black"/>
    <property name="Tile.ch" value="☻"/>
    <property name="Tile.fg" value="Yellow"/>
@@ -309,6 +345,7 @@
   <properties>
    <property name="Tile.ch" value="○"/>
    <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="message" value="A Power Ring--your whip is now a little stronger!"/>
    <property name="name" value="Power"/>
   </properties>
  </tile>
@@ -317,6 +354,7 @@
    <property name="Tile.bg" value="Blue"/>
    <property name="Tile.ch" value="≈"/>
    <property name="Tile.fg" value="LightBlue"/>
+   <property name="message" value="You cannot travel through Water."/>
    <property name="name" value="River"/>
   </properties>
  </tile>
@@ -324,6 +362,7 @@
   <properties>
    <property name="Tile.ch" value="Φ"/>
    <property name="Tile.fg" value="LightCyan"/>
+   <property name="message" value="You activated a Slow Time spell."/>
    <property name="name" value="SlowTime"/>
   </properties>
  </tile>
@@ -331,6 +370,7 @@
   <properties>
    <property name="Tile.ch" value="↑"/>
    <property name="Tile.fg" value="LightMagenta"/>
+   <property name="message" value="You found a Teleport scroll."/>
    <property name="name" value="Teleport"/>
   </properties>
  </tile>
@@ -338,6 +378,7 @@
   <properties>
    <property name="Tile.ch" value="∩"/>
    <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="message" value="You passed through a secret Tunnel!"/>
    <property name="name" value="Tunnel"/>
   </properties>
  </tile>
@@ -346,6 +387,7 @@
    <property name="Tile.bg" value="Red"/>
    <property name="Tile.ch" value="▓"/>
    <property name="Tile.fg" value="LightRed"/>
+   <property name="message" value="Oooooooooooooooooooh!  Lava hurts!  (Lose 10 Gems.)"/>
    <property name="name" value="Lava"/>
   </properties>
  </tile>
@@ -353,6 +395,7 @@
   <properties>
    <property name="Tile.ch" value="⌠"/>
    <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="message" value="You found a Whip"/>
    <property name="name" value="Whip"/>
   </properties>
  </tile>
@@ -360,6 +403,7 @@
   <properties>
    <property name="Tile.ch" value="▓"/>
    <property name="Tile.fg" value="Brown"/>
+   <property name="message" value="A Breakable Wall blocks your way"/>
    <property name="name" value="Block"/>
   </properties>
  </tile>
@@ -375,6 +419,7 @@
   <properties>
    <property name="Tile.ch" value="ƒ"/>
    <property name="Tile.fg" value="LightCyan"/>
+   <property name="message" value="You have activated a Freeze Creature spell!"/>
    <property name="name" value="Freeze"/>
   </properties>
  </tile>
@@ -390,6 +435,7 @@
    <property name="Tile.bg" value="Green"/>
    <property name="Tile.ch" value="♣"/>
    <property name="Tile.fg" value="Brown"/>
+   <property name="message" value="A tree blocks your way."/>
    <property name="name" value="Tree"/>
   </properties>
  </tile>
@@ -397,11 +443,13 @@
   <properties>
    <property name="Tile.ch" value="▼"/>
    <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="message" value="A Creature Creation Trap!"/>
    <property name="name" value="Create"/>
   </properties>
  </tile>
  <tile id="96" type="31">
   <properties>
+   <property name="message" value="An Invisible Door blocks your way."/>
    <property name="name" value="IDoor"/>
   </properties>
  </tile>
@@ -417,6 +465,7 @@
    <property name="Tile.bg" value="Red"/>
    <property name="Tile.ch" value="X"/>
    <property name="Tile.fg" value="LightRed"/>
+   <property name="message" value="You hit a Electrified Wall!  You lose one Gem."/>
    <property name="name" value="EWall"/>
   </properties>
  </tile>
@@ -458,6 +507,8 @@
  <tile id="159" type="81">
   <properties>
    <property name="Tile.ch" value="♀"/>
+   <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="message" value="YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!"/>
    <property name="name" value="Amulet"/>
   </properties>
  </tile>
@@ -479,6 +530,7 @@
   <properties>
    <property name="Tile.ch" value="│"/>
    <property name="Tile.fg" value="White"/>
+   <property name="message" value="You grabbed a Rope."/>
    <property name="name" value="Rope"/>
   </properties>
  </tile>
@@ -561,6 +613,7 @@
   <properties>
    <property name="Tile.ch" value="⌂"/>
    <property name="Tile.fg" value="LightCyan"/>
+   <property name="message" value="Magic has been released is this chamber!"/>
    <property name="name" value="OSpell1"/>
   </properties>
  </tile>
@@ -568,6 +621,7 @@
   <properties>
    <property name="Tile.ch" value="⌂"/>
    <property name="Tile.fg" value="LightCyan"/>
+   <property name="message" value="Magic has been released is this chamber!"/>
    <property name="name" value="OSpell2"/>
   </properties>
  </tile>
@@ -575,21 +629,25 @@
   <properties>
    <property name="Tile.ch" value="⌂"/>
    <property name="Tile.fg" value="LightCyan"/>
+   <property name="message" value="Magic has been released is this chamber!"/>
    <property name="name" value="OSpell3"/>
   </properties>
  </tile>
  <tile id="244" type="61">
   <properties>
+   <property name="message" value="New Walls have magically appeared!"/>
    <property name="name" value="CSpell1"/>
   </properties>
  </tile>
  <tile id="245" type="62">
   <properties>
+   <property name="message" value="New Walls have magically appeared!"/>
    <property name="name" value="CSpell2"/>
   </properties>
  </tile>
  <tile id="246" type="63">
   <properties>
+   <property name="message" value="New Walls have magically appeared!"/>
    <property name="name" value="CSpell3"/>
   </properties>
  </tile>

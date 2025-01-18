@@ -48,7 +48,7 @@ function getDefaultLevelState() {
     lavaFlow: false, // Lava flow (TODO)
     level: null as null | Level,
     player: new Entity(Type.Player),
-    entities: [] as Entity[],  // TODO: create sets by class
+    entities: [] as Entity[], // TODO: create sets by class
     map: new PlayField(),
     replacement: Type.Floor,
     T: [
@@ -140,6 +140,7 @@ export async function restore() {
 
     Object.assign(stats, save);
     await levels.loadLevel();
+    await screen.flashMessage('Press any key to begin this level.');
   }
 }
 

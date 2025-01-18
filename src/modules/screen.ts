@@ -320,7 +320,7 @@ export function renderPlayfield() {
   }
 
   const p = world.level.player.get(Position)!;
-  drawEntity(p.x, p.y, world.level.player);
+  if (p) drawEntity(p.x, p.y, world.level.player);
 }
 
 function drawFloorAt(x: number, y: number) {

@@ -29,7 +29,7 @@ function write(map: TileMap, fileName: string) {
 
 function read(filename: string) {
   const file = new TextFile(filename, TextFile.ReadOnly);
-  if(!file) return null;
+  if (!file) return null;
 
   const map = new TileMap();
   map.tileWidth = TILE_WIDTH;
@@ -40,21 +40,21 @@ function read(filename: string) {
 
   const layer = new TileLayer(); // assuming each CSV encodes a single-layer map...
   const editLayer = layer.edit(); // get the TileLayerEdit object so we can set tiles
-  const tileset = tiled.open(tiled.projectFilePath + "/../Display.tsx");
-  if(!tileset || !tileset.isTileset) return null; // show an error maybe xP
+  const tileset = tiled.open(tiled.projectFilePath + '/../Display.tsx');
+  if (!tileset || !tileset.isTileset) return null; // show an error maybe xP
 
-  while(!file.atEof) {
-      let line = file.readLine();
-      line = line.split("");
-      if(line.length > 0) {
-          map.width = Math.max(map.width, line.length);
-          for(let x = 0; x < line.length; x++) {
-              const tileID = getASCIICode(line[x]); //get the ASCII code of the character
-              const tile = tileset.findTile(tileID); //get the Tile from the tileset that has this ID
-              editLayer.setTile(x, map.height, tile);
-          }
-          map.height = map.height + 1;
+  while (!file.atEof) {
+    let line = file.readLine();
+    line = line.split('');
+    if (line.length > 0) {
+      map.width = Math.max(map.width, line.length);
+      for (let x = 0; x < line.length; x++) {
+        const tileID = getASCIICode(line[x]); //get the ASCII code of the character
+        const tile = tileset.findTile(tileID); //get the Tile from the tileset that has this ID
+        editLayer.setTile(x, map.height, tile);
       }
+      map.height = map.height + 1;
+    }
   }
   editLayer.apply();
   map.addLayer(layer);
@@ -69,26 +69,26 @@ function read(filename: string) {
 
 const extendedASCIIMap = {
   // Add mappings for characters that don't match
-  8216: 145,  // ‘ - TBlock
-  8217: 146,  // ’ - TRock
-  8220: 147,  // “ - TGem 
-  8221: 148,  // ” - TBlind
-  8226: 149,  // • - TWhip
-  8211: 150,  // – - TGold
-  8212: 151,  // — - TTree
-  402: 159,  // ƒ - Amulet
+  8216: 145, // ‘ - TBlock
+  8217: 146, // ’ - TRock
+  8220: 147, // “ - TGem
+  8221: 148, // ” - TBlind
+  8226: 149, // • - TWhip
+  8211: 150, // – - TGold
+  8212: 151, // — - TTree
+  402: 159, // ƒ - Amulet
 };
 
 const reverseExtendedASCIIMap = {
-  145: 8216,  // ‘ - TBlock
-  146: 8217,  // ’ - TRock
-  147: 8220,  // “ - TGem
-  148: 8221,  // ” - TBlind
-  149: 8226,  // • - TWhip
-  150: 8211,  // – - TGold
-  151: 8212,  // — - TTree
-  159: 402,  // ƒ - Amulet
-}
+  145: 8216, // ‘ - TBlock
+  146: 8217, // ’ - TRock
+  147: 8220, // “ - TGem
+  148: 8221, // ” - TBlind
+  149: 8226, // • - TWhip
+  150: 8211, // – - TGold
+  151: 8212, // — - TTree
+  159: 402, // ƒ - Amulet
+};
 
 function getASCIICode(char: string) {
   const code = char.charCodeAt(0);
@@ -105,11 +105,11 @@ function tileIdToChar(tileId: number) {
 }
 
 const customMapFormat = {
-	name: 'KROZ ASCII',
-	extension: 'txt',
+  name: 'KROZ ASCII',
+  extension: 'txt',
 
-	write,
-  read
+  write,
+  read,
 };
 
 tiled.registerMapFormat('kroz', customMapFormat);

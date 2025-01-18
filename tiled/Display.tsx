@@ -82,7 +82,7 @@
    <property name="name" value="Trap"/>
   </properties>
  </tile>
- <tile id="47" type="19">
+ <tile id="47" type="19" probability="0.2">
   <properties>
    <property name="Tile.bg" value="Green"/>
    <property name="Tile.ch" value="█"/>
@@ -380,7 +380,7 @@
    <property name="name" value="R"/>
   </properties>
  </tile>
- <tile id="92" type="20">
+ <tile id="92" type="20" probability="0.8">
   <properties>
    <property name="Tile.bg" value="Green"/>
    <property name="Tile.ch" value="♣"/>

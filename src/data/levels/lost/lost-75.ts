@@ -1,21 +1,18 @@
 // Lost Adventures of Kroz, Level 75 by Scott Miller 11/12/89
 // Original Source: 1987-1990 Scott Miller
 
+import type { Map } from '@kayahr/tiled';
+
+import levelData from './lost-75.json';
+
 import * as screen from '../../../modules/screen';
 import * as sound from '../../../modules/sound';
 import * as world from '../../../modules/world';
 import * as player from '../../../modules/player';
+import * as levels from '../../../modules/levels';
 
 import { XMax, YMax } from '../../constants';
 import { Type } from '../../tiles';
-
-import map from '../../../../levels/lost/lost-75.txt?raw';
-
-async function onLevelStart() {
-  world.level.magicEwalls = true;
-  world.level.evapoRate = 22;
-  world.level.map.hideType(Type.Create);
-}
 
 async function tabletMessage() {
   await player.prayer();
@@ -36,8 +33,6 @@ async function tabletMessage() {
 }
 
 export default {
-  id: 'Lost75',
-  map,
-  onLevelStart,
+  ...levels.readLevelJSON(levelData as unknown as Map),
   tabletMessage,
 };

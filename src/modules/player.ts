@@ -38,7 +38,14 @@ import { clamp, delay } from '../utils/utils.ts';
 import { LEVELS } from './levels.ts';
 import dedent from 'ts-dedent';
 import { Timer } from './world.ts';
-import { AttacksPlayer, Collectible, isInvisible, MagicTrigger, Position, Walkable } from '../classes/components.ts';
+import {
+  AttacksPlayer,
+  Collectible,
+  isInvisible,
+  MagicTrigger,
+  Position,
+  Walkable,
+} from '../classes/components.ts';
 
 const SPELL_DURATION = {
   [Timer.SlowTime]: 70 * TIME_SCALE,
@@ -182,7 +189,7 @@ export async function tryMove(dx: number, dy: number) {
   }
 
   if (e?.has(Collectible)) {
-    sound.grab();  // TODO: Chest sound
+    sound.grab(); // TODO: Chest sound
     const collect = e.get(Collectible)!;
 
     world.stats.whips += collect.whips;
@@ -201,7 +208,9 @@ export async function tryMove(dx: number, dy: number) {
         );
         break;
       case Type.Chance:
-        await screen.flashMessage(`You found a Pouch containing ${collect.gems} Gems!`);
+        await screen.flashMessage(
+          `You found a Pouch containing ${collect.gems} Gems!`,
+        );
         break;
       default:
         await screen.flashTypeMessage(block as Type, true);
@@ -214,6 +223,7 @@ export async function tryMove(dx: number, dy: number) {
   if (e?.has(MagicTrigger)) {
     move(x, y);
     await trigger(e.get(MagicTrigger)!.type, x, y);
+    return;
   }
 
   if (e?.get(Walkable)?.by(Type.Player)) {
@@ -503,7 +513,7 @@ async function whip() {
     }
 
     screen.renderStats();
-    await delay(25);
+    await delay(10);
   }
 }
 
@@ -858,7 +868,7 @@ async function zapTrap() {
     const n = RNG.getUniformInt(0, world.level.entities.length);
     const e = world.level.entities[n];
     if (!e) continue;
-    const p = world.level.player.get(Position)!;
+    const p = e.get(Position)!;
     if (p.x === -1 || p.y === -1) continue; // dead
     if (e.type !== Type.Slow && e.type !== Type.Medium && e.type !== Type.Fast)
       continue;
@@ -989,11 +999,14 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
   if (rx < 0 || rx > XMax || ry < 0 || ry > YMax) nogo = true;
 
   if (!nogo) {
-    const rb = world.level.map.getType(rx, ry); // TODO: other cases
+    const e = world.level.map.get(rx, ry);
+    if (!e) nogo = true;
+    const rb = e!.type;
 
-    async function moveRock() {
+    async function moveRock(kill = false) {
       nogo = false;
       await sound.pushRock();
+      if (kill) world.killAt(rx, ry);
       world.level.map.setType(rx, ry, Type.Rock);
       move(x, y);
       screen.renderPlayfield();
@@ -1007,7 +1020,7 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
       await moveRock();
       await sound.grab();
     } else if (MOBS.includes(rb as number)) {
-      await moveRock();
+      await moveRock(true);
       world.addScore(rb as Type);
       await sound.rockCrushMob();
     } else if (rb === Type.EWall) {

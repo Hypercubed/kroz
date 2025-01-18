@@ -123,7 +123,7 @@ function tryMove(e: Entity, dx: number, dy: number) {
 
   if (block.get(Walkable)?.by(e.type)) {
     moveTo(e, x, y);
-    return;  // TODO: change this to fall through
+    return; // TODO: change this to fall through
   }
 
   if (e.get(DestroyedBy)?.has(block.type)) {
@@ -158,10 +158,10 @@ function moveTo(e: Entity, x: number, y: number) {
 
   const p = e.get(Position)!;
 
-  if (e.type === Type.MBlock && (x !== p.x || y !== p.y)) {  // TODO: can this be applied to all entities?
+  if (e.type === Type.MBlock && (x !== p.x || y !== p.y)) {
+    // TODO: can this be applied to all entities?
     e.remove(isInvisible);
   }
-
 
   world.level.map.setType(p.x, p.y, Type.Floor);
   world.level.map.set(x, y, e);

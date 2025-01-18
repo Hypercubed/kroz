@@ -33,7 +33,7 @@ export async function start() {
   await screen.renderTitle();
   await screen.instructionsScreen();
 
-  level.loadLevel(); // Don't wait
+  await level.loadLevel();
   screen.fullRender();
   await player.flashPlayer();
   screen.fastRender();
@@ -80,6 +80,21 @@ export async function start() {
         },
       };
 
+      const player = {
+        get x(): number | undefined {
+          return world.level.player.get(Position)?.x;
+        },
+        set x(v: number) {
+          world.level.player.get(Position)!.x = v;
+        },
+        get y(): number | undefined {
+          return world.level.player.get(Position)?.y;
+        },
+        set y(v: number) {
+          world.level.player.get(Position)!.y = v;
+        },
+      };
+
       const t = gui.addFolder('Timers');
       t.add(timers, 'SlowTime', 0, 400, 1).listen();
       t.add(timers, 'Invisible', 0, 400, 1).listen();
@@ -94,8 +109,8 @@ export async function start() {
       o.add(world.stats, 'whipPower', 2, 7, 1).listen();
 
       const p = gui.addFolder('Player');
-      p.add(world.level.player.get(Position)!, 'x', 0, XMax, 1).listen();
-      p.add(world.level.player.get(Position)!, 'y', 0, YMax, 1).listen();
+      p.add(player, 'x', 0, XMax, 1).listen();
+      p.add(player, 'y', 0, YMax, 1).listen();
     }
   }
 
