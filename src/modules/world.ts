@@ -5,12 +5,12 @@ import * as sound from './sound.ts';
 import { CLOCK_SCALE, DEBUG, XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Level } from './levels.ts';
-import { createTileDataForType, Type } from '../data/tiles.ts';
+import { createMobEntity, Type } from '../data/tiles.ts';
 import { PlayField } from '../classes/map.ts';
 import { RNG } from 'rot-js';
-import { Position, Renderable } from '../classes/components.ts';
+import { Position } from '../classes/components.ts';
 
-export const enum Timer {
+export const enum Timer { // TODO: Eliminate this, use type
   SlowTime = 4,
   Invisible = 5,
   SpeedTime = 6,
@@ -48,7 +48,7 @@ function getDefaultLevelState() {
     lavaFlow: false, // Lava flow (TODO)
     level: null as null | Level,
     player: new Entity(Type.Player),
-    entities: [] as Entity[],
+    entities: [] as Entity[],  // TODO: create sets by class
     map: new PlayField(),
     replacement: Type.Floor,
     T: [
@@ -252,10 +252,8 @@ export async function generateCreatures(n: number = 1) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
       if (level.map.getType(x, y) === Type.Floor) {
-        const entity = new Entity(Type.Slow);
-        entity
-          .add(new Renderable(createTileDataForType(Type.Slow)))
-          .add(new Position({ x, y }));
+        const entity = createMobEntity(Type.Slow);
+        entity.add(new Position({ x, y }));
         level.entities.push(entity);
         level.map.set(x, y, entity);
         await sound.generateCreature();

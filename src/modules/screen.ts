@@ -18,7 +18,7 @@ import { delay } from '../utils/utils';
 import dedent from 'ts-dedent';
 import { Type, TypeChar, TypeColor, TypeMessage } from '../data/tiles';
 import { Entity } from '../classes/entity';
-import { Position, Renderable } from '../classes/components';
+import { isInvisible, Position, Renderable } from '../classes/components';
 
 export function renderScreen() {
   const x = 70;
@@ -325,24 +325,19 @@ export function renderPlayfield() {
 
 function drawFloorAt(x: number, y: number) {
   const [fg, bg] = TypeColor[Type.Floor];
-  display.draw(x, y, FLOOR_CHAR, fg!, bg!);
+  display.draw(x + XBot, y + XBot, FLOOR_CHAR, fg!, bg!);
 }
 
 export function drawEntity(x: number, y: number, entity?: Entity | null) {
+  drawFloorAt(x, y);
+
   entity ??= world.level.map.get(x, y);
   if (!entity) return;
+  if (entity.has(isInvisible)) return;
+  if (!entity.has(Renderable)) return;
 
-  if (entity.has(Renderable)) {
-    const t = entity.get(Renderable)!;
-    if (!t) return;
-
-    let ch = t.ch;
-    if (entity.type === Type.Player && world.level.T[world.Timer.Invisible] > 0)
-      ch = FLOOR_CHAR;
-    display.draw(x + XBot, y + YBot, ch, t.fg!, t.bg!);
-  } else {
-    drawFloorAt(x, y);
-  }
+  const t = entity.get(Renderable)!;
+  display.draw(x + XBot, y + YBot, t.ch, t.fg!, t.bg!);
 }
 
 export function drawType(

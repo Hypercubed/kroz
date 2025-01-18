@@ -1,0 +1,495 @@
+{
+    "activeFile": "Curses_1920x900.tsx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-2.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-4.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/debug.json": {
+            "scale": 0.9178385416666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 609.0395800822812,
+                "y": 414.560930628458
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-1.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-12.json": {
+            "scale": 0.8903296019900497,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 804.1965564209131,
+                "y": 413.89166346523245
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-2.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-4.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871407,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-6.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871407,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1.json": {
+            "scale": 0.9178385416666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 780.0936303021705,
+                "y": 449.4254504184991
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-11.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871407,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-18.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-2.json": {
+            "scale": 0.9178385416666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 780.0936303021705,
+                "y": 449.4254504184991
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-20.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-22.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-26.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-30.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-34.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-4.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-46.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-48.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871407,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-59.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-70.json": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871407,
+                "y": 413.5982956728251
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/tiles.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Curses_1920x900.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Curses_1920x900.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1.5
+        },
+        "Display.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "EGA8x14.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "all-tiles.txt": {
+            "scale": 1.3771701388888888,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 179.71635676016382,
+                "y": 288.27229751024265
+            }
+        },
+        "caverns/caverns-2.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "caverns/caverns-4.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "debug/all-tiles.txt": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 835.3333333333333,
+                "y": 385.33333333333326
+            }
+        },
+        "debug/debug.txt": {
+            "scale": 0.9178385416666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 767.5641935026244,
+                "y": 414.0161725067386
+            }
+        },
+        "kingdom/kingdom-1.txt": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768,
+                "y": 413.5
+            }
+        },
+        "kingdom/kingdom-12.txt": {
+            "scale": 1.0508138020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 767.9762089154613,
+                "y": 414.4406926675134
+            }
+        },
+        "kingdom/kingdom-2.txt": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768,
+                "y": 413.5
+            }
+        },
+        "kingdom/kingdom-4.txt": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 660,
+                "y": 413.5
+            }
+        },
+        "kingdom/kingdom-6.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871407,
+                "y": 413.5982956728251
+            }
+        },
+        "lost-75.json": {
+            "scale": 1.3771701388888888,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 179.71635676016382,
+                "y": 288.27229751024265
+            }
+        },
+        "lost/lost-1.tmx": {
+            "scale": 0.9178385416666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 767.5641935026244,
+                "y": 414.01617250673854
+            }
+        },
+        "lost/lost-1.txt": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 92,
+                "y": 143.5
+            }
+        },
+        "lost/lost-11.txt": {
+            "scale": 1.0508138020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 767.9762089154613,
+                "y": 414.4406926675134
+            }
+        },
+        "lost/lost-18.txt": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768,
+                "y": 413.5
+            }
+        },
+        "lost/lost-2.txt": {
+            "scale": 0.9178385416666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 767.5641935026244,
+                "y": 414.01617250673854
+            }
+        },
+        "lost/lost-20.txt": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768,
+                "y": 413.5
+            }
+        },
+        "lost/lost-22.txt": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768,
+                "y": 413.5
+            }
+        },
+        "lost/lost-26.txt": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768,
+                "y": 413.5
+            }
+        },
+        "lost/lost-30.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-33.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-34.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-42.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-46.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-48.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871407,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-52.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-59.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-61.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-64.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-70.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871407,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-74.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        },
+        "lost/lost-75.tmj": {
+            "scale": 0.9178385416666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 767.5641935026244,
+                "y": 414.0161725067386
+            }
+        },
+        "lost/lost-75.txt": {
+            "scale": 0.9320638020833333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 768.1877553871408,
+                "y": 413.5982956728251
+            }
+        }
+    },
+    "last.exportedFilePath": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost",
+    "last.externalTilesetPath": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/levels",
+    "lastUsedTilesetExportFilter": "JSON tileset files [Tiled 1.1] (*.json)",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "json1",
+    "openFiles": [
+        "Curses_1920x900.tsx",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/tiles.json"
+    ],
+    "project": "kroz.tiled-project",
+    "property.type": "int",
+    "recentFiles": [
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/tiles.json",
+        "Curses_1920x900.tsx",
+        "Display.tsx",
+        "EGA8x14.tsx",
+        "lost/lost-1.txt",
+        "lost/lost-70.txt",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-70.json",
+        "lost/lost-48.txt",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-48.json",
+        "lost/lost-11.txt",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-11.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-6.json"
+    ],
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "json1"
+}

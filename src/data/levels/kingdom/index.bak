@@ -1,0 +1,43 @@
+import kingdom1 from "./kingdom-1";
+import kingdom10 from "./kingdom-10";
+import kingdom12 from "./kingdom-12";
+import kingdom14 from "./kingdom-14";
+import kingdom16 from "./kingdom-16";
+import kingdom2 from "./kingdom-2";
+import kingdom20 from "./kingdom-20";
+import kingdom22 from "./kingdom-22";
+import kingdom25 from "./kingdom-25";
+import kingdom4 from "./kingdom-4";
+import kingdom6 from "./kingdom-6";
+
+// KINGDOM OF KROZ II Levels
+export const LEVELS = [
+  null, // Must be level 0
+  kingdom1,
+  kingdom2,  // Ends with extra key
+  null,
+  kingdom4,  // Needs a teleport from previous level
+  null,
+  kingdom6,
+  null,
+  null,
+  null,
+
+  kingdom10,
+  null,
+  kingdom12,
+  null,
+  kingdom14, // Same as level 46 of Lost Adventures.
+  null,
+  kingdom16, // Similar to level 33 of Lost Adventures
+  null,
+  null,
+  null,
+
+  kingdom20, // Same as level 22 of Lost Adventures
+  null,
+  kingdom22, // Same as level 30 of Lost Adventure
+  null,
+  null,
+  kingdom25
+];

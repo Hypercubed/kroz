@@ -1,5 +1,3 @@
-import { Type } from '../data/tiles';
-
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 interface Component<T> extends Function {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -10,7 +8,7 @@ export class Entity {
   protected _components = new Map<string, object>();
   protected _tags = new Set<string | symbol>();
 
-  constructor(public readonly type: Type | string) {}
+  constructor(public readonly type: number | string) {}
 
   add<T extends object>(x: T): this;
   add(x: symbol | string): this;
@@ -34,5 +32,14 @@ export class Entity {
       return this._tags.has(x);
     }
     return this._components.has(x.name);
+  }
+
+  remove(x: symbol | string): boolean;
+  remove<T extends object>(x: Component<T>): boolean;
+  remove(x: Component<object> | symbol | string): boolean {
+    if (typeof x === 'symbol' || typeof x === 'string') {
+      return this._tags.delete(x);
+    }
+    return this._components.delete(x.name);
   }
 }

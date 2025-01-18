@@ -5,11 +5,19 @@ import * as sound from './sound';
 import { XMax, YMax } from '../data/constants';
 import { RNG } from 'rot-js';
 import { Type } from '../data/tiles';
+import { isInvisible } from '../classes/components';
 
 export async function update() {
   // Effect timers
   for (let i = 0; i < world.level.T.length; i++) {
     world.level.T[i] = Math.max(0, world.level.T[i] - 1);
+  }
+
+  // Invisible
+  if (world.level.T[world.Timer.Invisible] > 0) {
+    world.level.player.add(isInvisible);
+  } else {
+    world.level.player.remove(isInvisible);
   }
 
   // Statue Gem Drain

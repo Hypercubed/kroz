@@ -38,7 +38,7 @@ import { clamp, delay } from '../utils/utils.ts';
 import { LEVELS } from './levels.ts';
 import dedent from 'ts-dedent';
 import { Timer } from './world.ts';
-import { Position } from '../classes/components.ts';
+import { AttacksPlayer, Collectible, isInvisible, MagicTrigger, Position, Walkable } from '../classes/components.ts';
 
 const SPELL_DURATION = {
   [Timer.SlowTime]: 70 * TIME_SCALE,
@@ -167,33 +167,75 @@ export async function tryMove(dx: number, dy: number) {
     return;
   }
 
+  const e = world.level.map.get(x, y);
+  if (!e) return;
+
   const block = world.level.map.getType(x, y) || Type.Floor;
 
+  if (e?.has(AttacksPlayer)) {
+    const damage = e.get(AttacksPlayer)!.damage;
+    world.stats.gems -= damage;
+    world.killAt(x, y);
+    world.addScore(e.type as Type);
+    move(x, y);
+    return;
+  }
+
+  if (e?.has(Collectible)) {
+    sound.grab();  // TODO: Chest sound
+    const collect = e.get(Collectible)!;
+
+    world.stats.whips += collect.whips;
+    world.stats.gems += collect.gems;
+    world.stats.teleports += collect.teleports;
+    world.stats.keys += collect.keys;
+    world.stats.whipPower += collect.whipPower;
+
+    world.addScore(block as Type);
+    move(x, y);
+
+    switch (block) {
+      case Type.Chest:
+        await screen.flashMessage(
+          `You found ${collect.gems} gems and ${collect.whips} whips inside the chest!`,
+        );
+        break;
+      case Type.Chance:
+        await screen.flashMessage(`You found a Pouch containing ${collect.gems} Gems!`);
+        break;
+      default:
+        await screen.flashTypeMessage(block as Type, true);
+        break;
+    }
+
+    return;
+  }
+
+  if (e?.has(MagicTrigger)) {
+    move(x, y);
+    await trigger(e.get(MagicTrigger)!.type, x, y);
+  }
+
+  if (e?.get(Walkable)?.by(Type.Player)) {
+    move(x, y);
+    return;
+  }
+
   switch (block) {
-    case Type.Floor: // moves
-    case Type.Stop:
-      move(x, y);
-      break;
-    case Type.Slow: // moves + Kills + Damage
-    case Type.Medium:
-    case Type.Fast:
-      world.stats.gems -= block;
-      world.killAt(x, y);
-      world.addScore(block);
-      move(x, y);
-      break;
-    case Type.Block: // blocked
+    case Type.Wall: // Blocked
+    case Type.River:
+    case Type.Block:
     case Type.ZBlock:
     case Type.GBlock:
+      sound.blockedWall();
       world.addScore(block);
-      await screen.flashTypeMessage(Type.Block, true);
+      await screen.flashTypeMessage(block, true);
       break;
-    case Type.Whip: // collects
-      sound.grab();
-      world.stats.whips++;
+    case Type.Tree: // Blocked
+    case Type.Forest:
       world.addScore(block);
-      move(x, y);
-      await screen.flashTypeMessage(Type.Whip, true);
+      await sound.blocked(); // TODO: replace this sound
+      await screen.flashTypeMessage(block, true);
       break;
     case Type.Stairs: // Next level
       move(x, y);
@@ -205,53 +247,6 @@ export async function tryMove(dx: number, dy: number) {
       await screen.flashTypeMessage(Type.Stairs, true);
       sound.footStep();
       await levels.nextLevel();
-      break;
-    case Type.Chest: {
-      // Collects
-      move(x, y);
-      // TODO: Sound
-      const whips = RNG.getUniformInt(2, 5);
-      const gems = RNG.getUniformInt(2, world.game.difficulty + 2);
-      world.stats.whips += whips;
-      world.stats.gems += gems;
-      world.addScore(block);
-      await screen.flashMessage(
-        `You found ${gems} gems and ${whips} whips inside the chest!`,
-      );
-      break;
-    }
-    case Type.SlowTime: // Triggers Slow Time
-      world.level.T[Timer.SpeedTime] = 0; // Reset Speed Time
-      world.level.T[Timer.FreezeTime] = 0;
-      world.level.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime]; // Slow Time
-      world.addScore(block);
-      move(x, y);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Gem: // Collects gem
-      sound.grab();
-      world.stats.gems++;
-      world.addScore(block);
-      move(x, y);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Invisible: // Triggers Invisible spell
-      world.level.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
-      world.addScore(block);
-      move(x, y);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Teleport: // Collects teleport
-      world.stats.teleports++;
-      world.addScore(block);
-      move(x, y);
-      screen.flashTypeMessage(block, true);
-      break;
-    case Type.Key: // Collects key
-      sound.grab();
-      world.stats.keys++;
-      move(x, y);
-      await screen.flashTypeMessage(block, true);
       break;
     case Type.Door: // Opens door (if has key)
       if (world.stats.keys < 1) {
@@ -268,45 +263,6 @@ export async function tryMove(dx: number, dy: number) {
       }
       // TODO: LOST 75 special case
       break;
-    case Type.Wall: // Blocked
-    case Type.River:
-      sound.blockedWall();
-      world.addScore(block);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.SpeedTime: // Trigger Speed Time
-      world.level.T[Timer.SlowTime] = 0; // Reset Slow Time
-      world.level.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime]; // Speed Time
-      world.addScore(block);
-      move(x, y);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Trap: // Triggers Teleport Trap
-      world.addScore(block);
-      move(x, y);
-      await screen.flashTypeMessage(block, true);
-      await teleport();
-      break;
-    case Type.Power: // Collects poer ring
-      world.stats.whipPower++;
-      world.addScore(block);
-      move(x, y);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Tree: // Blocked
-    case Type.Forest:
-      world.addScore(block);
-      await sound.blocked();
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Bomb: {
-      // Triggers Bomb
-      move(x, y);
-      await bomb(x, y);
-      await screen.flashTypeMessage(block, true);
-      screen.renderBorder();
-      break;
-    }
     case Type.Lava: // Moves + Damage
       world.stats.gems -= 10;
       world.addScore(block);
@@ -342,22 +298,6 @@ export async function tryMove(dx: number, dy: number) {
       await screen.flashTypeMessage(block, true);
       break;
     }
-    case Type.Freeze: // Trigger Freeze spell
-      world.level.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
-      move(x, y);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Nugget: // Collects nugget
-      sound.grab();
-      move(x, y);
-      world.addScore(block);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Quake: // Triggers Quake
-      move(x, y);
-      await quakeTrap();
-      await screen.flashTypeMessage(block, true);
-      break;
     case Type.IBlock: // IBlock is replaced by Block
       sound.blockedWall();
       world.level.map.setType(x, y, Type.Block);
@@ -376,25 +316,6 @@ export async function tryMove(dx: number, dy: number) {
       screen.drawEntity(x, y);
       await screen.flashTypeMessage(block, true);
       break;
-    case Type.Trap2: // Triggers Trap2
-      move(x, y);
-      replaceEntities(Type.Trap2, Type.Floor);
-      break;
-    case Type.Zap: {
-      // Triggers Zap spell
-      move(x, y);
-      await zapTrap();
-      await screen.flashTypeMessage(block, true);
-      break;
-    }
-    case Type.Create: {
-      // Triggers Create spell
-      move(x, y);
-      await createTrap();
-      world.addScore(block);
-      await screen.flashTypeMessage(block, true);
-      break;
-    }
     case Type.Generator: // Blocked
       sound.blocked();
       world.addScore(block);
@@ -405,14 +326,6 @@ export async function tryMove(dx: number, dy: number) {
       world.addScore(block);
       await screen.flashTypeMessage(block, true);
       break;
-    case Type.ShowGems: {
-      // Triggers Show Gems spell
-      move(x, y);
-      sound.grab();
-      await showGemsSpell();
-      await screen.flashTypeMessage(block, false);
-      break;
-    }
     case Type.Tablet: // Reads tablet
       move(x, y);
       sound.grab();
@@ -420,38 +333,9 @@ export async function tryMove(dx: number, dy: number) {
       await screen.flashTypeMessage(block, true);
       await tabletMessage();
       break;
-    case Type.BlockSpell: {
-      // Triggers Block spell
-      move(x, y);
-      await blockSpell();
-      await screen.flashTypeMessage(block, true);
-      break;
-    }
-    case Type.Chance: {
-      // Collects pouch
-      world.addScore(block);
-      const g = RNG.getUniformInt(14, 18);
-      world.stats.gems += g;
-      move(x, y);
-      await screen.flashMessage(`You found a Pouch containing ${g} Gems!`);
-      break;
-    }
     case Type.Statue: // Blocked
       sound.blocked();
       await screen.flashTypeMessage(block);
-      break;
-    case Type.WallVanish: // Trigger Wall Vanish
-      move(x, y);
-      await wallVanish();
-      await screen.flashTypeMessage(block);
-      break;
-    case Type.K:
-    case Type.R:
-    case Type.O:
-    case Type.Z:
-      move(x, y);
-      sound.grab();
-      await krozBonus(block);
       break;
     case Type.OWall1: // Blocked
     case Type.OWall2:
@@ -460,86 +344,19 @@ export async function tryMove(dx: number, dy: number) {
       world.addScore(Type.Wall);
       await screen.flashTypeMessage(Type.OWall1, true);
       break;
-    case Type.CWall1: // Moves
-    case Type.CWall2:
-    case Type.CWall3:
-      move(x, y);
-      break;
-    case Type.OSpell1: // Triggers OSpell
-    case Type.OSpell2:
-    case Type.OSpell3: {
-      move(x, y);
-      await triggerOSpell(block);
-      await screen.flashTypeMessage(block, true);
-      break;
-    }
-    case Type.CSpell1: // Triggers CSpell
-    case Type.CSpell2:
-    case Type.CSpell3: {
-      move(x, y);
-      await triggerCSpell(block);
-      await screen.flashTypeMessage(block, true);
-      break;
-    }
-    case Type.Rock: {
+    case Type.Rock:
       // Pushes rock
       await pushRock(x, y, dx, dy);
       break;
-    }
     case Type.EWall: // Damage
       world.addScore(block);
       world.stats.gems--;
       sound.staticNoise();
       await screen.flashTypeMessage(Type.EWall, true);
       break;
-    case Type.Trap3:
-    case Type.Trap4:
-    case Type.Trap5:
-    case Type.Trap6:
-    case Type.Trap7:
-    case Type.Trap8:
-    case Type.Trap9:
-    case Type.Trap10:
-    case Type.Trap11:
-    case Type.Trap12:
-    case Type.Trap13:
-      move(x, y);
-      replaceEntities(block, Type.Floor);
-      break;
-    case Type.TBlock: // Triggers
-    case Type.TRock:
-    case Type.TGem:
-    case Type.TBlind:
-    case Type.TWhip:
-    case Type.TGold:
-    case Type.TTree:
-      // https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST1.LEV#L1236C1-L1254C23
-      move(x, y);
-      await triggers(x, y, block);
-      break;
-    case Type.Rope: // Moves + Rope (Ropes not implemented)
-      move(x, y);
-      await screen.flashTypeMessage(Type.Rope, true);
-      break;
-    case Type.Message: {
+    case Type.Message:
       // Reads secret message
       await secretMessage();
-      break;
-    }
-    case Type.ShootRight:
-      move(x, y);
-      await shoot(x, y, 1);
-      break;
-    case Type.ShootLeft:
-      move(x, y);
-      await shoot(x, y, -1);
-      break;
-    case Type.DropRope: // NOP
-    case Type.DropRope2:
-    case Type.DropRope3:
-    case Type.DropRope4:
-    case Type.DropRope5:
-      move(x, y);
       break;
     case Type.Amulet:
       move(x, y);
@@ -630,27 +447,27 @@ async function whip() {
         sound.whipBreak();
         // TODO: Generator special case
         break;
-      case Type.Quake:
-      case Type.IBlock:
-      case Type.IWall:
-      case Type.IDoor:
-      case Type.Trap2:
-      case Type.Trap3:
-      case Type.Trap4:
-      case Type.ShowGems:
-      case Type.BlockSpell:
-      case Type.Trap5:
-      case Type.Trap6:
-      case Type.Trap7:
-      case Type.Trap8:
-      case Type.Trap9:
-      case Type.Trap10:
-      case Type.Trap11:
-      case Type.Trap12:
-      case Type.Trap13:
-      case Type.Stop:
-        // No break, no effect
-        break;
+      // case Type.Quake:
+      // case Type.IBlock:
+      // case Type.IWall:
+      // case Type.IDoor:
+      // case Type.Trap2:
+      // case Type.Trap3:
+      // case Type.Trap4:
+      // case Type.ShowGems:
+      // case Type.BlockSpell:
+      // case Type.Trap5:
+      // case Type.Trap6:
+      // case Type.Trap7:
+      // case Type.Trap8:
+      // case Type.Trap9:
+      // case Type.Trap10:
+      // case Type.Trap11:
+      // case Type.Trap12:
+      // case Type.Trap13:
+      // case Type.Stop:
+      //   // No break, no effect
+      //   break;
       case Type.Rock:
         if (30 * Math.random() < world.stats.whipPower) {
           sound.whipBreakRock();
@@ -679,8 +496,8 @@ async function whip() {
         world.level.map.setType(x, y, Type.Floor);
         world.level.genNum--;
         break;
-      case Type.Wall:
-        break;
+      // case Type.Wall:
+      //   break;
       default:
         break;
     }
@@ -1301,6 +1118,124 @@ async function wallVanish() {
         done = true;
       }
     } while (!done && RNG.getUniformInt(0, 200) !== 0);
+  }
+}
+
+async function trigger(type: Type, x: number, y: number) {
+  switch (type) {
+    case Type.SlowTime: // Triggers Slow Time
+      world.level.T[Timer.SpeedTime] = 0; // Reset Speed Time
+      world.level.T[Timer.FreezeTime] = 0;
+      world.level.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime]; // Slow Time
+      world.addScore(type);
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.SpeedTime: // Trigger Speed Time
+      world.level.T[Timer.SlowTime] = 0; // Reset Slow Time
+      world.level.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime]; // Speed Time
+      world.addScore(type);
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.Invisible: // Triggers Invisible spell
+      world.level.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
+      world.level.player.add(isInvisible);
+      screen.drawEntity(x, y);
+      world.addScore(type);
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.Trap: // Triggers Teleport Trap
+      world.addScore(type);
+      await screen.flashTypeMessage(type, true);
+      await teleport();
+      break;
+    case Type.Bomb: // Triggers Bomb
+      await bomb(x, y);
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.Freeze: // Trigger Freeze spell
+      world.level.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.Quake: // Triggers Quake
+      await quakeTrap();
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.Trap2: // Triggers Trap2
+      replaceEntities(type, Type.Floor);
+      break;
+    case Type.Zap: // Triggers Zap
+      await zapTrap();
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.Create:
+      // Triggers Create spell
+      await createTrap();
+      world.addScore(type);
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.ShowGems:
+      // Triggers Show Gems spell
+      sound.grab();
+      await showGemsSpell();
+      await screen.flashTypeMessage(type, false);
+      break;
+    case Type.BlockSpell:
+      // Triggers Block spell
+      await blockSpell();
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.WallVanish: // Trigger Wall Vanish
+      await wallVanish();
+      await screen.flashTypeMessage(type);
+      break;
+    case Type.K:
+    case Type.R:
+    case Type.O:
+    case Type.Z:
+      sound.grab();
+      await krozBonus(type);
+      break;
+    case Type.OSpell1: // Triggers OSpell
+    case Type.OSpell2:
+    case Type.OSpell3:
+      await triggerOSpell(type);
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.CSpell1: // Triggers CSpell
+    case Type.CSpell2:
+    case Type.CSpell3:
+      await triggerCSpell(type);
+      await screen.flashTypeMessage(type, true);
+      break;
+    case Type.Trap3:
+    case Type.Trap4:
+    case Type.Trap5:
+    case Type.Trap6:
+    case Type.Trap7:
+    case Type.Trap8:
+    case Type.Trap9:
+    case Type.Trap10:
+    case Type.Trap11:
+    case Type.Trap12:
+    case Type.Trap13:
+      replaceEntities(type, Type.Floor);
+      break;
+    case Type.TBlock: // Triggers
+    case Type.TRock:
+    case Type.TGem:
+    case Type.TBlind:
+    case Type.TWhip:
+    case Type.TGold:
+    case Type.TTree:
+      // https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST1.LEV#L1236C1-L1254C23
+      await triggers(x, y, type);
+      break;
+    case Type.ShootRight:
+      await shoot(x, y, 1);
+      break;
+    case Type.ShootLeft:
+      await shoot(x, y, -1);
+      break;
   }
 }
 

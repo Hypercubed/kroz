@@ -1,0 +1,11 @@
+import caverns2 from "./caverns-2";
+import caverns4 from "./caverns-4";
+
+export const LEVELS = [
+  null, // Must be level 0
+
+  null,
+  caverns2,
+  null,
+  caverns4
+];

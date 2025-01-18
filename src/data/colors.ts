@@ -1,5 +1,5 @@
 // PASCAL color codes
-export const enum Color {
+export enum Color {
   Black = 0,
   Blue = 1,
   Green = 2,

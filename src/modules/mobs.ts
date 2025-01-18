@@ -4,18 +4,20 @@ import Speed from 'rot-js/lib/scheduler/speed';
 import * as world from './world';
 import * as sound from './sound';
 
-import { Type, TypeChar, TypeColor } from '../data/tiles';
+import { Type } from '../data/tiles';
 import { TIME_SCALE, XMax, YMax } from '../data/constants';
 import { Timer } from './world';
 import type { Entity } from '../classes/entity';
 import {
-  Attacks,
+  AttacksPlayer,
   Eats,
   FollowsPlayer,
-  KilledBy,
+  DestroyedBy,
   Position,
   Renderable,
   Walkable,
+  AnimatedWalking,
+  isInvisible,
 } from '../classes/components';
 
 function getBaseSpeed(t: Type) {
@@ -119,20 +121,12 @@ function tryMove(e: Entity, dx: number, dy: number) {
     return;
   }
 
-  if (block.get(Walkable)?.has(e.type)) {
+  if (block.get(Walkable)?.by(e.type)) {
     moveTo(e, x, y);
-
-    if (e.type === Type.MBlock) {
-      const t = e.get(Renderable)!;
-      t.ch = TypeChar[Type.Block]; // MBlocks become visible afer moving
-      t.fg = TypeColor[Type.Block][0] ?? TypeColor[Type.Floor][0];
-      t.bg = TypeColor[Type.Block][1] ?? TypeColor[Type.Floor][1];
-    }
-
-    return;
+    return;  // TODO: change this to fall through
   }
 
-  if (e.get(KilledBy)?.has(block.type)) {
+  if (e.get(DestroyedBy)?.has(block.type)) {
     world.level.map.setType(ep.x, ep.y, Type.Floor);
     world.level.map.setType(x, y, Type.Floor);
     world.kill(e);
@@ -142,8 +136,9 @@ function tryMove(e: Entity, dx: number, dy: number) {
     return;
   }
 
-  if (e.get(Attacks)?.has(block.type)) {
-    world.stats.gems--;
+  if (e.has(AttacksPlayer) && block.type === Type.Player) {
+    const damage = e.get(AttacksPlayer)!.damage;
+    world.stats.gems -= damage;
     world.level.map.setType(ep.x, ep.y, Type.Floor);
     world.kill(e);
     world.addScore(block.type as Type);
@@ -155,13 +150,18 @@ function tryMove(e: Entity, dx: number, dy: number) {
 }
 
 function moveTo(e: Entity, x: number, y: number) {
-  if (e.type === Type.Slow) {
-    e.get(Renderable)!.ch = Math.random() > 0.5 ? 'A' : 'Ä';
-  } else if (e.type === Type.Medium) {
-    e.get(Renderable)!.ch = Math.random() > 0.5 ? 'ö' : 'Ö';
+  if (e.has(AnimatedWalking) && e.has(Renderable)) {
+    const r = e.get(Renderable)!;
+    const a = e.get(AnimatedWalking)!;
+    r.ch = a.getFrame();
   }
 
   const p = e.get(Position)!;
+
+  if (e.type === Type.MBlock && (x !== p.x || y !== p.y)) {  // TODO: can this be applied to all entities?
+    e.remove(isInvisible);
+  }
+
 
   world.level.map.setType(p.x, p.y, Type.Floor);
   world.level.map.set(x, y, e);

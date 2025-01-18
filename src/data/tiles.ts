@@ -1,20 +1,30 @@
+import { RNG } from 'rot-js';
+
+import * as world from '../modules/world';
+
 import {
-  Attacks,
+  AttacksPlayer,
   ChanceProbability,
   Eats,
   FollowsPlayer,
   isGenerator,
   isMobile,
   isPlayer,
-  KilledBy,
+  DestroyedBy,
   Renderable,
   Walkable,
+  Collectible,
+  AnimatedWalking,
+  MagicTrigger,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
 import { FLOOR_CHAR } from './constants';
 
-export const enum Type {
+import tileset from './tiles.json';
+import { tileIdToChar } from '../utils/utils';
+
+export enum Type {
   Border = -1,
   Floor = 0,
   Slow = 1,
@@ -113,358 +123,38 @@ export const enum Type {
   Message = 252,
 }
 
-export const TypeChar: Record<Type, string> = {
-  [Type.Border]: '▒',
-  [Type.Floor]: FLOOR_CHAR,
-  [Type.Slow]: 'Ä',
-  [Type.Medium]: 'Ö',
-  [Type.Fast]: 'Ω',
-  [Type.Block]: '▓',
-  [Type.Whip]: '⌠',
-  [Type.Stairs]: '≡',
-  [Type.Chest]: 'C',
-  [Type.SlowTime]: 'Φ',
-  [Type.Gem]: '♦',
-  [Type.Invisible]: '¡',
-  [Type.Teleport]: '↑',
-  [Type.Key]: 'î',
-  [Type.Door]: '∞',
-  [Type.Wall]: '█',
-  [Type.SpeedTime]: 'Θ',
-  [Type.Trap]: '∙',
-  [Type.River]: '≈',
-  [Type.Power]: '○',
-  [Type.Forest]: '█',
-  [Type.Tree]: '♣',
-  [Type.Bomb]: '¥',
-  [Type.Lava]: '▓',
-  [Type.Pit]: '░',
-  [Type.Tome]: '■',
-  [Type.Tunnel]: '∩',
-  [Type.Freeze]: 'ƒ',
-  [Type.Nugget]: '☼',
-  [Type.Quake]: FLOOR_CHAR,
-  [Type.IBlock]: FLOOR_CHAR,
-  [Type.IWall]: FLOOR_CHAR,
-  [Type.IDoor]: FLOOR_CHAR,
-  [Type.Stop]: FLOOR_CHAR,
-  [Type.Trap2]: FLOOR_CHAR,
-  [Type.Zap]: '▲',
-  [Type.Create]: '▼',
-  [Type.Generator]: '♠',
-  [Type.Trap3]: FLOOR_CHAR,
-  [Type.MBlock]: '▓',
-  [Type.Trap4]: FLOOR_CHAR,
-  [Type.Player]: '☻',
-  [Type.ShowGems]: FLOOR_CHAR,
-  [Type.Tablet]: '■',
-  [Type.ZBlock]: '▓',
-  [Type.BlockSpell]: FLOOR_CHAR,
-  [Type.Chance]: '?',
-  [Type.Statue]: '☺',
-  [Type.WallVanish]: FLOOR_CHAR,
-  [Type.K]: 'K',
-  [Type.R]: 'R',
-  [Type.O]: 'O',
-  [Type.Z]: 'Z',
-  [Type.OWall1]: '█',
-  [Type.OWall2]: '█',
-  [Type.OWall3]: '█',
-  [Type.CWall1]: FLOOR_CHAR,
-  [Type.CWall2]: FLOOR_CHAR,
-  [Type.CWall3]: FLOOR_CHAR,
-  [Type.OSpell1]: '⌂',
-  [Type.OSpell2]: '⌂',
-  [Type.OSpell3]: '⌂',
-  [Type.CSpell1]: FLOOR_CHAR,
-  [Type.CSpell2]: FLOOR_CHAR,
-  [Type.CSpell3]: FLOOR_CHAR,
-  [Type.GBlock]: '▓',
-  [Type.Rock]: 'O',
-  [Type.EWall]: 'X',
-  [Type.Trap5]: FLOOR_CHAR,
-  [Type.TBlock]: FLOOR_CHAR,
-  [Type.TRock]: FLOOR_CHAR,
-  [Type.TGem]: FLOOR_CHAR,
-  [Type.TBlind]: FLOOR_CHAR,
-  [Type.TWhip]: FLOOR_CHAR,
-  [Type.TGold]: FLOOR_CHAR,
-  [Type.TTree]: FLOOR_CHAR,
-  [Type.Rope]: '│',
-  [Type.DropRope]: '↓',
-  [Type.DropRope2]: '↓',
-  [Type.DropRope3]: '↓',
-  [Type.DropRope4]: '↓',
-  [Type.DropRope5]: '↓',
-  [Type.Amulet]: '♀',
-  [Type.ShootRight]: '→',
-  [Type.ShootLeft]: '←',
+const _MapLookup: Record<string, Type> = {};
+const _TypeColor: Partial<Record<Type, [Color | null, Color | null]>> = {};
+const _TypeChar: Partial<Record<Type, string>> = {};
+const _TypeMessage: Partial<Record<Type, string>> = {};
 
-  [Type.Trap6]: FLOOR_CHAR,
-  [Type.Trap7]: FLOOR_CHAR,
-  [Type.Trap8]: FLOOR_CHAR,
-  [Type.Trap9]: FLOOR_CHAR,
-  [Type.Trap10]: FLOOR_CHAR,
-  [Type.Trap11]: FLOOR_CHAR,
-  [Type.Trap12]: FLOOR_CHAR,
-  [Type.Trap13]: FLOOR_CHAR,
+const { tiles, tileproperties } = tileset;
 
-  [Type.Message]: '♣',
-};
+for (const tileId in tiles) {
+  const tile = tiles[tileId as keyof typeof tiles];
+  const type = +tile.type as Type;
+  const char = tileIdToChar(+tileId);
+  _MapLookup[char] = type;
 
-export const MapLookup: Record<string, Type> = {
-  ' ': Type.Floor,
-  '1': Type.Slow,
-  '2': Type.Medium,
-  '3': Type.Fast,
-  X: Type.Block,
-  W: Type.Whip,
-  L: Type.Stairs,
-  C: Type.Chest,
-  S: Type.SlowTime,
-  '+': Type.Gem,
-  I: Type.Invisible,
-  T: Type.Teleport,
-  K: Type.Key,
-  D: Type.Door,
-  '#': Type.Wall,
-  F: Type.SpeedTime,
-  '.': Type.Trap,
-  R: Type.River,
-  Q: Type.Power,
-  '/': Type.Forest,
-  '\\': Type.Tree,
-  '♣': Type.Tree,
-  B: Type.Bomb,
-  V: Type.Lava,
-  '=': Type.Pit,
-  A: Type.Tome,
-  U: Type.Tunnel,
-  Z: Type.Freeze,
-  '*': Type.Nugget,
-  E: Type.Quake,
-  ';': Type.IBlock,
-  ':': Type.IWall,
-  '`': Type.IDoor, // TODO: Add a seconday char for IDoor
-  '-': Type.Stop,
-  '@': Type.Trap2,
-  '%': Type.Zap,
-  ']': Type.Create,
-  G: Type.Generator,
-  ')': Type.Trap3,
-  M: Type.MBlock,
-  '(': Type.Trap4,
-  P: Type.Player,
-  '&': Type.ShowGems,
-  '!': Type.Tablet,
-  O: Type.ZBlock,
-  H: Type.BlockSpell,
-  '?': Type.Chance,
-  '>': Type.Statue,
-  N: Type.WallVanish,
-  '<': Type.K,
-  '[': Type.R,
-  '|': Type.O,
-  '"': Type.Z,
-  '4': Type.OWall1,
-  '5': Type.OWall2,
-  '6': Type.OWall3,
-  '7': Type.CWall1,
-  '8': Type.CWall2,
-  '9': Type.CWall3,
-  ñ: Type.OSpell1,
-  ò: Type.OSpell2,
-  ó: Type.OSpell3,
-  ô: Type.CSpell1,
-  õ: Type.CSpell2,
-  ö: Type.CSpell3,
-  Y: Type.GBlock,
-  '0': Type.Rock,
-  '~': Type.EWall,
-  $: Type.Trap5,
-  '‘': Type.TBlock,
-  '’': Type.TRock,
-  '“': Type.TGem,
-  '”': Type.TBlind,
-  '•': Type.TWhip,
-  '–': Type.TGold,
-  '—': Type.TTree,
-  '³': Type.Rope,
-  '¹': Type.DropRope,
-  º: Type.DropRope2,
-  '»': Type.DropRope3,
-  '¼': Type.DropRope4,
-  '½': Type.DropRope5,
-  ƒ: Type.Amulet,
-  '¯': Type.ShootRight,
-  '®': Type.ShootLeft,
+  const props = tileproperties[tileId as keyof typeof tiles];
+  if (props.name !== Type[type]) throw new Error('Tile ID mismatch');
+  const fg = props['Tile.fg' as keyof typeof props];
+  const bg = props['Tile.bg' as keyof typeof props];
+  const ch = props['Tile.ch' as keyof typeof props];
+  _TypeColor[type] = [Color[fg as keyof typeof Color] ?? null, Color[bg as keyof typeof Color] ?? null]; // Allow explicit color?
+  _TypeChar[type] = ch ?? FLOOR_CHAR;
+  if ('message' in props) {
+    _TypeMessage[type] = props['message' as keyof typeof props];
+  }
+}
 
-  à: Type.Trap6,
-  á: Type.Trap7,
-  â: Type.Trap8,
-  ã: Type.Trap9,
-  ä: Type.Trap10,
-  å: Type.Trap11,
-  æ: Type.Trap12,
-  ç: Type.Trap13,
-
-  ü: Type.Message,
-};
-
-export const TypeColor: Record<Type, [Color | null, Color | null]> = {
-  [Type.Border]: [Color.LightBlue, Color.Black],
-  [Type.Floor]: [Color.Black, Color.Black],
-  [Type.Slow]: [Color.LightRed, null],
-  [Type.Medium]: [Color.LightBlue, null],
-  [Type.Fast]: [Color.Green, null],
-  [Type.Block]: [Color.Brown, null],
-  [Type.Whip]: [Color.HighIntensityWhite, null],
-  [Type.Stairs]: [Color.Black | 16, Color.White],
-  [Type.Chest]: [Color.Yellow, Color.Red],
-  [Type.SlowTime]: [Color.LightCyan, null],
-  [Type.Gem]: [Color.Blue, null],
-  [Type.Invisible]: [Color.Green, null],
-  [Type.Teleport]: [Color.LightMagenta, null],
-  [Type.Key]: [Color.LightRed, null],
-  [Type.Door]: [Color.Cyan, Color.Magenta],
-  [Type.Wall]: [Color.Brown, Color.Brown],
-  [Type.SpeedTime]: [Color.LightCyan, null],
-  [Type.Trap]: [Color.White, null],
-  [Type.River]: [Color.LightBlue, Color.Blue],
-  [Type.Power]: [Color.HighIntensityWhite, null],
-  [Type.Forest]: [Color.Green, Color.Green],
-  [Type.Tree]: [Color.Brown, Color.Green],
-  [Type.Bomb]: [Color.HighIntensityWhite, null],
-  [Type.Lava]: [Color.LightRed, Color.Red],
-  [Type.Pit]: [Color.White, null],
-  [Type.Tome]: [Color.HighIntensityWhite | 32, Color.Magenta],
-  [Type.Tunnel]: [Color.HighIntensityWhite, null],
-  [Type.Freeze]: [Color.LightCyan, null],
-  [Type.Nugget]: [Color.Yellow, null], // ArtColor
-  [Type.Quake]: [Color.HighIntensityWhite, null],
-  [Type.IBlock]: [null, null],
-  [Type.IWall]: [null, null],
-  [Type.IDoor]: [null, null],
-  [Type.Stop]: [null, null],
-  [Type.Zap]: [Color.LightRed, null],
-  [Type.Create]: [Color.HighIntensityWhite, null],
-  [Type.Generator]: [Color.Yellow | 16, null], // 30
-  [Type.MBlock]: [Color.Brown, null],
-  [Type.Trap2]: [null, null],
-  [Type.Trap3]: [null, null],
-  [Type.Trap4]: [null, null],
-  [Type.Trap5]: [null, null],
-  [Type.Trap6]: [null, null],
-  [Type.Trap7]: [null, null],
-  [Type.Trap8]: [null, null],
-  [Type.Trap9]: [null, null],
-  [Type.Trap10]: [null, null],
-  [Type.Trap11]: [null, null],
-  [Type.Trap12]: [null, null],
-  [Type.Trap13]: [null, null],
-  [Type.Player]: [Color.Yellow, Color.Black], // 16
-  [Type.ShowGems]: [null, null],
-  [Type.Tablet]: [Color.LightBlue, null],
-  [Type.ZBlock]: [Color.Brown, null],
-  [Type.BlockSpell]: [null, null],
-  [Type.Chance]: [Color.HighIntensityWhite, null],
-  [Type.Statue]: [Color.HighIntensityWhite | 16, null], // 31
-  [Type.K]: [Color.Yellow, null],
-  [Type.R]: [Color.Yellow, null],
-  [Type.O]: [Color.Yellow, null],
-  [Type.Z]: [Color.Yellow, null],
-  [Type.OWall1]: [Color.Brown, Color.Brown],
-  [Type.OWall2]: [Color.Brown, Color.Brown],
-  [Type.OWall3]: [Color.White, Color.White],
-  [Type.CWall1]: [null, null],
-  [Type.CWall2]: [null, null],
-  [Type.CWall3]: [null, null],
-  [Type.OSpell1]: [Color.LightCyan, null],
-  [Type.OSpell2]: [Color.LightCyan, null],
-  [Type.OSpell3]: [Color.LightCyan, null],
-  [Type.CSpell1]: [null, null],
-  [Type.CSpell2]: [null, null],
-  [Type.CSpell3]: [null, null],
-  [Type.GBlock]: [Color.White, Color.Black],
-  [Type.Rock]: [Color.White, null],
-  [Type.EWall]: [Color.LightRed, Color.Red],
-  [Type.TBlock]: [null, null],
-  [Type.TRock]: [null, null],
-  [Type.TGem]: [null, null],
-  [Type.TBlind]: [null, null],
-  [Type.TWhip]: [null, null],
-  [Type.TGold]: [null, null],
-  [Type.TTree]: [null, null],
-  [Type.WallVanish]: [Color.HighIntensityWhite, null],
-  [Type.Rope]: [Color.White, null],
-  [Type.DropRope]: [Color.White, null],
-  [Type.DropRope2]: [Color.White, null],
-  [Type.DropRope3]: [Color.White, null],
-  [Type.DropRope4]: [Color.White, null],
-  [Type.DropRope5]: [Color.White, null],
-  [Type.ShootRight]: [Color.White, null],
-  [Type.ShootLeft]: [Color.White, null],
-  [Type.Amulet]: [Color.HighIntensityWhite | 16, null], // 31
-
-  [Type.Message]: [Color.Brown, Color.Green],
-};
-
-export const TypeMessage: Partial<Record<Type, string>> = {
-  [Type.Border]: 'An Electrified Wall blocks your way.',
-  [Type.Block]: 'A Breakable Wall blocks your way',
-  [Type.Whip]: 'You have found a Whip',
-  [Type.Stairs]: 'Stairs take you to the next lower level.',
-  [Type.Chest]: '`You found gems and whips inside the chest!',
-  [Type.SlowTime]: 'You activated a Slow Time spell.',
-  [Type.Gem]: 'Gems give you both points and strength.',
-  [Type.Invisible]: 'Oh no, a temporary Blindness Potion!',
-  [Type.Teleport]: 'You found a Teleport scroll.',
-  [Type.Key]: 'Use Keys to unlock doors.',
-  [Type.Door]: 'The Door opens!  (One of your Keys is used.)',
-  [Type.Wall]: 'A Solid Wall blocks your way.',
-  [Type.River]: 'You cannot travel through Water.',
-  [Type.SpeedTime]: 'You activated a Speed Creature spell.',
-  [Type.Trap]: 'You activated a Teleport trap!',
-  [Type.Power]: 'A Power Ring--your whip is now a little stronger!',
-  [Type.Tree]: 'A tree blocks your way.',
-  [Type.Forest]: 'You cannot travel through forest terrain.',
-  [Type.Bomb]: 'You activated a Magic Bomb!',
-  [Type.Lava]: 'Oooooooooooooooooooh!  Lava hurts!  (Lose 10 Gems.)',
-  [Type.Pit]: '* SPLAT!! *',
-  [Type.Tome]: 'The Sacred Tome of Kroz is finally yours--50,000 points!',
-  [Type.Tunnel]: 'You passed through a secret Tunnel!',
-  [Type.Freeze]: 'You have activated a Freeze Creature spell!',
-  [Type.Nugget]: 'You found a Gold Nugget...500 points!',
-  [Type.Quake]: 'Oh no, you set off an Earthquake trap!',
-  [Type.IBlock]: 'An Invisible Crumbled Wall blocks your way.',
-  [Type.IDoor]: 'An Invisible Door blocks your way.',
-  [Type.Zap]: 'A Creature Zap Spell!',
-  [Type.Create]: 'A Creature Creation Trap!',
-  [Type.Generator]: 'You have discovered a Creature Generator!',
-  [Type.MBlock]: 'A Moving Wall blocks your way.',
-  [Type.ShowGems]: 'Yah Hoo! You discovered a Reveal Gems Scroll!',
-  [Type.Tablet]: 'You found an Ancient Tablet of Wisdom...2,500 points!',
-  [Type.BlockSpell]: 'You triggered Exploding Walls!',
-  [Type.Chance]: 'You found a Pouch containing Gems!',
-  [Type.Statue]: 'Statues are very dangerous...they drain your Gems!',
-  [Type.WallVanish]:
-    'Yikes!  A trap has made many of the wall sections invisible!',
-  [Type.Z]: 'Super Kroz Bonus -- 10,000 points!',
-  [Type.OWall1]: 'A Solid Wall blocks your way.',
-  [Type.OSpell1]: 'Magic has been released is this chamber!',
-  [Type.OSpell2]: 'Magic has been released is this chamber!',
-  [Type.OSpell3]: 'Magic has been released is this chamber!',
-  [Type.CSpell1]: 'New Walls have magically appeared!',
-  [Type.CSpell2]: 'New Walls have magically appeared!',
-  [Type.CSpell3]: 'New Walls have magically appeared!',
-  [Type.Rock]: 'You pushed a big Boulder!',
-  [Type.EWall]: 'You hit a Electrified Wall!  You lose one Gem.',
-  [Type.Rope]: 'You grabbed a Rope.',
-  [Type.Amulet]: 'YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!',
-};
+export const MapLookup = _MapLookup as Record<string, Type>;
+export const TypeColor = _TypeColor as Record<Type, [Color | null, Color | null]>;
+export const TypeChar = _TypeChar as Record<Type, string>;
+export const TypeMessage = _TypeMessage as Record<Type, string>;
 
 export const MOBS = [Type.Fast, Type.Medium, Type.Slow]; // 1..3
-export const COLLECTABLES = [Type.Whip, Type.Gem, Type.Teleport]; // 5, 9, 11
+export const COLLECTABLES = [Type.Whip, Type.Gem, Type.Teleport, Type.Chest]; // 5, 9, 11
 export const SPELLS = [
   Type.SlowTime,
   Type.Invisible,
@@ -552,7 +242,6 @@ export const ROCKABLES = [
   ...MOBS,
   ...COLLECTABLES,
   ...SPELLS,
-  Type.Chest,
   ...TRAPS,
   Type.Stop,
 ];
@@ -592,7 +281,6 @@ export const ROCK_MOVEABLES = [
 
 export const ROCK_CRUSHABLES = [
   ...COLLECTABLES,
-  Type.Chest,
   Type.SlowTime,
   Type.Invisible,
   Type.Key,
@@ -728,6 +416,35 @@ export function createTileDataForType(type: Type | string) {
   return { ch, fg, bg };
 }
 
+const MOB_WALKABLE = [
+  Type.Floor,
+  Type.TBlock,
+  Type.TRock,
+  Type.TGem,
+  Type.TBlind,
+  Type.TGold,
+  Type.TWhip,
+  Type.TTree,
+  Type.Whip,
+  Type.Chest,
+  Type.SlowTime,
+  Type.Gem,
+  Type.Invisible,
+  Type.Teleport,
+  Type.Key,
+  Type.SpeedTime,
+  Type.Trap,
+  Type.Power,
+  Type.Freeze,
+  Type.Nugget,
+  Type.K,
+  Type.R,
+  Type.O,
+  Type.Z,
+  Type.ShootRight,
+  Type.ShootLeft,
+];
+
 const MOB_EATS = [
   Type.Whip,
   Type.Chest,
@@ -748,47 +465,71 @@ const MOB_EATS = [
   Type.ShootRight,
   Type.ShootLeft,
 ];
-const MOB_WALKABLE = [
-  Type.Floor,
-  Type.TBlock,
-  Type.TRock,
-  Type.TGem,
-  Type.TBlind,
-  Type.TGold,
-  Type.TWhip,
-  Type.TTree,
-  ...MOB_EATS,
+
+const MAGIC_TRIGGERS = [
+  Type.SlowTime,
+    Type.Invisible,
+    Type.SpeedTime,
+    Type.Trap,
+    Type.Bomb,
+    Type.Freeze,
+    Type.Quake,
+    Type.Trap2,
+    Type.Zap,
+    Type.Create,
+    Type.ShowGems,
+    Type.BlockSpell,
+    Type.WallVanish,
+    Type.K,
+    Type.R,
+    Type.O,
+    Type.Z,
+    Type.OSpell1,
+    Type.OSpell2,
+    Type.OSpell3,
+    Type.CSpell1,
+    Type.CSpell2,
+    Type.CSpell3,
+    Type.Trap3,
+    Type.Trap4,
+    Type.Trap5,
+    Type.Trap6,
+    Type.Trap7,
+    Type.Trap8,
+    Type.Trap9,
+    Type.Trap10,
+    Type.Trap11,
+    Type.Trap12,
+    Type.Trap13,
+    Type.TBlock,
+    Type.TRock,
+    Type.TGem,
+    Type.TBlind,
+    Type.TWhip,
+    Type.TGold,
+    Type.TTree,
+    Type.ShootRight,
+    Type.ShootLeft,
 ];
-const MOB_KILLED_BY = [Type.Block, Type.MBlock, Type.ZBlock, Type.GBlock];
 
 export function createEntityOfType(type: Type | string) {
+  if (type === Type.Player) {
+    return createPlayerEntity();
+  } else if (MOBS.includes(type as Type) || type === Type.MBlock) {
+    return createMobEntity(type as Type);
+  } else {
+    return createTileEntity(type);
+  }
+}
+
+export function createTileEntity(type: Type | string) {
   const entity = new Entity(type);
 
   // TODO: Don't add Renderable for invisible tiles
   entity.add(new Renderable(createTileDataForType(type)));
 
-  if (type === Type.Player) {
-    entity.add(isPlayer);
-  }
-
-  if (
-    type === Type.Fast ||
-    type === Type.Medium ||
-    type === Type.Slow ||
-    type === Type.MBlock
-  ) {
-    entity.add(isMobile).add(FollowsPlayer);
-
-    if (type === Type.Fast || type === Type.Medium || type === Type.Slow) {
-      entity
-        .add(new Eats(MOB_EATS))
-        .add(new KilledBy(MOB_KILLED_BY))
-        .add(new Attacks([Type.Player]));
-    }
-  }
-
   // Adds walkability to tiles
-  if (MOB_WALKABLE.includes(type as Type) || type === Type.Floor) {
+  if (type === Type.Floor) {
     entity.add(
       new Walkable([
         Type.Fast,
@@ -798,6 +539,58 @@ export function createEntityOfType(type: Type | string) {
         Type.Player,
       ]),
     );
+  } else if (type === Type.Stop) {
+      entity.add(
+        new Walkable([
+          Type.Player,
+        ]),
+      );
+  } else if (MOB_WALKABLE.includes(type as Type)) {
+    entity.add(
+      new Walkable([
+        Type.Fast,
+        Type.Medium,
+        Type.Slow,
+        Type.Player,
+      ]),
+    );
+  } else if (CWALLS.includes(type as Type)) {
+    entity.add(
+      new Walkable([
+        Type.Player,
+      ]),
+    );
+  }
+
+  switch (type) {
+    case Type.Whip:
+      entity.add(new Collectible({ whips: 1 }));
+      break;
+    case Type.Gem:
+      entity.add(new Collectible({ gems: 1 }));
+      break;
+    case Type.Key:
+      entity.add(new Collectible({ keys: 1 }));
+      break;
+    case Type.Chest:
+      entity.add(new Collectible({
+        whips: RNG.getUniformInt(2, 5),
+        gems: RNG.getUniformInt(5, world.game.difficulty + 2),
+      }));
+      break;
+    case Type.Nugget:
+      entity.add(new Collectible()); // Only points
+      break;
+    case Type.Chance:
+      entity.add(new Collectible({ gems: RNG.getUniformInt(14, 18) }));
+      break;
+    case Type.Teleport:
+      entity.add(new Collectible({ keys: 1 }));
+      break;
+  }
+
+  if (MAGIC_TRIGGERS.includes(type as Type)) {
+    entity.add(new MagicTrigger(type as Type));
   }
 
   if (ChanceChance[type as keyof typeof ChanceChance]) {
@@ -812,3 +605,53 @@ export function createEntityOfType(type: Type | string) {
 
   return entity;
 }
+
+export function createPlayerEntity() {
+  return new Entity(Type.Player)
+    .add(new Renderable(createTileDataForType(Type.Player)))
+    .add(isPlayer);
+}
+
+export function createMobEntity(type: Type) {
+  const entity = new Entity(type)
+    .add(new Renderable(createTileDataForType(type)))
+    .add(isMobile)   // TODO: Replace with movement and speed
+    .add(FollowsPlayer);  // TODO: Replace with AI
+
+  if (type === Type.Fast || type === Type.Medium || type === Type.Slow) {
+    entity
+      .add(new Eats(MOB_EATS))
+      .add(new DestroyedBy([Type.Block, Type.MBlock, Type.ZBlock, Type.GBlock]))
+      .add(new AttacksPlayer({ damage: type }));
+  }
+
+  if (type === Type.Slow) {
+    entity.add(new AnimatedWalking('AÄ'));
+  } else if (type === Type.Medium) {
+    entity.add(new AnimatedWalking('öÖ'));
+  }
+
+  return entity;
+}
+
+// const keys = Object.keys(MapLookup).sort((a, b) => MapLookup[a] - MapLookup[b]);
+// for (const key of keys) {
+//   const asc = getASCIICode(key);
+//   const type = MapLookup[key];
+//   // console.log(`{${key}} {${type}} ${Type[type]} = #${asc}`);
+//   // console.log(`"${asc}": { "type": ${type} },`);
+
+//   const obj = { name: Type[type] };
+//   if (TypeChar[type] !== FLOOR_CHAR) {
+//     obj["Tile.ch"] = TypeChar[type];
+//     const [fg, bg] = TypeColor[type];
+//     if (fg !== null) {
+//       obj["Tile.fg"] = Color[fg];
+//     }
+//     if (bg !== null) {
+//       obj["Tile.bg"] = Color[bg];
+//     }
+//   }
+
+//   console.log(`"${asc}": ${JSON.stringify(obj)},`);
+// }
