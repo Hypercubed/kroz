@@ -7,6 +7,7 @@ export const isPlayer = Symbol('isPlayer');
 export const isMobile = Symbol('isMobile');
 export const isGenerator = Symbol('isGenerator');
 export const isInvisible = Symbol('isInvisible');
+export const isChanced = Symbol('isChanced'); // Appears as ?
 
 export class Renderable {
   ch: string;

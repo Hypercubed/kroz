@@ -41,6 +41,7 @@ import { Timer } from './world.ts';
 import {
   AttacksPlayer,
   Collectible,
+  isChanced,
   isInvisible,
   MagicTrigger,
   Position,
@@ -408,9 +409,15 @@ async function whip() {
   async function hit(x: number, y: number, ch: string) {
     if (x < 0 || x > XMax || y < 0 || y > YMax) return;
 
-    const thing = world.level.map.getType(x, y);
+    const entity = world.level.map.get(x, y);
+    const thing = entity?.type || Type.Floor;
 
     screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
+
+    if (entity?.has(isChanced)) {
+      entity?.remove(isChanced);
+      screen.drawEntity(x, y);
+    }
 
     // TODO: use lists
     switch (thing) {

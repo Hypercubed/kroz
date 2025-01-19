@@ -663,7 +663,7 @@ export const SPEAR_IGNORE = [
   Type.Rope,
 ];
 
-export const ChanceChance = {
+export const ChanceOdds = {
   [Type.Chest]: 1 / 20,
   [Type.SlowTime]: 1 / 35,
   [Type.Key]: 1 / 25,
@@ -911,9 +911,9 @@ export function createTileEntity(type: Type | string) {
     entity.add(new MagicTrigger(type as Type));
   }
 
-  if (ChanceChance[type as keyof typeof ChanceChance]) {
+  if (ChanceOdds[type as keyof typeof ChanceOdds]) {
     entity.add(
-      new ChanceProbability(ChanceChance[type as keyof typeof ChanceChance]),
+      new ChanceProbability(ChanceOdds[type as keyof typeof ChanceOdds]),
     );
   }
 

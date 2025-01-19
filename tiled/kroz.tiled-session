@@ -691,7 +691,7 @@
     "last.exportedFilePath": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data",
     "last.externalTilesetPath": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/tiled",
     "last.imagePath": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/tiled",
-    "lastUsedTilesetExportFilter": "JSON tileset files [Tiled 1.1] (*.json)",
+    "lastUsedTilesetExportFilter": "Lua files (*.lua)",
     "map.lastUsedExportFilter": "JSON map files [Tiled 1.1] (*.json)",
     "map.lastUsedFormat": "json1",
     "openFiles": [

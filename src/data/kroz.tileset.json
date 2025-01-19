@@ -1,5 +1,11 @@
 {
   "columns": 16,
+  "editorsettings": {
+    "export": {
+      "format": "lua",
+      "target": "kroz.lua"
+    }
+  },
   "image": "..\/..\/tiled\/ASCII.png",
   "imageheight": 576,
   "imagewidth": 384,
@@ -144,6 +150,11 @@
           "value": "LightRed"
         },
         {
+          "name": "description",
+          "type": "string",
+          "value": "Creature zap spell"
+        },
+        {
           "name": "message",
           "type": "string",
           "value": "A Creature Zap Spell!"
@@ -249,6 +260,11 @@
     {
       "id": 45,
       "properties": [
+        {
+          "name": "description",
+          "type": "string",
+          "value": "Stop space"
+        },
         {
           "name": "name",
           "type": "string",
@@ -364,6 +380,11 @@
           "value": "LightRed"
         },
         {
+          "name": "description",
+          "type": "string",
+          "value": "Red enemy"
+        },
+        {
           "name": "name",
           "type": "string",
           "value": "Slow"
@@ -392,7 +413,12 @@
         {
           "name": "Tile.fg",
           "type": "string",
-          "value": "LightBlue"
+          "value": "Green"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "value": "Green enemy"
         },
         {
           "name": "name",
@@ -423,7 +449,12 @@
         {
           "name": "Tile.fg",
           "type": "string",
-          "value": "Green"
+          "value": "LightBlue"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "value": "Blue enemy"
         },
         {
           "name": "name",
@@ -835,6 +866,11 @@
           "value": "LightCyan"
         },
         {
+          "name": "description",
+          "type": "string",
+          "value": "Speed time spell"
+        },
+        {
           "name": "message",
           "type": "string",
           "value": "You activated a Speed Creature spell."
@@ -986,6 +1022,11 @@
           "value": "Brown"
         },
         {
+          "name": "description",
+          "type": "string",
+          "value": "Moving wall"
+        },
+        {
           "name": "message",
           "type": "string",
           "value": "A Moving Wall blocks your way."
@@ -1057,6 +1098,11 @@
           "name": "Tile.fg",
           "type": "string",
           "value": "Yellow"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "value": "The player"
         },
         {
           "name": "name",
@@ -1135,6 +1181,11 @@
           "name": "Tile.fg",
           "type": "string",
           "value": "LightCyan"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "value": "Slow time spell"
         },
         {
           "name": "message",
@@ -1246,6 +1297,11 @@
           "value": "HighIntensityWhite"
         },
         {
+          "name": "description",
+          "type": "string",
+          "value": "Breakable wall"
+        },
+        {
           "name": "message",
           "type": "string",
           "value": "You found a Whip"
@@ -1324,6 +1380,11 @@
           "value": "LightCyan"
         },
         {
+          "name": "description",
+          "type": "string",
+          "value": "Freeze time spell"
+        },
+        {
           "name": "message",
           "type": "string",
           "value": "You have activated a Freeze Creature spell!"
@@ -1400,6 +1461,11 @@
           "name": "Tile.fg",
           "type": "string",
           "value": "HighIntensityWhite"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "value": "Creature creation trap"
         },
         {
           "name": "message",
@@ -1571,6 +1637,11 @@
           "name": "Tile.fg",
           "type": "string",
           "value": "HighIntensityWhite"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "value": "Amulet of Yendor"
         },
         {
           "name": "message",

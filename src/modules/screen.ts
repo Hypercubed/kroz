@@ -18,7 +18,12 @@ import { delay } from '../utils/utils';
 import dedent from 'ts-dedent';
 import { Type, TypeChar, TypeColor, TypeMessage } from '../data/tiles';
 import { Entity } from '../classes/entity';
-import { isInvisible, Position, Renderable } from '../classes/components';
+import {
+  isChanced,
+  isInvisible,
+  Position,
+  Renderable,
+} from '../classes/components';
 
 export function renderScreen() {
   const x = 70;
@@ -334,6 +339,13 @@ export function drawEntity(x: number, y: number, entity?: Entity | null) {
   entity ??= world.level.map.get(x, y);
   if (!entity) return;
   if (entity.has(isInvisible)) return;
+
+  if (entity.has(isChanced)) {
+    const [fg, bg] = TypeColor[Type.Chance];
+    display.draw(x + XBot, y + YBot, TypeChar[Type.Chance], fg!, bg!);
+    return;
+  }
+
   if (!entity.has(Renderable)) return;
 
   const t = entity.get(Renderable)!;

@@ -15,7 +15,6 @@ import {
   createEntityOfType,
   TileIdLookup,
   Type,
-  TypeChar,
   TypeColor,
 } from '../data/tiles.ts';
 import { Timer } from './world.ts';
@@ -23,11 +22,11 @@ import { mod } from 'rot-js/lib/util';
 import {
   ChanceProbability,
   isGenerator,
+  isChanced,
   isInvisible,
   isMobile,
   isPlayer,
   Position,
-  Renderable,
 } from '../classes/components.ts';
 import { ensureObject, tileIdToChar } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
@@ -131,12 +130,18 @@ export function readLevelJSON(tilemap: tiled.Map): Level {
     if (properties.HideGems) {
       world.level.map.hideType(Type.Gem);
     }
+    if (properties.HideRocks) {
+      world.level.map.hideType(Type.Rock);
+    }
     if (properties.HideStairs) {
       world.level.map.hideType(Type.Stairs);
     }
     if (properties.HideOpenWall) {
-      // be careful with this one
+      // be careful with this one, name is confusing
+      // hides the open wall spell, not the wall itself
       world.level.map.hideType(Type.OSpell1);
+      world.level.map.hideType(Type.OSpell2);
+      world.level.map.hideType(Type.OSpell3);
     }
     if (properties.HideCreate) {
       world.level.map.hideType(Type.Create);
@@ -198,10 +203,8 @@ function readLevelMapData(data: number[]) {
       if (entity.has(ChanceProbability)) {
         const p = entity.get(ChanceProbability)!.probability;
         if (Math.random() < p) {
-          const t = entity.get(Renderable)!;
-          t.ch = TypeChar[Type.Chance];
-          t.fg = TypeColor[Type.Chance][0] ?? TypeColor[Type.Floor][0];
-          t.bg = TypeColor[Type.Chance][1] ?? TypeColor[Type.Floor][1];
+          entity.remove(ChanceProbability);
+          entity.add(isChanced);
         }
       }
     }

@@ -16,6 +16,7 @@ import {
   Collectible,
   AnimatedWalking,
   MagicTrigger,
+  isChanced,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -369,15 +370,15 @@ export const SPEAR_IGNORE = [
   Type.Rope,
 ];
 
-export const ChanceChance = {
-  [Type.Chest]: 1 / 20,
-  [Type.SlowTime]: 1 / 35,
-  [Type.Key]: 1 / 25,
-  [Type.SpeedTime]: 1 / 10,
-  [Type.Power]: 1 / 15,
-  [Type.Bomb]: 1 / 40,
-  [Type.Quake]: 1 / 15,
-  [Type.WallVanish]: 1 / 20,
+export const ChanceOdds = {
+  [Type.Chest]: 20,
+  [Type.SlowTime]: 35,
+  [Type.Key]: 25,
+  [Type.SpeedTime]: 10,
+  [Type.Power]: 15,
+  [Type.Bomb]: 40,
+  [Type.Quake]: 15,
+  [Type.WallVanish]: 20,
 };
 
 export function createTileDataForType(type: Type | string) {
@@ -385,6 +386,7 @@ export function createTileDataForType(type: Type | string) {
   let bg = TypeColor[Type.Floor][1]!;
   let ch = FLOOR_CHAR;
 
+  // Special characters for punctuation
   switch (type) {
     case 'Ã':
       type = '!';
@@ -596,9 +598,9 @@ export function createTileEntity(type: Type | string) {
     entity.add(new MagicTrigger(type as Type));
   }
 
-  if (ChanceChance[type as keyof typeof ChanceChance]) {
+  if (ChanceOdds[type as keyof typeof ChanceOdds]) {
     entity.add(
-      new ChanceProbability(ChanceChance[type as keyof typeof ChanceChance]),
+      new ChanceProbability(1 / ChanceOdds[type as keyof typeof ChanceOdds]),
     );
   }
 
@@ -632,6 +634,11 @@ export function createMobEntity(type: Type) {
     entity.add(new AnimatedWalking('AÄ'));
   } else if (type === Type.Medium) {
     entity.add(new AnimatedWalking('öÖ'));
+  }
+
+  if (type === Type.Create) {
+    // Create always starts obscured
+    entity.add(isChanced);
   }
 
   return entity;
