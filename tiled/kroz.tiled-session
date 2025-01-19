@@ -1,8 +1,5 @@
 {
-    "activeFile": "",
-    "expandedProjectPaths": [
-    ],
-    "file.lastUsedOpenFilter": "All Files (*)",
+    "activeFile": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-6.map.json",
     "fileStates": {
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/levels/Curses_1920x900.tsx": {
             "scaleInDock": 1
@@ -64,6 +61,14 @@
             "viewCenter": {
                 "x": 768.1578947368421,
                 "y": 414.47368421052636
+            }
+        },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/effects.map.json": {
+            "scale": 0.6333333333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 708.9473684210526,
+                "y": 437.36842105263156
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-1.json": {
@@ -134,8 +139,8 @@
             "scale": 0.6333333333333333,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 768.1578947368421,
-                "y": 414.47368421052636
+                "x": 767.3684210526316,
+                "y": 413.6842105263158
             }
         },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1-test.json": {
@@ -696,30 +701,25 @@
             }
         }
     },
-    "last.exportedFilePath": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data",
-    "last.externalTilesetPath": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/tiled",
-    "last.imagePath": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/tiled",
-    "lastUsedTilesetExportFilter": "Lua files (*.lua)",
-    "map.lastUsedExportFilter": "JSON map files [Tiled 1.1] (*.json)",
-    "map.lastUsedFormat": "json",
     "openFiles": [
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-75.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1-test.json",
+        "Curses_1920x900.tsx",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/effects.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-6.map.json"
     ],
-    "project": "kroz.tiled-project",
-    "property.type": "int",
     "recentFiles": [
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-75.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1-test.json",
+        "Curses_1920x900.tsx",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/effects.map.json",
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-6.map.json",
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-2.map.json",
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-4.map.json",
         "Display.tsx",
-        "Curses_1920x900.tsx",
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-34.map.json",
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-52.map.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-75.map.json",
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-64.map.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-2.map.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1.map.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-42.map.json",
-        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-12.map.json"
-    ],
-    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
-    "tileset.lastUsedFormat": "tsx"
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-2.map.json"
+    ]
 }

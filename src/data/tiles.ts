@@ -590,7 +590,7 @@ export function createTileEntity(type: Type | string) {
       entity.add(new Collectible({ gems: RNG.getUniformInt(14, 18) }));
       break;
     case Type.Teleport:
-      entity.add(new Collectible({ keys: 1 }));
+      entity.add(new Collectible({ teleports: 1 }));
       break;
   }
 
