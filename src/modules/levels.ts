@@ -127,6 +127,14 @@ export function readLevelJSON(tilemap: tiled.Map): Level {
   async function onLevelStart() {
     if (!properties) return;
 
+    world.level.magicEwalls = properties.MagicEWalls ?? false;
+    world.level.evapoRate = properties.EvapoRate ?? 0;
+    world.level.treeRate = properties.TreeRate ?? 0;
+    world.level.lavaRate = properties.LavaRate ?? 0;
+    world.level.lavaFlow = properties.LavaFlow ?? false;
+
+    console.log(world.level, properties);
+
     if (properties.HideGems) {
       world.level.map.hideType(Type.Gem);
     }

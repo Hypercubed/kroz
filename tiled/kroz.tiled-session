@@ -138,6 +138,14 @@
                 "y": 414.47368421052636
             }
         },
+        "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1-test.json": {
+            "scale": 0.8065104166666667,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 788.5824991927673,
+                "y": 400.49079754601235
+            }
+        },
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/lost/lost-1.json": {
             "scale": 0.33,
             "selectedLayer": 0,
@@ -693,11 +701,11 @@
     "last.imagePath": "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/tiled",
     "lastUsedTilesetExportFilter": "Lua files (*.lua)",
     "map.lastUsedExportFilter": "JSON map files [Tiled 1.1] (*.json)",
-    "map.lastUsedFormat": "json1",
+    "map.lastUsedFormat": "json",
     "openFiles": [
     ],
     "project": "kroz.tiled-project",
-    "property.type": "string",
+    "property.type": "int",
     "recentFiles": [
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-2.map.json",
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/caverns/caverns-4.map.json",
@@ -713,5 +721,5 @@
         "//wsl.localhost/Ubuntu/home/jmh/workspace/projects/kroz/src/data/levels/kingdom/kingdom-12.map.json"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
-    "tileset.lastUsedFormat": "json"
+    "tileset.lastUsedFormat": "tsx"
 }

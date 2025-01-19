@@ -2,12 +2,12 @@ import { readLevelJSON } from '../../modules/levels';
 
 // 'The Forgotton Adventures of Kroz'
 const LEVELS = [
-  async () => readLevelJSON((await import('./debug.map.json')).default), // Must be level 0
+  async () => readLevelJSON((await import('./effects.map.json')).default), // Must be level 0
 
   // 1
-  async () => readLevelJSON((await import('./lost/lost-1.map.json')).default),
-  async () => readLevelJSON((await import('./lost/lost-2.map.json')).default),
-  async () => readLevelJSON((await import('./lost/lost-4.map.json')).default),
+  async () => readLevelJSON((await import('./lost/lost-1.map.json')).default), // Your Hut
+  async () => readLevelJSON((await import('./lost/lost-2.map.json')).default), // The Secret Tunnel
+  async () => readLevelJSON((await import('./lost/lost-4.map.json')).default), // Monster Marketplace
   async () =>
     readLevelJSON((await import('./caverns/caverns-2.map.json')).default),
   async () =>
@@ -40,7 +40,7 @@ const LEVELS = [
   async () => (await import('./lost/lost-61')).default,
   async () => (await import('./lost/lost-64')).default,
   async () => readLevelJSON((await import('./lost/lost-70.map.json')).default),
-  async () => (await import('./lost/lost-75')).default,
+  async () => (await import('./lost/lost-75')).default, // The Sacred Chamber of Kroz
 ];
 
 export default LEVELS;

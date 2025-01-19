@@ -70,17 +70,79 @@ export async function update() {
 
   // Evaporate
   if (world.level.evapoRate > 0 && RNG.getUniformInt(0, 9) === 0) {
-    const x = RNG.getUniformInt(0, XMax);
-    const y = RNG.getUniformInt(0, YMax);
-    const block = world.level.map.getType(x, y);
-    if (block === Type.River) {
-      world.level.map.setType(x, y, Type.Floor);
-      screen.drawEntity(x, y);
-      // TODO: Sound
+    for (let i = 0; i < world.level.evapoRate; i++) {
+      const x = RNG.getUniformInt(0, XMax);
+      const y = RNG.getUniformInt(0, YMax);
+      const block = world.level.map.getType(x, y);
+      if (block === Type.River) {
+        world.level.map.setType(x, y, Type.Floor);
+        screen.drawEntity(x, y);
+        // TODO: Sound
+      }
     }
   }
 
-  // TODO:
   // Lava Flow
-  // TreeGrow
+  if (world.level.lavaFlow && RNG.getUniformInt(0, 9) === 0) {
+    for (let i = 0; i < world.level.lavaRate; i++) {
+      const x = RNG.getUniformInt(0, XMax);
+      const y = RNG.getUniformInt(0, YMax);
+      const block = world.level.map.getType(x, y);
+      if (
+        [
+          0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 15, 16, 18, 19, 20, 21, 26, 27, 28,
+          32, 33, 34, 35, 37, 38, 39, 41, 42, 43, 44, 45, 47, 48, 49, 50, 51,
+          57, 60, 64, 67, 68, 69, 70, 71, 72, 73, 74, 77, 78, 79, 80, 81, 82,
+          83,
+        ].includes(block as number)
+      ) {
+        let done = false;
+        if (world.level.map.getType(x + 1, y) === Type.Lava) done = true;
+        if (world.level.map.getType(x - 1, y) === Type.Lava) done = true;
+        if (world.level.map.getType(x, y + 1) === Type.Lava) done = true;
+        if (world.level.map.getType(x, y - 1) === Type.Lava) done = true;
+        if (done) {
+          world.level.map.setType(x, y, Type.Lava);
+          screen.drawEntity(x, y);
+        }
+      }
+    }
+  }
+
+  // Tree Rate
+  if (world.level.treeRate > 0 && RNG.getUniformInt(0, 9) === 0) {
+    for (let i = 0; i < world.level.treeRate; i++) {
+      const x = RNG.getUniformInt(0, XMax);
+      const y = RNG.getUniformInt(0, YMax);
+      const block = world.level.map.getType(x, y);
+      if ([0, 16, 27, 28, 32, 33, 37, 39].includes(block as number)) {
+        let done = false;
+        if (
+          world.level.map.getType(x + 1, y) === Type.Tree ||
+          world.level.map.getType(x + 1, y) === Type.Forest
+        )
+          done = true;
+        if (
+          world.level.map.getType(x - 1, y) === Type.Tree ||
+          world.level.map.getType(x - 1, y) === Type.Forest
+        )
+          done = true;
+        if (
+          world.level.map.getType(x, y + 1) === Type.Tree ||
+          world.level.map.getType(x, y + 1) === Type.Forest
+        )
+          done = true;
+        if (
+          world.level.map.getType(x, y - 1) === Type.Tree ||
+          world.level.map.getType(x, y - 1) === Type.Forest
+        )
+          done = true;
+        if (done) {
+          const t = RNG.getUniformInt(0, 3) === 0 ? Type.Tree : Type.Forest;
+          world.level.map.setType(x, y, t);
+          screen.drawEntity(x, y);
+        }
+      }
+    }
+  }
 }

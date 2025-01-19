@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.11" tiledversion="1.11.1" name="Curses_1920x900" tilewidth="24" tileheight="36" tilecount="256" columns="16">
+ <editorsettings>
+  <export target="../src/data/kroz.lua" format="lua"/>
+ </editorsettings>
  <image source="ASCII.png" width="384" height="576"/>
  <tile id="32" type="0">
   <properties>
@@ -43,6 +46,7 @@
   <properties>
    <property name="Tile.ch" value="▲"/>
    <property name="Tile.fg" value="LightRed"/>
+   <property name="description" value="Creature zap spell"/>
    <property name="message" value="A Creature Zap Spell!"/>
    <property name="name" value="Zap"/>
   </properties>
@@ -81,6 +85,7 @@
  </tile>
  <tile id="45" type="32">
   <properties>
+   <property name="description" value="Stop space"/>
    <property name="name" value="Stop"/>
   </properties>
  </tile>
@@ -115,6 +120,7 @@
    <property name="Movement.pace" type="int" value="4"/>
    <property name="Tile.ch" value="Ä"/>
    <property name="Tile.fg" value="LightRed"/>
+   <property name="description" value="Red enemy"/>
    <property name="name" value="Slow"/>
   </properties>
  </tile>
@@ -123,7 +129,8 @@
    <property name="Attacks.damage" type="int" value="2"/>
    <property name="Movement.pace" type="int" value="3"/>
    <property name="Tile.ch" value="Ö"/>
-   <property name="Tile.fg" value="LightBlue"/>
+   <property name="Tile.fg" value="Green"/>
+   <property name="description" value="Green enemy"/>
    <property name="name" value="Medium"/>
   </properties>
  </tile>
@@ -132,7 +139,8 @@
    <property name="Attacks.damage" type="int" value="3"/>
    <property name="Movement.pace" type="int" value="2"/>
    <property name="Tile.ch" value="Ω"/>
-   <property name="Tile.fg" value="Green"/>
+   <property name="Tile.fg" value="LightBlue"/>
+   <property name="description" value="Blue enemy"/>
    <property name="name" value="Fast"/>
   </properties>
  </tile>
@@ -268,6 +276,7 @@
   <properties>
    <property name="Tile.ch" value="Θ"/>
    <property name="Tile.fg" value="LightCyan"/>
+   <property name="description" value="Speed time spell"/>
    <property name="message" value="You activated a Speed Creature spell."/>
    <property name="name" value="SpeedTime"/>
   </properties>
@@ -315,6 +324,7 @@
    <property name="Movement.pace" type="int" value="2"/>
    <property name="Tile.ch" value="▓"/>
    <property name="Tile.fg" value="Brown"/>
+   <property name="description" value="Moving wall"/>
    <property name="message" value="A Moving Wall blocks your way."/>
    <property name="name" value="MBlock"/>
   </properties>
@@ -338,6 +348,7 @@
    <property name="Tile.bg" value="Black"/>
    <property name="Tile.ch" value="☻"/>
    <property name="Tile.fg" value="Yellow"/>
+   <property name="description" value="The player"/>
    <property name="name" value="Player"/>
   </properties>
  </tile>
@@ -362,6 +373,7 @@
   <properties>
    <property name="Tile.ch" value="Φ"/>
    <property name="Tile.fg" value="LightCyan"/>
+   <property name="description" value="Slow time spell"/>
    <property name="message" value="You activated a Slow Time spell."/>
    <property name="name" value="SlowTime"/>
   </properties>
@@ -395,6 +407,7 @@
   <properties>
    <property name="Tile.ch" value="⌠"/>
    <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="description" value="Breakable wall"/>
    <property name="message" value="You found a Whip"/>
    <property name="name" value="Whip"/>
   </properties>
@@ -419,6 +432,7 @@
   <properties>
    <property name="Tile.ch" value="ƒ"/>
    <property name="Tile.fg" value="LightCyan"/>
+   <property name="description" value="Freeze time spell"/>
    <property name="message" value="You have activated a Freeze Creature spell!"/>
    <property name="name" value="Freeze"/>
   </properties>
@@ -443,6 +457,7 @@
   <properties>
    <property name="Tile.ch" value="▼"/>
    <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="description" value="Creature creation trap"/>
    <property name="message" value="A Creature Creation Trap!"/>
    <property name="name" value="Create"/>
   </properties>
@@ -508,6 +523,7 @@
   <properties>
    <property name="Tile.ch" value="♀"/>
    <property name="Tile.fg" value="HighIntensityWhite"/>
+   <property name="description" value="Amulet of Yendor"/>
    <property name="message" value="YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!"/>
    <property name="name" value="Amulet"/>
   </properties>
