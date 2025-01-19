@@ -94,29 +94,15 @@ const KEY_BINDING: Record<string, Action | null> = {
   F12: Action.FasterClock,
 };
 
-// const GAMEPAD_BINDING: Record<string, Action | null> = {
-//   button0: Action.Whip,
-//   button1: Action.Teleport,
-//   button4: DEBUG ? Action.PrevLevel : null,
-//   button5: DEBUG ? Action.NextLevel : null,
-//   button8: Action.Save,
-//   button9: Action.Pause,
-//   button16: Action.Quit,
-//   up: Action.North,
-//   down: Action.South,
-//   left: Action.West,
-//   right: Action.East,
-//   button12: Action.North,
-//   button13: Action.South,
-//   button14: Action.West,
-//   button15: Action.East,
-// };
-
 const GAMEPAD_BINDING: Record<string, string | null> = {
   button0: 'w',
   button1: 't',
+  button2: 's',
+  button3: 'r',
   button4: DEBUG ? 'PageDown' : null,
   button5: DEBUG ? 'PageUp' : null,
+  button6: 'F11',
+  button7: 'F12',
   button8: 's',
   button9: 'p',
   button16: 'Escape',

@@ -25,4 +25,4 @@ dist-ssr
 *.sw?
 
 .eslintcache
-./tiled/kroz.tiled-session
+tiled/kroz.tiled-session

@@ -106,11 +106,16 @@ export function storeLevelStartState() {
 export async function save() {
   let answer = '';
 
-  while (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
+  while (
+    answer.toLowerCase() !== 'y' &&
+    answer.toLowerCase() !== 'n' &&
+    answer.toLowerCase() !== 'w' &&
+    answer.toLowerCase() !== 't'
+  ) {
     answer = await screen.flashMessage('Are you sure you want to SAVE? (Y/N)');
   }
 
-  if (answer.toLowerCase() === 'y') {
+  if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'w') {
     // Don't need deep copy now, but might later
     Object.assign(saveState, levelStartState);
     localStorage.setItem('Kroz--saveState--v1', JSON.stringify(saveState));
@@ -120,13 +125,18 @@ export async function save() {
 export async function restore() {
   let answer = '';
 
-  while (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
+  while (
+    answer.toLowerCase() !== 'y' &&
+    answer.toLowerCase() !== 'n' &&
+    answer.toLowerCase() !== 'w' &&
+    answer.toLowerCase() !== 't'
+  ) {
     answer = await screen.flashMessage(
       'Are you sure you want to RESTORE? (Y/N)',
     );
   }
 
-  if (answer.toLowerCase() === 'y') {
+  if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'w') {
     let save = saveState;
 
     const value = localStorage.getItem('Kroz--saveState--v1');

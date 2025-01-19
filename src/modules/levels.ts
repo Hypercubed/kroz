@@ -6,10 +6,10 @@ import * as controls from './controls.ts';
 import * as screen from './screen.ts';
 import * as tiled from '@kayahr/tiled';
 
-import FORGOTTEN from '../data/levels/forgotton.ts';
-// import { LEVELS as KINGDOM } from '../data/levels/kingdom/index.ts';
-// import { LEVELS as LOST } from '../data/levels/lost/index.ts';
-// import { LEVELS as CAVERNS } from '../data/levels/caverns/index.ts';
+import LEVELS from '../data/levels/forgotton.ts';
+// import LEVELS from '../data/levels/kingdom/index.ts';
+// import LEVELS from '../data/levels/lost/index.ts';
+// import LEVELS from '../data/levels/caverns/index.ts';
 
 import {
   createEntityOfType,
@@ -39,7 +39,7 @@ export interface Level {
   tabletMessage?: (() => Promise<void>) | string;
 }
 
-export const LEVELS = FORGOTTEN;
+export { LEVELS };
 
 export async function loadLevel() {
   world.resetLevel();
@@ -132,8 +132,6 @@ export function readLevelJSON(tilemap: tiled.Map): Level {
     world.level.treeRate = properties.TreeRate ?? 0;
     world.level.lavaRate = properties.LavaRate ?? 0;
     world.level.lavaFlow = properties.LavaFlow ?? false;
-
-    console.log(world.level, properties);
 
     if (properties.HideGems) {
       world.level.map.hideType(Type.Gem);
