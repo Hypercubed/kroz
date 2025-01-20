@@ -64,7 +64,8 @@ function getDefaultLevelState() {
       0,
       0,
     ], // Timers
-    tabletMessage: undefined as undefined | (() => Promise<void>) | string,
+    tabletMessage: undefined as undefined | string,
+    startText: undefined as undefined | string,
   };
 }
 
@@ -151,7 +152,6 @@ export async function restore() {
 
     Object.assign(stats, save);
     await levels.loadLevel();
-    await screen.flashMessage('Press any key to begin this level.');
   }
 }
 

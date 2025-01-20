@@ -5,6 +5,7 @@ import * as tiles from '../data/tiles.ts';
 import * as controls from './controls.ts';
 import * as screen from './screen.ts';
 import * as tiled from '@kayahr/tiled';
+import * as player from './player.ts';
 
 import LEVELS from '../data/levels/forgotton.ts';
 // import LEVELS from '../data/levels/kingdom/index.ts';
@@ -13,23 +14,20 @@ import LEVELS from '../data/levels/forgotton.ts';
 
 import { Timer } from './world.ts';
 import { mod } from 'rot-js/lib/util';
-import {
-  isGenerator,
-  isInvisible,
-  isMobile,
-  isPlayer,
-} from '../classes/components.ts';
+import { isGenerator, isMobile, isPlayer } from '../classes/components.ts';
 import { ensureObject } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Type, TypeColor } from '../data/tiles.ts';
+import { specialTriggers } from './player.ts';
 
 export interface Level {
   id: string;
   data: Entity[];
   properties?: Record<string, unknown>;
   onLevelStart?: () => Promise<void>;
-  tabletMessage?: (() => Promise<void>) | string;
+  tabletMessage?: string;
+  startText?: string;
 }
 
 export { LEVELS };
@@ -48,6 +46,13 @@ export async function loadLevel() {
   level?.onLevelStart?.();
   world.storeLevelStartState();
   screen.fullRender();
+
+  if (world.level.startText) {
+    await player.readMessage(world.level.startText);
+  } else {
+    await screen.flashMessage('Press any key to begin this level.');
+  }
+  controls.flushAll();
 }
 
 export async function nextLevel() {
@@ -64,7 +69,6 @@ export async function nextLevel() {
 
   world.stats.levelIndex = i;
   await loadLevel();
-  await screen.flashMessage('Press any key to begin this level.');
 }
 
 export async function prevLevel() {
@@ -76,7 +80,6 @@ export async function prevLevel() {
 
   world.stats.levelIndex = i;
   await loadLevel();
-  await screen.flashMessage('Press any key to begin this level.');
 }
 
 async function readLevel(i: number) {
@@ -86,6 +89,7 @@ async function readLevel(i: number) {
   const levelData = await levelLoadPromise();
   const level = readLevelJSON(levelData as tiled.Map);
   world.level.tabletMessage = level!.tabletMessage;
+  world.level.startText = level!.startText;
 
   readLevelMapData(level.data);
 
@@ -119,7 +123,7 @@ function readLevelJSON(tilemap: tiled.Map): Level {
   function readObjectGroup(layer: tiled.ObjectGroup, output: Entity[]) {
     for (const obj of layer.objects) {
       const { gid, x, y, height, width, properties } = obj;
-      if (!gid || !x || !y || !height || !width) continue;
+      if (!gid || x < 0 || y < 0 || !height || !width) continue;
       const tileId = tiles.getTileIdFromGID(obj.gid!);
       if (tileId > -1) {
         const xx = x / width;
@@ -170,39 +174,28 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     world.level.lavaFlow = properties.LavaFlow ?? false;
 
     if (properties.HideGems) {
-      world.level.map.hideType(Type.Gem);
+      specialTriggers('HideGems');
     }
     if (properties.HideRocks) {
-      world.level.map.hideType(Type.Rock);
+      specialTriggers('HideRocks');
     }
     if (properties.HideStairs) {
-      world.level.map.hideType(Type.Stairs);
+      specialTriggers('HideStairs');
     }
     if (properties.HideOpenWall) {
-      // be careful with this one, name is confusing
-      // hides the open wall spell, not the wall itself
-      world.level.map.hideType(Type.OSpell1);
-      world.level.map.hideType(Type.OSpell2);
-      world.level.map.hideType(Type.OSpell3);
+      specialTriggers('HideOpenWall');
     }
     if (properties.HideCreate) {
-      world.level.map.hideType(Type.Create);
+      specialTriggers('HideCreate');
     }
     if (properties.HideMBlock) {
-      world.level.map.hideType(Type.MBlock);
+      specialTriggers('HideMBlock');
     }
     if (properties.HideTrap) {
-      world.level.map.hideType(Type.Trap);
+      specialTriggers('HideTrap');
     }
     if (properties.HideLevel) {
-      for (let x = 0; x < world.level.map.width; x++) {
-        for (let y = 0; y < world.level.map.height; y++) {
-          const e = world.level.map.get(x, y)!;
-          if (e && !e.has(isPlayer)) {
-            e.add(isInvisible);
-          }
-        }
-      }
+      specialTriggers('HideLevel');
     }
   }
 
@@ -211,11 +204,17 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     // @ts-ignore
     tilemap.tabletMessage ?? properties?.tabletMessage ?? undefined;
 
+  const startText =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    tilemap.StartText ?? properties?.StartText ?? undefined;
+
   return {
     id: (properties?.id || '') as string,
     data,
     onLevelStart,
     tabletMessage,
+    startText,
     properties,
   };
 }

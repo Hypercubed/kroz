@@ -6,41 +6,5322 @@
   "layers": [
     {
       "compression": "zlib",
-      "data": "eJzlWEtKBDEUzFVaBHeCC3XtfhzwAgP+caEIfvAczYSczyuoBzDBFyyKet2tiBnoRTHdL8n71PukmT6E0BlW8Nzbew+yDmQ97I\/2XJBIR0+6etuP9hLs7wh8ltcVEpyJ5Gt53gVUWSJ76I\/SwT4jVz3JI5xh3fzr8ZRIN+7jeD3e6m+J+wTir5yxbhV7In0qniovZ9\/o3Ir2ob0UvmtJ+T1UB8ytylkF5l\/FE4PmgrlGW+xfPav0s\/+R1rC+sE+YE\/RV9YvHOXPs9a1Xi9VeEvuUH1yTXGuqHpCXFIbzr3z1OGBb3EMx+ByoXk9whtdYjxdn9VHpUXbH\/GVuVC2jzSEf0Z9Esuic4TypnsGYIq15sw37Tc0Ins+KN+Wz4kXlc8y210M8k1SO1Xzx7A3dizgH1Szk3CqevJmk7toh\/qbmlmvCsxFp30\/qhPOi+tirf+9OGJuvnq4kZFNqjGtD3bdT6lpxou6wjs7zXTRW56ofPxwbXu1592fBuxO7x5PyHXslOjwxF6ynE7a5Vr25rua1+g5SvTGmy9OJedsW2Aeo9SFcZ9xn3BrK84utPWXcZFzZ+3nGg72fZVya\/MLkzxl3tu\/xF75MwSuhyA4A5X1H7Ns0HGUsR7CAuI8NrOdQoHVsfxX\/EuJfh6\/6b+13q\/hPDa39bhV\/yf36n3zb2sD4557\/ufd\/\/f+jtd+t498ztPa\/VfyLmcVfv2lq\/J9vkx2W",
+      "data": "eJzlWFtKQzEQnbWI4J\/gh\/rtfy24AcE3fiiCD1zHpSHrcwvqArzBDD09nLn3KmIKDRyaTOZ1JpO0tLPlOIV5V9edrQ6XdaCf6rwgkw\/U9XmieBn0ebDtlJHBJlGuZb4LcBnmgLoW+OCcsVYdyRPYsG\/+jOqE8bgmzNeEDsYovE+Av1Uf7Ftxz7bqT\/FxebF9J7tT0sN42Za9pPIe6gOurTozB56\/4pNM14JrjbE4P7dV\/jn\/RHvYX+4XOahcjeTuQ9WAaxzd26gXPV4WeioP7knuNYzJ7wrWIjp\/lWtUA47FdyiRDp+pqoHb8B77iXh6jsqPijuWL9dG9TLGHMoR88kkS4ENn5O6M8gp0V70tvl+9Ebw+6zqpnJWdTGynRI7ukNoq3xH70sUT9XJB76DHFf1lKqTBTZqDNVv6tmaTYuRSO8nfYK+onsc9X\/0nTD2vka+spBN6THuDfQ\/9HY5PxUPY+Ie+nd73zfT8dFXdB8\/gxhR70XfnwUfAfeoTip3vCvJ4nfDSI5rgzW+y6qn1W8E5YN7QN2NMV+RTwObbYF9gNofwk2Phx53FWX+Wveee9z2uK7rix6PdX3e46rKL6v8pcd91Xv6RS5T8EYosgNAWe8IvXXDUY\/5CGbA+7iC\/RwKtOb2V\/znwH9h3\/3fOu9W\/M8qWufdin85+8U\/5ba1hvw3\/fw3\/f77\/x+t827Nf6+idf6t+M82jL\/\/pnH+X3p\/AXw=",
       "encoding": "base64",
       "height": 23,
       "id": 1,
+      "locked": true,
       "name": "",
       "opacity": 1,
       "type": "tilelayer",
-      "visible": true,
+      "visible": false,
       "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Special Floors",
+      "objects": [
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1512,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 3,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "Brown"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1512,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 6,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1488,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 7,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1488,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 8,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1464,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 9,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1440,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 10,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1440,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 11,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1416,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 12,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1392,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 13,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1440,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 14,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1416,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 15,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1368,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 16,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1392,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 17,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1416,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 18,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1440,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 19,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1464,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 20,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1488,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 21,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1392,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 22,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1368,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 23,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1368,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 24,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1344,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 25,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1320,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 26,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1296,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 27,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1272,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 28,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1248,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 29,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1224,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 30,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1248,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 31,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1272,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 32,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1296,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 33,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1320,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 34,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1344,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 35,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1320,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 36,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1296,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 37,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1272,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 38,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 0,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 39,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 24,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 40,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 48,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 41,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 24,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 42,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 72,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 43,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 96,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 44,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 48,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 45,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 168,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 49,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1104,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 50,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1080,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 51,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1056,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 52,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1032,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 53,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1008,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 54,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 984,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 55,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 960,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 56,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 936,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 57,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 912,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 58,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 888,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 59,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 864,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 60,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 864,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 61,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 840,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 62,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 840,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 63,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 816,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 64,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 792,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 65,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 768,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 66,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 768,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 67,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 792,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 68,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 816,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 69,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 840,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 70,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 864,
+          "y": 216
+        },
+
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 71,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 888,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 72,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 912,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 73,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 936,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 74,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 960,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 75,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 960,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 76,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 960,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 77,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 936,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 78,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 912,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 79,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 864,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 80,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 888,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 81,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1056,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 82,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1080,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 83,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1104,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 84,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1248,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 85,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1272,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 86,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1248,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 87,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1224,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 88,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1200,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 89,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1176,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 90,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1152,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 91,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1128,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 92,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1104,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 93,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1128,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 94,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1152,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 95,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1176,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 96,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1200,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 97,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1224,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 98,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1080,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 99,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1032,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 100,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1104,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 101,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1128,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 102,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1152,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 103,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1176,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 104,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1176,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 105,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1200,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 106,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1224,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 107,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1248,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 108,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1128,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 109,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1104,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 110,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1080,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 111,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1056,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 112,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1032,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 113,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1008,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 114,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1008,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 115,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1008,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 116,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1008,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 117,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 816,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 118,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 840,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 119,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 792,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 120,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 768,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 121,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 744,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 122,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 720,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 123,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 744,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 124,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 768,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 125,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 792,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 126,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 768,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 127,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 744,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 128,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 720,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 129,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 696,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 130,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 648,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 131,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 648,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 132,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 624,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 133,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 600,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 134,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 576,
+          "y": 396
+        },
+
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 136,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 552,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 137,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 528,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 138,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 504,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 139,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 480,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 140,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 456,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 141,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 432,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 142,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 456,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 143,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 432,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 144,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 408,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 145,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 384,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 146,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 360,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 147,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 336,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 148,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 312,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 149,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 288,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 150,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 264,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 151,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 240,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 152,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 216,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 153,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 192,
+          "y": 360
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 154,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 168,
+          "y": 396
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 155,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 144,
+          "y": 432
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 156,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 120,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 157,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 144,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 158,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 168,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 159,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 72,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 160,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 96,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 161,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 120,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 162,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 96,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 163,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 72,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 164,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 48,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 165,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 24,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 166,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 0,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 167,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 0,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 168,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 24,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 169,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 48,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 170,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 72,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 171,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 96,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 172,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 120,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 173,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 144,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 174,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 168,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 175,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 192,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 176,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 216,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 177,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 240,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 178,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 264,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 179,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 288,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 180,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 264,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 181,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 240,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 182,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 264,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 183,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 288,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 184,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 312,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 185,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 336,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 186,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 240,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 187,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 216,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 188,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 192,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 189,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 264,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 190,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 288,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 191,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 312,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 192,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 360,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 193,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 336,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 194,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 384,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 195,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 408,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 196,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 360,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 197,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 336,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 198,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 360,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 199,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 336,
+          "y": 108
+        },
+
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 200,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 360,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 201,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 384,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 202,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 408,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 203,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 408,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 204,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 432,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 205,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 432,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 206,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 456,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 207,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 480,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 208,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 504,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 209,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 456,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 210,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 480,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 211,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 504,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 212,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 528,
+          "y": 36
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 213,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 552,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 214,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 528,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 215,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 552,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 216,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 576,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 217,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 600,
+          "y": 288
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 218,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 624,
+          "y": 324
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 219,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 672,
+          "y": 252
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 220,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 648,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 221,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 624,
+          "y": 180
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 222,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 624,
+          "y": 144
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 223,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 600,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 224,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 696,
+          "y": 108
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 225,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 696,
+          "y": 72
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 226,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Black",
+                "ch": ".",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 720,
+          "y": 36
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
       "x": 0,
       "y": 0
     }
   ],
-  "nextlayerid": 2,
-  "nextobjectid": 1,
+  "nextlayerid": 3,
+  "nextobjectid": 227,
   "orientation": "orthogonal",
-  "properties": {
-    "HideCreate": true,
-    "HideMBlock": true
-  },
-  "propertytypes": {
-    "HideCreate": "bool",
-    "HideMBlock": "bool"
-  },
+  "properties": [
+    {
+      "name": "HideCreate",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "HideMBlock",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "tabletMessage",
+      "type": "string",
+      "value": "Up 4 steps, then left 16 steps."
+    }
+  ],
   "renderorder": "right-down",
   "tiledversion": "1.11.1",
   "tileheight": 36,
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/..\/..\/..\/tiled\/Display.tsx"
+      "source": "..\/..\/kroz.tileset.json"
     }
   ],
   "tilewidth": 24,
   "type": "map",
-  "version": 1.1,
+  "version": "1.10",
   "width": 64
 }

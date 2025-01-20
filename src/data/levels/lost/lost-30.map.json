@@ -27,6 +27,11 @@
       "name": "HideCreate",
       "type": "bool",
       "value": true
+    },
+    {
+      "name": "tabletMessage",
+      "type": "string",
+      "value": "On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"If goodness is in my heart, that which flows shall...\"\n##RiverToGold\n\"...Turn to Gold!\""
     }
   ],
   "renderorder": "right-down",
@@ -40,6 +45,6 @@
   ],
   "tilewidth": 24,
   "type": "map",
-  "version": "1.11",
+  "version": "1.10",
   "width": 64
 }

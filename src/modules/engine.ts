@@ -32,13 +32,7 @@ export async function start() {
   await screen.introScreen();
   await screen.renderTitle();
   await screen.instructionsScreen();
-
   await level.loadLevel();
-  screen.fullRender();
-  await player.flashPlayer();
-  screen.fastRender();
-  await screen.flashMessage('Press any key to begin this level.');
-  controls.clearActions();
 
   if (DEBUG) {
     if (!stats) {

@@ -521,10 +521,13 @@ export function createEntityFromTileId(
   const entity = new Entity(type);
 
   const tileDefinition = getTileDefinition(tileId);
-  if (tileDefinition && tileDefinition.properties) {
+  if (properties) {
+    // Object properties first
+    addComponentsToEntity(entity, properties);
+  } else if (tileDefinition && tileDefinition.properties) {
     addComponentsToEntity(entity, ensureObject(tileDefinition.properties));
   } else {
-    addComponentsToEntity(entity, properties || {});
+    addComponentsToEntity(entity, {});
   }
 
   if (entity.has(isPlayer) || entity.has(isMobile)) {

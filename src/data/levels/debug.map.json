@@ -30,7 +30,7 @@
     {
       "name": "tabletMessage",
       "type": "string",
-      "value": "This is a debug level"
+      "value": "This is a debug level\nIt is used by the developer for testing\nTest\n1\n2\n3\nGood!"
     }
   ],
   "renderorder": "right-down",

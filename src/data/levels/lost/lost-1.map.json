@@ -27,14 +27,23 @@
   "nextlayerid": 2,
   "nextobjectid": 1,
   "orientation": "orthogonal",
-  "properties": {
-    "id": "Lost1",
-    "tabletMessage": "'Once again you uncover the hidden tunnel leading to Kroz!'"
-  },
-  "propertytypes": {
-    "id": "string",
-    "tabletMessage": "string"
-  },
+  "properties": [
+    {
+      "name": "StartText",
+      "type": "string",
+      "value": "##FlashPlayer\nPress any key to begin this level."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "value": "Lost1"
+    },
+    {
+      "name": "tabletMessage",
+      "type": "string",
+      "value": "'Once again you uncover the hidden tunnel leading to Kroz!'"
+    }
+  ],
   "renderorder": "right-down",
   "tiledversion": "1.11.1",
   "tileheight": 36,
@@ -46,6 +55,6 @@
   ],
   "tilewidth": 24,
   "type": "map",
-  "version": 1.1,
+  "version": "1.10",
   "width": 64
 }

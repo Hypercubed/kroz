@@ -32,6 +32,11 @@
       "name": "HideGems",
       "type": "bool",
       "value": true
+    },
+    {
+      "name": "tabletMessage",
+      "type": "string",
+      "value": "No one has ever made it this far!\nYou have shown exceptional skills to reach this far...\nTherefore I grant you the power to see...\n##ShowIWalls\nBehold...your path awaits..."
     }
   ],
   "renderorder": "right-down",

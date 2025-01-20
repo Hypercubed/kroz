@@ -6,7 +6,7 @@
   "layers": [
     {
       "compression": "zlib",
-      "data": "eJzll99qU0EQxvdV1HihhW1ioy0tFoQKVmKheNFovWqpYqko+OdCKX2Hpnmjvkh9BK2Xgrs4H\/1cZ3tmTqIRvPgxs7uTPeeb2T8nnRBCx8hB4lXiTeJd4rn0Z\/taxvPYB2m\/l7G3Et+R8Rfi5\/GXNM+BxO4kPiU+Un+eczexL+0deReM78sz9xKnDk39xJUZsjnDZ\/cpD9GRs5KVKcRY5pgkvvbbJwYQe5QYNljEHktON8QyuW+e2tcN5LjlRFf8bAPNAf+wqCkYJb6KLd+nCcw3Jxovs\/zsY9I5plyMi3kt+hHLmpGLEH7NCWKfGtgw0Kb+XHesBeQCY4i9ZYDzyrq74fd8IPaGgZsG2tQ\/a0WdeQ1EGkPsggHE1tY9bNepf82gH8\/y1P9c0c1rgddV3wBiv5NObf3jnIhG\/W3PUI1J7pBpsUz+nQby+54YrOc88azp2nnbK9pDmvexAT6DmvDcAx799wxo91SP0O6grO+yu9qr33P\/\/2n90P1AyUFN\/2BC\/Z77v41+frd\/sf4jA1b9g4r+bYf+v7n\/B0VuZ3UXfJvic9fJ3zbEH4WLu\/1Z0YZF7JCYr3AWfn6vrRgs52pJyHf9mviRxhC7Sv3Zfyh2lfoQ+7lCXqt5jV1TtGrWox+xlhwgFlqXiFj4iL2q6OV8ePT3DNq5\/jXNmv629Y9Ku6x\/DU\/9gaf+Hv1t669pZ\/1c51hY7Icm\/QzOwKYcnJHGu1Oo\/5dCv7YHeD3EcLHXeb1rewDzev5X\/S\/cFtB+JHCetxR\/q\/Cj0g\/uF22tf1TpH1f6FwXLf8Ua+JZgSv0WvZpu9i36azpreYF+yzeohx9gpmDu",
+      "data": "eJzll99OU0EQxs+riPUCTLZUixIIJCaQoCkkxguqyA1GiQSiiciFxvAOlL4RL4KPoHJJ4m6cL3yus5yZ02pNuPhl9s90z\/lmZndPW1VVtYzsRw4i7yOHkTcynuw7mU9zR9L\/KHMfxL8l87vSTvNvaZ198d2JfI58ovG05qvInvR35F0wvyfPfB05c2jqRm5NkKcTfHaX4hAcMctZHIOPZY1R\/Eu\/fW4AvseRfo2F74nEdEMsk8ba1L9jIPktRGalnew2rYH2lyynYBD5LjZ\/nzqw3l3ReJ3lZ5+QziHFYpita9EPX9aMWGxXv8cEvi8MbBhokn\/OO2oBscAcfO8Z4Liy7tnqz3jAd9rAjIEm+W9TnrkGAs3B974B+JbqnmvAo3\/FoB\/P8uT\/h6Kba4HrqmsAvpekU6t\/nBPBqL\/pGaoxyh0yLhao\/aCG9L6nBus5Tzw1XTpvO1m\/T+s+M8BnUB2ee8Cj\/5EB7Z7qENodlPRdd1d79Xvu\/7+tH7rXlBiU9PdG1O+5\/5vo53f7H\/M\/MGDV3yvo33Lo\/5f7v5fFdlJ3wcUYn\/uY2lsG\/+Pq6m5\/mfVh4dsn2gXOq1\/fa4sGy7GaF9JdvyLtQHPwXabx1H4idpnG4Pu1QKrVVGO3Fa2a9eiHryUG8IXWeSJkbfhOKXo5Hh79HYN2zn9Js6a\/af6D0s\/zX8KTf+DJv0d\/0\/xr2lk\/5zlkFvuhTj+DM7AuBuekcWkM+f+W6df2ANdDqK72Ote7tgewrud\/1U1hTkB\/XeA4byrtzawdlHGwmvW18UFhfFgYfyhY\/iuWwLcEk+u36NV0c9uiv6SzFBfot3yDevgJx2NkkA==",
       "encoding": "base64",
       "height": 23,
       "id": 1,
@@ -22,23 +22,29 @@
   "nextlayerid": 2,
   "nextobjectid": 1,
   "orientation": "orthogonal",
-  "properties": {
-    "TreeRate": 35
-  },
-  "propertytypes": {
-    "TreeRate": "int"
-  },
+  "properties": [
+    {
+      "name": "TreeRate",
+      "type": "int",
+      "value": 35
+    },
+    {
+      "name": "tabletMessage",
+      "type": "string",
+      "value": "On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"Barriers of water, like barriers in life, can always be...\"\n##RiverToBlock\n\"...Overcome!\""
+    }
+  ],
   "renderorder": "right-down",
   "tiledversion": "1.11.1",
   "tileheight": 36,
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/..\/..\/..\/tiled\/Display.tsx"
+      "source": "..\/..\/kroz.tileset.json"
     }
   ],
   "tilewidth": 24,
   "type": "map",
-  "version": 1.1,
+  "version": "1.10",
   "width": 64
 }

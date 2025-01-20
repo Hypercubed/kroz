@@ -22,17 +22,29 @@
   "nextlayerid": 2,
   "nextobjectid": 1,
   "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "StartText",
+      "type": "string",
+      "value": "##DisguiseFast\nPress any key to begin this level."
+    },
+    {
+      "name": "tabletMessage",
+      "type": "string",
+      "value": "On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"Tnarg yna rerutnevda ohw sevivrus siht raf...\"\n##WallsToGold\n\"...Dlog!\""
+    }
+  ],
   "renderorder": "right-down",
   "tiledversion": "1.11.1",
   "tileheight": 36,
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/..\/..\/..\/tiled\/Display.tsx"
+      "source": "..\/..\/kroz.tileset.json"
     }
   ],
   "tilewidth": 24,
   "type": "map",
-  "version": 1.1,
+  "version": "1.10",
   "width": 64
 }

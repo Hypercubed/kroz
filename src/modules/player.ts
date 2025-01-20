@@ -47,6 +47,7 @@ import {
   Position,
   Walkable,
   isPushable,
+  isPlayer,
 } from '../classes/components.ts';
 import { Entity } from '../classes/entity.ts';
 
@@ -342,7 +343,7 @@ export async function tryMove(dx: number, dy: number) {
       sound.grab();
       world.addScore(block);
       await screen.flashTypeMessage(block, true);
-      await tabletMessage();
+      await readMessage(world.level.tabletMessage);
       break;
     case Type.Statue: // Blocked
       sound.blocked();
@@ -536,6 +537,7 @@ export async function flashPlayer() {
     }
     sound.play(i / 2, 80, 10);
   }
+  screen.renderPlayfield();
 }
 
 async function teleport() {
@@ -592,25 +594,21 @@ async function pause() {
   await screen.flashMessage('Press any key to resume');
 }
 
-// See https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L45
-async function tabletMessage() {
-  const tabletMessage = world.level.tabletMessage;
-  if (tabletMessage) {
-    if (typeof tabletMessage === 'string') {
-      await screen.flashMessage(tabletMessage);
-    } else if (typeof tabletMessage === 'function') {
-      await tabletMessage();
+export async function readMessage(message: string | undefined) {
+  if (!message) return;
+
+  if (typeof message === 'string') {
+    const messages = message.split('\n');
+    for (const message of messages) {
+      if (!message) continue;
+
+      if (message.startsWith('##')) {
+        await specialTriggers(message.slice(2));
+      } else {
+        await screen.flashMessage(message);
+      }
     }
   }
-}
-
-export async function prayer() {
-  await screen.flashMessage(
-    'On the Ancient Tablet is a short Mantra, a prayer...',
-  );
-  await screen.flashMessage(
-    'You take a deep breath and speak the words aloud...',
-  );
 }
 
 export async function endRoutine() {
@@ -741,15 +739,11 @@ async function gotAmulet() {
   await sound.grab();
   await sound.amulet();
   world.addScore(Type.Amulet);
-  await screen.flashMessage(
-    'You have found the Amulet of Yendor -- 25,000 points!',
-  );
-  await screen.flashMessage(
-    'It seems that Kroz and Rogue share the same underground!)',
-  );
-  await screen.flashMessage(
-    'Your quest for the treasure of Kroz must still continue...',
-  );
+  await readMessage(dedent`
+    You have found the Amulet of Yendor -- 25,000 points!
+    It seems that Kroz and Rogue share the same underground!)
+    Your quest for the treasure of Kroz must still continue...
+  `);
 }
 
 async function bomb(x: number, y: number) {
@@ -1057,20 +1051,15 @@ async function pushRock(
 // TODO: Make this a component
 async function secretMessage() {
   await sound.secretMessage();
-  await screen.flashMessage(
-    'You notice a secret message carved into the old tree...',
-  );
-  await screen.flashMessage('"Goodness of Heart Overcomes Adversity."');
-  await screen.flashMessage(
-    'Reveal that you found this message to Scott Miller...',
-  );
-  await screen.flashMessage(
-    'And receive a "MASTER KROZ CERTIFICATE" to hang on your wall!!',
-  );
-  await screen.flashMessage('Only the first 100 players to report this...');
-  await screen.flashMessage(
-    'Will be awarded the certificate.  Congratulations!',
-  );
+
+  await readMessage(dedent`
+    You notice a secret message carved into the old tree...
+    "Goodness of Heart Overcomes Adversity."
+    Reveal that you found this message to Scott Miller...
+    And receive a "MASTER KROZ CERTIFICATE" to hang on your wall!!
+    Only the first 100 players to report this...
+    Will be awarded the certificate.  Congratulations!
+  `);
 }
 
 async function triggers(x: number, y: number, block: Type) {
@@ -1281,4 +1270,116 @@ function move(x: number, y: number) {
   p.x = x;
   p.y = y;
   screen.drawEntity(p.x, p.y);
+}
+
+export async function specialTriggers(t: string) {
+  // TODO: #CHANGE(INVISIBLE_SOLID_WALL,SOLID_WALL)
+  // #GIVE(SCORE,25000)
+  // #ITEMEFFECT(OPEN_SPELL1)
+  // #SETLEVELFEATURE(WaterFlow,1)
+
+  switch (t) {
+    case 'HideGems':
+      world.level.map.hideType(Type.Gem);
+      break;
+    case 'HideRocks':
+      world.level.map.hideType(Type.Rock);
+      break;
+    case 'HideStairs':
+      world.level.map.hideType(Type.Stairs);
+      break;
+    case 'HideOpenWall':
+      // be careful with this one, name is confusing
+      // hides the open wall spell, not the wall itself
+      world.level.map.hideType(Type.OSpell1);
+      world.level.map.hideType(Type.OSpell2);
+      world.level.map.hideType(Type.OSpell3);
+      break;
+    case 'HideCreate':
+      world.level.map.hideType(Type.Create);
+      break;
+    case 'HideMBlock':
+      world.level.map.hideType(Type.MBlock);
+      break;
+    case 'HideTrap':
+      world.level.map.hideType(Type.Trap);
+      break;
+    case 'HideLevel':
+      for (let x = 0; x < world.level.map.width; x++) {
+        for (let y = 0; y < world.level.map.height; y++) {
+          const e = world.level.map.get(x, y)!;
+          if (e && !e.has(isPlayer)) {
+            e.add(isInvisible);
+          }
+        }
+      }
+      break;
+    case 'ShowIWalls':
+      for (let x = 0; x <= XMax; x++) {
+        for (let y = 0; y <= YMax; y++) {
+          if (world.level.map.getType(x, y) === Type.IWall) {
+            await sound.play(x * y, 1, 10);
+            world.level.map.setType(x, y, Type.OWall3);
+            screen.drawEntity(x, y);
+          }
+        }
+      }
+      break;
+    case 'RiverToGold':
+      for (let x = 0; x <= XMax; x++) {
+        for (let y = 0; y <= YMax; y++) {
+          if (world.level.map.getType(x, y) === Type.River) {
+            await sound.play(x * y, 50, 10);
+            world.level.map.setType(x, y, Type.Nugget);
+            screen.drawEntity(x, y);
+          }
+        }
+      }
+      break;
+    case 'RiverToBlock':
+      for (let x = 0; x <= XMax; x++) {
+        for (let y = 0; y <= YMax; y++) {
+          if (world.level.map.getType(x, y) === Type.River) {
+            await sound.play(x * y, 50, 10);
+            world.level.map.setType(x, y, Type.Block);
+            screen.drawEntity(x, y);
+          }
+        }
+      }
+      break;
+    case 'WallsToGold':
+      for (let x = 0; x <= XMax; x++) {
+        for (let y = 0; y <= YMax; y++) {
+          if (world.level.map.getType(x, y) === Type.CWall1) {
+            await sound.play(x * y, 50, 10);
+            world.level.map.setType(x, y, Type.Nugget);
+            // ArtColor??
+            screen.drawEntity(x, y);
+          }
+        }
+      }
+      break;
+    case 'PitsToRock':
+      for (let x = 0; x <= XMax; x++) {
+        for (let y = 0; y <= YMax; y++) {
+          if (world.level.map.getType(x, y) === Type.Pit) {
+            await sound.play(x * y, 50, 10);
+            world.level.map.setType(x, y, Type.Rock);
+            screen.drawEntity(x, y);
+          }
+        }
+      }
+      break;
+    case 'OSpell1':
+      await triggerOSpell(Type.OSpell1);
+      await screen.flashTypeMessage(Type.OSpell1, true);
+      break;
+    case 'DisguiseFast':
+      world.level.map.updateTilesByType(Type.Fast, { ch: '☺' });
+      screen.renderPlayfield();
+      break;
+    case 'FlashPlayer':
+      flashPlayer();
+      break;
+  }
 }
