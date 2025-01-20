@@ -422,6 +422,8 @@ async function quit() {
 }
 
 async function pause() {
+  world.game.paused = true;
+  screen.fullRender();
   await screen.flashMessage('Press any key to resume');
 }
 

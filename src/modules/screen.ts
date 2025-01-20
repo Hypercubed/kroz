@@ -349,7 +349,7 @@ export function drawEntity(x: number, y: number, entity?: Entity | null) {
 
   const t = entity.get(Renderable)!;
   let fg = t.fg;
-  if (fg !== null && t.blink) fg |= 16; // add blink
+  if (!world.game.paused && fg !== null && t.blink) fg |= 16; // add blink
   display.draw(x + XBot, y + YBot, t.ch, fg!, t.bg!);
 }
 
