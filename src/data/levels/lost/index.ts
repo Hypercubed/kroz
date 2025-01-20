@@ -1,13 +1,11 @@
-import { readLevelJSON } from '../../../modules/levels';
-
 // LOST ADVENTURES OF KROZ Levels
 const LEVELS = [
   null, // Must be level 0
 
-  async () => readLevelJSON((await import('./lost-1.map.json')).default),
-  async () => readLevelJSON((await import('./lost-2.map.json')).default),
+  async () => (await import('./lost-1.map.json')).default,
+  async () => (await import('./lost-2.map.json')).default,
   null,
-  async () => readLevelJSON((await import('./lost-4.map.json')).default),
+  async () => (await import('./lost-4.map.json')).default,
   null,
   null,
   null,
@@ -15,19 +13,19 @@ const LEVELS = [
   null,
 
   null,
-  async () => readLevelJSON((await import('./lost-11.map.json')).default), // Need more keys
+  async () => (await import('./lost-11.map.json')).default, // Need more keys
   null,
   null,
   null,
   null,
   null,
   null,
-  async () => readLevelJSON((await import('./lost-18.map.json')).default),
+  async () => (await import('./lost-18.map.json')).default,
   null,
 
-  async () => readLevelJSON((await import('./lost-20.map.json')).default), // Need a keys
+  async () => (await import('./lost-20.map.json')).default, // Need a keys
   null,
-  async () => readLevelJSON((await import('./lost-22.map.json')).default),
+  async () => (await import('./lost-22.map.json')).default,
   null,
   null,
   null,
@@ -40,7 +38,7 @@ const LEVELS = [
   null,
   null,
   null, // lost33, // Needs to start with a key
-  async () => readLevelJSON((await import('./lost-34.map.json')).default),
+  async () => (await import('./lost-34.map.json')).default,
   null, // Needs lava flow
   null,
   null,
@@ -53,9 +51,9 @@ const LEVELS = [
   null,
   null,
   null,
-  async () => readLevelJSON((await import('./lost-46.map.json')).default),
+  async () => (await import('./lost-46.map.json')).default,
   null,
-  async () => readLevelJSON((await import('./lost-48.map.json')).default),
+  async () => (await import('./lost-48.map.json')).default,
   null,
 
   null,
@@ -67,7 +65,7 @@ const LEVELS = [
   null,
   null,
   null,
-  async () => readLevelJSON((await import('./lost-59.map.json')).default),
+  async () => (await import('./lost-59.map.json')).default,
 
   null,
   async () => (await import('./lost-61')).default,
@@ -80,7 +78,7 @@ const LEVELS = [
   null,
   null,
 
-  async () => readLevelJSON((await import('./lost-70.map.json')).default),
+  async () => (await import('./lost-70.map.json')).default,
   null,
   null,
   null,

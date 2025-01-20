@@ -2,12 +2,13 @@ import { RNG } from 'rot-js';
 import { FLOOR_CHAR } from '../data/constants';
 import { Type, TypeColor } from '../data/tiles';
 
-export const FollowsPlayer = Symbol('FollowsPlayer');
+export const doesFollowsPlayer = Symbol('doesFollowsPlayer');
 export const isPlayer = Symbol('isPlayer');
 export const isMobile = Symbol('isMobile');
 export const isGenerator = Symbol('isGenerator');
 export const isInvisible = Symbol('isInvisible');
-export const isChanced = Symbol('isChanced'); // Appears as ?
+export const isSecreted = Symbol('isSecreted'); // Appears as ?
+export const isPushable = Symbol('isPushable');
 
 export class Renderable {
   ch: string;
@@ -96,16 +97,13 @@ export class AttacksPlayer {
   }
 }
 
-export class ChanceProbability {
-  constructor(public probability: number) {}
-}
-
 export class Collectible {
   keys: number = 0;
   gems: number = 0;
   whips: number = 0;
   teleports: number = 0;
   whipPower: number = 0;
+  // TODO: Add points
 
   constructor(data?: Partial<Collectible>) {
     this.keys = data?.keys || 0;
@@ -116,6 +114,7 @@ export class Collectible {
   }
 }
 
+// TODO: Replace with using Renderable
 export class AnimatedWalking {
   constructor(public frames: string) {}
 

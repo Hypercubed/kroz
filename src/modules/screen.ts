@@ -19,7 +19,7 @@ import dedent from 'ts-dedent';
 import { Type, TypeChar, TypeColor, TypeMessage } from '../data/tiles';
 import { Entity } from '../classes/entity';
 import {
-  isChanced,
+  isSecreted,
   isInvisible,
   Position,
   Renderable,
@@ -340,7 +340,7 @@ export function drawEntity(x: number, y: number, entity?: Entity | null) {
   if (!entity) return;
   if (entity.has(isInvisible)) return;
 
-  if (entity.has(isChanced)) {
+  if (entity.has(isSecreted)) {
     const [fg, bg] = TypeColor[Type.Chance];
     display.draw(x + XBot, y + YBot, TypeChar[Type.Chance], fg!, bg!);
     return;
@@ -370,6 +370,7 @@ export function drawType(
     bg ??=
       TypeColor[block as unknown as Type]?.[1] ?? TypeColor[Type.Floor][1]!;
   } else if (
+    // TODO: Add these to tileset data
     (block >= 'a' && block <= 'z') ||
     ['!', '·', '∙', '∩'].includes(block)
   ) {

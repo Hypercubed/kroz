@@ -41,12 +41,14 @@ import { Timer } from './world.ts';
 import {
   AttacksPlayer,
   Collectible,
-  isChanced,
+  isSecreted,
   isInvisible,
   MagicTrigger,
   Position,
   Walkable,
+  isPushable,
 } from '../classes/components.ts';
+import { Entity } from '../classes/entity.ts';
 
 const SPELL_DURATION = {
   [Timer.SlowTime]: 70 * TIME_SCALE,
@@ -232,8 +234,13 @@ export async function tryMove(dx: number, dy: number) {
     return;
   }
 
+  if (e?.has(isPushable)) {
+    await pushRock(e, x, y, dx, dy);
+    return;
+  }
+
   switch (block) {
-    case Type.Wall: // Blocked
+    case Type.Wall: // Blocked -> isBlock Component
     case Type.River:
     case Type.Block:
     case Type.ZBlock:
@@ -242,13 +249,15 @@ export async function tryMove(dx: number, dy: number) {
       world.addScore(block);
       await screen.flashTypeMessage(block, true);
       break;
-    case Type.Tree: // Blocked
+    case Type.Tree: // Blocked -> isBlock Component?
     case Type.Forest:
+    case Type.Generator:
+    case Type.MBlock:
       world.addScore(block);
       await sound.blocked(); // TODO: replace this sound
       await screen.flashTypeMessage(block, true);
       break;
-    case Type.Stairs: // Next level
+    case Type.Stairs: // Next level -> isStairs Component?
       move(x, y);
       if (world.stats.levelIndex === LEVELS.length - 1) {
         await endRoutine();
@@ -259,7 +268,7 @@ export async function tryMove(dx: number, dy: number) {
       sound.footStep();
       await levels.nextLevel();
       break;
-    case Type.Door: // Opens door (if has key)
+    case Type.Door: // Opens door (if has key) -> isDoor Component?
       if (world.stats.keys < 1) {
         sound.locked();
         await delay(100);
@@ -274,18 +283,18 @@ export async function tryMove(dx: number, dy: number) {
       }
       // TODO: LOST 75 special case
       break;
-    case Type.Lava: // Moves + Damage
+    case Type.Lava: // Moves + Damage -> Damage Component?
       world.stats.gems -= 10;
       world.addScore(block);
       move(x, y);
       await screen.flashTypeMessage(block, true);
       break;
-    case Type.Pit: // Moves + Kills
+    case Type.Pit: // Moves + Kills -> Kills Component?
       move(x, y);
       world.stats.gems = -1; // dead
       await screen.flashTypeMessage(block);
       break;
-    case Type.Tome:
+    case Type.Tome: // -> Read Component?
       // TODO: Tome_Message;
 
       world.level.map.setType(31, 6, Type.Stairs);
@@ -298,6 +307,7 @@ export async function tryMove(dx: number, dy: number) {
       );
       break;
     case Type.Tunnel: {
+      // -> isTunnel Component?
       // Goes through tunnel
       // Player starting position
       const p = world.level.player.get(Position)!;
@@ -309,35 +319,25 @@ export async function tryMove(dx: number, dy: number) {
       await screen.flashTypeMessage(block, true);
       break;
     }
-    case Type.IBlock: // IBlock is replaced by Block
+    case Type.IBlock: // IBlock is replaced by Block -> SwapOnTouch Component?
       sound.blockedWall();
       world.level.map.setType(x, y, Type.Block);
       screen.drawEntity(x, y);
       await screen.flashTypeMessage(block, true);
       break;
-    case Type.IWall: // IBlock is replaced by Wall
+    case Type.IWall: // IBlock is replaced by Wall -> SwapOnTouch Component?
       sound.blockedWall();
       world.level.map.setType(x, y, Type.Wall);
       screen.drawEntity(x, y);
       await screen.flashTypeMessage(block, true);
       break;
-    case Type.IDoor: // IBlock is replaced by Door
+    case Type.IDoor: // IDoor is replaced by Door -> SwapOnTouch Component?
       sound.blockedWall();
       world.level.map.setType(x, y, Type.Door);
       screen.drawEntity(x, y);
       await screen.flashTypeMessage(block, true);
       break;
-    case Type.Generator: // Blocked
-      sound.blocked();
-      world.addScore(block);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.MBlock: // Blocked
-      sound.blocked();
-      world.addScore(block);
-      await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Tablet: // Reads tablet
+    case Type.Tablet: // Reads tablet -> Read Component?
       move(x, y);
       sound.grab();
       world.addScore(block);
@@ -355,21 +355,17 @@ export async function tryMove(dx: number, dy: number) {
       world.addScore(Type.Wall);
       await screen.flashTypeMessage(Type.OWall1, true);
       break;
-    case Type.Rock:
-      // Pushes rock
-      await pushRock(x, y, dx, dy);
-      break;
-    case Type.EWall: // Damage
+    case Type.EWall: // Damage -> Damage Component?
       world.addScore(block);
       world.stats.gems--;
       sound.staticNoise();
       await screen.flashTypeMessage(Type.EWall, true);
       break;
-    case Type.Message:
+    case Type.Message: // Reads message -> Read Component?
       // Reads secret message
       await secretMessage();
       break;
-    case Type.Amulet:
+    case Type.Amulet: // Reads message -> Read Component?
       move(x, y);
       await gotAmulet();
       break;
@@ -384,7 +380,7 @@ function replaceEntities(a: Type | string, b: Type | string) {
   for (let x = 0; x < map.width; x++) {
     for (let y = 0; y < map.height; y++) {
       if (map.getType(x, y) === a) {
-        map.set(x, y, createEntityOfType(b));
+        map.set(x, y, createEntityOfType(b, x, y));
       }
     }
   }
@@ -414,8 +410,8 @@ async function whip() {
 
     screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
 
-    if (entity?.has(isChanced)) {
-      entity?.remove(isChanced);
+    if (entity?.has(isSecreted)) {
+      entity?.remove(isSecreted);
       screen.drawEntity(x, y);
     }
 
@@ -997,49 +993,56 @@ async function triggerCSpell(block: Type) {
   }
 }
 
-async function pushRock(x: number, y: number, dx: number, dy: number) {
+// TODO: Make this a component (isPushable)
+async function pushRock(
+  r: Entity,
+  x: number,
+  y: number,
+  dx: number,
+  dy: number,
+) {
   let nogo = false;
 
   const p = world.level.player.get(Position)!;
-  const rx = p.x + dx * 2;
-  const ry = p.y + dy * 2;
-  if (rx < 0 || rx > XMax || ry < 0 || ry > YMax) nogo = true;
+  const tx = p.x + dx * 2;
+  const ty = p.y + dy * 2;
+  if (tx < 0 || tx > XMax || ty < 0 || ty > YMax) nogo = true;
 
   if (!nogo) {
-    const e = world.level.map.get(rx, ry);
-    if (!e) nogo = true;
-    const rb = e!.type;
+    const t = world.level.map.get(tx, ty);
+    if (!t) nogo = true;
+    const tb = t!.type;
 
     async function moveRock(kill = false) {
       nogo = false;
       await sound.pushRock();
-      if (kill) world.killAt(rx, ry);
-      world.level.map.setType(rx, ry, Type.Rock);
+      if (kill) world.killAt(tx, ty);
+      world.level.map.set(tx, ty, r);
       move(x, y);
       screen.renderPlayfield();
       await screen.flashTypeMessage(Type.Rock, true);
     }
 
     // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST5.MOV#L1366
-    if (ROCK_MOVEABLES.includes(rb as number)) {
+    if (ROCK_MOVEABLES.includes(tb as number)) {
       await moveRock();
-    } else if (ROCK_CRUSHABLES.includes(rb as number)) {
+    } else if (ROCK_CRUSHABLES.includes(tb as number)) {
       await moveRock();
       await sound.grab();
-    } else if (MOBS.includes(rb as number)) {
+    } else if (MOBS.includes(tb as number)) {
       await moveRock(true);
-      world.addScore(rb as Type);
+      world.addScore(tb as Type);
       await sound.rockCrushMob();
-    } else if (rb === Type.EWall) {
+    } else if (tb === Type.EWall) {
       await moveRock();
-      world.level.map.setType(rx, ry, Type.Floor);
+      world.level.map.setType(tx, ty, Type.Floor);
       sound.rockVaporized();
-      await screen.flashMessage('The Boulder is vaporized!'); // TODO: show once
-    } else if (ROCK_CLIFFABLES.includes(rb as number)) {
+      await screen.flashMessage('The Boulder is vaporized!'); // TODO: show once?, change for pushed type
+    } else if (ROCK_CLIFFABLES.includes(tb as number)) {
       nogo = false;
       await sound.pushRock();
       move(x, y);
-      screen.drawType(rx, ry, Type.Rock);
+      screen.drawType(tx, ty, r.type);
       await sound.rockDropped();
       screen.renderPlayfield();
       await screen.flashTypeMessage(Type.Rock, true);
@@ -1051,6 +1054,7 @@ async function pushRock(x: number, y: number, dx: number, dy: number) {
   }
 }
 
+// TODO: Make this a component
 async function secretMessage() {
   await sound.secretMessage();
   await screen.flashMessage(

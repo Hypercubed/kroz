@@ -1,11 +1,12 @@
 import * as screen from './screen.ts';
 import * as levels from './levels.ts';
 import * as sound from './sound.ts';
+import * as tiles from '../data/tiles.ts';
 
 import { CLOCK_SCALE, DEBUG, XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Level } from './levels.ts';
-import { createMobEntity, Type } from '../data/tiles.ts';
+import { Type } from '../data/tiles.ts';
 import { PlayField } from '../classes/map.ts';
 import { RNG } from 'rot-js';
 import { Position } from '../classes/components.ts';
@@ -154,6 +155,7 @@ export async function restore() {
   }
 }
 
+// Replace with tielset data
 export function addScore(block: Type) {
   switch (block) {
     case Type.Border:
@@ -263,8 +265,7 @@ export async function generateCreatures(n: number = 1) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
       if (level.map.getType(x, y) === Type.Floor) {
-        const entity = createMobEntity(Type.Slow);
-        entity.add(new Position({ x, y }));
+        const entity = tiles.createEntityOfType(Type.Slow, x, y);
         level.entities.push(entity);
         level.map.set(x, y, entity);
         await sound.generateCreature();

@@ -3,14 +3,14 @@
   "editorsettings": {
     "export": {
       "format": "lua",
-      "target": "kroz.lua"
+      "target": ""
     }
   },
   "image": "..\/..\/tiled\/ASCII.png",
   "imageheight": 576,
   "imagewidth": 384,
   "margin": 0,
-  "name": "Curses_1920x900",
+  "name": "Kroz Tileset",
   "spacing": 0,
   "tilecount": 256,
   "tiledversion": "1.11.1",
@@ -20,19 +20,14 @@
       "id": 32,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Black"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u00a0"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Black"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Black",
+            "ch": "\u00a0",
+            "fg": "Black"
+          }
         },
         {
           "name": "name",
@@ -46,19 +41,18 @@
       "id": 33,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u25a0"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightBlue"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You found an Ancient Tablet of Wisdom...2,500 points!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u25a0",
+            "fg": "LightBlue"
+          }
         },
         {
           "name": "name",
@@ -72,19 +66,18 @@
       "id": 34,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "Z"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Yellow"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Super Kroz Bonus -- 10,000 points!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "Z",
+            "fg": "Yellow"
+          }
         },
         {
           "name": "name",
@@ -98,24 +91,24 @@
       "id": 35,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Brown"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2588"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Brown"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "A Solid Wall blocks your way."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "\u2588",
+            "fg": "Brown"
+          }
+        },
+        {
+          "name": "isPushable",
+          "type": "bool",
+          "value": false
         },
         {
           "name": "name",
@@ -140,24 +133,23 @@
       "id": 37,
       "properties": [
         {
-          "name": "Tile.ch",
+          "name": "Message",
           "type": "string",
-          "value": "\u25b2"
+          "value": "A Creature Zap Spell!"
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightRed"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u25b2",
+            "fg": "LightRed"
+          }
         },
         {
           "name": "description",
           "type": "string",
           "value": "Creature zap spell"
-        },
-        {
-          "name": "message",
-          "type": "string",
-          "value": "A Creature Zap Spell!"
         },
         {
           "name": "name",
@@ -171,7 +163,7 @@
       "id": 38,
       "properties": [
         {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Yah Hoo! You discovered a Reveal Gems Scroll!"
         },
@@ -209,19 +201,26 @@
       "id": 42,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u263c"
+          "name": "Collectible",
+          "propertytype": "Collectible",
+          "type": "class",
+          "value": {
+            "score": 50
+          }
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Yellow"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You found a Gold Nugget...500 points!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u263c",
+            "fg": "Yellow"
+          }
         },
         {
           "name": "name",
@@ -235,19 +234,26 @@
       "id": 43,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2666"
+          "name": "Collectible",
+          "propertytype": "Collectible",
+          "type": "class",
+          "value": {
+            "gems": 1
+          }
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Blue"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Gems give you both points and strength."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2666",
+            "fg": "Blue"
+          }
         },
         {
           "name": "name",
@@ -277,19 +283,23 @@
       "id": 46,
       "properties": [
         {
+          "name": "Message",
+          "type": "string",
+          "value": "You activated a Teleport trap!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2219",
+            "fg": "White"
+          }
+        },
+        {
           "name": "Tile.ch",
           "type": "string",
           "value": "\u2219"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
-        },
-        {
-          "name": "message",
-          "type": "string",
-          "value": "You activated a Teleport trap!"
         },
         {
           "name": "name",
@@ -303,24 +313,19 @@
       "id": 47,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Green"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2588"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Green"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You cannot travel through forest terrain."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Green",
+            "ch": "\u2588",
+            "fg": "Green"
+          }
         },
         {
           "name": "name",
@@ -334,19 +339,23 @@
       "id": 48,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "O"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You pushed a big Boulder!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "O",
+            "fg": "White"
+          }
+        },
+        {
+          "name": "isPushable",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -360,9 +369,12 @@
       "id": 49,
       "properties": [
         {
-          "name": "Attacks.damage",
-          "type": "int",
-          "value": 1
+          "name": "Attacks",
+          "propertytype": "Attacks",
+          "type": "class",
+          "value": {
+            "damage": 1
+          }
         },
         {
           "name": "Movement.pace",
@@ -370,19 +382,28 @@
           "value": 4
         },
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u00c4"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightRed"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u00c4",
+            "fg": "LightRed"
+          }
         },
         {
           "name": "description",
           "type": "string",
           "value": "Red enemy"
+        },
+        {
+          "name": "doesFollowsPlayer",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isMobile",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -396,9 +417,12 @@
       "id": 50,
       "properties": [
         {
-          "name": "Attacks.damage",
-          "type": "int",
-          "value": 2
+          "name": "Attacks",
+          "propertytype": "Attacks",
+          "type": "class",
+          "value": {
+            "damage": 2
+          }
         },
         {
           "name": "Movement.pace",
@@ -406,19 +430,28 @@
           "value": 3
         },
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u00d6"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Green"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u00d6",
+            "fg": "Green"
+          }
         },
         {
           "name": "description",
           "type": "string",
           "value": "Green enemy"
+        },
+        {
+          "name": "doesFollowsPlayer",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isMobile",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -432,9 +465,12 @@
       "id": 51,
       "properties": [
         {
-          "name": "Attacks.damage",
-          "type": "int",
-          "value": 3
+          "name": "Attacks",
+          "propertytype": "Attacks",
+          "type": "class",
+          "value": {
+            "damage": 3
+          }
         },
         {
           "name": "Movement.pace",
@@ -442,19 +478,28 @@
           "value": 2
         },
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u03a9"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightBlue"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u03a9",
+            "fg": "LightBlue"
+          }
         },
         {
           "name": "description",
           "type": "string",
           "value": "Blue enemy"
+        },
+        {
+          "name": "doesFollowsPlayer",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isMobile",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -468,24 +513,19 @@
       "id": 52,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Brown"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2588"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Brown"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "A Solid Wall blocks your way."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "\u2588",
+            "fg": "Brown"
+          }
         },
         {
           "name": "name",
@@ -499,19 +539,14 @@
       "id": 53,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Brown"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2588"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Brown"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "\u2588",
+            "fg": "Brown"
+          }
         },
         {
           "name": "name",
@@ -525,19 +560,14 @@
       "id": 54,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "White"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2588"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "White",
+            "ch": "\u2588",
+            "fg": "White"
+          }
         },
         {
           "name": "name",
@@ -595,7 +625,7 @@
       "id": 59,
       "properties": [
         {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "An Invisible Crumbled Wall blocks your way."
         },
@@ -611,14 +641,13 @@
       "id": 60,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "K"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Yellow"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "K",
+            "fg": "Yellow"
+          }
         },
         {
           "name": "name",
@@ -632,19 +661,18 @@
       "id": 61,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2591"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "* SPLAT!! *"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2591",
+            "fg": "White"
+          }
         },
         {
           "name": "name",
@@ -658,19 +686,18 @@
       "id": 62,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u263a"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "HighIntensityWhite"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Statues are very dangerous...they drain your Gems!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u263a",
+            "fg": "HighIntensityWhite"
+          }
         },
         {
           "name": "name",
@@ -684,19 +711,18 @@
       "id": 63,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "?"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "HighIntensityWhite"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You found a Pouch containing Gems!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "?",
+            "fg": "HighIntensityWhite"
+          }
         },
         {
           "name": "name",
@@ -721,24 +747,19 @@
       "id": 65,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Magenta"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u25a0"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "HighIntensityWhite"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "The Sacred Tome of Kroz is finally yours--50,000 points!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Magenta",
+            "ch": "\u25a0",
+            "fg": "Blue"
+          }
         },
         {
           "name": "name",
@@ -752,19 +773,23 @@
       "id": 66,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u00a5"
+          "name": "ChanceOdds",
+          "type": "int",
+          "value": 40
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "HighIntensityWhite"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You activated a Magic Bomb!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u00a5",
+            "fg": "HighIntensityWhite"
+          }
         },
         {
           "name": "name",
@@ -778,24 +803,24 @@
       "id": 67,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Red"
+          "name": "ChanceOdds",
+          "type": "int",
+          "value": 20
         },
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "C"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Yellow"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You found gems and whips inside the chest!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Red",
+            "ch": "C",
+            "fg": "Yellow"
+          }
         },
         {
           "name": "name",
@@ -809,24 +834,19 @@
       "id": 68,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Magenta"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u221e"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Cyan"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "The Door opens!  (One of your Keys is used.)"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Magenta",
+            "ch": "\u221e",
+            "fg": "Cyan"
+          }
         },
         {
           "name": "name",
@@ -840,7 +860,12 @@
       "id": 69,
       "properties": [
         {
-          "name": "message",
+          "name": "ChanceOdds",
+          "type": "int",
+          "value": 15
+        },
+        {
+          "name": "Message",
           "type": "string",
           "value": "Oh no, you set off an Earthquake trap!"
         },
@@ -856,24 +881,23 @@
       "id": 70,
       "properties": [
         {
-          "name": "Tile.ch",
+          "name": "Message",
           "type": "string",
-          "value": "\u0398"
+          "value": "You activated a Speed Creature spell."
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightCyan"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u0398",
+            "fg": "LightCyan"
+          }
         },
         {
           "name": "description",
           "type": "string",
           "value": "Speed time spell"
-        },
-        {
-          "name": "message",
-          "type": "string",
-          "value": "You activated a Speed Creature spell."
         },
         {
           "name": "name",
@@ -887,19 +911,23 @@
       "id": 71,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2660"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Yellow"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You have discovered a Creature Generator!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2660",
+            "fg": "Yellow"
+          }
+        },
+        {
+          "name": "isGenerator",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -913,7 +941,7 @@
       "id": 72,
       "properties": [
         {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You triggered Exploding Walls!"
         },
@@ -929,19 +957,18 @@
       "id": 73,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u00a1"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Green"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Oh no, a temporary Blindness Potion!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u00a1",
+            "fg": "Green"
+          }
         },
         {
           "name": "name",
@@ -955,19 +982,31 @@
       "id": 75,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u00ee"
+          "name": "ChanceOdds",
+          "type": "int",
+          "value": 25
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightRed"
+          "name": "Collectible",
+          "propertytype": "Collectible",
+          "type": "class",
+          "value": {
+            "keys": 1
+          }
         },
         {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Use Keys to unlock doors."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u00ee",
+            "fg": "LightRed"
+          }
         },
         {
           "name": "name",
@@ -981,19 +1020,18 @@
       "id": 76,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "White"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2261"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Stairs take you to the next lower level."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "White",
+            "ch": "\u2261"
+          }
         },
         {
           "name": "name",
@@ -1007,19 +1045,23 @@
       "id": 77,
       "properties": [
         {
+          "name": "Message",
+          "type": "string",
+          "value": "A Moving Wall blocks your way."
+        },
+        {
           "name": "Movement.pace",
           "type": "int",
           "value": 2
         },
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2593"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Brown"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2593",
+            "fg": "Brown"
+          }
         },
         {
           "name": "description",
@@ -1027,9 +1069,14 @@
           "value": "Moving wall"
         },
         {
-          "name": "message",
-          "type": "string",
-          "value": "A Moving Wall blocks your way."
+          "name": "doesFollowsPlayer",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isMobile",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -1043,7 +1090,12 @@
       "id": 78,
       "properties": [
         {
-          "name": "message",
+          "name": "ChanceOdds",
+          "type": "int",
+          "value": 20
+        },
+        {
+          "name": "Message",
           "type": "string",
           "value": "Yikes!  A trap has made many of the wall sections invisible!"
         },
@@ -1059,14 +1111,13 @@
       "id": 79,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2593"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Brown"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2593",
+            "fg": "Brown"
+          }
         },
         {
           "name": "name",
@@ -1085,24 +1136,23 @@
           "value": 1
         },
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Black"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u263b"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Yellow"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u263b",
+            "fg": "Yellow"
+          }
         },
         {
           "name": "description",
           "type": "string",
           "value": "The player"
+        },
+        {
+          "name": "isPlayer",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -1116,19 +1166,23 @@
       "id": 81,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u25cb"
+          "name": "ChanceOdds",
+          "type": "int",
+          "value": 15
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "HighIntensityWhite"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "A Power Ring--your whip is now a little stronger!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u25cb",
+            "fg": "HighIntensityWhite"
+          }
         },
         {
           "name": "name",
@@ -1142,24 +1196,19 @@
       "id": 82,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Blue"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2248"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightBlue"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You cannot travel through Water."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Blue",
+            "ch": "\u2248",
+            "fg": "LightBlue"
+          }
         },
         {
           "name": "name",
@@ -1173,24 +1222,28 @@
       "id": 83,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u03a6"
+          "name": "ChanceOdds",
+          "type": "int",
+          "value": 35
         },
         {
-          "name": "Tile.fg",
+          "name": "Message",
           "type": "string",
-          "value": "LightCyan"
+          "value": "You activated a Slow Time spell."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u03a6",
+            "fg": "LightCyan"
+          }
         },
         {
           "name": "description",
           "type": "string",
           "value": "Slow time spell"
-        },
-        {
-          "name": "message",
-          "type": "string",
-          "value": "You activated a Slow Time spell."
         },
         {
           "name": "name",
@@ -1204,19 +1257,26 @@
       "id": 84,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2191"
+          "name": "Collectible",
+          "propertytype": "Collectible",
+          "type": "class",
+          "value": {
+            "teleports": 1
+          }
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightMagenta"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You found a Teleport scroll."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2191",
+            "fg": "LightMagenta"
+          }
         },
         {
           "name": "name",
@@ -1230,19 +1290,18 @@
       "id": 85,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2229"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "HighIntensityWhite"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You passed through a secret Tunnel!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2229",
+            "fg": "HighIntensityWhite"
+          }
         },
         {
           "name": "name",
@@ -1256,24 +1315,19 @@
       "id": 86,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Red"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2593"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightRed"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Oooooooooooooooooooh!  Lava hurts!  (Lose 10 Gems.)"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Red",
+            "ch": "\u2593",
+            "fg": "LightRed"
+          }
         },
         {
           "name": "name",
@@ -1287,24 +1341,31 @@
       "id": 87,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2320"
+          "name": "Collectible",
+          "propertytype": "Collectible",
+          "type": "class",
+          "value": {
+            "whips": 1
+          }
         },
         {
-          "name": "Tile.fg",
+          "name": "Message",
           "type": "string",
-          "value": "HighIntensityWhite"
+          "value": "You found a Whip"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2320",
+            "fg": "HighIntensityWhite"
+          }
         },
         {
           "name": "description",
           "type": "string",
-          "value": "Breakable wall"
-        },
-        {
-          "name": "message",
-          "type": "string",
-          "value": "You found a Whip"
+          "value": "A whip"
         },
         {
           "name": "name",
@@ -1318,19 +1379,18 @@
       "id": 88,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2593"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Brown"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "A Breakable Wall blocks your way"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2593",
+            "fg": "Brown"
+          }
         },
         {
           "name": "name",
@@ -1344,19 +1404,14 @@
       "id": 89,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Black"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2593"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Black",
+            "ch": "\u2593",
+            "fg": "White"
+          }
         },
         {
           "name": "name",
@@ -1370,24 +1425,23 @@
       "id": 90,
       "properties": [
         {
-          "name": "Tile.ch",
+          "name": "Message",
           "type": "string",
-          "value": "\u0192"
+          "value": "You have activated a Freeze Creature spell!"
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightCyan"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u0192",
+            "fg": "LightCyan"
+          }
         },
         {
           "name": "description",
           "type": "string",
           "value": "Freeze time spell"
-        },
-        {
-          "name": "message",
-          "type": "string",
-          "value": "You have activated a Freeze Creature spell!"
         },
         {
           "name": "name",
@@ -1401,14 +1455,13 @@
       "id": 91,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "R"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Yellow"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "R",
+            "fg": "Yellow"
+          }
         },
         {
           "name": "name",
@@ -1422,24 +1475,19 @@
       "id": 92,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Green"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2663"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Brown"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "A tree blocks your way."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Green",
+            "ch": "\u2663",
+            "fg": "Brown"
+          }
         },
         {
           "name": "name",
@@ -1453,14 +1501,18 @@
       "id": 93,
       "properties": [
         {
-          "name": "Tile.ch",
+          "name": "Message",
           "type": "string",
-          "value": "\u25bc"
+          "value": "A Creature Creation Trap!"
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "HighIntensityWhite"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u25bc",
+            "fg": "HighIntensityWhite"
+          }
         },
         {
           "name": "description",
@@ -1468,9 +1520,9 @@
           "value": "Creature creation trap"
         },
         {
-          "name": "message",
-          "type": "string",
-          "value": "A Creature Creation Trap!"
+          "name": "isSecreted",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -1484,7 +1536,7 @@
       "id": 96,
       "properties": [
         {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "An Invisible Door blocks your way."
         },
@@ -1500,14 +1552,13 @@
       "id": 124,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "O"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Yellow"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "O",
+            "fg": "Yellow"
+          }
         },
         {
           "name": "name",
@@ -1521,24 +1572,19 @@
       "id": 126,
       "properties": [
         {
-          "name": "Tile.bg",
-          "type": "string",
-          "value": "Red"
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "X"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightRed"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You hit a Electrified Wall!  You lose one Gem."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Red",
+            "ch": "X",
+            "fg": "LightRed"
+          }
         },
         {
           "name": "name",
@@ -1629,24 +1675,23 @@
       "id": 159,
       "properties": [
         {
-          "name": "Tile.ch",
+          "name": "Message",
           "type": "string",
-          "value": "\u2640"
+          "value": "YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!"
         },
         {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "HighIntensityWhite"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2640",
+            "fg": "HighIntensityWhite"
+          }
         },
         {
           "name": "description",
           "type": "string",
           "value": "Amulet of Yendor"
-        },
-        {
-          "name": "message",
-          "type": "string",
-          "value": "YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!"
         },
         {
           "name": "name",
@@ -1660,14 +1705,13 @@
       "id": 174,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2190"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2190",
+            "fg": "White"
+          }
         },
         {
           "name": "name",
@@ -1681,14 +1725,18 @@
       "id": 175,
       "properties": [
         {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2192",
+            "fg": "White"
+          }
+        },
+        {
           "name": "Tile.ch",
           "type": "string",
           "value": "\u2192"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
         },
         {
           "name": "name",
@@ -1702,19 +1750,18 @@
       "id": 179,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2502"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "You grabbed a Rope."
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2502",
+            "fg": "White"
+          }
         },
         {
           "name": "name",
@@ -1725,17 +1772,91 @@
       "type": "75"
     },
     {
+      "id": 180,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": ".",
+            "fg": "HighIntensityWhite"
+          }
+        }
+      ]
+    },
+    {
+      "id": 181,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "?",
+            "fg": "HighIntensityWhite"
+          }
+        }
+      ]
+    },
+    {
+      "id": 182,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "'",
+            "fg": "HighIntensityWhite"
+          }
+        }
+      ]
+    },
+    {
+      "id": 183,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": ",",
+            "fg": "HighIntensityWhite"
+          }
+        }
+      ]
+    },
+    {
+      "id": 184,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": ":",
+            "fg": "HighIntensityWhite"
+          }
+        }
+      ]
+    },
+    {
       "id": 185,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2193"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2193",
+            "fg": "White"
+          }
         },
         {
           "name": "name",
@@ -1749,14 +1870,13 @@
       "id": 186,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2193"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2193",
+            "fg": "White"
+          }
         },
         {
           "name": "name",
@@ -1828,6 +1948,21 @@
         }
       ],
       "type": "80"
+    },
+    {
+      "id": 195,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "!",
+            "fg": "HighIntensityWhite"
+          }
+        }
+      ]
     },
     {
       "id": 224,
@@ -1918,22 +2053,36 @@
       "type": "231"
     },
     {
+      "id": 239,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "\u2229",
+            "fg": "HighIntensityWhite"
+          }
+        }
+      ]
+    },
+    {
       "id": 241,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2302"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightCyan"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Magic has been released is this chamber!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2302",
+            "fg": "LightCyan"
+          }
         },
         {
           "name": "name",
@@ -1947,19 +2096,18 @@
       "id": 242,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2302"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightCyan"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Magic has been released is this chamber!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2302",
+            "fg": "LightCyan"
+          }
         },
         {
           "name": "name",
@@ -1973,19 +2121,18 @@
       "id": 243,
       "properties": [
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2302"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "LightCyan"
-        },
-        {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "Magic has been released is this chamber!"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "ch": "\u2302",
+            "fg": "LightCyan"
+          }
         },
         {
           "name": "name",
@@ -1999,7 +2146,7 @@
       "id": 244,
       "properties": [
         {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "New Walls have magically appeared!"
         },
@@ -2015,7 +2162,7 @@
       "id": 245,
       "properties": [
         {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "New Walls have magically appeared!"
         },
@@ -2031,7 +2178,7 @@
       "id": 246,
       "properties": [
         {
-          "name": "message",
+          "name": "Message",
           "type": "string",
           "value": "New Walls have magically appeared!"
         },
@@ -2044,22 +2191,52 @@
       "type": "63"
     },
     {
+      "id": 249,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "\u2219",
+            "fg": "HighIntensityWhite"
+          }
+        }
+      ]
+    },
+    {
+      "id": 250,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "\u00b7",
+            "fg": "HighIntensityWhite"
+          }
+        }
+      ]
+    },
+    {
       "id": 252,
       "properties": [
         {
-          "name": "Tile.bg",
+          "name": "Message",
           "type": "string",
-          "value": "Green"
+          "value": "You notice a secret message carved into the old tree...\\n\"Goodness of Heart Overcomes Adversity.\"\\nReveal that you found this message to Scott Miller...\\nAnd receive a \"MASTER KROZ CERTIFICATE\" to hang on your wall!!\\nOnly the first 100 players to report this...\\nWill be awarded the certificate.  Congratulations!"
         },
         {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2663"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "Brown"
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Green",
+            "ch": "\u2663",
+            "fg": "Brown"
+          }
         },
         {
           "name": "name",
@@ -2072,5 +2249,5 @@
   ],
   "tilewidth": 24,
   "type": "tileset",
-  "version": "1.11"
+  "version": "1.10"
 }

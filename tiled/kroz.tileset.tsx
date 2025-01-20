@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.11.1" name="Display Tileset" tilewidth="24" tileheight="36" tilecount="256" columns="16">
+<tileset version="1.10" tiledversion="1.11.1" name="Kroz Tileset" tilewidth="24" tileheight="36" tilecount="256" columns="16">
  <editorsettings>
   <export target="" format="lua"/>
  </editorsettings>
- <image source="Display.png" width="384" height="576"/>
+ <image source="ASCII.png" width="384" height="576"/>
  <tile id="32" type="0">
   <properties>
    <property name="Tile" type="class" propertytype="Renderable">

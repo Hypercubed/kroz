@@ -5,7 +5,7 @@
   "layers": [
     {
       "compression": "zlib",
-      "data": "eJzVmNtOGzEQhv0qaSO4AAlI0iMqFyEFCdGLcmiIKLkIaSConJqERI2qvkrfoH22Hq+QOr8yozUjr9cOWam9+PSvMrux\/x17bG\/BGFMI4Fvgfd+JH8Qa8ZM4IFaJGrFALBL7xDaxQzSJeeKWmCP2iE3ikNgiqsQusUEsE0vEkaf9r9Z1kShlqNyXRojnf5VioK4QFb6upDzfJrpEh+gTA47VlKblIhbXeNP9HhEt4pzReYvxr73r+8AlcUOcMogtKPX5x9x4ZPHc4k+A\/12lPeKMGHJeelP4l3ay8i+cclsXHFtU6vOPuvDY4pnF7wD\/y0pPiCv2bY\/L2PxnzX\/8b5fbGlnvALF5pT7\/qIdPLJ5a\/Arwf6R0YHnvOPoNbWRoaB0pcnto59zyv6\/U539V4au1Lv91pegH5v+Q1eW\/nKEx\/sF79v6RY9tKff5jcPlfU3ptJvNfxvy09S\/EP9qS8S+1BrEdpXn6byg9NpMxgH61OTfT+M+a\/3IN711+59ccO1Cap\/\/PSjsmfQ2M8Y\/1r8zXZas9ibdNUmfQltQBxJpKQ\/2\/nsJ\/LLHrfznl+f+VkPov79mX\/1nQiMD1\/EqKZvmvZKjc55v\/2OvI\/gJgDsj+71apjT3+Y\/3b49\/nHfPyvvUv5D0KY\/Yv9W9OaR7+sd9FzXtFrJvJ+ld3tOfq9yz9I\/ey3ow4tqc0D\/\/gBfGW+EQ8tH5HzmUMjHPMf59zLnvNdxzbVJqXf\/BSaYH7cWWSc0Be6\/+JubvXHnPsUGmafxfrnpjL\/xulAGsxzqSXjOzPpd8h+3\/UkxJfl6z\/dr2fM25nyLEtpWn+7f845nxd8LXvHHAffHm125J6WnI8L++4ZZL9Zsck3z8eKPX5xztvWu3IWou1qKpy4sr\/klLpW88kNbkf+Q6lnaz8tzhfN+bu+e+L0jznv+usrc\/megy56nLMOLHjA5OMW\/FfVerzj7qFOoHvF\/ieiTMD1rQa97Oe4X9DKfjAOUF+5Gzqyr+rPufNrPPv+9YQiq7TfwGi\/jnn",
+      "data": "eJzVmMluE0EQhvtVDFZySKQktlkjcnBMIkXhQBYcK8QHxzhxRDZsxxYW4lV4A7iw3XkgxCqBIvGXXKXplHp6eoxHgsOnf+Sacfff1V3dMzljTC6AN4H3fQFfwRL4BnbAIqiAGTALtsE62AB1MA0uwRTYAqtgF6yBMtgEK2AezIE9T\/uvres8KCSo3BdHiOd\/lXygLoASX5dinm+CNmiBLuhxrKI0Lhdpcc033e8BaIBjRuctjX\/tXd9HnIILcMhQbEapzz+tjRsWdy1+BvjfVNoBR6DPeemM4V\/aScq\/cMhtnXBsVqnPP9WFmxZ3LH4E+J9XegDO2Lc9L9PmP2n90\/+2ua2BNQYUm1bq80\/18JbFbYvvAf73lPYs7y1Hv0lrCRpaR\/LcHrVzbPnfVurzv6jw1VqX\/6pS6get\/z6ry38xQdP4J56y9+ccW1fq858Gl\/8lpedmtP5lzo9b\/0L8U1sy\/6XWUGxDqc\/\/J\/AWvAPvwQfwEfwGv8DnBP81pftmNAeoX03OzTj+k9a\/XJP3No\/5Ocd2lGaZ\/5dKWyZ+D0zjn\/a\/Il8XrfYk3jRRnaG2pA5QrK401P\/DMfynJe3+X4x5\/n8lpP7LOPvyPwlqKXA9vxCjSf5LCSr3+dY\/nXXkfEHQGpDz36VSG3v+p\/Vvz3+fd1qXf1v\/QsZRGLJ\/qX9TSrPwT+ddqnkPwLIZ7X9VR3uufk\/SP+Ve9psBx7aUZuGfuAcegxfguvU75VzmwDDD\/Hc553LWfMKxVaVZ+SfuK81xP85M9B6Q1f5\/YK6etYcc21Ua59\/Fsifm8v9IKUF7Mb2TnjJyPpd+h5z\/qZ4U+Lpg\/bdrfI64nT7H1pTG+bf\/Y5\/zdcLXrjGfBL682m1JPS04npcxbpjovNky0fePa0p9\/mnM61Y7stfSXlRWOXHlf06p9K1joprcTTmG0k5S\/hucrwtz9f3vldIs17\/rXVu\/m+s55KrLaeaJHe+ZaN6K\/7JSn3+qW1Qn6PsFfc+kdwba0yrcz2qC\/xWlxDPOCeVH3k1d+XfV56yZdP593xpC0XX6D8vGP\/o=",
       "encoding": "base64",
       "height": 23,
       "id": 1,
@@ -39,11 +39,11 @@
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/..\/..\/tiled\/Curses_1920x900.tsx"
+      "source": "..\/kroz.tileset.json"
     }
   ],
   "tilewidth": 24,
   "type": "map",
-  "version": "1.11",
+  "version": "1.10",
   "width": 64
 }

@@ -1,0 +1,99 @@
+[
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 3,
+        "members": [
+            {
+                "name": "gems",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "keys",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "score",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "teleports",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "whipPower",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "whips",
+                "type": "int",
+                "value": 0
+            }
+        ],
+        "name": "Collectible",
+        "type": "class",
+        "useAs": [
+            "property"
+        ]
+    },
+    {
+        "id": 1,
+        "name": "Color",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "None",
+            "Black",
+            "Blue",
+            "Green",
+            "Cyan",
+            "Red",
+            "Magenta",
+            "Brown",
+            "White",
+            "Grey",
+            "LightBlue",
+            "LightGreen",
+            "LightCyan",
+            "LightRed",
+            "LightMagenta",
+            "Yellow",
+            "HighIntensityWhite"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 2,
+        "members": [
+            {
+                "name": "bg",
+                "propertyType": "Color",
+                "type": "string",
+                "value": "Black"
+            },
+            {
+                "name": "ch",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "fg",
+                "propertyType": "Color",
+                "type": "string",
+                "value": "Black"
+            }
+        ],
+        "name": "Renderable",
+        "type": "class",
+        "useAs": [
+            "property"
+        ]
+    }
+]

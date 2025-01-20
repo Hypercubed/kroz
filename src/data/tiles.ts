@@ -4,9 +4,8 @@ import * as world from '../modules/world';
 
 import {
   AttacksPlayer,
-  ChanceProbability,
   Eats,
-  FollowsPlayer,
+  doesFollowsPlayer,
   isGenerator,
   isMobile,
   isPlayer,
@@ -16,12 +15,15 @@ import {
   Collectible,
   AnimatedWalking,
   MagicTrigger,
-  isChanced,
+  isSecreted,
+  Position,
+  isPushable,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
 import { FLOOR_CHAR } from './constants';
 
+// TODO: Load this dynamically
 import tileset from './kroz.tileset.json';
 import { ensureObject, tileIdToChar } from '../utils/utils';
 
@@ -129,10 +131,9 @@ const _TypeChar: Partial<Record<Type, string>> = {
   [Type.Floor]: FLOOR_CHAR,
 };
 
-const _MapLookup: Record<string, Type> = {
-  ' ': Type.Floor,
-};
-const _TileIdLookup: Record<number, Type> = {};
+const TileIDToType: Record<number, Type> = {}; // TileID to type lookup
+const TypeToTileID: Record<number, Type> = {}; // TileID to type lookup
+
 const _TypeColor: Partial<Record<Type, [Color | null, Color | null]>> = {
   [Type.Border]: [Color.LightBlue, Color.Black],
   [Type.Floor]: [Color.Black, Color.Black],
@@ -147,36 +148,41 @@ export function readTileset() {
   for (const tile of tileset.tiles!) {
     const tileId = tile.id!;
     const type = +tile.type! as Type;
-    const char = tileIdToChar(+tileId);
-    _MapLookup[char] = type;
-    _TileIdLookup[+tileId] = type;
+    TileIDToType[+tileId] = type;
+    TypeToTileID[type] = +tileId;
+
+    if (!tile.properties) continue;
 
     const props = ensureObject(tile.properties);
     if (props.name !== Type[type]) throw new Error('Tile ID mismatch');
-    const fg = props['Tile.fg' as keyof typeof props];
-    const bg = props['Tile.bg' as keyof typeof props];
-    const ch = props['Tile.ch' as keyof typeof props];
-    _TypeColor[type] = [
-      Color[fg as keyof typeof Color] ?? null,
-      Color[bg as keyof typeof Color] ?? null,
-    ]; // Allow explicit color?
-    _TypeChar[type] = ch ?? FLOOR_CHAR;
-    if ('message' in props) {
-      _TypeMessage[type] = props['message' as keyof typeof props];
+
+    // TODO: remove this, use when creating entities
+    if ('Tile' in props) {
+      const tile = props['Tile' as keyof typeof props];
+      _TypeColor[type] = [
+        Color[tile.fg as keyof typeof Color] ?? tile.fg ?? null,
+        Color[tile.bg as keyof typeof Color] ?? tile.bg ?? null,
+      ]; // Allow explicit color?
+      _TypeChar[type] = tile.ch ?? FLOOR_CHAR;
+    }
+
+    if ('Message' in props) {
+      _TypeMessage[type] = props['Message' as keyof typeof props];
     }
   }
 }
 
 readTileset();
 
-export const MapLookup = _MapLookup as Record<string, Type>;
+// export const MapLookup = _MapLookup as Record<string, Type>;
 export const TypeColor = _TypeColor as Record<
   Type,
   [Color | null, Color | null]
 >;
+
+// TODO: Remove thesem use entity data
 export const TypeChar = _TypeChar as Record<Type, string>;
 export const TypeMessage = _TypeMessage as Record<Type, string>;
-export const TileIdLookup = _TileIdLookup as Record<number, Type>;
 
 export const MOBS = [Type.Fast, Type.Medium, Type.Slow]; // 1..3
 export const COLLECTABLES = [Type.Whip, Type.Gem, Type.Teleport, Type.Chest]; // 5, 9, 11
@@ -370,54 +376,14 @@ export const SPEAR_IGNORE = [
   Type.Rope,
 ];
 
-export const ChanceOdds = {
-  [Type.Chest]: 20,
-  [Type.SlowTime]: 35,
-  [Type.Key]: 25,
-  [Type.SpeedTime]: 10,
-  [Type.Power]: 15,
-  [Type.Bomb]: 40,
-  [Type.Quake]: 15,
-  [Type.WallVanish]: 20,
-};
-
-export function createTileDataForType(type: Type | string) {
+// TODO: Remove this, use entity data
+function createTileDataForType(type: Type | string) {
   let fg = TypeColor[Type.Floor][0]!;
   let bg = TypeColor[Type.Floor][1]!;
   let ch = FLOOR_CHAR;
 
-  // Special characters for punctuation
-  switch (type) {
-    case 'Ã':
-      type = '!';
-      break;
-    case '´':
-      type = '.';
-      break;
-    case 'µ':
-      type = '?';
-      break;
-    case '¶':
-      type = "'";
-      break;
-    case '·':
-      type = ',';
-      break;
-    case '¸':
-      type = ':';
-      break;
-    case 'ú':
-      type = '·';
-      break;
-    case 'ù':
-      type = '∙';
-      break;
-    case 'ï':
-      type = '∩';
-      break;
-  }
-
   if (typeof type === 'string') {
+    // TODO: remove these, add to tileset data
     ch = type.toLocaleUpperCase();
     fg = Color.HighIntensityWhite;
     bg = Color.Brown;
@@ -530,50 +496,124 @@ const MAGIC_TRIGGERS = [
   Type.ShootLeft,
 ];
 
-export function createEntityOfType(type: Type | string) {
-  if (type === Type.Player) {
-    return createPlayerEntity();
-  } else if (MOBS.includes(type as Type) || type === Type.MBlock) {
-    return createMobEntity(type as Type);
-  } else {
-    return createTileEntity(type);
+export function getTileDefinition(tileId: number) {
+  for (const tile of tileset.tiles!) {
+    if (tile.id === tileId) {
+      return tile;
+    }
   }
 }
 
-export function createTileEntity(type: Type | string) {
+export function createEntityOfType(type: Type | string, x: number, y: number) {
+  const tileId = TypeToTileID[type as Type] ?? 0;
+  return createEntityFromTileId(tileId, x, y);
+}
+
+// Creates an entity from a tile ID
+export function createEntityFromTileId(
+  tileId: number,
+  x: number,
+  y: number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  properties?: Record<string, any>,
+) {
+  const type = TileIDToType[tileId] ?? tileIdToChar(tileId) ?? 0;
   const entity = new Entity(type);
 
-  // TODO: Don't add Renderable for invisible tiles
-  entity.add(new Renderable(createTileDataForType(type)));
+  const tileDefinition = getTileDefinition(tileId);
+  if (tileDefinition && tileDefinition.properties) {
+    addComponentsToEntity(entity, ensureObject(tileDefinition.properties));
+  } else {
+    addComponentsToEntity(entity, properties || {});
+  }
 
-  // Adds walkability to tiles
-  if (type === Type.Floor) {
-    entity.add(
-      new Walkable([
-        Type.Fast,
-        Type.Medium,
-        Type.Slow,
-        Type.MBlock,
-        Type.Player,
-      ]),
-    );
-  } else if (type === Type.Stop) {
-    entity.add(new Walkable([Type.Player]));
-  } else if (MOB_WALKABLE.includes(type as Type)) {
+  if (entity.has(isPlayer) || entity.has(isMobile)) {
+    entity.add(new Position({ x, y }));
+  }
+
+  return entity;
+}
+
+function addComponentsToEntity(
+  entity: Entity,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  properties: Record<string, any>,
+) {
+  const type = entity.type as Type;
+
+  // TODO: Shoudlo be able to remove this by adding to tiles set
+  if (typeof type === 'string') {
+    entity.add(new Renderable(createTileDataForType(type)));
+  }
+
+  if (properties.isPlayer) {
+    entity.add(isPlayer);
+  }
+
+  if (properties.isMobile) {
+    entity.add(isMobile);
+
+    if (type === Type.Fast || type === Type.Medium || type === Type.Slow) {
+      entity
+        .add(new Eats(MOB_EATS))
+        .add(
+          new DestroyedBy([Type.Block, Type.MBlock, Type.ZBlock, Type.GBlock]),
+        );
+
+      if (type === Type.Slow) {
+        entity.add(new AnimatedWalking('AÄ'));
+      } else if (type === Type.Medium) {
+        entity.add(new AnimatedWalking('öÖ'));
+      }
+    }
+  }
+
+  if (properties.doesFollowsPlayer) {
+    entity.add(doesFollowsPlayer);
+  }
+
+  if (properties.isGenerator) {
+    entity.add(isGenerator);
+  }
+
+  if (properties.isSecreted) {
+    entity.add(isSecreted);
+  }
+
+  if (MOB_WALKABLE.includes(type as Type)) {
     entity.add(new Walkable([Type.Fast, Type.Medium, Type.Slow, Type.Player]));
-  } else if (CWALLS.includes(type as Type)) {
+  }
+  if (CWALLS.includes(type as Type)) {
     entity.add(new Walkable([Type.Player]));
+  }
+  if (MAGIC_TRIGGERS.includes(type as Type)) {
+    entity.add(new MagicTrigger(type as Type));
+  }
+
+  if ('ChanceOdds' in properties) {
+    const odds = properties['ChanceOdds' as keyof typeof properties] ?? 0;
+    if (odds > 0) {
+      const p = 1 / odds;
+      if (Math.random() < p) {
+        entity.add(isSecreted);
+      }
+    }
   }
 
   switch (type) {
-    case Type.Whip:
-      entity.add(new Collectible({ whips: 1 }));
+    case Type.Floor:
+      entity.add(
+        new Walkable([
+          Type.Fast,
+          Type.Medium,
+          Type.Slow,
+          Type.MBlock,
+          Type.Player,
+        ]),
+      );
       break;
-    case Type.Gem:
-      entity.add(new Collectible({ gems: 1 }));
-      break;
-    case Type.Key:
-      entity.add(new Collectible({ keys: 1 }));
+    case Type.Stop:
+      entity.add(new Walkable([Type.Player]));
       break;
     case Type.Chest:
       entity.add(
@@ -583,63 +623,41 @@ export function createTileEntity(type: Type | string) {
         }),
       );
       break;
-    case Type.Nugget:
-      entity.add(new Collectible()); // Only points
-      break;
     case Type.Chance:
       entity.add(new Collectible({ gems: RNG.getUniformInt(14, 18) }));
       break;
-    case Type.Teleport:
-      entity.add(new Collectible({ teleports: 1 }));
-      break;
   }
 
-  if (MAGIC_TRIGGERS.includes(type as Type)) {
-    entity.add(new MagicTrigger(type as Type));
-  }
-
-  if (ChanceOdds[type as keyof typeof ChanceOdds]) {
+  if ('Attacks' in properties) {
     entity.add(
-      new ChanceProbability(1 / ChanceOdds[type as keyof typeof ChanceOdds]),
+      new AttacksPlayer(properties['Attacks' as keyof typeof properties]),
     );
   }
 
-  if (type === Type.Generator) {
-    entity.add(isGenerator);
+  if ('Tile' in properties) {
+    const tile = properties['Tile' as keyof typeof properties];
+    const fg = Color[tile.fg as keyof typeof Color] ?? null; // TODO: alow explict color strings
+    const bg = Color[tile.bg as keyof typeof Color] ?? null;
+    const ch = tile.ch ?? FLOOR_CHAR;
+    entity.add(new Renderable({ fg, bg, ch }));
   }
 
-  return entity;
+  if ('Collectible' in properties) {
+    entity.add(
+      new Collectible(properties['Collectible' as keyof typeof properties]),
+    );
+  }
+
+  if (properties.isPushable) {
+    entity.add(isPushable);
+  }
+
+  // TODO:
+  // isPushable
+  // Message
 }
 
-export function createPlayerEntity() {
-  return new Entity(Type.Player)
-    .add(new Renderable(createTileDataForType(Type.Player)))
-    .add(isPlayer);
-}
-
-export function createMobEntity(type: Type) {
-  const entity = new Entity(type)
-    .add(new Renderable(createTileDataForType(type)))
-    .add(isMobile) // TODO: Replace with movement and speed
-    .add(FollowsPlayer); // TODO: Replace with AI
-
-  if (type === Type.Fast || type === Type.Medium || type === Type.Slow) {
-    entity
-      .add(new Eats(MOB_EATS))
-      .add(new DestroyedBy([Type.Block, Type.MBlock, Type.ZBlock, Type.GBlock]))
-      .add(new AttacksPlayer({ damage: type }));
-  }
-
-  if (type === Type.Slow) {
-    entity.add(new AnimatedWalking('AÄ'));
-  } else if (type === Type.Medium) {
-    entity.add(new AnimatedWalking('öÖ'));
-  }
-
-  if (type === Type.Create) {
-    // Create always starts obscured
-    entity.add(isChanced);
-  }
-
-  return entity;
+export function getTileIdFromGID(gid: number): number {
+  if (!gid) return 0;
+  return (+gid % 256) - 1;
 }

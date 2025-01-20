@@ -10,7 +10,6 @@ import * as sound from '../../../modules/sound';
 
 import { XMax, YMax } from '../../constants';
 import { Type } from '../../tiles';
-import { readLevelJSON } from '../../../modules/levels';
 
 async function tabletMessage() {
   await player.prayer();
@@ -33,6 +32,6 @@ async function tabletMessage() {
 }
 
 export default {
-  ...readLevelJSON(levelData),
+  ...levelData,
   tabletMessage,
 };

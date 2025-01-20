@@ -11,7 +11,7 @@ import type { Entity } from '../classes/entity';
 import {
   AttacksPlayer,
   Eats,
-  FollowsPlayer,
+  doesFollowsPlayer,
   DestroyedBy,
   Position,
   Renderable,
@@ -89,7 +89,7 @@ async function act(e: Entity) {
     return;
   } // dead
 
-  if (e.has(FollowsPlayer)) {
+  if (e.has(doesFollowsPlayer)) {
     let dx = 0;
     let dy = 0;
 

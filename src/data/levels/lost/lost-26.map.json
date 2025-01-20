@@ -22,25 +22,29 @@
   "nextlayerid": 2,
   "nextobjectid": 1,
   "orientation": "orthogonal",
-  "properties": {
-    "HideCreate": true,
-    "HideGems": true
-  },
-  "propertytypes": {
-    "HideCreate": "bool",
-    "HideGems": "bool"
-  },
+  "properties": [
+    {
+      "name": "HideCreate",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "HideGems",
+      "type": "bool",
+      "value": true
+    }
+  ],
   "renderorder": "right-down",
   "tiledversion": "1.11.1",
   "tileheight": 36,
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/..\/..\/..\/tiled\/Curses_1920x900.tsx"
+      "source": "..\/..\/kroz.tileset.json"
     }
   ],
   "tilewidth": 24,
   "type": "map",
-  "version": 1.1,
+  "version": "1.10",
   "width": 64
 }

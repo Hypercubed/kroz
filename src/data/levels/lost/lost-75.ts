@@ -7,7 +7,6 @@ import * as screen from '../../../modules/screen';
 import * as sound from '../../../modules/sound';
 import * as world from '../../../modules/world';
 import * as player from '../../../modules/player';
-import * as levels from '../../../modules/levels';
 
 import { XMax, YMax } from '../../constants';
 import { Type } from '../../tiles';
@@ -31,6 +30,6 @@ async function tabletMessage() {
 }
 
 export default {
-  ...levels.readLevelJSON(levelData),
+  ...levelData,
   tabletMessage,
 };

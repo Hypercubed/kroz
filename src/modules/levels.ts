@@ -11,29 +11,22 @@ import LEVELS from '../data/levels/forgotton.ts';
 // import LEVELS from '../data/levels/lost/index.ts';
 // import LEVELS from '../data/levels/caverns/index.ts';
 
-import {
-  createEntityOfType,
-  TileIdLookup,
-  Type,
-  TypeColor,
-} from '../data/tiles.ts';
 import { Timer } from './world.ts';
 import { mod } from 'rot-js/lib/util';
 import {
-  ChanceProbability,
   isGenerator,
-  isChanced,
   isInvisible,
   isMobile,
   isPlayer,
-  Position,
 } from '../classes/components.ts';
-import { ensureObject, tileIdToChar } from '../utils/utils.ts';
+import { ensureObject } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
+import { Entity } from '../classes/entity.ts';
+import { Type, TypeColor } from '../data/tiles.ts';
 
 export interface Level {
   id: string;
-  data: number[]; // TileIds
+  data: Entity[];
   properties?: Record<string, unknown>;
   onLevelStart?: () => Promise<void>;
   tabletMessage?: (() => Promise<void>) | string;
@@ -50,16 +43,7 @@ export async function loadLevel() {
   }
 
   tiles.readTileset(); // Reset tileset
-
-  const levelLoadPromise = LEVELS[(world.stats.levelIndex = i)];
-  const level = (await levelLoadPromise()) as Level;
-  world.level.tabletMessage = level!.tabletMessage;
-
-  readLevelMapData(level.data);
-
-  // Randomize gem and border colors
-  world.level.map.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
-  TypeColor[Type.Border] = [RNG.getUniformInt(8, 15), RNG.getUniformInt(1, 8)];
+  const level = await readLevel(i);
 
   level?.onLevelStart?.();
   world.storeLevelStartState();
@@ -95,36 +79,88 @@ export async function prevLevel() {
   await screen.flashMessage('Press any key to begin this level.');
 }
 
-export function readLevelJSON(tilemap: tiled.Map): Level {
+async function readLevel(i: number) {
+  world.stats.levelIndex = i;
+
+  const levelLoadPromise = LEVELS[world.stats.levelIndex];
+  const levelData = await levelLoadPromise();
+  const level = readLevelJSON(levelData as tiled.Map);
+  world.level.tabletMessage = level!.tabletMessage;
+
+  readLevelMapData(level.data);
+
+  // Randomize gem and border colors
+  world.level.map.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
+  TypeColor[Type.Border] = [RNG.getUniformInt(8, 15), RNG.getUniformInt(1, 8)];
+
+  return level;
+}
+
+// Reads the level data from a Tiled JSON file into a Level object
+function readLevelJSON(tilemap: tiled.Map): Level {
   const { layers, properties: _properties } = tilemap;
   const properties = ensureObject(_properties);
 
-  // TODO:
-  // verify encoding and/or compression
-
-  const data = [];
+  const data: Entity[] = [];
   for (const layer of layers) {
     // Collapse layers
-    let layerData;
+    // TODO: Combine layers?
     if (tiled.isEncodedTileLayer(layer)) {
-      layerData = tiled.decodeTileLayer(layer).data;
+      readUnencodedTileLayer(tiled.decodeTileLayer(layer), data);
     } else if (tiled.isUnencodedTileLayer(layer)) {
-      layerData = layer.data;
+      readUnencodedTileLayer(layer, data);
+    } else if (tiled.isObjectGroup(layer)) {
+      readObjectGroup(layer, data);
     } else {
       throw new Error('Unsupported layer encoding');
     }
+  }
 
-    if (layerData) {
-      for (let i = 0; i < layerData.length; i++) {
-        const tileId = +layerData[i] - 1;
-        if (tileId > -1) {
-          data[i] = tileId;
-        }
+  function readObjectGroup(layer: tiled.ObjectGroup, output: Entity[]) {
+    for (const obj of layer.objects) {
+      const { gid, x, y, height, width, properties } = obj;
+      if (!gid || !x || !y || !height || !width) continue;
+      const tileId = tiles.getTileIdFromGID(obj.gid!);
+      if (tileId > -1) {
+        const xx = x / width;
+        const yy = y / height - 1;
+        output[yy * tilemap.width + xx] = tiles.createEntityFromTileId(
+          tileId,
+          xx,
+          yy,
+          ensureObject(properties),
+        );
       }
     }
+
+    return output;
+  }
+
+  function readUnencodedTileLayer(
+    layer: tiled.UnencodedTileLayer,
+    output: Entity[],
+  ) {
+    const { data } = layer;
+    if (!data) return output;
+
+    for (let i = 0; i < data.length; i++) {
+      const tileId = tiles.getTileIdFromGID(+data[i]);
+      if (tileId > -1) {
+        const x = i % tilemap.width;
+        const y = Math.floor(i / tilemap.width);
+        output[i] = tiles.createEntityFromTileId(tileId, x, y);
+      }
+    }
+    return output;
   }
 
   async function onLevelStart() {
+    if ('onLevelStart' in tilemap) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await tilemap.onLevelStart();
+    }
+
     if (!properties) return;
 
     world.level.magicEwalls = properties.MagicEWalls ?? false;
@@ -170,48 +206,47 @@ export function readLevelJSON(tilemap: tiled.Map): Level {
     }
   }
 
+  const tabletMessage =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    tilemap.tabletMessage ?? properties?.tabletMessage ?? undefined;
+
   return {
     id: (properties?.id || '') as string,
     data,
     onLevelStart,
-    tabletMessage: properties?.tabletMessage as string,
+    tabletMessage,
     properties,
   };
 }
 
-function readLevelMapData(data: number[]) {
+// Reads the level data into the world
+function readLevelMapData(data: Entity[]) {
   const map = world.level.map;
 
   let i = 0;
   for (let y = 0; y <= YMax; y++) {
     for (let x = 0; x <= XMax; x++) {
-      const tileId = data[i++];
-      const type = TileIdLookup[tileId] ?? tileIdToChar(tileId) ?? 0;
-      const entity = createEntityOfType(type);
+      const entity = data[i++];
       map.set(x, y, entity);
+    }
+  }
 
+  for (let y = 0; y <= YMax; y++) {
+    for (let x = 0; x <= XMax; x++) {
+      const entity = map.get(x, y);
+      if (!entity) continue;
       if (entity.type === Type.Statue) {
         world.level.T[Timer.StatueGemDrain] = 32000;
       }
       if (entity.has(isPlayer)) {
-        entity.add(new Position({ x, y }));
         world.level.player = entity;
       }
       if (entity.has(isMobile)) {
-        entity.add(new Position({ x, y }));
         world.level.entities.push(entity);
       }
       if (entity.has(isGenerator)) {
         world.level.genNum++;
-      }
-
-      // TODO: item becomes visible once whipped
-      if (entity.has(ChanceProbability)) {
-        const p = entity.get(ChanceProbability)!.probability;
-        if (Math.random() < p) {
-          entity.remove(ChanceProbability);
-          entity.add(isChanced);
-        }
       }
     }
   }

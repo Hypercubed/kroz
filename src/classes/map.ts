@@ -1,6 +1,9 @@
 import { default as RNG } from 'rot-js/lib/rng';
+
+import * as tiles from '../data/tiles';
+
 import { XMax, YMax } from '../data/constants';
-import { createTileEntity, Type } from '../data/tiles';
+import { Type } from '../data/tiles';
 import { Entity } from './entity';
 import { isInvisible, Renderable } from './components';
 
@@ -40,12 +43,11 @@ export class PlayField {
   }
 
   // TODO: get rid of this, doesn't work for mobs
-  setType(x: number, y: number, type: Type | string) {
-    this.set(x, y, createTileEntity(type));
+  setType(x: number, y: number, type: Type) {
+    this.set(x, y, tiles.createEntityOfType(type, x, y));
   }
 
   // TODO: move some of these outside of the class to eliminate dependencies
-
   findRandomEmptySpace(): [number, number] {
     while (true) {
       const x = RNG.getUniformInt(0, XMax);

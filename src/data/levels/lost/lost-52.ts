@@ -4,7 +4,6 @@
 import levelData from './lost-52.map.json';
 
 import * as world from '../../../modules/world';
-import * as levels from '../../../modules/levels';
 
 import { Type } from '../../tiles';
 import { Color } from '../../colors';
@@ -13,7 +12,7 @@ async function onLevelStart() {
   // Change floor character
   world.level.map.updateTilesByType(Type.Floor, {
     ch: '.',
-    fg: Color.White,
+    fg: Color.Brown,
     bg: Color.Black,
   });
 
@@ -25,7 +24,7 @@ async function onLevelStart() {
 }
 
 export default {
-  ...levels.readLevelJSON(levelData),
+  ...levelData,
   onLevelStart,
   tabletMessage: 'Up 4 steps, then left 16 steps.',
 };

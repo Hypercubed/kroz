@@ -28,7 +28,7 @@
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/..\/..\/..\/tiled\/Curses_1920x900.tsx"
+      "source": "..\/..\/kroz.tileset.json"
     }
   ],
   "tilewidth": 24,

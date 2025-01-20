@@ -9,7 +9,6 @@ import * as world from '../../../modules/world';
 
 import { XMax, YMax } from '../../constants';
 import { Type } from '../../tiles';
-import { readLevelJSON } from '../../../modules/levels';
 
 async function tabletMessage() {
   await screen.flashMessage(
@@ -35,6 +34,6 @@ async function tabletMessage() {
 }
 
 export default {
-  ...readLevelJSON(levelData),
+  ...levelData,
   tabletMessage,
 };

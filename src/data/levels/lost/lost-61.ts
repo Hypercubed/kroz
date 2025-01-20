@@ -6,7 +6,6 @@ import levelData from './lost-61.map.json';
 import * as player from '../../../modules/player';
 import * as screen from '../../../modules/screen';
 import * as world from '../../../modules/world';
-import * as levels from '../../../modules/levels';
 
 import { Type } from '../../tiles';
 import { Position } from '../../../classes/components';
@@ -26,7 +25,7 @@ async function tabletMessage() {
 }
 
 export default {
-  ...levels.readLevelJSON(levelData),
+  ...levelData,
   onLevelStart,
   tabletMessage,
 };

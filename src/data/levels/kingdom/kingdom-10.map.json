@@ -1,46 +1,50 @@
-{ "class":"Kingdom10",
- "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
-        {
-         "compression":"zlib",
-         "data":"eJztl+FKwzAQx\/Mq6pjMSaEy9ZOgWIVJFQeznSC+ifjO6gOYQg7+hEtz6S6rMD\/8aLckR353SdoeGmNOLQUD93+oL7VNHFNL63hmOHc0cO\/3ofFTiLtQpBZ4p+SmgHm2RuaPhPxbiHupyELoGmvj6s85I9TvQjiG+hwoQf5DXPv2Rar\/9R\/yT13rXJt0\/aNTyJ1b\/68M2\/qnnnOS\/V8J\/CkHoTYaX2X0H+rJ9WkG+PfB+TfK\/pMRCe2FXfKkDMVdD6wLxxrinimTy1\/Lncjlf6NMin8JjOVfD3DcKNW0814J\/ZeW20S3WP+v\/\/rv\/f7f9\/N\/zOf\/JzDWHLTyyL3\/lRHwHbKEK9dOcRv3+8TxAPcc+L3vtxVu7jMF\/Hn6Lh1LxlmSDz8u+W\/rPhf4vwCxHOB+itXeP\/9jUFytus9djFz+oTWdAo5Ffy33XdQf8+DT535lebN8WI4grqa7pP4p+PXPcV5runfXH5PneVoFak7cMdd3x73l23JseXRQ3FrRvZvjL9uUIek=",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":2,
- "nextobjectid":1,
- "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"HideGems",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"tabletMessage",
-         "type":"string",
-         "value":"Sometimes, Adventurer, Gems can be crystal clear."
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/..\/..\/tiled\/Display.tsx"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.11",
- "width":64
+{
+  "class": "Kingdom10",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJztl+FKwzAQx\/Mq6pjMSaEy9ZOgWIVJFQeznSC+ifjO6gOYQg7+hEtz6S6rMD\/8aLckR353SdoeGmNOLQUD93+oL7VNHFNL63hmOHc0cO\/3ofFTiLtQpBZ4p+SmgHm2RuaPhPxbiHupyELoGmvj6s85I9TvQjiG+hwoQf5DXPv2Rar\/9R\/yT13rXJt0\/aNTyJ1b\/68M2\/qnnnOS\/V8J\/CkHoTYaX2X0H+rJ9WkG+PfB+TfK\/pMRCe2FXfKkDMVdD6wLxxrinimTy1\/Lncjlf6NMin8JjOVfD3DcKNW0814J\/ZeW20S3WP+v\/\/rv\/f7f9\/N\/zOf\/JzDWHLTyyL3\/lRHwHbKEK9dOcRv3+8TxAPcc+L3vtxVu7jMF\/Hn6Lh1LxlmSDz8u+W\/rPhf4vwCxHOB+itXeP\/9jUFytus9djFz+oTWdAo5Ffy33XdQf8+DT535lebN8WI4grqa7pP4p+PXPcV5runfXH5PneVoFak7cMdd3x73l23JseXRQ3FrRvZvjL9uUIek=",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "HideGems",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "tabletMessage",
+      "type": "string",
+      "value": "Sometimes, Adventurer, Gems can be crystal clear."
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/..\/..\/tiled\/Display.tsx"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.11",
+  "width": 64
 }

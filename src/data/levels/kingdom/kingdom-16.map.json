@@ -1,46 +1,50 @@
-{ "class":"Kingdom16",
- "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
-        {
-         "compression":"zlib",
-         "data":"eJzVmM9qAkEMxvdVBPG4B6HFB+ilUKn25rFSWinaFqq99C2KtO+peG+ELIRhJ5PMJKsefoy7a2byfdn5o\/2qqvrABvgC3pFnYAWs8fkH8IKfl8An3vvGe1JqYIptrYy9RGYt+imSuDCG8pN4Xkf6PBVS\/VyMFq7vcfDd+5b4WyZ+D\/SQPWm9tEg8s9bPvUON9hukub6O4KWf5jUM8HxPac3pe3Ducyy1Flh4eCq0ubd5kbNO5fj8BsyBBfAKPGX2Y527d\/23mNsvtn\/B9bag71B\/ak3z8lDT\/53hmBb6NfXPOVc05xaulfTjNS+86982nvcYmppaz\/9Unbry+JzrnyI2j63OUdxvDm\/9XfqYU38NI2DXgVbPc0up\/mN7ZYQmb4t1a1Lo2QixqrPGC0n9ubU4V7uV96l94ujBARhE9JXkENM+I5R6701uDpx2ev2gGFu6dz0mYi33OIn+CaHEe0v9kv\/5OP2Sc3KO5kvnH9wQ+fQ=",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":2,
- "nextobjectid":1,
- "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"HideOpenWall",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"HideStairs",
-         "type":"bool",
-         "value":true
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/..\/..\/tiled\/Display.tsx"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.11",
- "width":64
+{
+  "class": "Kingdom16",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzVmM9qAkEMxvdVBPG4B6HFB+ilUKn25rFSWinaFqq99C2KtO+peG+ELIRhJ5PMJKsefoy7a2byfdn5o\/2qqvrABvgC3pFnYAWs8fkH8IKfl8An3vvGe1JqYIptrYy9RGYt+imSuDCG8pN4Xkf6PBVS\/VyMFq7vcfDd+5b4WyZ+D\/SQPWm9tEg8s9bPvUON9hukub6O4KWf5jUM8HxPac3pe3Ducyy1Flh4eCq0ubd5kbNO5fj8BsyBBfAKPGX2Y527d\/23mNsvtn\/B9bag71B\/ak3z8lDT\/53hmBb6NfXPOVc05xaulfTjNS+86982nvcYmppaz\/9Unbry+JzrnyI2j63OUdxvDm\/9XfqYU38NI2DXgVbPc0up\/mN7ZYQmb4t1a1Lo2QixqrPGC0n9ubU4V7uV96l94ujBARhE9JXkENM+I5R6701uDpx2ev2gGFu6dz0mYi33OIn+CaHEe0v9kv\/5OP2Sc3KO5kvnH9wQ+fQ=",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "HideOpenWall",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "HideStairs",
+      "type": "bool",
+      "value": true
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/..\/..\/tiled\/Display.tsx"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.11",
+  "width": 64
 }
