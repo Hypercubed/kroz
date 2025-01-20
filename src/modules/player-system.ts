@@ -35,6 +35,7 @@ import {
   SecretMessage,
   TabletMessage,
   AmuletMessage,
+  ChangeLevel,
 } from '../classes/components.ts';
 import { SPELL_DURATION, Timer } from './effects.ts';
 import type { Entity } from '../classes/entity.ts';
@@ -261,8 +262,27 @@ export async function tryMove(dx: number, dy: number) {
     return;
   }
 
-  // case Type.Tablet: // Reads tablet -> Read Component?
-  // break;
+  if (e.has(ChangeLevel)) {
+    move(x, y);
+    const c = e.get(ChangeLevel)!;
+    if (c.deltaLevel > 0) {
+      if (world.stats.levelIndex === LEVELS.length - 1) {
+        await endRoutine();
+        return;
+      }
+      world.addScore(block as Type);
+      await screen.flashTypeMessage(Type.Stairs, true);
+      sound.footStep();
+      await levels.nextLevel(c.deltaLevel);
+    } else if (c.deltaLevel < 0) {
+      sound.footStep();
+      await levels.prevLevel(-c.deltaLevel);
+    } else if (c.exactLevel !== null) {
+      sound.footStep();
+      world.stats.levelIndex = c.exactLevel - 1;
+      await levels.nextLevel(1);
+    }
+  }
 
   switch (block) {
     case Type.Wall: // Blocked -> isBlock Component
@@ -281,17 +301,6 @@ export async function tryMove(dx: number, dy: number) {
       world.addScore(block);
       await sound.blocked(); // TODO: replace this sound
       await screen.flashTypeMessage(block, true);
-      break;
-    case Type.Stairs: // Next level -> isStairs Component?
-      move(x, y);
-      if (world.stats.levelIndex === LEVELS.length - 1) {
-        await endRoutine();
-        return;
-      }
-      world.addScore(block);
-      await screen.flashTypeMessage(Type.Stairs, true);
-      sound.footStep();
-      await levels.nextLevel();
       break;
     case Type.Door: // Opens door (if has key) -> isDoor Component?
       if (world.stats.keys < 1) {

@@ -40,6 +40,36 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 5,
+            "members": [
+                {
+                    "name": "deltaLevel",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "exactLevel",
+                    "type": "int",
+                    "value": 0
+                }
+            ],
+            "name": "ChangeLevel",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 3,
             "members": [
                 {

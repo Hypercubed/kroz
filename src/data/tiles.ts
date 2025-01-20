@@ -20,6 +20,7 @@ import {
   isPushable,
   SecretMessage,
   TabletMessage,
+  ChangeLevel,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -553,6 +554,7 @@ const SIMPLE_COMPONENTS = {
   SecretMessage,
   TabletMessage,
   Attacks: AttacksPlayer, // TODO: Rename
+  ChangeLevel,
 };
 
 function addComponentsToEntity(

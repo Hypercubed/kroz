@@ -138,3 +138,13 @@ export class TabletMessage {
 export class AmuletMessage {
   constructor(public message: string) {}
 }
+
+export class ChangeLevel {
+  exactLevel: number | null = null;
+  deltaLevel: number = 0;
+
+  constructor(data: Partial<ChangeLevel>) {
+    this.exactLevel = data.exactLevel ?? null;
+    this.deltaLevel = data.deltaLevel ?? 0;
+  }
+}

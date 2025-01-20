@@ -9,12 +9,10 @@ import * as world from './world';
 import * as mob from './mobs-system';
 import * as level from './levels';
 import * as effects from './effects-system';
+import * as debug from './debug-interface';
 
 import { DEBUG, XMax, YMax } from '../data/constants';
 import { Color } from '../data/colors';
-import { Position } from '../classes/components';
-import { Timer } from './effects';
-
 let stats: Stats;
 let gui: dat.GUI;
 
@@ -47,64 +45,22 @@ export async function start() {
         title: 'Debug',
       });
 
-      const timers = {
-        get SlowTime() {
-          return world.level.T[Timer.SlowTime];
-        },
-        set SlowTime(v: number) {
-          world.level.T[Timer.SlowTime] = v;
-        },
-        get Invisible() {
-          return world.level.T[Timer.Invisible];
-        },
-        set Invisible(v: number) {
-          world.level.T[Timer.Invisible] = v;
-        },
-        get SpeedTime() {
-          return world.level.T[Timer.SpeedTime];
-        },
-        set SpeedTime(v: number) {
-          world.level.T[Timer.SpeedTime] = v;
-        },
-        get FreezeTime() {
-          return world.level.T[Timer.FreezeTime];
-        },
-        set FreezeTime(v: number) {
-          world.level.T[Timer.FreezeTime] = v;
-        },
-      };
-
-      const player = {
-        get x(): number | undefined {
-          return world.level.player.get(Position)?.x;
-        },
-        set x(v: number) {
-          world.level.player.get(Position)!.x = v;
-        },
-        get y(): number | undefined {
-          return world.level.player.get(Position)?.y;
-        },
-        set y(v: number) {
-          world.level.player.get(Position)!.y = v;
-        },
-      };
-
       const t = gui.addFolder('Timers');
-      t.add(timers, 'SlowTime', 0, 400, 1).listen();
-      t.add(timers, 'Invisible', 0, 400, 1).listen();
-      t.add(timers, 'SpeedTime', 0, 400, 1).listen();
-      t.add(timers, 'FreezeTime', 0, 400, 1).listen();
+      t.add(debug.timers, 'SlowTime', 0, 400, 1).listen();
+      t.add(debug.timers, 'Invisible', 0, 400, 1).listen();
+      t.add(debug.timers, 'SpeedTime', 0, 400, 1).listen();
+      t.add(debug.timers, 'FreezeTime', 0, 400, 1).listen();
 
       const o = gui.addFolder('Objects');
-      o.add(world.stats, 'gems', 0, 400, 1).listen();
-      o.add(world.stats, 'whips', 0, 400, 1).listen();
-      o.add(world.stats, 'keys', 0, 400, 1).listen();
-      o.add(world.stats, 'teleports', 0, 400, 1).listen();
-      o.add(world.stats, 'whipPower', 2, 7, 1).listen();
+      o.add(debug.stats, 'gems', 0, 400, 1).listen();
+      o.add(debug.stats, 'whips', 0, 400, 1).listen();
+      o.add(debug.stats, 'keys', 0, 400, 1).listen();
+      o.add(debug.stats, 'teleports', 0, 400, 1).listen();
+      o.add(debug.stats, 'whipPower', 2, 7, 1).listen();
 
       const p = gui.addFolder('Player');
-      p.add(player, 'x', 0, XMax, 1).listen();
-      p.add(player, 'y', 0, YMax, 1).listen();
+      p.add(debug.player, 'x', 0, XMax, 1).listen();
+      p.add(debug.player, 'y', 0, YMax, 1).listen();
     }
   }
 

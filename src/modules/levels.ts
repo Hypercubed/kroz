@@ -34,11 +34,7 @@ export { LEVELS };
 export async function loadLevel() {
   world.resetLevel();
 
-  let i = world.stats.levelIndex;
-  while (!LEVELS[i]) {
-    i = mod(i + 1, LEVELS.length);
-  }
-
+  const i = findNextLevel(world.stats.levelIndex);
   tiles.readTileset(); // Reset tileset
   const level = await readLevel(i);
 
@@ -54,14 +50,21 @@ export async function loadLevel() {
   controls.flushAll();
 }
 
-export async function nextLevel() {
-  // https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST5.MOV#L377C19-L377C72 ??
-  controls.flushAll();
-  let i = world.stats.levelIndex;
-  do {
+export function findNextLevel(i: number) {
+  while (!LEVELS[i]) {
     i = mod(i + 1, LEVELS.length);
-  } while (!LEVELS[i]);
+  }
+  return i;
+}
 
+export async function setLevel(l: number) {
+  const i = findNextLevel(l);
+  world.stats.levelIndex = i;
+  await loadLevel();
+}
+
+export async function nextLevel(dl: number = 1) {
+  const i = findNextLevel(world.stats.levelIndex + dl);
   if (i % 10 === 0) {
     await screen.openSourceScreen();
   }
@@ -70,9 +73,9 @@ export async function nextLevel() {
   await loadLevel();
 }
 
-export async function prevLevel() {
+export async function prevLevel(dl: number = 1) {
   controls.flushAll();
-  let i = world.stats.levelIndex;
+  let i = world.stats.levelIndex - dl + 1;
   do {
     i = mod(i - 1, LEVELS.length);
   } while (!LEVELS[i]);
