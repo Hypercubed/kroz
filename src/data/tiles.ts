@@ -5,7 +5,7 @@ import * as world from '../modules/world';
 import {
   AttacksPlayer,
   Eats,
-  doesFollowsPlayer,
+  followsPlayer,
   isGenerator,
   isMobile,
   isPlayer,
@@ -18,6 +18,8 @@ import {
   isSecreted,
   Position,
   isPushable,
+  SecretMessage,
+  TabletMessage,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -537,24 +539,41 @@ export function createEntityFromTileId(
   return entity;
 }
 
+const SIMPLE_TAGS = {
+  isPlayer,
+  isMobile,
+  isGenerator,
+  isSecreted,
+  isPushable,
+  doesFollowsPlayer: followsPlayer, // TODO: Rename
+};
+
+const SIMPLE_COMPONENTS = {
+  Collectible,
+  SecretMessage,
+  TabletMessage,
+  Attacks: AttacksPlayer, // TODO: Rename
+};
+
 function addComponentsToEntity(
   entity: Entity,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  properties: Record<string, any>,
+  properties: Record<string, unknown>,
 ) {
   const type = entity.type as Type;
 
-  // TODO: Shoudlo be able to remove this by adding to tiles set
+  // TODO: Should be able to remove this by adding to tiles set
   if (typeof type === 'string') {
     entity.add(new Renderable(createTileDataForType(type)));
   }
 
-  if (properties.isPlayer) {
-    entity.add(isPlayer);
+  for (const tag in SIMPLE_TAGS) {
+    if (properties[tag]) {
+      entity.add(SIMPLE_TAGS[tag as keyof typeof SIMPLE_TAGS]);
+    }
   }
 
-  if (properties.isMobile) {
-    entity.add(isMobile);
+  if (entity.has(isMobile)) {
+    // entity.add(isMobile);
 
     if (type === Type.Fast || type === Type.Medium || type === Type.Slow) {
       entity
@@ -571,18 +590,6 @@ function addComponentsToEntity(
     }
   }
 
-  if (properties.doesFollowsPlayer) {
-    entity.add(doesFollowsPlayer);
-  }
-
-  if (properties.isGenerator) {
-    entity.add(isGenerator);
-  }
-
-  if (properties.isSecreted) {
-    entity.add(isSecreted);
-  }
-
   if (MOB_WALKABLE.includes(type as Type)) {
     entity.add(new Walkable([Type.Fast, Type.Medium, Type.Slow, Type.Player]));
   }
@@ -594,7 +601,8 @@ function addComponentsToEntity(
   }
 
   if ('ChanceOdds' in properties) {
-    const odds = properties['ChanceOdds' as keyof typeof properties] ?? 0;
+    const odds =
+      (properties['ChanceOdds' as keyof typeof properties] as number) ?? 0;
     if (odds > 0) {
       const p = 1 / odds;
       if (Math.random() < p) {
@@ -626,41 +634,34 @@ function addComponentsToEntity(
         }),
       );
       break;
-    case Type.Chance:
-      entity.add(new Collectible({ gems: RNG.getUniformInt(14, 18) }));
+    case Type.Chance: {
+      const gems = RNG.getUniformInt(0, world.game.difficulty) + 13;
+      entity.add(new Collectible({ gems }));
       break;
-  }
-
-  if ('Attacks' in properties) {
-    entity.add(
-      new AttacksPlayer(properties['Attacks' as keyof typeof properties]),
-    );
+    }
   }
 
   if ('Tile' in properties) {
-    const tile = properties['Tile' as keyof typeof properties];
-    const fg = Color[tile.fg as keyof typeof Color] ?? null; // TODO: alow explict color strings
-    const bg = Color[tile.bg as keyof typeof Color] ?? null;
+    const tile = properties[
+      'Tile' as keyof typeof properties
+    ] as Partial<Renderable>;
+    const fg = Color[tile.fg as unknown as keyof typeof Color] ?? null; // TODO: alow explict color strings
+    const bg = Color[tile.bg as unknown as keyof typeof Color] ?? null;
     const ch = tile.ch ?? FLOOR_CHAR;
-    entity.add(new Renderable({ fg, bg, ch }));
+    const blink = tile.blink ?? false;
+    entity.add(new Renderable({ fg, bg, ch, blink }));
   }
 
-  if ('Collectible' in properties) {
-    entity.add(
-      new Collectible(properties['Collectible' as keyof typeof properties]),
-    );
+  for (const key in SIMPLE_COMPONENTS) {
+    if (properties[key]) {
+      const Ctor = SIMPLE_COMPONENTS[key as keyof typeof SIMPLE_COMPONENTS];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      entity.add(new Ctor(properties[key] as any));
+    }
   }
-
-  if (properties.isPushable) {
-    entity.add(isPushable);
-  }
-
-  // TODO:
-  // isPushable
-  // Message
 }
 
 export function getTileIdFromGID(gid: number): number {
-  if (!gid) return 0;
+  if (!gid || gid < 0) return -1;
   return (+gid % 256) - 1;
 }

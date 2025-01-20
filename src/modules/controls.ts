@@ -344,7 +344,7 @@ export async function waitForKeypress() {
 }
 
 export async function repeatUntilKeyPressed(
-  cb: () => void | Promise<void>,
+  cb?: () => void | Promise<void>,
   d = 50,
 ) {
   const waitFor = waitForKeypress();

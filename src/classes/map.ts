@@ -5,7 +5,6 @@ import * as tiles from '../data/tiles';
 import { XMax, YMax } from '../data/constants';
 import { Type } from '../data/tiles';
 import { Entity } from './entity';
-import { isInvisible, Renderable } from './components';
 
 export class PlayField {
   private PF = [] as Entity[][];
@@ -42,12 +41,11 @@ export class PlayField {
     return type ?? Type.Floor;
   }
 
-  // TODO: get rid of this, doesn't work for mobs
+  // Only works for base types, those defined in the tileset
   setType(x: number, y: number, type: Type) {
     this.set(x, y, tiles.createEntityOfType(type, x, y));
   }
 
-  // TODO: move some of these outside of the class to eliminate dependencies
   findRandomEmptySpace(): [number, number] {
     while (true) {
       const x = RNG.getUniformInt(0, XMax);
@@ -59,25 +57,26 @@ export class PlayField {
     }
   }
 
-  updateTilesByType(type: Type | string, tileData: Partial<Renderable>) {
+  async forEach(
+    callback: (x: number, y: number, e: Entity) => Promise<void> | void,
+  ) {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const e = this.get(x, y);
-        if (e?.type === type) {
-          const t = e.get(Renderable)!;
-          Object.assign(t, tileData);
-        }
+        if (!e) continue;
+        await callback(x, y, e);
       }
     }
   }
 
-  hideType(type: Type) {
+  async map(
+    callback: (x: number, y: number, e: Entity) => Promise<Entity> | Entity,
+  ) {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const e = this.get(x, y);
-        if (e?.type === type) {
-          e.add(isInvisible);
-        }
+        if (!e) continue;
+        this.set(x, y, await callback(x, y, e));
       }
     }
   }

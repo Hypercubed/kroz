@@ -24,6 +24,7 @@ import {
   Position,
   Renderable,
 } from '../classes/components';
+import { Difficulty } from './world';
 
 export function renderScreen() {
   const x = 70;
@@ -300,18 +301,16 @@ export function renderPlayfield() {
       // Skip entities, will be rendered later
       const e = world.level.map.get(x, y);
 
-      if (!e) {
-        drawFloorAt(x, y);
-        continue;
-      }
-
       if (
+        !e ||
         e.type === Type.Player ||
         e.type === Type.Slow ||
         e.type === Type.Medium ||
         e.type === Type.Fast
-      )
+      ) {
+        drawFloorAt(x, y);
         continue;
+      }
 
       drawEntity(x, y, e);
     }
@@ -349,7 +348,9 @@ export function drawEntity(x: number, y: number, entity?: Entity | null) {
   if (!entity.has(Renderable)) return;
 
   const t = entity.get(Renderable)!;
-  display.draw(x + XBot, y + YBot, t.ch, t.fg!, t.bg!);
+  let fg = t.fg;
+  if (fg !== null && t.blink) fg |= 16; // add blink
+  display.draw(x + XBot, y + YBot, t.ch, fg!, t.bg!);
 }
 
 export function drawType(
@@ -485,16 +486,111 @@ export async function renderTitle() {
   );
 
   display.writeCenter(
+    19,
+    'Are you a (N)ovice, (E)xperenced or and (A)dvanced player?',
+    Color.HighIntensityWhite,
+    Color.Blue,
+  );
+
+  await getDifficulty();
+
+  display.writeCenter(
     HEIGHT - 1,
     'Press any key to begin your decent into Kroz.',
     Color.HighIntensityWhite,
     Color.Blue,
   );
 
-  const x = WIDTH / 2 - TITLE.length / 2;
-
   await controls.repeatUntilKeyPressed(async () => {
-    display.drawText(x, 3, TITLE, RNG.getUniformInt(0, 16), Color.Red);
-    await delay(500);
+    await writeTitle();
   });
+}
+
+async function writeTitle() {
+  const x = WIDTH / 2 - TITLE.length / 2;
+  display.drawText(x, 3, TITLE, RNG.getUniformInt(0, 16), Color.Red);
+  await delay(500);
+}
+
+const DIFFICULTY_LEVELS = {
+  '!': 'SECRET MODE',
+  T: 'TOURIST',
+  N: 'NOVICE',
+  E: 'EXPERENCED',
+  A: 'ADVANCED',
+};
+
+async function getDifficulty() {
+  let answer = '';
+
+  const KEYS = Object.keys(DIFFICULTY_LEVELS);
+
+  display.writeCenter(
+    19,
+    'Are you a (N)ovice, (E)xperenced or and (A)dvanced player?',
+    Color.LightGreen,
+    Color.Blue,
+  );
+
+  while (KEYS.indexOf(answer.toUpperCase()) === -1) {
+    answer = await controls.repeatUntilKeyPressed(async () => {
+      await writeTitle();
+    });
+  }
+  answer = answer.toUpperCase();
+
+  display.clearLine(19);
+  display.writeCenter(
+    19,
+    DIFFICULTY_LEVELS[answer as keyof typeof DIFFICULTY_LEVELS],
+    Color.LightGreen,
+    Color.Blue,
+  );
+
+  switch (answer) {
+    case 'N':
+      world.stats.gems = 20;
+      world.stats.teleports = 0;
+      world.stats.keys = 0;
+      world.stats.whips = 0;
+      world.stats.whipPower = 2;
+      world.game.difficulty = Difficulty.Novice;
+      break;
+    case 'E':
+      world.stats.gems = 15;
+      world.stats.teleports = 0;
+      world.stats.keys = 0;
+      world.stats.whips = 0;
+      world.stats.whipPower = 2;
+      world.game.difficulty = Difficulty.Experienced;
+      break;
+    case 'A':
+      world.stats.gems = 10;
+      world.stats.teleports = 0;
+      world.stats.keys = 0;
+      world.stats.whips = 0;
+      world.stats.whipPower = 2;
+      world.game.difficulty = Difficulty.Advanced;
+      world.game.foundSet = true;
+      break;
+    case '!':
+      world.stats.gems = 250;
+      world.stats.whips = 100;
+      world.stats.teleports = 50;
+      world.stats.keys = 1;
+      world.stats.whipPower = 3;
+      world.game.difficulty = Difficulty.Cheat;
+      world.game.foundSet = true;
+      break;
+    case 'T':
+      world.stats.gems = Infinity;
+      world.stats.teleports = Infinity;
+      world.stats.keys = 1;
+      world.stats.whips = Infinity;
+      world.stats.whipPower = 4;
+      world.game.difficulty = Difficulty.Cheat;
+      break;
+  }
+
+  return answer;
 }

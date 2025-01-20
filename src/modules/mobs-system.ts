@@ -6,12 +6,11 @@ import * as sound from './sound';
 
 import { Type } from '../data/tiles';
 import { TIME_SCALE, XMax, YMax } from '../data/constants';
-import { Timer } from './world';
 import type { Entity } from '../classes/entity';
 import {
   AttacksPlayer,
   Eats,
-  doesFollowsPlayer,
+  followsPlayer,
   DestroyedBy,
   Position,
   Renderable,
@@ -19,6 +18,7 @@ import {
   AnimatedWalking,
   isInvisible,
 } from '../classes/components';
+import { Timer } from './effects';
 
 function getBaseSpeed(t: Type) {
   switch (t) {
@@ -69,14 +69,16 @@ export function init() {
 }
 
 export async function update() {
-  const current = scheduler.next();
-  if (!current) return;
-  const type = current.type;
-  if (type === Type.Player) return;
-  if (world.level.T[Timer.FreezeTime] > 0) return;
+  while (true) {
+    const current = scheduler.next();
+    if (!current) return;
+    const type = current.type;
+    if (type === Type.Player) return;
+    if (world.level.T[Timer.FreezeTime] > 0) return;
 
-  for (const e of world.level.entities) {
-    if (e.type === type) await act(e);
+    for (const e of world.level.entities) {
+      if (e.type === type) await act(e);
+    }
   }
 }
 
@@ -89,7 +91,7 @@ async function act(e: Entity) {
     return;
   } // dead
 
-  if (e.has(doesFollowsPlayer)) {
+  if (e.has(followsPlayer)) {
     let dx = 0;
     let dy = 0;
 

@@ -22,6 +22,29 @@ The game is played in the browser. You can play the game by visiting the followi
 
 ![Game Screen](./screenshots/game-screen.png)
 
+## How to create your own version of Kroz
+
+I encourage you to fork this project and create your own version of Kroz. You can modify the levels, add new features, or even create a whole new game. The game is written in TypeScript and uses [Tiled](https://www.mapeditor.org/) to define the tileset and levels. Here is a quick overview:
+
+### Creating Your Own Levels
+
+The levels are defined using Tiled and can be read directly into the game. To get started:
+
+- **Open an Existing Level**: Open an existing `*.map.json` file in Tiled and modify it to your liking.
+- **Create a New Level**: You can also create a new level from scratch. Be sure to use the `kroz.tileset.json` tileset.
+- **Layer Management**: Use Tiled's layers to define the level. Note that the "top-most" layer takes precedence.
+- **Tile Properties**: If you'd like to change properties of tiles in a particular level, you can add an Object Layer and define the properties there. Only "Insert Tile" objects are supported. Use the properties panel to modify the properties of the tile.
+
+### Adding New Features
+
+You can extend the game by adding new features. The game is built with modularity in mind, so you can easily add new mechanics, enemies, or items. Refer to the source code to understand the existing structure and how new features can be integrated.
+
+### Documentation and Support
+
+I realize documentation is lacking, but I hope to improve this in the future. If you have any questions, please ask using GitHub's discussions: [GitHub Discussions](https://github.com/Hypercubed/kroz/discussions/).
+
+Feel free to submit pull requests with your changes. I would love to see what you come up with and collaborate on improving this project.
+
 ## Q&A
 
 **Q: Is this an Kroz emulator?**

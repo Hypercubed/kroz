@@ -180,7 +180,7 @@
     </properties>
    </property>
    <property name="description" value="Red enemy"/>
-   <property name="doesFollowsPlayer" type="bool" value="true"/>
+   <property name="followsPlayer" type="bool" value="true"/>
    <property name="isMobile" type="bool" value="true"/>
    <property name="name" value="Slow"/>
   </properties>
@@ -200,7 +200,7 @@
     </properties>
    </property>
    <property name="description" value="Green enemy"/>
-   <property name="doesFollowsPlayer" type="bool" value="true"/>
+   <property name="followsPlayer" type="bool" value="true"/>
    <property name="isMobile" type="bool" value="true"/>
    <property name="name" value="Medium"/>
   </properties>
@@ -220,7 +220,7 @@
     </properties>
    </property>
    <property name="description" value="Blue enemy"/>
-   <property name="doesFollowsPlayer" type="bool" value="true"/>
+   <property name="followsPlayer" type="bool" value="true"/>
    <property name="isMobile" type="bool" value="true"/>
    <property name="name" value="Fast"/>
   </properties>
@@ -485,7 +485,7 @@
     </properties>
    </property>
    <property name="description" value="Moving wall"/>
-   <property name="doesFollowsPlayer" type="bool" value="true"/>
+   <property name="followsPlayer" type="bool" value="true"/>
    <property name="isMobile" type="bool" value="true"/>
    <property name="name" value="MBlock"/>
   </properties>

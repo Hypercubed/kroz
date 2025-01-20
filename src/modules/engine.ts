@@ -3,17 +3,17 @@ import * as dat from 'lil-gui';
 
 import * as controls from './controls';
 import * as display from './display';
-import * as player from './player';
+import * as player from './player-system';
 import * as screen from './screen';
 import * as world from './world';
-import * as mob from './mobs';
+import * as mob from './mobs-system';
 import * as level from './levels';
-import * as effects from './effects';
+import * as effects from './effects-system';
 
 import { DEBUG, XMax, YMax } from '../data/constants';
-import { Timer } from './world';
 import { Color } from '../data/colors';
 import { Position } from '../classes/components';
+import { Timer } from './effects';
 
 let stats: Stats;
 let gui: dat.GUI;

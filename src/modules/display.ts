@@ -39,6 +39,14 @@ export function writeCenter(
   drawText(x, y, s, fg, bg);
 }
 
+export function clearLine(
+  y: number,
+  fg: string | Color = rotDisplay.getOptions().fg,
+  bg: string | Color = rotDisplay.getOptions().bg,
+) {
+  drawText(0, y, ' '.repeat(WIDTH), fg, bg);
+}
+
 export function clear(bg: string | Color = rotDisplay.getOptions().bg) {
   if (typeof bg === 'number') bg = ColorCodes[bg];
   rotDisplay.setOptions({ bg });

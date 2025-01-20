@@ -2,7 +2,7 @@ import { RNG } from 'rot-js';
 import { FLOOR_CHAR } from '../data/constants';
 import { Type, TypeColor } from '../data/tiles';
 
-export const doesFollowsPlayer = Symbol('doesFollowsPlayer');
+export const followsPlayer = Symbol('followsPlayer');
 export const isPlayer = Symbol('isPlayer');
 export const isMobile = Symbol('isMobile');
 export const isGenerator = Symbol('isGenerator');
@@ -14,13 +14,13 @@ export class Renderable {
   ch: string;
   fg: number | null;
   bg: number | null;
+  blink: boolean = false;
 
-  constructor(
-    data: Partial<{ ch: string; fg: number | null; bg: number | null }>,
-  ) {
+  constructor(data: Partial<Renderable>) {
     this.ch = data.ch ?? FLOOR_CHAR;
     this.fg = data.fg ?? TypeColor[Type.Floor][0]!;
     this.bg = data.bg ?? TypeColor[Type.Floor][1]!;
+    this.blink = data.blink ?? false;
   }
 }
 
@@ -125,4 +125,16 @@ export class AnimatedWalking {
 
 export class MagicTrigger {
   constructor(public type: Type) {}
+}
+
+export class SecretMessage {
+  constructor(public message: string) {}
+}
+
+export class TabletMessage {
+  constructor(public message: string) {}
+}
+
+export class AmuletMessage {
+  constructor(public message: string) {}
 }

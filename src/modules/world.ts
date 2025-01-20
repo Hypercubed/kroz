@@ -11,15 +11,7 @@ import { PlayField } from '../classes/map.ts';
 import { RNG } from 'rot-js';
 import { Position } from '../classes/components.ts';
 
-export const enum Timer { // TODO: Eliminate this, use type
-  SlowTime = 4,
-  Invisible = 5,
-  SpeedTime = 6,
-  FreezeTime = 7,
-  StatueGemDrain = 9,
-}
-
-const enum Difficulty {
+export const enum Difficulty {
   Novice = 8,
   Experienced = 5,
   Advanced = 2,

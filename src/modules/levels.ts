@@ -5,21 +5,20 @@ import * as tiles from '../data/tiles.ts';
 import * as controls from './controls.ts';
 import * as screen from './screen.ts';
 import * as tiled from '@kayahr/tiled';
-import * as player from './player.ts';
+import * as effects from './effects.ts';
 
-import LEVELS from '../data/levels/forgotton.ts';
+import LEVELS from '../data/levels/forgotton/index.ts';
 // import LEVELS from '../data/levels/kingdom/index.ts';
 // import LEVELS from '../data/levels/lost/index.ts';
 // import LEVELS from '../data/levels/caverns/index.ts';
 
-import { Timer } from './world.ts';
 import { mod } from 'rot-js/lib/util';
 import { isGenerator, isMobile, isPlayer } from '../classes/components.ts';
 import { ensureObject } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Type, TypeColor } from '../data/tiles.ts';
-import { specialTriggers } from './player.ts';
+import { Timer } from './effects.ts';
 
 export interface Level {
   id: string;
@@ -43,12 +42,12 @@ export async function loadLevel() {
   tiles.readTileset(); // Reset tileset
   const level = await readLevel(i);
 
-  level?.onLevelStart?.();
+  await level?.onLevelStart?.();
   world.storeLevelStartState();
   screen.fullRender();
 
   if (world.level.startText) {
-    await player.readMessage(world.level.startText);
+    await effects.readMessage(world.level.startText);
   } else {
     await screen.flashMessage('Press any key to begin this level.');
   }
@@ -94,11 +93,22 @@ async function readLevel(i: number) {
   readLevelMapData(level.data);
 
   // Randomize gem and border colors
-  world.level.map.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
+  effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
   TypeColor[Type.Border] = [RNG.getUniformInt(8, 15), RNG.getUniformInt(1, 8)];
 
   return level;
 }
+
+// const LEVEL_START_TRIGGERS = {
+//   HideGems: () => effects.specialTriggers('HideGems'),
+//   HideRocks: () => effects.specialTriggers('HideRocks'),
+//   HideStairs: () => effects.specialTriggers('HideStairs'),
+//   HideOpenWall: () => effects.specialTriggers('HideOpenWall'),
+//   HideCreate: () => effects.specialTriggers('HideCreate'),
+//   HideMBlock: () => effects.specialTriggers('HideMBlock'),
+//   HideTrap: () => effects.specialTriggers('HideTrap'),
+//   HideLevel: () => effects.specialTriggers('HideLevel'),
+// }
 
 // Reads the level data from a Tiled JSON file into a Level object
 function readLevelJSON(tilemap: tiled.Map): Level {
@@ -174,31 +184,32 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     world.level.lavaFlow = properties.LavaFlow ?? false;
 
     if (properties.HideGems) {
-      specialTriggers('HideGems');
+      await effects.specialTriggers('HideGems');
     }
     if (properties.HideRocks) {
-      specialTriggers('HideRocks');
+      await effects.specialTriggers('HideRocks');
     }
     if (properties.HideStairs) {
-      specialTriggers('HideStairs');
+      await effects.specialTriggers('HideStairs');
     }
     if (properties.HideOpenWall) {
-      specialTriggers('HideOpenWall');
+      await effects.specialTriggers('HideOpenWall');
     }
     if (properties.HideCreate) {
-      specialTriggers('HideCreate');
+      await effects.specialTriggers('HideCreate');
     }
     if (properties.HideMBlock) {
-      specialTriggers('HideMBlock');
+      await effects.specialTriggers('HideMBlock');
     }
     if (properties.HideTrap) {
-      specialTriggers('HideTrap');
+      await effects.specialTriggers('HideTrap');
     }
     if (properties.HideLevel) {
-      specialTriggers('HideLevel');
+      await effects.specialTriggers('HideLevel');
     }
   }
 
+  // TODO: Make map an entity, add these to the map?
   const tabletMessage =
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

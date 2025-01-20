@@ -5,7 +5,7 @@ import * as world from '../modules/world';
 import {
   AttacksPlayer,
   Eats,
-  doesFollowsPlayer,
+  followsPlayer,
   isGenerator,
   isMobile,
   isPlayer,
