@@ -1,4 +1,4 @@
-export const DEBUG = import.meta.env.DEV;
+export const DEBUG = false; // import.meta.env.DEV;
 
 export const TITLE = 'The Forgotton Adventures of Kroz';
 
