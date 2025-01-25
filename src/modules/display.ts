@@ -29,6 +29,10 @@ export function init() {
   };
 }
 
+export function debug(x: number, y: number, n: number) {
+  rotDisplay.DEBUG(x, y, n);
+}
+
 export function writeCenter(
   y: number,
   s: string,

@@ -1,94 +1,121 @@
-{
-  "compressionlevel": -1,
-  "height": 23,
-  "infinite": false,
-  "layers": [
-    {
-      "compression": "zlib",
-      "data": "eJzVmMluE0EQhvtVDFZySKQktlkjcnBMIkXhQBYcK8QHxzhxRDZsxxYW4lV4A7iw3XkgxCqBIvGXXKXplHp6eoxHgsOnf+Sacfff1V3dMzljTC6AN4H3fQFfwRL4BnbAIqiAGTALtsE62AB1MA0uwRTYAqtgF6yBMtgEK2AezIE9T\/uvres8KCSo3BdHiOd\/lXygLoASX5dinm+CNmiBLuhxrKI0Lhdpcc033e8BaIBjRuctjX\/tXd9HnIILcMhQbEapzz+tjRsWdy1+BvjfVNoBR6DPeemM4V\/aScq\/cMhtnXBsVqnPP9WFmxZ3LH4E+J9XegDO2Lc9L9PmP2n90\/+2ua2BNQYUm1bq80\/18JbFbYvvAf73lPYs7y1Hv0lrCRpaR\/LcHrVzbPnfVurzv6jw1VqX\/6pS6get\/z6ry38xQdP4J56y9+ccW1fq858Gl\/8lpedmtP5lzo9b\/0L8U1sy\/6XWUGxDqc\/\/J\/AWvAPvwQfwEfwGv8DnBP81pftmNAeoX03OzTj+k9a\/XJP3No\/5Ocd2lGaZ\/5dKWyZ+D0zjn\/a\/Il8XrfYk3jRRnaG2pA5QrK401P9Dx28PEvynJe3+X4x5\/n8lpP7LOPvyPwlqKXA9vxCjSf5LCSr3+dY\/nXXkfEHQGpDz36VSG3v+p\/Vvz3+fd1qXf1v\/QsZRGLJ\/qX9TSrPwT+ddqnlUH5bNaP+rOtpz9XuS\/in3st8MOLalNAv\/xD3wGLwA163fKecyB4YZ5r\/LOZez5hOOrSrNyj9xX2mO+3FmoveArPb\/A3P1rD3k2K7SOP8ulj0xl\/9HSgnai+md9JSR87n0O+T8T\/WkwNcF679d43PE7fQ5tqY0zr\/9H\/ucrxO+do35JPDl1W5L6mnB8byMccNE582Wib5\/XFPq809jXrfakb2W9qKyyokr\/3NKpW8dE9XkbsoxlHaS8t\/gfF2Yq+9\/r5Rmuf5d79r63VzPIVddTjNP7HjPRPNW\/JeV+vxT3aI6Qd8v6HsmvTPQnlbhflYT\/K8oJZ5xTig\/8m7qyr+rPmfNpPPv+9YQiq7TfwDv1EAm",
-      "encoding": "base64",
-      "height": 23,
-      "id": 1,
-      "name": "",
-      "opacity": 1,
-      "type": "tilelayer",
-      "visible": true,
-      "width": 64,
-      "x": 0,
-      "y": 0
-    },
-    {
-      "draworder": "topdown",
-      "id": 2,
-      "name": "Object Layer 1",
-      "objects": [
+{ "compressionlevel":-1,
+ "height":23,
+ "infinite":false,
+ "layers":[
         {
-          "gid": 77,
-          "height": 36,
-          "id": 1,
-          "name": "",
-          "properties": [
-            {
-              "name": "ChangeLevel",
-              "propertytype": "ChangeLevel",
-              "type": "class",
-              "value": {
-                "deltaLevel": 0,
-                "exactLevel": 25
-              }
-            },
-            {
-              "name": "Tile",
-              "propertytype": "Renderable",
-              "type": "class",
-              "value": {
-                "bg": "White",
-                "blink": true,
-                "ch": "\u2261"
-              }
-            }
-          ],
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 24,
-          "x": 624,
-          "y": 396
-        }
-      ],
-      "opacity": 1,
-      "type": "objectgroup",
-      "visible": true,
-      "x": 0,
-      "y": 0
-    }
-  ],
-  "nextlayerid": 3,
-  "nextobjectid": 3,
-  "orientation": "orthogonal",
-  "properties": [
-    {
-      "name": "id",
-      "type": "string",
-      "value": "Debug"
-    },
-    {
-      "name": "tabletMessage",
-      "type": "string",
-      "value": "This is a debug level\nIt is used by the developer for testing\nTest\n1\n2\n3\nGood!"
-    }
-  ],
-  "renderorder": "right-down",
-  "tiledversion": "1.11.1",
-  "tileheight": 36,
-  "tilesets": [
-    {
-      "firstgid": 1,
-      "source": "..\/kroz.tileset.json"
-    }
-  ],
-  "tilewidth": 24,
-  "type": "map",
-  "version": "1.10",
-  "width": 64
+         "compression":"zlib",
+         "data":"eJzVmMluE0EQhvtVDFZySKQktlkjcnBMIkXhQBYcK8QHxzhxRDZsxxYW4lV4A7iw3XkgxCqBIvGXXKXplHp6eoxHgsOnf+Sacfff1V3dMzljTC6AN4H3fQFfwRL4BnbAIqiAGTALtsE62AB1MA0uwRTYAqtgF6yBMtgEK2AezIE9T\/uvres8KCSo3BdHiOd\/lXygLoASX5dinm+CNmiBLuhxrKI0Lhdpcc033e8BaIBjRuctjX\/tXd9HnIILcMhQbEapzz+tjRsWdy1+BvjfVNoBR6DPeemM4V\/aScq\/cMhtnXBsVqnPP9WFmxZ3LH4E+J9XegDO2Lc9L9PmP2n90\/+2ua2BNQYUm1bq80\/18JbFbYvvAf73lPYs7y1Hv0lrCRpaR\/LcHrVzbPnfVurzv6jw1VqX\/6pS6get\/z6ry38xQdP4J56y9+ccW1fq858Gl\/8lpedmtP5lzo9b\/0L8U1sy\/6XWUGxDqc\/\/J\/AWvAPvwQfwEfwGv8DnBP81pftmNAeoX03OzTj+k9a\/XJP3No\/5Ocd2lGaZ\/5dKWyZ+D0zjn\/a\/Il8XrfYk3jRRnaG2pA5QrK401P9Dx28PEvynJe3+X4x5\/n8lpP7LOPvyPwlqKXA9vxCjSf5LCSr3+dY\/nXXkfEHQGpDz36VSG3v+p\/Vvz3+fd1qXf1v\/QsZRGLJ\/qX9TSrPwT+ddqnlUH5bNaP+rOtpz9XuS\/in3st8MOLalNAv\/xD3wGLwA163fKecyB4YZ5r\/LOZez5hOOrSrNyj9xX2mO+3FmoveArPb\/A3P1rD3k2K7SOP8ulj0xl\/9HSgnai+md9JSR87n0O+T8T\/WkwNcF679d43PE7fQ5tqY0zr\/9H\/ucrxO+do35JPDl1W5L6mnB8byMccNE582Wib5\/XFPq809jXrfakb2W9qKyyokr\/3NKpW8dE9XkbsoxlHaS8t\/gfF2Yq+9\/r5Rmuf5d79r63VzPIVddTjNP7HjPRPNW\/JeV+vxT3aI6Qd8v6HsmvTPQnlbhflYT\/K8oJZ5xTig\/8m7qyr+rPmfNpPPv+9YQiq7TfwDv1EAm",
+         "encoding":"base64",
+         "height":23,
+         "id":1,
+         "name":"",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":64,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "gid":77,
+                 "height":36,
+                 "id":1,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"ChangeLevel",
+                         "propertytype":"ChangeLevel",
+                         "type":"class",
+                         "value":
+                            {
+                             "deltaLevel":0,
+                             "exactLevel":25
+                            }
+                        }, 
+                        {
+                         "name":"Tile",
+                         "propertytype":"Renderable",
+                         "type":"class",
+                         "value":
+                            {
+                             "bg":"White",
+                             "blink":true,
+                             "ch":"\u2261"
+                            }
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":624,
+                 "y":396
+                }, 
+                {
+                 "gid":34,
+                 "height":36,
+                 "id":3,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"ReadMessage",
+                         "type":"string",
+                         "value":"This is a debug level\nIt is used by the developer for testing\nTest\n1\n2\n3\nGood!"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":384,
+                 "y":720
+                }, 
+                {
+                 "gid":34,
+                 "height":36,
+                 "id":4,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"ReadMessage",
+                         "type":"string",
+                         "value":"This is a debug level\nIt is used by the developer for testing\nTest\n1\n2\n3\nGood!"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":432,
+                 "y":720
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":3,
+ "nextobjectid":6,
+ "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"id",
+         "type":"string",
+         "value":"Debug"
+        }],
+ "renderorder":"right-down",
+ "tiledversion":"1.11.1",
+ "tileheight":36,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/kroz.tileset.json"
+        }],
+ "tilewidth":24,
+ "type":"map",
+ "version":"1.10",
+ "width":64
 }

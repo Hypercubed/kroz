@@ -69,6 +69,7 @@ export class PlayField {
     }
   }
 
+  // Rename.... this is not a map
   async map(
     callback: (x: number, y: number, e: Entity) => Promise<Entity> | Entity,
   ) {

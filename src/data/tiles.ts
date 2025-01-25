@@ -19,8 +19,9 @@ import {
   Position,
   isPushable,
   SecretMessage,
-  TabletMessage,
   ChangeLevel,
+  ReadMessage,
+  isPassable,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -453,7 +454,7 @@ const MOB_EATS = [
   Type.ShootLeft,
 ];
 
-const MAGIC_TRIGGERS = [
+export const MAGIC_TRIGGERS = [
   Type.SlowTime,
   Type.Invisible,
   Type.SpeedTime,
@@ -524,14 +525,10 @@ export function createEntityFromTileId(
   const entity = new Entity(type);
 
   const tileDefinition = getTileDefinition(tileId);
-  if (properties) {
-    // Object properties first
-    addComponentsToEntity(entity, properties);
-  } else if (tileDefinition && tileDefinition.properties) {
+  if (tileDefinition && tileDefinition.properties) {
     addComponentsToEntity(entity, ensureObject(tileDefinition.properties));
-  } else {
-    addComponentsToEntity(entity, {});
   }
+  addComponentsToEntity(entity, properties || {});
 
   if (entity.has(isPlayer) || entity.has(isMobile)) {
     entity.add(new Position({ x, y }));
@@ -546,13 +543,15 @@ const SIMPLE_TAGS = {
   isGenerator,
   isSecreted,
   isPushable,
+  isPassable,
   doesFollowsPlayer: followsPlayer, // TODO: Rename
 };
 
 const SIMPLE_COMPONENTS = {
   Collectible,
   SecretMessage,
-  TabletMessage,
+  ReadMessage,
+  AnimatedWalking,
   Attacks: AttacksPlayer, // TODO: Rename
   ChangeLevel,
 };
@@ -583,20 +582,11 @@ function addComponentsToEntity(
         .add(
           new DestroyedBy([Type.Block, Type.MBlock, Type.ZBlock, Type.GBlock]),
         );
-
-      if (type === Type.Slow) {
-        entity.add(new AnimatedWalking('AÄ'));
-      } else if (type === Type.Medium) {
-        entity.add(new AnimatedWalking('öÖ'));
-      }
     }
   }
 
   if (MOB_WALKABLE.includes(type as Type)) {
-    entity.add(new Walkable([Type.Fast, Type.Medium, Type.Slow, Type.Player]));
-  }
-  if (CWALLS.includes(type as Type)) {
-    entity.add(new Walkable([Type.Player]));
+    entity.add(new Walkable([Type.Fast, Type.Medium, Type.Slow]));
   }
   if (MAGIC_TRIGGERS.includes(type as Type)) {
     entity.add(new MagicTrigger(type as Type));
@@ -616,17 +606,8 @@ function addComponentsToEntity(
   switch (type) {
     case Type.Floor:
       entity.add(
-        new Walkable([
-          Type.Fast,
-          Type.Medium,
-          Type.Slow,
-          Type.MBlock,
-          Type.Player,
-        ]),
+        new Walkable([Type.Fast, Type.Medium, Type.Slow, Type.MBlock]),
       );
-      break;
-    case Type.Stop:
-      entity.add(new Walkable([Type.Player]));
       break;
     case Type.Chest:
       entity.add(
@@ -655,7 +636,7 @@ function addComponentsToEntity(
   }
 
   for (const key in SIMPLE_COMPONENTS) {
-    if (properties[key]) {
+    if (key in properties) {
       const Ctor = SIMPLE_COMPONENTS[key as keyof typeof SIMPLE_COMPONENTS];
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       entity.add(new Ctor(properties[key] as any));
@@ -666,4 +647,75 @@ function addComponentsToEntity(
 export function getTileIdFromGID(gid: number): number {
   if (!gid || gid < 0) return -1;
   return (+gid % 256) - 1;
+}
+
+// Replace with tileset data
+export function getScoreDelta(block: Type) {
+  switch (block) {
+    case Type.Border:
+      if (world.stats.score > world.stats.levelIndex)
+        return -world.stats.levelIndex / 2;
+      return 0;
+    case Type.Slow:
+    case Type.Medium:
+    case Type.Fast:
+      return block;
+    case Type.Block:
+    case Type.Wall:
+    case Type.ZBlock:
+    case Type.GBlock:
+    case Type.River:
+    case Type.Tree:
+    case Type.Forest:
+    case Type.MBlock:
+    case Type.OWall1:
+    case Type.OWall2:
+    case Type.OWall3:
+    case Type.EWall:
+      if (world.stats.score > 2) return -2;
+      return 0;
+    case Type.Whip:
+    case Type.SlowTime:
+      return 1;
+    case Type.Stairs:
+      return world.stats.levelIndex;
+    case Type.Chest:
+      return 5;
+    case Type.Gem:
+      return 1;
+    case Type.Invisible:
+      return 10;
+    case Type.Nugget:
+      return 50;
+    case Type.Door:
+    case Type.Teleport:
+    case Type.Freeze:
+      return 1;
+    case Type.SpeedTime:
+      return 2;
+    case Type.Power:
+      return 5;
+    case Type.Trap:
+      if (world.stats.score > 5) return -5;
+      return 0;
+    case Type.Lava:
+      return 25;
+    case Type.Tome:
+      return 5000;
+    case Type.Tablet:
+      return world.stats.levelIndex + 250;
+    case Type.Chance:
+      return 100;
+    case Type.Statue:
+      return 10;
+    case Type.Amulet:
+      return 2500;
+    case Type.Z:
+      return 1000;
+    case Type.Create:
+      return world.stats.levelIndex * 2;
+    case Type.Generator:
+      return 50; // When destroyed
+  }
+  return 0;
 }

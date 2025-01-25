@@ -1,44 +1,35 @@
-{
-  "class": "Kingdom2",
-  "compressionlevel": -1,
-  "height": 23,
-  "infinite": false,
-  "layers": [
-    {
-      "compression": "zlib",
-      "data": "eJzlWNsKwjAM7a8IexwTnD+wV9EHQUF\/S39YHzYII2nPSdcW9CG4Xtbk5CRp5juEsPsj2Rvz41e6BnJuoNPyzbL+WvlF85U2ZvZKfZ2xHnvXMxfDL9f7+TelP6Xb8ktqD+pf1h6U\/17ZF7PPY5uHSy\/\/y5jl32NTjNsY18h7uf5n+UewxWwqLWyMSfwPkH+PnmdB8eaKxDcJKcF\/DfxM\/mn8a+cg+Y\/U91r42Tq0Rf1HahLK3TDrGpQ1NP6ZPCh1\/6P8HxT8VwX\/gcCPcJLLv+VP67kG\/6gPNH49+Y\/grpn\/ntj03v9sv9Gq\/ufEP1L\/0RhoUf8tzFv0\/+w3TQ1helEv\/zl9NxM36ByDVXv28M\/crynbc+1P+T51Hsr\/UdmXgyNnvAXuNb4pxPv\/e8Djn40HObb+k2JzCvXBomsUoq3XlFvh8+XdkeL\/l+Uk8F+EfACAF\/rg",
-      "encoding": "base64",
-      "height": 23,
-      "id": 1,
-      "name": "",
-      "opacity": 1,
-      "type": "tilelayer",
-      "visible": true,
-      "width": 64,
-      "x": 0,
-      "y": 0
-    }
-  ],
-  "nextlayerid": 2,
-  "nextobjectid": 1,
-  "orientation": "orthogonal",
-  "properties": {
-    "tabletMessage": "Warning to all Adventurers:  No one returns from Kroz!"
-  },
-  "propertytypes": {
-    "tabletMessage": "string"
-  },
-  "renderorder": "right-down",
-  "tiledversion": "1.11.1",
-  "tileheight": 36,
-  "tilesets": [
-    {
-      "firstgid": 1,
-      "source": "..\/..\/kroz.tileset.json"
-    }
-  ],
-  "tilewidth": 24,
-  "type": "map",
-  "version": 1.1,
-  "width": 64
+{ "class":"Kingdom2",
+ "compressionlevel":-1,
+ "height":23,
+ "infinite":false,
+ "layers":[
+        {
+         "compression":"zlib",
+         "data":"eJzlWNsKwjAM7a8IexwTnD+wV9EHQUF\/S39YHzYII2nPSdcW9CG4Xtbk5CRp5juEsPsj2Rvz41e6BnJuoNPyzbL+WvlF85U2ZvZKfZ2xHnvXMxfDL9f7+TelP6Xb8ktqD+pf1h6U\/17ZF7PPY5uHSy\/\/y5jl32NTjNsY18h7uf5n+UewxWwqLWyMSfwPkH+PnmdB8eaKxDcJKcF\/DfxM\/mn8a+cg+Y\/U91r42Tq0Rf1HahLK3TDrGpQ1NP6ZPCh1\/6P8HxT8VwX\/gcCPcJLLv+VP67kG\/6gPNH49+Y\/grpn\/ntj03v9sv9Gq\/ufEP1L\/0RhoUf8tzFv0\/+w3TQ1helEv\/zl9NxM36ByDVXv28M\/crynbc+1P+T51Hsr\/UdmXgyNnvAXuNb4pxPv\/e8Djn40HObb+k2JzCvXBomsUoq3XlFvh8+XdkeL\/l+Uk8F+EfACAF\/rg",
+         "encoding":"base64",
+         "height":23,
+         "id":1,
+         "name":"",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":64,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.1",
+ "tileheight":36,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/..\/kroz.tileset.json"
+        }],
+ "tilewidth":24,
+ "type":"map",
+ "version":"1.10",
+ "width":64
 }

@@ -7,6 +7,7 @@ import * as screen from './screen.ts';
 import * as world from './world.ts';
 import * as levels from './levels.ts';
 import * as effects from './effects.ts';
+import * as bot from './bot.ts';
 
 import {
   MOBS,
@@ -30,18 +31,34 @@ import {
   isInvisible,
   MagicTrigger,
   Position,
-  Walkable,
   isPushable,
-  SecretMessage,
-  TabletMessage,
-  AmuletMessage,
+  ReadMessage,
   ChangeLevel,
+  isPassable,
 } from '../classes/components.ts';
 import { SPELL_DURATION, Timer } from './effects.ts';
 import type { Entity } from '../classes/entity.ts';
 import { Difficulty } from './world.ts';
 
 export async function update() {
+  if (DEBUG && controls.wasActionDeactivated(Action.SlowerClock)) {
+    world.game.clockScale = Math.min(20, world.game.clockScale + 1);
+    console.log('Clock Scale:', world.game.clockScale);
+    return;
+  }
+
+  if (DEBUG && controls.wasActionDeactivated(Action.FasterClock)) {
+    world.game.clockScale = Math.max(1, world.game.clockScale - 1);
+    console.log('Clock Scale:', world.game.clockScale);
+    return;
+  }
+
+  // Game Actions
+  if (controls.wasActionDeactivated(Action.Pause)) return pause();
+  if (controls.wasActionDeactivated(Action.Quit)) return quit();
+  if (controls.wasActionDeactivated(Action.Save)) return world.save();
+  if (controls.wasActionDeactivated(Action.Restore)) return world.restore();
+
   // Debug Actions
   if (controls.wasActionDeactivated(Action.NextLevel))
     return await levels.nextLevel();
@@ -70,18 +87,6 @@ export async function update() {
     return;
   }
 
-  if (DEBUG && controls.wasActionDeactivated(Action.SlowerClock)) {
-    world.game.clockScale = Math.min(20, world.game.clockScale + 1);
-    console.log('Clock Scale:', world.game.clockScale);
-    return;
-  }
-
-  if (DEBUG && controls.wasActionDeactivated(Action.FasterClock)) {
-    world.game.clockScale = Math.max(1, world.game.clockScale - 1);
-    console.log('Clock Scale:', world.game.clockScale);
-    return;
-  }
-
   // Player Actions
   if (controls.wasActionDeactivated(Action.ResetFound)) {
     world.game.foundSet = new Set();
@@ -95,12 +100,6 @@ export async function update() {
     );
     return;
   }
-
-  // Game Actions
-  if (controls.wasActionDeactivated(Action.Pause)) return pause();
-  if (controls.wasActionDeactivated(Action.Quit)) return quit();
-  if (controls.wasActionDeactivated(Action.Save)) return world.save();
-  if (controls.wasActionDeactivated(Action.Restore)) return world.restore();
 
   // Whip can happen at any time (no return)
   if (controls.wasActionActive(Action.Whip)) {
@@ -117,7 +116,7 @@ export async function update() {
       await sound.noneSound();
     } else {
       world.stats.teleports--;
-      await effects.teleport();
+      move(...(await effects.teleport()));
     }
   }
 
@@ -153,6 +152,11 @@ export async function update() {
   if (dx !== 0 || dy !== 0) {
     await tryMove(dx, dy);
   }
+
+  if (world.game.bot && !world.game.paused && !world.game.done) {
+    await bot.botPlay();
+    return;
+  }
 }
 
 export async function tryMove(dx: number, dy: number) {
@@ -170,7 +174,11 @@ export async function tryMove(dx: number, dy: number) {
   const e = world.level.map.get(x, y);
   if (!e) return;
 
-  const block = world.level.map.getType(x, y) || Type.Floor;
+  const block = world.level.map.getType(x, y);
+
+  if (e.has(isPassable)) {
+    move(x, y);
+  }
 
   if (e.has(AttacksPlayer)) {
     const damage = e.get(AttacksPlayer)!.damage;
@@ -178,7 +186,6 @@ export async function tryMove(dx: number, dy: number) {
     world.killAt(x, y);
     world.addScore(e.type as Type);
     move(x, y);
-    return;
   }
 
   if (e.has(Collectible)) {
@@ -192,7 +199,6 @@ export async function tryMove(dx: number, dy: number) {
     world.stats.whipPower += collect.whipPower;
 
     world.addScore(block as Type);
-    move(x, y);
 
     switch (block) {
       case Type.Chest:
@@ -209,19 +215,10 @@ export async function tryMove(dx: number, dy: number) {
         await screen.flashTypeMessage(block as Type, true);
         break;
     }
-
-    return;
   }
 
   if (e.has(MagicTrigger)) {
-    move(x, y);
     await trigger(e.get(MagicTrigger)!.type, x, y);
-    return;
-  }
-
-  if (e.get(Walkable)?.by(Type.Player)) {
-    move(x, y);
-    return;
   }
 
   if (e.has(isPushable)) {
@@ -229,41 +226,14 @@ export async function tryMove(dx: number, dy: number) {
     return;
   }
 
-  if (e.has(SecretMessage)) {
-    await sound.secretMessage();
-    await effects.readMessage(e.get(SecretMessage)?.message);
-    return;
-  }
-
-  if (e.has(TabletMessage)) {
-    move(x, y);
+  if (e.has(ReadMessage)) {
     sound.grab();
     world.addScore(block as Type);
     await screen.flashTypeMessage(block as Type, true);
-    await effects.readMessage(
-      e.get(TabletMessage)?.message || world.level.tabletMessage,
-    );
-    return;
-  }
-
-  if (e.has(AmuletMessage)) {
-    move(x, y);
-    await sound.grab();
-    world.addScore(block as Type);
-    await sound.amulet();
-    await effects.readMessage(
-      e.get(TabletMessage)?.message ||
-        dedent`
-      You have found the Amulet of Yendor -- 25,000 points!
-      It seems that Kroz and Rogue share the same underground!)
-      Your quest for the treasure of Kroz must still continue...
-    `,
-    );
-    return;
+    await effects.readMessage(e.get(ReadMessage)?.message);
   }
 
   if (e.has(ChangeLevel)) {
-    move(x, y);
     const c = e.get(ChangeLevel)!;
     if (c.deltaLevel > 0) {
       if (world.stats.levelIndex === LEVELS.length - 1) {
@@ -320,36 +290,24 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Lava: // Moves + Damage -> Damage Component?
       world.stats.gems -= 10;
       world.addScore(block);
-      move(x, y);
       await screen.flashTypeMessage(block, true);
       break;
     case Type.Pit: // Moves + Kills -> Kills Component?
-      move(x, y);
       world.stats.gems = -1; // dead
       await screen.flashTypeMessage(block);
       break;
-    case Type.Tome: // -> Read Component?
-      // TODO: Tome_Message;
-
-      world.level.map.setType(31, 6, Type.Stairs);
-      screen.drawType(31, 6, Type.Stairs);
-
-      world.addScore(block);
-      await screen.flashTypeMessage(block);
-      await screen.flashMessage(
-        'Congratulations, Adventurer, you finally did it!!!',
-      );
+    case Type.Tome:
+      // TODO: Make a ReadMessage effect
+      effects.replaceEntities(Type.Tome, Type.Stairs);
+      screen.drawType(x, y);
       break;
     case Type.Tunnel: {
       // -> isTunnel Component?
       // Goes through tunnel
-      // Player starting position
-      const p = world.level.player.get(Position)!;
-      const sx = p.x;
-      const sy = p.y;
 
-      move(x, y);
-      await tunnel(x, y, sx, sy);
+      const p = world.level.player.get(Position)!;
+      await tunnel(x, y, p.px!, p.py!);
+
       await screen.flashTypeMessage(block, true);
       break;
     }
@@ -389,7 +347,11 @@ export async function tryMove(dx: number, dy: number) {
       await screen.flashTypeMessage(Type.EWall, true);
       break;
     default:
-      sound.blockedWall();
+      // TODO: Only if nothing else happened
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (isNaN(block as any) || typeof block === 'string') {
+        sound.blockedWall();
+      }
       break;
   }
 }
@@ -641,7 +603,7 @@ async function trigger(type: Type, x: number, y: number) {
   }
 }
 
-function move(x: number, y: number) {
+export function move(x: number, y: number) {
   sound.footStep();
 
   const e = world.level.player;

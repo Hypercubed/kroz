@@ -1,44 +1,35 @@
-{
-  "class": "Kingdom4",
-  "compressionlevel": -1,
-  "height": 23,
-  "infinite": false,
-  "layers": [
-    {
-      "compression": "zlib",
-      "data": "eJzVV8tKA0EQ3F9ZSG6SyGaPuQQigkTwlZAgOYggIgiC6G\/5TfkTZ3AGi7a6dya7YeOh6N3peVVV72QyKopi3BNqh4FDFeIkxNjuMVIwNXK5YwY9AdfWNDjk\/pA\/80fqpPnoc6XDRZjrzlizhOeFyDEN4v5ODVQNeas\/8keOjK\/VhtxQC8avJDlNg7i\/bcht94A1bgTrWBpo\/mv8Gc9Sea4KXQPL\/1zfGTT+lg7ye4hzMN6srWrIY5849xzQ1nPMpfifokmq79jG+uGZUCn8c2tByy0If\/Q45du36r+rM7rrc5\/N38U65T\/CLkT8nutE+L6xFlmdnx\/Qr00DsO\/O8NvjpMN9yZrPvZtp+Gq5r0nxd1\/I\/9HhxeE5gZ+Exj2u2xZyvzm6aRpgzp9\/Hw7vDm8On0GPV4cnwe+WgJ3hXUPyl\/lVwxitDlLrX3JfKDqkcBkWP\/9BhgrqEJcG\/3381zSogwYSGv8yzIHR0uCe8G\/jfyoe4PmmQYPIeUn4a9yvi9\/anxgaxHfPYZXpn+blMmAMz0wzqxZQA8t\/5B+5I+8m\/+UdtktMW45HDa5ETKl\/zftajPVxTuate44eZyFuRLQ0iLUwV7xn\/GVtzHqOufyZBtr5z\/hj2zFwj\/+xPH923kyJZ0wD9vtv3Yv65i6jxp\/tHTkhb+y3Du9rkuubK\/qP\/LV7J7vvpmgiMTtS+H1fOnwDfdYLKw==",
-      "encoding": "base64",
-      "height": 23,
-      "id": 1,
-      "name": "",
-      "opacity": 1,
-      "type": "tilelayer",
-      "visible": true,
-      "width": 64,
-      "x": 0,
-      "y": 0
-    }
-  ],
-  "nextlayerid": 2,
-  "nextobjectid": 1,
-  "orientation": "orthogonal",
-  "properties": {
-    "tabletMessage": "Adventurer, try the top right corner if you desire."
-  },
-  "propertytypes": {
-    "tabletMessage": "string"
-  },
-  "renderorder": "right-down",
-  "tiledversion": "1.11.1",
-  "tileheight": 36,
-  "tilesets": [
-    {
-      "firstgid": 1,
-      "source": "..\/..\/kroz.tileset.json"
-    }
-  ],
-  "tilewidth": 24,
-  "type": "map",
-  "version": 1.1,
-  "width": 64
+{ "class":"Kingdom4",
+ "compressionlevel":-1,
+ "height":23,
+ "infinite":false,
+ "layers":[
+        {
+         "compression":"zlib",
+         "data":"eJzVV8tKA0EQ3F9ZSG6SyGaPuQQigkTwlZAgOYggIgiC6G\/5TfkTZ3AGi7a6dya7YeOh6N3peVVV72QyKopi3BNqh4FDFeIkxNjuMVIwNXK5YwY9AdfWNDjk\/pA\/80fqpPnoc6XDRZjrzlizhOeFyDEN4v5ODVQNeas\/8keOjK\/VhtxQC8avJDlNg7i\/bcht94A1bgTrWBpo\/mv8Gc9Sea4KXQPL\/1zfGTT+lg7ye4hzMN6srWrIY5849xzQ1nPMpfifokmq79jG+uGZUCn8c2tByy0If\/Q45du36r+rM7rrc5\/N38U65T\/CLkT8nutE+L6xFlmdnx\/Qr00DsO\/O8NvjpMN9yZrPvZtp+Gq5r0nxd1\/I\/9HhxeE5gZ+Exj2u2xZyvzm6aRpgzp9\/Hw7vDm8On0GPV4cnwe+WgJ3hXUPyl\/lVwxitDlLrX3JfKDqkcBkWP\/9BhgrqEJcG\/3381zSogwYSGv8yzIHR0uCe8G\/jfyoe4PmmQYPIeUn4a9yvi9\/anxgaxHfPYZXpn+blMmAMz0wzqxZQA8t\/5B+5I+8m\/+UdtktMW45HDa5ETKl\/zftajPVxTuate44eZyFuRLQ0iLUwV7xn\/GVtzHqOufyZBtr5z\/hj2zFwj\/+xPH923kyJZ0wD9vtv3Yv65i6jxp\/tHTkhb+y3Du9rkuubK\/qP\/LV7J7vvpmgiMTtS+H1fOnwDfdYLKw==",
+         "encoding":"base64",
+         "height":23,
+         "id":1,
+         "name":"",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":64,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.11.1",
+ "tileheight":36,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/..\/kroz.tileset.json"
+        }],
+ "tilewidth":24,
+ "type":"map",
+ "version":"1.10",
+ "width":64
 }

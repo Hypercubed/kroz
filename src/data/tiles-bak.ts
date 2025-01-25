@@ -1,26 +1,9 @@
-import { RNG } from 'rot-js';
-
-import * as world from '../modules/world';
-
-import {
-  AttacksPlayer,
-  Eats,
-  followsPlayer,
-  isGenerator,
-  isMobile,
-  isPlayer,
-  DestroyedBy,
-  Renderable,
-  Walkable,
-  Collectible,
-  AnimatedWalking,
-  MagicTrigger,
-} from '../classes/components';
-import { Entity } from '../classes/entity';
+import { getASCIICode } from '../utils/utils';
 import { Color } from './colors';
-import { FLOOR_CHAR } from './constants';
 
-export const enum Type {
+const FLOOR_CHAR = ' ';
+
+export enum Type {
   Border = -1,
   Floor = 0,
   Slow = 1,
@@ -291,7 +274,7 @@ export const MapLookup: Record<string, Type> = {
   '‘': Type.TBlock,
   '’': Type.TRock,
   '“': Type.TGem,
-  '”': Type.TBlind, 
+  '”': Type.TBlind,
   '•': Type.TWhip,
   '–': Type.TGold,
   '—': Type.TTree,
@@ -302,13 +285,13 @@ export const MapLookup: Record<string, Type> = {
   '¼': Type.DropRope4,
   '½': Type.DropRope5,
   ƒ: Type.Amulet,
-  'â': Type.Amulet,
+  â: Type.Amulet,
   '¯': Type.ShootRight,
   '®': Type.ShootLeft,
 
   à: Type.Trap6,
   á: Type.Trap7,
-  â: Type.Trap8,  // FIX this
+  â: Type.Trap8, // FIX this
   ã: Type.Trap9,
   ä: Type.Trap10,
   å: Type.Trap11,
@@ -470,383 +453,16 @@ export const TypeMessage: Partial<Record<Type, string>> = {
   [Type.Amulet]: 'YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!',
 };
 
-export const MOBS = [Type.Fast, Type.Medium, Type.Slow]; // 1..3
-export const COLLECTABLES = [Type.Whip, Type.Gem, Type.Teleport, Type.Chest]; // 5, 9, 11
-export const SPELLS = [
-  Type.SlowTime,
-  Type.Invisible,
-  Type.SpeedTime,
-  Type.Freeze,
-]; // 8, 10, 15, 26
-
-export const ITRAPS = [
-  // 33, 37, 39, 67, 224..231
-  Type.Trap2,
-  Type.Trap3,
-  Type.Trap4,
-  Type.Trap5,
-  Type.Trap6,
-  Type.Trap7,
-  Type.Trap8,
-  Type.Trap9,
-  Type.Trap10,
-  Type.Trap11,
-  Type.Trap12,
-  Type.Trap13,
-];
-
-export const TRAPS = [
-  // 16, 33, 37, 39, 67, 224..231
-  Type.Trap,
-  ...ITRAPS,
-];
-
-const IBLOCKS = [Type.IBlock, Type.IWall, Type.IDoor]; // 29..31
-
-export const KROZ = [
-  // 48..51
-  Type.K,
-  Type.R,
-  Type.O,
-  Type.Z,
-];
-
-export const OWALLS = [Type.OWall1, Type.OWall2, Type.OWall3]; // 52..54
-export const CWALLS = [Type.CWall1, Type.CWall2, Type.CWall3]; // 55..57
-export const OSPELLS = [Type.OSpell1, Type.OSpell2, Type.OSpell3]; // 58..60
-export const CSPELLS = [Type.CSpell1, Type.CSpell2, Type.CSpell3]; // 61..63
-
-export const TBLOCKS = [
-  // 68..74
-  Type.TBlock,
-  Type.TRock,
-  Type.TGem,
-  Type.TBlind,
-  Type.TWhip,
-  Type.TGold,
-  Type.TTree,
-];
-
-export const ROPE_DROP = [
-  Type.DropRope,
-  Type.DropRope2,
-  Type.DropRope3,
-  Type.DropRope4,
-  Type.DropRope5,
-]; // 76..80
-
-export const BOMBABLES = [
-  ...MOBS,
-  Type.Block,
-  ...IBLOCKS,
-  Type.ZBlock,
-  Type.GBlock,
-  Type.MBlock,
-  ...TBLOCKS,
-  Type.Door,
-  ...TRAPS,
-  Type.Forest,
-  Type.Quake,
-  Type.Stop,
-  Type.Create,
-  Type.Generator,
-  Type.Chance,
-  ...KROZ,
-];
-
-export const ROCKABLES = [
-  Type.Floor,
-  ...MOBS,
-  ...COLLECTABLES,
-  ...SPELLS,
-  ...TRAPS,
-  Type.Stop,
-];
-
-export const VISUAL_TELEPORTABLES = [
-  Type.Floor,
-  Type.Stop,
-  ...ITRAPS,
-  Type.ShowGems,
-  Type.BlockSpell,
-  Type.WallVanish,
-  ...CWALLS,
-  ...CSPELLS,
-  ...TBLOCKS,
-];
-
-export const TRIGGERABLES = [
-  Type.Floor,
-  Type.Stop,
-  ...ITRAPS,
-  Type.ShowGems,
-  Type.WallVanish,
-  ...TBLOCKS,
-];
-
-export const ROCK_MOVEABLES = [
-  Type.Floor,
-  Type.Stop,
-  Type.ShowGems,
-  Type.BlockSpell,
-  Type.WallVanish,
-  ...CWALLS,
-  ...CSPELLS,
-  ...TBLOCKS,
-  ...ITRAPS,
-];
-
-export const ROCK_CRUSHABLES = [
-  ...COLLECTABLES,
-  Type.SlowTime,
-  Type.Invisible,
-  Type.Key,
-  Type.Trap,
-  Type.Power,
-  Type.Bomb,
-  Type.Freeze,
-  Type.Nugget,
-  Type.Zap,
-  Type.Create,
-  Type.Tablet,
-  Type.Chance,
-  ...KROZ,
-  ...OSPELLS,
-  ...ROPE_DROP,
-  Type.ShootRight,
-  Type.ShootLeft,
-];
-
-export const ROCK_CLIFFABLES = [Type.Stairs, Type.Pit];
-
-export const TUNNELABLES = [Type.Floor, Type.Stop, ...ITRAPS, ...CWALLS];
-
-export const SPEAR_BLOCKS = [
-  Type.Block,
-  Type.Stairs,
-  Type.Door,
-  Type.Wall,
-  Type.Lava,
-  Type.Tunnel,
-  Type.IDoor,
-  Type.Generator,
-  Type.MBlock,
-  Type.Tablet,
-  Type.ZBlock,
-  Type.Statue,
-  ...OWALLS,
-  Type.GBlock,
-  Type.Rock,
-  Type.EWall,
-  Type.Amulet,
-];
-
-export const SPEAR_IGNORE = [
-  Type.Floor,
-  Type.River,
-  Type.Pit,
-  Type.Quake,
-  Type.IBlock,
-  Type.IWall,
-  Type.Stop,
-  Type.Trap2,
-  Type.Trap3,
-  Type.Trap4,
-  Type.Trap5,
-  Type.ShowGems,
-  Type.BlockSpell,
-  Type.WallVanish,
-  ...CWALLS,
-  ...CSPELLS,
-  ...TBLOCKS,
-  Type.Rope,
-];
-
-export const ChanceOdds = {
-  [Type.Chest]: 1 / 20,
-  [Type.SlowTime]: 1 / 35,
-  [Type.Key]: 1 / 25,
-  [Type.SpeedTime]: 1 / 10,
-  [Type.Power]: 1 / 15,
-  [Type.Bomb]: 1 / 40,
-  [Type.Quake]: 1 / 15,
-  [Type.WallVanish]: 1 / 20,
-};
-
-const tileCharsDefault = structuredClone(TypeChar);
-const tileColorsDefault = structuredClone(TypeColor);
-
-export function reset() {
-  Object.assign(TypeChar, tileCharsDefault);
-  Object.assign(TypeColor, tileColorsDefault);
-}
-
-export function createTileDataForType(type: Type | string) {
-  let fg = TypeColor[Type.Floor][0]!;
-  let bg = TypeColor[Type.Floor][1]!;
-  let ch = FLOOR_CHAR;
-
-  switch (type) {
-    case 'Ã':
-      type = '!';
-      break;
-    case '´':
-      type = '.';
-      break;
-    case 'µ':
-      type = '?';
-      break;
-    case '¶':
-      type = "'";
-      break;
-    case '·':
-      type = ',';
-      break;
-    case '¸':
-      type = ':';
-      break;
-    case 'ú':
-      type = '·';
-      break;
-    case 'ù':
-      type = '∙';
-      break;
-    case 'ï':
-      type = '∩';
-      break;
-  }
-
-  if (typeof type === 'string') {
-    ch = type.toLocaleUpperCase();
-    fg = Color.HighIntensityWhite;
-    bg = Color.Brown;
-  } else {
-    ch = TypeChar[type];
-    fg = TypeColor[type]?.[0] ?? TypeColor[Type.Floor][0]!;
-    bg = TypeColor[type]?.[1] ?? TypeColor[Type.Floor][1]!;
-  }
-
-  fg ??= TypeColor[Type.Floor][0]!;
-  bg ??= TypeColor[Type.Floor][1]!;
-  ch ??= FLOOR_CHAR;
-
-  return { ch, fg, bg };
-}
-
-const MOB_WALKABLE = [
-  Type.Floor,
-  Type.TBlock,
-  Type.TRock,
-  Type.TGem,
-  Type.TBlind,
-  Type.TGold,
-  Type.TWhip,
-  Type.TTree,
-  Type.Whip,
-  Type.Chest,
-  Type.SlowTime,
-  Type.Gem,
-  Type.Invisible,
-  Type.Teleport,
-  Type.Key,
-  Type.SpeedTime,
-  Type.Trap,
-  Type.Power,
-  Type.Freeze,
-  Type.Nugget,
-  Type.K,
-  Type.R,
-  Type.O,
-  Type.Z,
-  Type.ShootRight,
-  Type.ShootLeft,
-];
-
-const MOB_EATS = [
-  Type.Whip,
-  Type.Chest,
-  Type.SlowTime,
-  Type.Gem,
-  Type.Invisible,
-  Type.Teleport,
-  Type.Key,
-  Type.SpeedTime,
-  Type.Trap,
-  Type.Power,
-  Type.Freeze,
-  Type.Nugget,
-  Type.K,
-  Type.R,
-  Type.O,
-  Type.Z,
-  Type.ShootRight,
-  Type.ShootLeft,
-];
-
-const MAGIC_TRIGGERS = [
-  Type.SlowTime,
-    Type.Invisible,
-    Type.SpeedTime,
-    Type.Trap,
-    Type.Bomb,
-    Type.Freeze,
-    Type.Quake,
-    Type.Trap2,
-    Type.Zap,
-    Type.Create,
-    Type.ShowGems,
-    Type.BlockSpell,
-    Type.WallVanish,
-    Type.K,
-    Type.R,
-    Type.O,
-    Type.Z,
-    Type.OSpell1,
-    Type.OSpell2,
-    Type.OSpell3,
-    Type.CSpell1,
-    Type.CSpell2,
-    Type.CSpell3,
-    Type.Trap3,
-    Type.Trap4,
-    Type.Trap5,
-    Type.Trap6,
-    Type.Trap7,
-    Type.Trap8,
-    Type.Trap9,
-    Type.Trap10,
-    Type.Trap11,
-    Type.Trap12,
-    Type.Trap13,
-    Type.TBlock,
-    Type.TRock,
-    Type.TGem,
-    Type.TBlind,
-    Type.TWhip,
-    Type.TGold,
-    Type.TTree,
-    Type.ShootRight,
-    Type.ShootLeft,
-];
-
-const keys = Object.keys(MapLookup).sort((a, b) => MapLookup[a] - MapLookup[b]);
+let keys = Object.keys(MapLookup).sort((a, b) => MapLookup[a] - MapLookup[b]);
 for (const key of keys) {
   const asc = getASCIICode(key);
   const type = MapLookup[key];
-  // console.log(`{${key}} {${type}} ${Type[type]} = #${asc}`);
-  // console.log(`"${asc}": { "type": ${type} },`);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  console.log(`${key},${type},${Type[type as any]},${asc}`);
+}
 
-  const obj = { name: Type[type] };
-  if (TypeChar[type] !== FLOOR_CHAR) {
-    obj["Tile.ch"] = TypeChar[type];
-    const [fg, bg] = TypeColor[type];
-    if (fg !== null) {
-      obj["Tile.fg"] = Color[fg];
-    }
-    if (bg !== null) {
-      obj["Tile.bg"] = Color[bg];
-    }
-  }
-
-  console.log(`"${asc}": ${JSON.stringify(obj)},`);
+keys = Object.keys(TypeChar);
+for (const key of keys) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  console.log(`${key},${Type[key as any]},${(TypeChar as any)[key]}`);
 }

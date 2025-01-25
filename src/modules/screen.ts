@@ -1,6 +1,7 @@
 import * as display from './display';
 import * as world from './world';
 import * as controls from './controls';
+import * as sound from './sound';
 
 import {
   FLOOR_CHAR,
@@ -417,13 +418,13 @@ export async function flashTypeMessage(msg: Type, once: boolean = false) {
 }
 
 export async function flashMessage(msg: string): Promise<string> {
+  if (world.game.bot) return '';
   if (!msg) return '';
 
   const x = (XTop - msg.length) / 2;
   const y = YTop + 1;
 
   world.game.paused = true;
-
   const key = await controls.repeatUntilKeyPressed(() => {
     display.drawText(x, y, msg, RNG.getUniformInt(1, 15), Color.Black);
   });
@@ -485,18 +486,13 @@ export async function renderTitle() {
     Color.Blue,
   );
 
-  display.writeCenter(
-    19,
-    'Are you a (N)ovice, (E)xperenced or and (A)dvanced player?',
-    Color.HighIntensityWhite,
-    Color.Blue,
-  );
-
+  await sound.play(220, 100, 50);
   await getDifficulty();
+  await sound.play(700, 100, 10);
 
   display.writeCenter(
     HEIGHT - 1,
-    'Press any key to begin your decent into Kroz.',
+    'Press any key.',
     Color.HighIntensityWhite,
     Color.Blue,
   );
@@ -508,7 +504,27 @@ export async function renderTitle() {
 
 async function writeTitle() {
   const x = WIDTH / 2 - TITLE.length / 2;
-  display.drawText(x, 3, TITLE, RNG.getUniformInt(0, 16), Color.Red);
+  display.drawText(
+    x,
+    1,
+    ' '.repeat(TITLE.length + 2),
+    RNG.getUniformInt(0, 16),
+    Color.Red,
+  );
+  display.drawText(
+    x,
+    2,
+    ' ' + TITLE + ' ',
+    RNG.getUniformInt(0, 16),
+    Color.Red,
+  );
+  display.drawText(
+    x,
+    3,
+    ' '.repeat(TITLE.length + 2),
+    RNG.getUniformInt(0, 16),
+    Color.Red,
+  );
   await delay(500);
 }
 
@@ -518,6 +534,7 @@ const DIFFICULTY_LEVELS = {
   N: 'NOVICE',
   E: 'EXPERENCED',
   A: 'ADVANCED',
+  B: 'BOT',
 };
 
 async function getDifficulty() {
@@ -525,10 +542,13 @@ async function getDifficulty() {
 
   const KEYS = Object.keys(DIFFICULTY_LEVELS);
 
-  display.writeCenter(
+  const c1 = ColorCodes[Color.LightGreen];
+  const c2 = ColorCodes[Color.HighIntensityWhite];
+  display.drawText(
+    (WIDTH - 52) / 2,
     19,
-    'Are you a (N)ovice, (E)xperenced or and (A)dvanced player?',
-    Color.LightGreen,
+    `Are you a %c{${c2}}N%c{${c1}}ovice, %c{${c2}}E%c{${c1}}xperenced or and %c{${c2}}A%c{${c1}}dvanced player?`,
+    c1,
     Color.Blue,
   );
 
@@ -589,6 +609,16 @@ async function getDifficulty() {
       world.stats.whips = Infinity;
       world.stats.whipPower = 4;
       world.game.difficulty = Difficulty.Cheat;
+      break;
+    case 'B':
+      world.stats.gems = Infinity;
+      world.stats.teleports = 0;
+      world.stats.keys = 0;
+      world.stats.whips = 0;
+      world.stats.whipPower = 2;
+      world.game.difficulty = Difficulty.Cheat;
+      world.game.foundSet = true;
+      world.game.bot = true;
       break;
   }
 

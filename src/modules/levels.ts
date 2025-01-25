@@ -6,11 +6,13 @@ import * as controls from './controls.ts';
 import * as screen from './screen.ts';
 import * as tiled from '@kayahr/tiled';
 import * as effects from './effects.ts';
+import * as events from './events.ts';
 
-import LEVELS from '../data/levels/forgotton/index.ts';
+// import LEVELS from '../data/levels/forgotton/index.ts';
 // import LEVELS from '../data/levels/kingdom/index.ts';
 // import LEVELS from '../data/levels/lost/index.ts';
 // import LEVELS from '../data/levels/caverns/index.ts';
+import LEVELS from '../data/levels/cruz/index.ts';
 
 import { mod } from 'rot-js/lib/util';
 import { isGenerator, isMobile, isPlayer } from '../classes/components.ts';
@@ -25,7 +27,6 @@ export interface Level {
   data: Entity[];
   properties?: Record<string, unknown>;
   onLevelStart?: () => Promise<void>;
-  tabletMessage?: string;
   startText?: string;
 }
 
@@ -47,6 +48,7 @@ export async function loadLevel() {
   } else {
     await screen.flashMessage('Press any key to begin this level.');
   }
+  events.levelStart.dispatch();
   controls.flushAll();
 }
 
@@ -87,10 +89,9 @@ export async function prevLevel(dl: number = 1) {
 async function readLevel(i: number) {
   world.stats.levelIndex = i;
 
-  const levelLoadPromise = LEVELS[world.stats.levelIndex];
+  const levelLoadPromise = LEVELS[world.stats.levelIndex]!;
   const levelData = await levelLoadPromise();
   const level = readLevelJSON(levelData as tiled.Map);
-  world.level.tabletMessage = level!.tabletMessage;
   world.level.startText = level!.startText;
 
   readLevelMapData(level.data);
@@ -212,12 +213,6 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     }
   }
 
-  // TODO: Make map an entity, add these to the map?
-  const tabletMessage =
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    tilemap.tabletMessage ?? properties?.tabletMessage ?? undefined;
-
   const startText =
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -227,7 +222,6 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     id: (properties?.id || '') as string,
     data,
     onLevelStart,
-    tabletMessage,
     startText,
     properties,
   };

@@ -1,2273 +1,2580 @@
-{
-  "columns": 16,
-  "editorsettings": {
-    "export": {
-      "format": "lua",
-      "target": ""
-    }
-  },
-  "image": "..\/..\/tiled\/ASCII.png",
-  "imageheight": 576,
-  "imagewidth": 384,
-  "margin": 0,
-  "name": "Kroz Tileset",
-  "spacing": 0,
-  "tilecount": 256,
-  "tiledversion": "1.11.1",
-  "tileheight": 36,
-  "tiles": [
-    {
-      "id": 32,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Black",
-            "ch": "\u00a0",
-            "fg": "Black"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Floor"
-        }
-      ],
-      "type": "0"
-    },
-    {
-      "id": 33,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You found an Ancient Tablet of Wisdom...2,500 points!"
-        },
-        {
-          "name": "TabletMessage",
-          "type": "string",
-          "value": ""
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u25a0",
-            "fg": "LightBlue"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Tablet"
-        }
-      ],
-      "type": "42"
-    },
-    {
-      "id": 34,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Super Kroz Bonus -- 10,000 points!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "Z",
-            "fg": "Yellow"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Z"
-        }
-      ],
-      "type": "51"
-    },
-    {
-      "id": 35,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "A Solid Wall blocks your way."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": "\u2588",
-            "fg": "Brown"
-          }
-        },
-        {
-          "name": "isPushable",
-          "type": "bool",
-          "value": false
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Wall"
-        }
-      ],
-      "type": "14"
-    },
-    {
-      "id": 36,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap5"
-        }
-      ],
-      "type": "67"
-    },
-    {
-      "id": 37,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "A Creature Zap Spell!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u25b2",
-            "fg": "LightRed"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Creature zap spell"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Zap"
-        }
-      ],
-      "type": "34"
-    },
-    {
-      "id": 38,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Yah Hoo! You discovered a Reveal Gems Scroll!"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "ShowGems"
-        }
-      ],
-      "type": "41"
-    },
-    {
-      "id": 40,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap4"
-        }
-      ],
-      "type": "39"
-    },
-    {
-      "id": 41,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap3"
-        }
-      ],
-      "type": "37"
-    },
-    {
-      "id": 42,
-      "properties": [
-        {
-          "name": "Collectible",
-          "propertytype": "Collectible",
-          "type": "class",
-          "value": {
-            "score": 50
-          }
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You found a Gold Nugget...500 points!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u263c",
-            "fg": "Yellow"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Nugget"
-        }
-      ],
-      "type": "27"
-    },
-    {
-      "id": 43,
-      "properties": [
-        {
-          "name": "Collectible",
-          "propertytype": "Collectible",
-          "type": "class",
-          "value": {
-            "gems": 1
-          }
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Gems give you both points and strength."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2666",
-            "fg": "Blue"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Gem"
-        }
-      ],
-      "type": "9"
-    },
-    {
-      "id": 45,
-      "properties": [
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Stop space"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Stop"
-        }
-      ],
-      "type": "32"
-    },
-    {
-      "id": 46,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You activated a Teleport trap!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2219",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2219"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap"
-        }
-      ],
-      "type": "16"
-    },
-    {
-      "id": 47,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You cannot travel through forest terrain."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Green",
-            "ch": "\u2588",
-            "fg": "Green"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Forest"
-        }
-      ],
-      "type": "19"
-    },
-    {
-      "id": 48,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You pushed a big Boulder!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "O",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "isPushable",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Rock"
-        }
-      ],
-      "type": "65"
-    },
-    {
-      "id": 49,
-      "properties": [
-        {
-          "name": "Attacks",
-          "propertytype": "Attacks",
-          "type": "class",
-          "value": {
-            "damage": 1
-          }
-        },
-        {
-          "name": "Movement.pace",
-          "type": "int",
-          "value": 4
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u00c4",
-            "fg": "LightRed"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Red enemy"
-        },
-        {
-          "name": "doesFollowsPlayer",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "isMobile",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Slow"
-        }
-      ],
-      "type": "1"
-    },
-    {
-      "id": 50,
-      "properties": [
-        {
-          "name": "Attacks",
-          "propertytype": "Attacks",
-          "type": "class",
-          "value": {
-            "damage": 2
-          }
-        },
-        {
-          "name": "Movement.pace",
-          "type": "int",
-          "value": 3
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u00d6",
-            "fg": "Green"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Green enemy"
-        },
-        {
-          "name": "doesFollowsPlayer",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "isMobile",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Medium"
-        }
-      ],
-      "type": "2"
-    },
-    {
-      "id": 51,
-      "properties": [
-        {
-          "name": "Attacks",
-          "propertytype": "Attacks",
-          "type": "class",
-          "value": {
-            "damage": 3
-          }
-        },
-        {
-          "name": "Movement.pace",
-          "type": "int",
-          "value": 2
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u03a9",
-            "fg": "LightBlue"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Blue enemy"
-        },
-        {
-          "name": "doesFollowsPlayer",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "isMobile",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Fast"
-        }
-      ],
-      "type": "3"
-    },
-    {
-      "id": 52,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "A Solid Wall blocks your way."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": "\u2588",
-            "fg": "Brown"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "OWall1"
-        }
-      ],
-      "type": "52"
-    },
-    {
-      "id": 53,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": "\u2588",
-            "fg": "Brown"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "OWall2"
-        }
-      ],
-      "type": "53"
-    },
-    {
-      "id": 54,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "White",
-            "ch": "\u2588",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "OWall3"
-        }
-      ],
-      "type": "54"
-    },
-    {
-      "id": 55,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "CWall1"
-        }
-      ],
-      "type": "55"
-    },
-    {
-      "id": 56,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "CWall2"
-        }
-      ],
-      "type": "56"
-    },
-    {
-      "id": 57,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "CWall3"
-        }
-      ],
-      "type": "57"
-    },
-    {
-      "id": 58,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "IWall"
-        }
-      ],
-      "type": "30"
-    },
-    {
-      "id": 59,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "An Invisible Crumbled Wall blocks your way."
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "IBlock"
-        }
-      ],
-      "type": "29"
-    },
-    {
-      "id": 60,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "K",
-            "fg": "Yellow"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "K"
-        }
-      ],
-      "type": "48"
-    },
-    {
-      "id": 61,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "* SPLAT!! *"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2591",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Pit"
-        }
-      ],
-      "type": "23"
-    },
-    {
-      "id": 62,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Statues are very dangerous...they drain your Gems!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u263a",
-            "fg": "HighIntensityWhite"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Statue"
-        }
-      ],
-      "type": "46"
-    },
-    {
-      "id": 63,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You found a Pouch containing Gems!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "?",
-            "fg": "HighIntensityWhite"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Chance"
-        }
-      ],
-      "type": "45"
-    },
-    {
-      "id": 64,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap2"
-        }
-      ],
-      "type": "33"
-    },
-    {
-      "id": 65,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "The Sacred Tome of Kroz is finally yours--50,000 points!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Magenta",
-            "ch": "\u25a0",
-            "fg": "Blue"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Tome"
-        }
-      ],
-      "type": "24"
-    },
-    {
-      "id": 66,
-      "properties": [
-        {
-          "name": "ChanceOdds",
-          "type": "int",
-          "value": 40
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You activated a Magic Bomb!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u00a5",
-            "fg": "HighIntensityWhite"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Bomb"
-        }
-      ],
-      "type": "21"
-    },
-    {
-      "id": 67,
-      "properties": [
-        {
-          "name": "ChanceOdds",
-          "type": "int",
-          "value": 20
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You found gems and whips inside the chest!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Red",
-            "ch": "C",
-            "fg": "Yellow"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Chest"
-        }
-      ],
-      "type": "7"
-    },
-    {
-      "id": 68,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "The Door opens!  (One of your Keys is used.)"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Magenta",
-            "ch": "\u221e",
-            "fg": "Cyan"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Door"
-        }
-      ],
-      "type": "13"
-    },
-    {
-      "id": 69,
-      "properties": [
-        {
-          "name": "ChanceOdds",
-          "type": "int",
-          "value": 15
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Oh no, you set off an Earthquake trap!"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Quake"
-        }
-      ],
-      "type": "28"
-    },
-    {
-      "id": 70,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You activated a Speed Creature spell."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u0398",
-            "fg": "LightCyan"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Speed time spell"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "SpeedTime"
-        }
-      ],
-      "type": "15"
-    },
-    {
-      "id": 71,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You have discovered a Creature Generator!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "blink": true,
-            "ch": "\u2660",
-            "fg": "Yellow"
-          }
-        },
-        {
-          "name": "isGenerator",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Generator"
-        }
-      ],
-      "type": "36"
-    },
-    {
-      "id": 72,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You triggered Exploding Walls!"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "BlockSpell"
-        }
-      ],
-      "type": "44"
-    },
-    {
-      "id": 73,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Oh no, a temporary Blindness Potion!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u00a1",
-            "fg": "Green"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Invisible"
-        }
-      ],
-      "type": "10"
-    },
-    {
-      "id": 75,
-      "properties": [
-        {
-          "name": "ChanceOdds",
-          "type": "int",
-          "value": 25
-        },
-        {
-          "name": "Collectible",
-          "propertytype": "Collectible",
-          "type": "class",
-          "value": {
-            "keys": 1
-          }
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Use Keys to unlock doors."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u00ee",
-            "fg": "LightRed"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Key"
-        }
-      ],
-      "type": "12"
-    },
-    {
-      "id": 76,
-      "properties": [
-        {
-          "name": "ChangeLevel",
-          "propertytype": "ChangeLevel",
-          "type": "class",
-          "value": {
-            "deltaLevel": 1
-          }
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Stairs take you to the next lower level."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "White",
-            "blink": true,
-            "ch": "\u2261"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Stairs"
-        }
-      ],
-      "type": "6"
-    },
-    {
-      "id": 77,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "A Moving Wall blocks your way."
-        },
-        {
-          "name": "Movement.pace",
-          "type": "int",
-          "value": 2
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2593",
-            "fg": "Brown"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Moving wall"
-        },
-        {
-          "name": "doesFollowsPlayer",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "isMobile",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "MBlock"
-        }
-      ],
-      "type": "38"
-    },
-    {
-      "id": 78,
-      "properties": [
-        {
-          "name": "ChanceOdds",
-          "type": "int",
-          "value": 20
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Yikes!  A trap has made many of the wall sections invisible!"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "WallVanish"
-        }
-      ],
-      "type": "47"
-    },
-    {
-      "id": 79,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2593",
-            "fg": "Brown"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "ZBlock"
-        }
-      ],
-      "type": "43"
-    },
-    {
-      "id": 80,
-      "properties": [
-        {
-          "name": "Movement.pace",
-          "type": "int",
-          "value": 1
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u263b",
-            "fg": "Yellow"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "The player"
-        },
-        {
-          "name": "isPlayer",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Player"
-        }
-      ],
-      "type": "40"
-    },
-    {
-      "id": 81,
-      "properties": [
-        {
-          "name": "ChanceOdds",
-          "type": "int",
-          "value": 15
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "A Power Ring--your whip is now a little stronger!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u25cb",
-            "fg": "HighIntensityWhite"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Power"
-        }
-      ],
-      "type": "18"
-    },
-    {
-      "id": 82,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You cannot travel through Water."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Blue",
-            "ch": "\u2248",
-            "fg": "LightBlue"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "River"
-        }
-      ],
-      "type": "17"
-    },
-    {
-      "id": 83,
-      "properties": [
-        {
-          "name": "ChanceOdds",
-          "type": "int",
-          "value": 35
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You activated a Slow Time spell."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u03a6",
-            "fg": "LightCyan"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Slow time spell"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "SlowTime"
-        }
-      ],
-      "type": "8"
-    },
-    {
-      "id": 84,
-      "properties": [
-        {
-          "name": "Collectible",
-          "propertytype": "Collectible",
-          "type": "class",
-          "value": {
-            "teleports": 1
-          }
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You found a Teleport scroll."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2191",
-            "fg": "LightMagenta"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Teleport"
-        }
-      ],
-      "type": "11"
-    },
-    {
-      "id": 85,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You passed through a secret Tunnel!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2229",
-            "fg": "HighIntensityWhite"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Tunnel"
-        }
-      ],
-      "type": "25"
-    },
-    {
-      "id": 86,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Oooooooooooooooooooh!  Lava hurts!  (Lose 10 Gems.)"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Red",
-            "ch": "\u2593",
-            "fg": "LightRed"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Lava"
-        }
-      ],
-      "type": "22"
-    },
-    {
-      "id": 87,
-      "properties": [
-        {
-          "name": "Collectible",
-          "propertytype": "Collectible",
-          "type": "class",
-          "value": {
-            "whips": 1
-          }
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You found a Whip"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2320",
-            "fg": "HighIntensityWhite"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "A whip"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Whip"
-        }
-      ],
-      "type": "5"
-    },
-    {
-      "id": 88,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "A Breakable Wall blocks your way"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2593",
-            "fg": "Brown"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Block"
-        }
-      ],
-      "type": "4"
-    },
-    {
-      "id": 89,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Black",
-            "ch": "\u2593",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "GBlock"
-        }
-      ],
-      "type": "64"
-    },
-    {
-      "id": 90,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You have activated a Freeze Creature spell!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u0192",
-            "fg": "LightCyan"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Freeze time spell"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Freeze"
-        }
-      ],
-      "type": "26"
-    },
-    {
-      "id": 91,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "R",
-            "fg": "Yellow"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "R"
-        }
-      ],
-      "type": "49"
-    },
-    {
-      "id": 92,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "A tree blocks your way."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Green",
-            "ch": "\u2663",
-            "fg": "Brown"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Tree"
-        }
-      ],
-      "type": "20"
-    },
-    {
-      "id": 93,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "A Creature Creation Trap!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u25bc",
-            "fg": "HighIntensityWhite"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Creature creation trap"
-        },
-        {
-          "name": "isSecreted",
-          "type": "bool",
-          "value": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Create"
-        }
-      ],
-      "type": "35"
-    },
-    {
-      "id": 96,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "An Invisible Door blocks your way."
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "IDoor"
-        }
-      ],
-      "type": "31"
-    },
-    {
-      "id": 124,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "O",
-            "fg": "Yellow"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "O"
-        }
-      ],
-      "type": "50"
-    },
-    {
-      "id": 126,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You hit a Electrified Wall!  You lose one Gem."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Red",
-            "ch": "X",
-            "fg": "LightRed"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "EWall"
-        }
-      ],
-      "type": "66"
-    },
-    {
-      "id": 145,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "TBlock"
-        }
-      ],
-      "type": "68"
-    },
-    {
-      "id": 146,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "TRock"
-        }
-      ],
-      "type": "69"
-    },
-    {
-      "id": 147,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "TGem"
-        }
-      ],
-      "type": "70"
-    },
-    {
-      "id": 148,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "TBlind"
-        }
-      ],
-      "type": "71"
-    },
-    {
-      "id": 149,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "TWhip"
-        }
-      ],
-      "type": "72"
-    },
-    {
-      "id": 150,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "TGold"
-        }
-      ],
-      "type": "73"
-    },
-    {
-      "id": 151,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "TTree"
-        }
-      ],
-      "type": "74"
-    },
-    {
-      "id": 159,
-      "properties": [
-        {
-          "name": "AmuletMessage",
-          "type": "string",
-          "value": "You have found the Amulet of Yendor -- 25,000 points!\nIt seems that Kroz and Rogue share the same underground!)\nYour quest for the treasure of Kroz must still continue..."
-        },
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2640",
-            "fg": "HighIntensityWhite"
-          }
-        },
-        {
-          "name": "description",
-          "type": "string",
-          "value": "Amulet of Yendor"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Amulet"
-        }
-      ],
-      "type": "81"
-    },
-    {
-      "id": 174,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2190",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "ShootLeft"
-        }
-      ],
-      "type": "83"
-    },
-    {
-      "id": 175,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2192",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2192"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "ShootRight"
-        }
-      ],
-      "type": "82"
-    },
-    {
-      "id": 179,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "You grabbed a Rope."
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2502",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Rope"
-        }
-      ],
-      "type": "75"
-    },
-    {
-      "id": 180,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": ".",
-            "fg": "HighIntensityWhite"
-          }
-        }
-      ]
-    },
-    {
-      "id": 181,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": "?",
-            "fg": "HighIntensityWhite"
-          }
-        }
-      ]
-    },
-    {
-      "id": 182,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": "'",
-            "fg": "HighIntensityWhite"
-          }
-        }
-      ]
-    },
-    {
-      "id": 183,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": ",",
-            "fg": "HighIntensityWhite"
-          }
-        }
-      ]
-    },
-    {
-      "id": 184,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": ":",
-            "fg": "HighIntensityWhite"
-          }
-        }
-      ]
-    },
-    {
-      "id": 185,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2193",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "DropRope"
-        }
-      ],
-      "type": "76"
-    },
-    {
-      "id": 186,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2193",
-            "fg": "White"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "DropRope2"
-        }
-      ],
-      "type": "77"
-    },
-    {
-      "id": 187,
-      "properties": [
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2193"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "DropRope3"
-        }
-      ],
-      "type": "78"
-    },
-    {
-      "id": 188,
-      "properties": [
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2193"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "DropRope4"
-        }
-      ],
-      "type": "79"
-    },
-    {
-      "id": 189,
-      "properties": [
-        {
-          "name": "Tile.ch",
-          "type": "string",
-          "value": "\u2193"
-        },
-        {
-          "name": "Tile.fg",
-          "type": "string",
-          "value": "White"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "DropRope5"
-        }
-      ],
-      "type": "80"
-    },
-    {
-      "id": 195,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": "!",
-            "fg": "HighIntensityWhite"
-          }
-        }
-      ]
-    },
-    {
-      "id": 224,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap6"
-        }
-      ],
-      "type": "224"
-    },
-    {
-      "id": 225,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap7"
-        }
-      ],
-      "type": "225"
-    },
-    {
-      "id": 226,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap8"
-        }
-      ],
-      "type": "226"
-    },
-    {
-      "id": 227,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap9"
-        }
-      ],
-      "type": "227"
-    },
-    {
-      "id": 228,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap10"
-        }
-      ],
-      "type": "228"
-    },
-    {
-      "id": 229,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap11"
-        }
-      ],
-      "type": "229"
-    },
-    {
-      "id": 230,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap12"
-        }
-      ],
-      "type": "230"
-    },
-    {
-      "id": 231,
-      "properties": [
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Trap13"
-        }
-      ],
-      "type": "231"
-    },
-    {
-      "id": 239,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": "\u2229",
-            "fg": "HighIntensityWhite"
-          }
-        }
-      ]
-    },
-    {
-      "id": 241,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Magic has been released is this chamber!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2302",
-            "fg": "LightCyan"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "OSpell1"
-        }
-      ],
-      "type": "58"
-    },
-    {
-      "id": 242,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Magic has been released is this chamber!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2302",
-            "fg": "LightCyan"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "OSpell2"
-        }
-      ],
-      "type": "59"
-    },
-    {
-      "id": 243,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "Magic has been released is this chamber!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "ch": "\u2302",
-            "fg": "LightCyan"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "OSpell3"
-        }
-      ],
-      "type": "60"
-    },
-    {
-      "id": 244,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "New Walls have magically appeared!"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "CSpell1"
-        }
-      ],
-      "type": "61"
-    },
-    {
-      "id": 245,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "New Walls have magically appeared!"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "CSpell2"
-        }
-      ],
-      "type": "62"
-    },
-    {
-      "id": 246,
-      "properties": [
-        {
-          "name": "Message",
-          "type": "string",
-          "value": "New Walls have magically appeared!"
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "CSpell3"
-        }
-      ],
-      "type": "63"
-    },
-    {
-      "id": 249,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": "\u2219",
-            "fg": "HighIntensityWhite"
-          }
-        }
-      ]
-    },
-    {
-      "id": 250,
-      "properties": [
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Brown",
-            "ch": "\u00b7",
-            "fg": "HighIntensityWhite"
-          }
-        }
-      ]
-    },
-    {
-      "id": 252,
-      "properties": [
-        {
-          "name": "SecretMessage",
-          "type": "string",
-          "value": "You notice a secret message carved into the old tree...\\n\"Goodness of Heart Overcomes Adversity.\"\\nReveal that you found this message to Scott Miller...\\nAnd receive a \"MASTER KROZ CERTIFICATE\" to hang on your wall!!\\nOnly the first 100 players to report this...\\nWill be awarded the certificate.  Congratulations!"
-        },
-        {
-          "name": "Tile",
-          "propertytype": "Renderable",
-          "type": "class",
-          "value": {
-            "bg": "Green",
-            "ch": "\u2663",
-            "fg": "Brown"
-          }
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "value": "Message"
-        }
-      ],
-      "type": "252"
-    }
-  ],
-  "tilewidth": 24,
-  "type": "tileset",
-  "version": "1.10"
+{ "columns":16,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"lua",
+         "target":""
+        }
+    },
+ "image":"..\/..\/tiled\/ASCII.png",
+ "imageheight":576,
+ "imagewidth":384,
+ "margin":0,
+ "name":"Kroz Tileset",
+ "spacing":0,
+ "tilecount":256,
+ "tiledversion":"1.11.1",
+ "tileheight":36,
+ "tiles":[
+        {
+         "id":32,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Black",
+                     "ch":"\u00a0",
+                     "fg":"Black"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Floor"
+                }],
+         "type":"0"
+        }, 
+        {
+         "id":33,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You found an Ancient Tablet of Wisdom...2,500 points!"
+                }, 
+                {
+                 "name":"ReadMessage",
+                 "type":"string",
+                 "value":""
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u25a0",
+                     "fg":"LightBlue"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Tablet"
+                }],
+         "type":"42"
+        }, 
+        {
+         "id":34,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Super Kroz Bonus -- 10,000 points!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"Z",
+                     "fg":"Yellow"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Z"
+                }],
+         "type":"51"
+        }, 
+        {
+         "id":35,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"A Solid Wall blocks your way."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":"\u2588",
+                     "fg":"Brown"
+                    }
+                }, 
+                {
+                 "name":"isPushable",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Wall"
+                }],
+         "type":"14"
+        }, 
+        {
+         "id":36,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap5"
+                }],
+         "type":"67"
+        }, 
+        {
+         "id":37,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"A Creature Zap Spell!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u25b2",
+                     "fg":"LightRed"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Creature zap spell"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Zap"
+                }],
+         "type":"34"
+        }, 
+        {
+         "id":38,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Yah Hoo! You discovered a Reveal Gems Scroll!"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"ShowGems"
+                }],
+         "type":"41"
+        }, 
+        {
+         "id":40,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap4"
+                }],
+         "type":"39"
+        }, 
+        {
+         "id":41,
+         "properties":[
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap3"
+                }],
+         "type":"37"
+        }, 
+        {
+         "id":42,
+         "properties":[
+                {
+                 "name":"Collectible",
+                 "propertytype":"Collectible",
+                 "type":"class",
+                 "value":
+                    {
+                     "score":50
+                    }
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You found a Gold Nugget...500 points!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u263c",
+                     "fg":"Yellow"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Nugget"
+                }],
+         "type":"27"
+        }, 
+        {
+         "id":43,
+         "properties":[
+                {
+                 "name":"Collectible",
+                 "propertytype":"Collectible",
+                 "type":"class",
+                 "value":
+                    {
+                     "gems":1
+                    }
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Gems give you both points and strength."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2666",
+                     "fg":"Blue"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Gem"
+                }],
+         "type":"9"
+        }, 
+        {
+         "id":45,
+         "properties":[
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Stop space"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Stop"
+                }],
+         "type":"32"
+        }, 
+        {
+         "id":46,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You activated a Teleport trap!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2219",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"Tile.ch",
+                 "type":"string",
+                 "value":"\u2219"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap"
+                }],
+         "type":"16"
+        }, 
+        {
+         "id":47,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You cannot travel through forest terrain."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Green",
+                     "ch":"\u2588",
+                     "fg":"Green"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Forest"
+                }],
+         "type":"19"
+        }, 
+        {
+         "id":48,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You pushed a big Boulder!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"O",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"isPushable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Rock"
+                }],
+         "type":"65"
+        }, 
+        {
+         "id":49,
+         "properties":[
+                {
+                 "name":"AnimatedWalking",
+                 "type":"string",
+                 "value":"A\u00c4"
+                }, 
+                {
+                 "name":"Attacks",
+                 "propertytype":"Attacks",
+                 "type":"class",
+                 "value":
+                    {
+                     "damage":1
+                    }
+                }, 
+                {
+                 "name":"Movement.pace",
+                 "type":"int",
+                 "value":4
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u00c4",
+                     "fg":"LightRed"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Red enemy"
+                }, 
+                {
+                 "name":"doesFollowsPlayer",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isMobile",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Slow"
+                }],
+         "type":"1"
+        }, 
+        {
+         "id":50,
+         "properties":[
+                {
+                 "name":"AnimatedWalking",
+                 "type":"string",
+                 "value":"\u00f6\u00d6"
+                }, 
+                {
+                 "name":"Attacks",
+                 "propertytype":"Attacks",
+                 "type":"class",
+                 "value":
+                    {
+                     "damage":2
+                    }
+                }, 
+                {
+                 "name":"Movement.pace",
+                 "type":"int",
+                 "value":3
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u00d6",
+                     "fg":"Green"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Green enemy"
+                }, 
+                {
+                 "name":"doesFollowsPlayer",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isMobile",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Medium"
+                }],
+         "type":"2"
+        }, 
+        {
+         "id":51,
+         "properties":[
+                {
+                 "name":"Attacks",
+                 "propertytype":"Attacks",
+                 "type":"class",
+                 "value":
+                    {
+                     "damage":3
+                    }
+                }, 
+                {
+                 "name":"Movement.pace",
+                 "type":"int",
+                 "value":2
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u03a9",
+                     "fg":"LightBlue"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Blue enemy"
+                }, 
+                {
+                 "name":"doesFollowsPlayer",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isMobile",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Fast"
+                }],
+         "type":"3"
+        }, 
+        {
+         "id":52,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"A Solid Wall blocks your way."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":"\u2588",
+                     "fg":"Brown"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"OWall1"
+                }],
+         "type":"52"
+        }, 
+        {
+         "id":53,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":"\u2588",
+                     "fg":"Brown"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"OWall2"
+                }],
+         "type":"53"
+        }, 
+        {
+         "id":54,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"White",
+                     "ch":"\u2588",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"OWall3"
+                }],
+         "type":"54"
+        }, 
+        {
+         "id":55,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"CWall1"
+                }],
+         "type":"55"
+        }, 
+        {
+         "id":56,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"CWall2"
+                }],
+         "type":"56"
+        }, 
+        {
+         "id":57,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"CWall3"
+                }],
+         "type":"57"
+        }, 
+        {
+         "id":58,
+         "properties":[
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"IWall"
+                }],
+         "type":"30"
+        }, 
+        {
+         "id":59,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"An Invisible Crumbled Wall blocks your way."
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"IBlock"
+                }],
+         "type":"29"
+        }, 
+        {
+         "id":60,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"K",
+                     "fg":"Yellow"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"K"
+                }],
+         "type":"48"
+        }, 
+        {
+         "id":61,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"* SPLAT!! *"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2591",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Pit"
+                }],
+         "type":"23"
+        }, 
+        {
+         "id":62,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Statues are very dangerous...they drain your Gems!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u263a",
+                     "fg":"HighIntensityWhite"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Statue"
+                }],
+         "type":"46"
+        }, 
+        {
+         "id":63,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You found a Pouch containing Gems!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"?",
+                     "fg":"HighIntensityWhite"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Chance"
+                }],
+         "type":"45"
+        }, 
+        {
+         "id":64,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap2"
+                }],
+         "type":"33"
+        }, 
+        {
+         "id":65,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"The Sacred Tome of Kroz is finally yours--50,000 points!"
+                }, 
+                {
+                 "name":"ReadMessage",
+                 "type":"string",
+                 "value":"Congratulations, Adventurer, you finally did it!!!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Magenta",
+                     "ch":"\u25a0",
+                     "fg":"Blue"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Tome"
+                }],
+         "type":"24"
+        }, 
+        {
+         "id":66,
+         "properties":[
+                {
+                 "name":"ChanceOdds",
+                 "type":"int",
+                 "value":40
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You activated a Magic Bomb!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u00a5",
+                     "fg":"HighIntensityWhite"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Bomb"
+                }],
+         "type":"21"
+        }, 
+        {
+         "id":67,
+         "properties":[
+                {
+                 "name":"ChanceOdds",
+                 "type":"int",
+                 "value":20
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You found gems and whips inside the chest!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Red",
+                     "ch":"C",
+                     "fg":"Yellow"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Chest"
+                }],
+         "type":"7"
+        }, 
+        {
+         "id":68,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"The Door opens!  (One of your Keys is used.)"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Magenta",
+                     "ch":"\u221e",
+                     "fg":"Cyan"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Door"
+                }],
+         "type":"13"
+        }, 
+        {
+         "id":69,
+         "properties":[
+                {
+                 "name":"ChanceOdds",
+                 "type":"int",
+                 "value":15
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Oh no, you set off an Earthquake trap!"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Quake"
+                }],
+         "type":"28"
+        }, 
+        {
+         "id":70,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You activated a Speed Creature spell."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u0398",
+                     "fg":"LightCyan"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Speed time spell"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"SpeedTime"
+                }],
+         "type":"15"
+        }, 
+        {
+         "id":71,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You have discovered a Creature Generator!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "blink":true,
+                     "ch":"\u2660",
+                     "fg":"Yellow"
+                    }
+                }, 
+                {
+                 "name":"isGenerator",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Generator"
+                }],
+         "type":"36"
+        }, 
+        {
+         "id":72,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You triggered Exploding Walls!"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"BlockSpell"
+                }],
+         "type":"44"
+        }, 
+        {
+         "id":73,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Oh no, a temporary Blindness Potion!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u00a1",
+                     "fg":"Green"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Invisible"
+                }],
+         "type":"10"
+        }, 
+        {
+         "id":75,
+         "properties":[
+                {
+                 "name":"ChanceOdds",
+                 "type":"int",
+                 "value":25
+                }, 
+                {
+                 "name":"Collectible",
+                 "propertytype":"Collectible",
+                 "type":"class",
+                 "value":
+                    {
+                     "keys":1
+                    }
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Use Keys to unlock doors."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u00ee",
+                     "fg":"LightRed"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Key"
+                }],
+         "type":"12"
+        }, 
+        {
+         "id":76,
+         "properties":[
+                {
+                 "name":"ChangeLevel",
+                 "propertytype":"ChangeLevel",
+                 "type":"class",
+                 "value":
+                    {
+                     "deltaLevel":1
+                    }
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Stairs take you to the next lower level."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"White",
+                     "blink":true,
+                     "ch":"\u2261"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Stairs"
+                }],
+         "type":"6"
+        }, 
+        {
+         "id":77,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"A Moving Wall blocks your way."
+                }, 
+                {
+                 "name":"Movement.pace",
+                 "type":"int",
+                 "value":2
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2593",
+                     "fg":"Brown"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Moving wall"
+                }, 
+                {
+                 "name":"doesFollowsPlayer",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isMobile",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"MBlock"
+                }],
+         "type":"38"
+        }, 
+        {
+         "id":78,
+         "properties":[
+                {
+                 "name":"ChanceOdds",
+                 "type":"int",
+                 "value":20
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Yikes!  A trap has made many of the wall sections invisible!"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"WallVanish"
+                }],
+         "type":"47"
+        }, 
+        {
+         "id":79,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2593",
+                     "fg":"Brown"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"ZBlock"
+                }],
+         "type":"43"
+        }, 
+        {
+         "id":80,
+         "properties":[
+                {
+                 "name":"Movement.pace",
+                 "type":"int",
+                 "value":1
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u263b",
+                     "fg":"Yellow"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"The player"
+                }, 
+                {
+                 "name":"isPlayer",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Player"
+                }],
+         "type":"40"
+        }, 
+        {
+         "id":81,
+         "properties":[
+                {
+                 "name":"ChanceOdds",
+                 "type":"int",
+                 "value":15
+                }, 
+                {
+                 "name":"Collectible",
+                 "propertytype":"Collectible",
+                 "type":"class",
+                 "value":
+                    {
+                     "whipPower":1
+                    }
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"A Power Ring--your whip is now a little stronger!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u25cb",
+                     "fg":"HighIntensityWhite"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Power"
+                }],
+         "type":"18"
+        }, 
+        {
+         "id":82,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You cannot travel through Water."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Blue",
+                     "ch":"\u2248",
+                     "fg":"LightBlue"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"River"
+                }],
+         "type":"17"
+        }, 
+        {
+         "id":83,
+         "properties":[
+                {
+                 "name":"ChanceOdds",
+                 "type":"int",
+                 "value":35
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You activated a Slow Time spell."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u03a6",
+                     "fg":"LightCyan"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Slow time spell"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"SlowTime"
+                }],
+         "type":"8"
+        }, 
+        {
+         "id":84,
+         "properties":[
+                {
+                 "name":"Collectible",
+                 "propertytype":"Collectible",
+                 "type":"class",
+                 "value":
+                    {
+                     "teleports":1
+                    }
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You found a Teleport scroll."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2191",
+                     "fg":"LightMagenta"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Teleport"
+                }],
+         "type":"11"
+        }, 
+        {
+         "id":85,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You passed through a secret Tunnel!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2229",
+                     "fg":"HighIntensityWhite"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Tunnel"
+                }],
+         "type":"25"
+        }, 
+        {
+         "id":86,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Oooooooooooooooooooh!  Lava hurts!  (Lose 10 Gems.)"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Red",
+                     "ch":"\u2593",
+                     "fg":"LightRed"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Lava"
+                }],
+         "type":"22"
+        }, 
+        {
+         "id":87,
+         "properties":[
+                {
+                 "name":"Collectible",
+                 "propertytype":"Collectible",
+                 "type":"class",
+                 "value":
+                    {
+                     "whips":1
+                    }
+                }, 
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You found a Whip"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2320",
+                     "fg":"HighIntensityWhite"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"A whip"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Whip"
+                }],
+         "type":"5"
+        }, 
+        {
+         "id":88,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"A Breakable Wall blocks your way"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2593",
+                     "fg":"Brown"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Block"
+                }],
+         "type":"4"
+        }, 
+        {
+         "id":89,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Black",
+                     "ch":"\u2593",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"GBlock"
+                }],
+         "type":"64"
+        }, 
+        {
+         "id":90,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You have activated a Freeze Creature spell!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u0192",
+                     "fg":"LightCyan"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Freeze time spell"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Freeze"
+                }],
+         "type":"26"
+        }, 
+        {
+         "id":91,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"R",
+                     "fg":"Yellow"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"R"
+                }],
+         "type":"49"
+        }, 
+        {
+         "id":92,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"A tree blocks your way."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Green",
+                     "ch":"\u2663",
+                     "fg":"Brown"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Tree"
+                }],
+         "type":"20"
+        }, 
+        {
+         "id":93,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"A Creature Creation Trap!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u25bc",
+                     "fg":"HighIntensityWhite"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Creature creation trap"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"isSecreted",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Create"
+                }],
+         "type":"35"
+        }, 
+        {
+         "id":96,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"An Invisible Door blocks your way."
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"IDoor"
+                }],
+         "type":"31"
+        }, 
+        {
+         "id":124,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"O",
+                     "fg":"Yellow"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"O"
+                }],
+         "type":"50"
+        }, 
+        {
+         "id":126,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You hit a Electrified Wall!  You lose one Gem."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Red",
+                     "ch":"X",
+                     "fg":"LightRed"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"EWall"
+                }],
+         "type":"66"
+        }, 
+        {
+         "id":145,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"TBlock"
+                }],
+         "type":"68"
+        }, 
+        {
+         "id":146,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"TRock"
+                }],
+         "type":"69"
+        }, 
+        {
+         "id":147,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"TGem"
+                }],
+         "type":"70"
+        }, 
+        {
+         "id":148,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"TBlind"
+                }],
+         "type":"71"
+        }, 
+        {
+         "id":149,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"TWhip"
+                }],
+         "type":"72"
+        }, 
+        {
+         "id":150,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"TGold"
+                }],
+         "type":"73"
+        }, 
+        {
+         "id":151,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"TTree"
+                }],
+         "type":"74"
+        }, 
+        {
+         "id":159,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!"
+                }, 
+                {
+                 "name":"ReadMessage",
+                 "type":"string",
+                 "value":"You have found the Amulet of Yendor -- 25,000 points!\nIt seems that Kroz and Rogue share the same underground!)\nYour quest for the treasure of Kroz must still continue..."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2640",
+                     "fg":"HighIntensityWhite"
+                    }
+                }, 
+                {
+                 "name":"description",
+                 "type":"string",
+                 "value":"Amulet of Yendor"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Amulet"
+                }],
+         "type":"81"
+        }, 
+        {
+         "id":174,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2190",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"ShootLeft"
+                }],
+         "type":"83"
+        }, 
+        {
+         "id":175,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2192",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"Tile.ch",
+                 "type":"string",
+                 "value":"\u2192"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"ShootRight"
+                }],
+         "type":"82"
+        }, 
+        {
+         "id":179,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"You grabbed a Rope."
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2502",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Rope"
+                }],
+         "type":"75"
+        }, 
+        {
+         "id":180,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":".",
+                     "fg":"HighIntensityWhite"
+                    }
+                }]
+        }, 
+        {
+         "id":181,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":"?",
+                     "fg":"HighIntensityWhite"
+                    }
+                }]
+        }, 
+        {
+         "id":182,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":"'",
+                     "fg":"HighIntensityWhite"
+                    }
+                }]
+        }, 
+        {
+         "id":183,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":",",
+                     "fg":"HighIntensityWhite"
+                    }
+                }]
+        }, 
+        {
+         "id":184,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":":",
+                     "fg":"HighIntensityWhite"
+                    }
+                }]
+        }, 
+        {
+         "id":185,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2193",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"DropRope"
+                }],
+         "type":"76"
+        }, 
+        {
+         "id":186,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2193",
+                     "fg":"White"
+                    }
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"DropRope2"
+                }],
+         "type":"77"
+        }, 
+        {
+         "id":187,
+         "properties":[
+                {
+                 "name":"Tile.ch",
+                 "type":"string",
+                 "value":"\u2193"
+                }, 
+                {
+                 "name":"Tile.fg",
+                 "type":"string",
+                 "value":"White"
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"DropRope3"
+                }],
+         "type":"78"
+        }, 
+        {
+         "id":188,
+         "properties":[
+                {
+                 "name":"Tile.ch",
+                 "type":"string",
+                 "value":"\u2193"
+                }, 
+                {
+                 "name":"Tile.fg",
+                 "type":"string",
+                 "value":"White"
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"DropRope4"
+                }],
+         "type":"79"
+        }, 
+        {
+         "id":189,
+         "properties":[
+                {
+                 "name":"Tile.ch",
+                 "type":"string",
+                 "value":"\u2193"
+                }, 
+                {
+                 "name":"Tile.fg",
+                 "type":"string",
+                 "value":"White"
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"DropRope5"
+                }],
+         "type":"80"
+        }, 
+        {
+         "id":195,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":"!",
+                     "fg":"HighIntensityWhite"
+                    }
+                }]
+        }, 
+        {
+         "id":224,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap6"
+                }],
+         "type":"224"
+        }, 
+        {
+         "id":225,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap7"
+                }],
+         "type":"225"
+        }, 
+        {
+         "id":226,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap8"
+                }],
+         "type":"226"
+        }, 
+        {
+         "id":227,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap9"
+                }],
+         "type":"227"
+        }, 
+        {
+         "id":228,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap10"
+                }],
+         "type":"228"
+        }, 
+        {
+         "id":229,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap11"
+                }],
+         "type":"229"
+        }, 
+        {
+         "id":230,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap12"
+                }],
+         "type":"230"
+        }, 
+        {
+         "id":231,
+         "properties":[
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Trap13"
+                }],
+         "type":"231"
+        }, 
+        {
+         "id":239,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":"\u2229",
+                     "fg":"HighIntensityWhite"
+                    }
+                }]
+        }, 
+        {
+         "id":241,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Magic has been released is this chamber!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2302",
+                     "fg":"LightCyan"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"OSpell1"
+                }],
+         "type":"58"
+        }, 
+        {
+         "id":242,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Magic has been released is this chamber!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2302",
+                     "fg":"LightCyan"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"OSpell2"
+                }],
+         "type":"59"
+        }, 
+        {
+         "id":243,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"Magic has been released is this chamber!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "ch":"\u2302",
+                     "fg":"LightCyan"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"OSpell3"
+                }],
+         "type":"60"
+        }, 
+        {
+         "id":244,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"New Walls have magically appeared!"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"CSpell1"
+                }],
+         "type":"61"
+        }, 
+        {
+         "id":245,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"New Walls have magically appeared!"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"CSpell2"
+                }],
+         "type":"62"
+        }, 
+        {
+         "id":246,
+         "properties":[
+                {
+                 "name":"Message",
+                 "type":"string",
+                 "value":"New Walls have magically appeared!"
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":true
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"CSpell3"
+                }],
+         "type":"63"
+        }, 
+        {
+         "id":249,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":"\u2219",
+                     "fg":"HighIntensityWhite"
+                    }
+                }]
+        }, 
+        {
+         "id":250,
+         "properties":[
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Brown",
+                     "ch":"\u00b7",
+                     "fg":"HighIntensityWhite"
+                    }
+                }]
+        }, 
+        {
+         "id":252,
+         "properties":[
+                {
+                 "name":"ReadMessage",
+                 "type":"string",
+                 "value":"You notice a secret message carved into the old tree...\\n\"Goodness of Heart Overcomes Adversity.\"\\nReveal that you found this message to Scott Miller...\\nAnd receive a \"MASTER KROZ CERTIFICATE\" to hang on your wall!!\\nOnly the first 100 players to report this...\\nWill be awarded the certificate.  Congratulations!"
+                }, 
+                {
+                 "name":"Tile",
+                 "propertytype":"Renderable",
+                 "type":"class",
+                 "value":
+                    {
+                     "bg":"Green",
+                     "ch":"\u2663",
+                     "fg":"Brown"
+                    }
+                }, 
+                {
+                 "name":"isPassable",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"Message"
+                }],
+         "type":"252"
+        }],
+ "tilewidth":24,
+ "type":"tileset",
+ "version":"1.10"
 }

@@ -1,50 +1,70 @@
-{
-  "class": "Lost42",
-  "compressionlevel": -1,
-  "height": 23,
-  "infinite": false,
-  "layers": [
-    {
-      "compression": "zlib",
-      "data": "eJzll99OU0EQxs+riPUCTLZUixIIJCaQoCkkxguqyA1GiQSiiciFxvAOlL4RL4KPoHJJ4m6cL3yus5yZ02pNuPhl9s90z\/lmZndPW1VVtYzsRw4i7yOHkTcynuw7mU9zR9L\/KHMfxL8l87vSTvNvaZ198d2JfI58ovG05qvInvR35F0wvyfPfB05c2jqRm5NkKcTfHaX4hAcMctZHIOPZY1R\/Eu\/fW4AvseRfo2F74nEdEMsk8ba1L9jIPktRGalnew2rYH2lyynYBD5LjZ\/nzqw3l3ReJ3lZ5+QziHFYpita9EPX9aMWGxXv8cEvi8MbBhokn\/OO2oBscAcfO8Z4Liy7tnqz3jAd9rAjIEm+W9TnrkGAs3B974B+JbqnmvAo3\/FoB\/P8uT\/h6Kba4HrqmsAvpekU6t\/nBPBqL\/pGaoxyh0yLhao\/aCG9L6nBus5Tzw1XTpvO1m\/T+s+M8BnUB2ee8Cj\/5EB7Z7qENodlPRdd1d79Xvu\/7+tH7rXlBiU9PdG1O+5\/5vo53f7H\/M\/MGDV3yvo33Lo\/5f7v5fFdlJ3wcUYn\/uY2lsG\/+Pq6m5\/mfVh4dsn2gXOq1\/fa4sGy7GaF9JdvyLtQHPwXabx1H4idpnG4Pu1QKrVVGO3Fa2a9eiHryUG8IXWeSJkbfhOKXo5Hh79HYN2zn9Js6a\/af6D0s\/zX8KTf+DJv0d\/0\/xr2lk\/5zlkFvuhTj+DM7AuBuekcWkM+f+W6df2ANdDqK72Ote7tgewrud\/1U1hTkB\/XeA4byrtzawdlHGwmvW18UFhfFgYfyhY\/iuWwLcEk+u36NV0c9uiv6SzFBfot3yDevgJx2NkkA==",
-      "encoding": "base64",
-      "height": 23,
-      "id": 1,
-      "name": "",
-      "opacity": 1,
-      "type": "tilelayer",
-      "visible": true,
-      "width": 64,
-      "x": 0,
-      "y": 0
-    }
-  ],
-  "nextlayerid": 2,
-  "nextobjectid": 1,
-  "orientation": "orthogonal",
-  "properties": [
-    {
-      "name": "TreeRate",
-      "type": "int",
-      "value": 35
-    },
-    {
-      "name": "tabletMessage",
-      "type": "string",
-      "value": "On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"Barriers of water, like barriers in life, can always be...\"\n##RiverToBlock\n\"...Overcome!\""
-    }
-  ],
-  "renderorder": "right-down",
-  "tiledversion": "1.11.1",
-  "tileheight": 36,
-  "tilesets": [
-    {
-      "firstgid": 1,
-      "source": "..\/..\/kroz.tileset.json"
-    }
-  ],
-  "tilewidth": 24,
-  "type": "map",
-  "version": "1.10",
-  "width": 64
+{ "class":"Lost42",
+ "compressionlevel":-1,
+ "height":23,
+ "infinite":false,
+ "layers":[
+        {
+         "compression":"zlib",
+         "data":"eJzll99OU0EQxs+riPUCTLZUixIIJCaQoCkkxguqyA1GiQSiiciFxvAOlL4RL4KPoHJJ4m6cL3yus5yZ02pNuPhl9s90z\/lmZndPW1VVtYzsRw4i7yOHkTcynuw7mU9zR9L\/KHMfxL8l87vSTvNvaZ198d2JfI58ovG05qvInvR35F0wvyfPfB05c2jqRm5NkKcTfHaX4hAcMctZHIOPZY1R\/Eu\/fW4AvseRfo2F74nEdEMsk8ba1L9jIPktRGalnew2rYH2lyynYBD5LjZ\/nzqw3l3ReJ3lZ5+QziHFYpita9EPX9aMWGxXv8cEvi8MbBhokn\/OO2oBscAcfO8Z4Liy7tnqz3jAd9rAjIEm+W9TnrkGAs3B974B+JbqnmvAo3\/FoB\/P8uT\/h6Kba4HrqmsAvpekU6t\/nBPBqL\/pGaoxyh0yLhao\/aCG9L6nBus5Tzw1XTpvO1m\/T+s+M8BnUB2ee8Cj\/5EB7Z7qENodlPRdd1d79Xvu\/7+tH7rXlBiU9PdG1O+5\/5vo53f7H\/M\/MGDV3yvo33Lo\/5f7v5fFdlJ3wcUYn\/uY2lsG\/+Pq6m5\/mfVh4dsn2gXOq1\/fa4sGy7GaF9JdvyLtQHPwXabx1H4idpnG4Pu1QKrVVGO3Fa2a9eiHryUG8IXWeSJkbfhOKXo5Hh79HYN2zn9Js6a\/af6D0s\/zX8KTf+DJv0d\/0\/xr2lk\/5zlkFvuhTj+DM7AuBuekcWkM+f+W6df2ANdDqK72Ote7tgewrud\/1U1hTkB\/XeA4byrtzawdlHGwmvW18UFhfFgYfyhY\/iuWwLcEk+u36NV0c9uiv6SzFBfot3yDevgJx2NkkA==",
+         "encoding":"base64",
+         "height":23,
+         "id":1,
+         "name":"",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":64,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Object Layer 1",
+         "objects":[
+                {
+                 "gid":34,
+                 "height":36,
+                 "id":1,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"ReadMessage",
+                         "type":"string",
+                         "value":"On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"Barriers of water, like barriers in life, can always be...\"\n##RiverToBlock\n\"...Overcome!\""
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24,
+                 "x":1056,
+                 "y":612
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":3,
+ "nextobjectid":2,
+ "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"TreeRate",
+         "type":"int",
+         "value":35
+        }],
+ "renderorder":"right-down",
+ "tiledversion":"1.11.1",
+ "tileheight":36,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/..\/kroz.tileset.json"
+        }],
+ "tilewidth":24,
+ "type":"map",
+ "version":"1.10",
+ "width":64
 }

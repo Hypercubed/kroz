@@ -56,7 +56,6 @@ function getDefaultLevelState() {
       0,
       0,
     ], // Timers
-    tabletMessage: undefined as undefined | string,
     startText: undefined as undefined | string,
   };
 }
@@ -68,6 +67,7 @@ function getDefaultGameState() {
     paused: false,
     done: false,
     foundSet: new Set<Type>() as Set<Type> | true,
+    bot: false,
   };
 }
 
@@ -147,88 +147,8 @@ export async function restore() {
   }
 }
 
-// Replace with tielset data
 export function addScore(block: Type) {
-  switch (block) {
-    case Type.Border:
-      if (stats.score > stats.levelIndex) stats.score -= stats.levelIndex / 2;
-      break;
-    case Type.Slow:
-    case Type.Medium:
-    case Type.Fast:
-      stats.score += block;
-      break;
-    case Type.Block:
-    case Type.ZBlock:
-    case Type.GBlock:
-    case Type.Wall:
-    case Type.River:
-    case Type.Tree:
-    case Type.Forest:
-    case Type.MBlock:
-    case Type.OWall1:
-    case Type.OWall2:
-    case Type.OWall3:
-    case Type.EWall:
-      if (stats.score > 2) stats.score -= 2;
-      break;
-    case Type.Whip:
-    case Type.SlowTime:
-    case Type.Bomb:
-      stats.score++;
-      break;
-    case Type.Stairs:
-      stats.score += stats.levelIndex * 5;
-      break;
-    case Type.Chest:
-      stats.score += 10 + Math.floor(stats.levelIndex / 2);
-      break;
-    case Type.Gem:
-      stats.score += Math.floor(stats.levelIndex / 2) + 1;
-      break;
-    case Type.Invisible:
-      stats.score += 25;
-      break;
-    case Type.Nugget:
-      stats.score += 50;
-      break;
-    case Type.Door:
-      stats.score += 10;
-      break;
-    case Type.Teleport:
-    case Type.Freeze:
-      stats.score += 2;
-      break;
-    case Type.SpeedTime:
-    case Type.Power:
-      stats.score += 5;
-      break;
-    case Type.Trap:
-      if (stats.score > 5) stats.score -= 5;
-      break;
-    case Type.Lava:
-      if (stats.score > 100) stats.score += 100;
-      break;
-    case Type.Tome:
-      stats.score += 5000;
-      break;
-    case Type.Tablet:
-      stats.score += stats.levelIndex + 250;
-      break;
-    case Type.Chance:
-      stats.score += 100;
-      break;
-    case Type.Statue:
-      stats.score += 10;
-      break;
-    case Type.Amulet:
-      stats.score += 2500;
-      break;
-    case Type.Z:
-      stats.score += 1000;
-      break;
-  }
-
+  stats.score += tiles.getScoreDelta(block);
   screen.renderStats();
 }
 

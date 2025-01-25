@@ -687,9 +687,22 @@ export async function readMessage(message: string | undefined) {
 
       if (message.startsWith('##')) {
         await specialTriggers(message.slice(2));
+      } else if (message.startsWith('@@')) {
+        await specialSounds(message.slice(2));
       } else {
         await screen.flashMessage(message);
       }
     }
+  }
+}
+
+async function specialSounds(t: string) {
+  switch (t) {
+    case 'Amulet':
+      await sound.amulet();
+      break;
+    case 'SecretMessage':
+      await sound.secretMessage();
+      break;
   }
 }

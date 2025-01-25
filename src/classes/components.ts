@@ -9,6 +9,7 @@ export const isGenerator = Symbol('isGenerator');
 export const isInvisible = Symbol('isInvisible');
 export const isSecreted = Symbol('isSecreted'); // Appears as ?
 export const isPushable = Symbol('isPushable');
+export const isPassable = Symbol('isPushable');
 
 export class Renderable {
   ch: string;
@@ -29,6 +30,8 @@ export class Position {
 
   x!: number;
   y!: number;
+  px: number | null = null;
+  py: number | null = null;
 
   constructor(data: Partial<{ x: number; y: number }> = {}) {
     this.x = data.x ?? 0;
@@ -36,6 +39,8 @@ export class Position {
   }
 
   moveTo(x: number, y: number) {
+    this.px = this.x;
+    this.py = this.y;
     this.x = x;
     this.y = y;
   }
@@ -131,11 +136,8 @@ export class SecretMessage {
   constructor(public message: string) {}
 }
 
-export class TabletMessage {
-  constructor(public message: string) {}
-}
-
-export class AmuletMessage {
+// Combine with SecretMessage
+export class ReadMessage {
   constructor(public message: string) {}
 }
 

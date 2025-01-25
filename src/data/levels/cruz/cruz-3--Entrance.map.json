@@ -1,11 +1,10 @@
-{ "class":"Lost18",
- "compressionlevel":-1,
+{ "compressionlevel":-1,
  "height":23,
  "infinite":false,
  "layers":[
         {
          "compression":"zlib",
-         "data":"eJzlmEsKwjAQQHuVakVaigXxs3LZXRVcCEXEm3hpvYANJBBCOpmZmmmxi0ca8n2TGpM2SZJshLlbLJy85DwanR5niomDyb87UkHU2CWhft1xA9KzJrWc3PGWgL+kOwfOGrv+tq+bHxvpOLr+J533tSkizUE9V5qx\/U3e1yZjgPUPrb\/pb0UAmgP192\/62hIIxYDjr7ggCK0BxZ\/jbsgj+IdigHkHp+SfE\/zbQAx89cZ6\/yF37vq3QAz66mD895oCgLr3Yf2vDH\/bbx0o9\/V30GDXvyCufaz9v3LIEGVD33+qe8z9v6+M2uaf\/EPnlaH+Mf77f+nPacPd\/3919uP6Pwn45hG6\/1DiOxT7zC81vnJ9TMRf+m7pA3P\/4fSL8S89Y0nH3vV\/Af7q2XxfUeeLGkjHcMLyAfznhv0NVJIdgOQ8lPsXGFH+yg==",
+         "data":"eJzFl0FOw1AMRP9VgrJkgZA4AysWqGxaKfffcwKKFEvuZGZsNYEurN807Y+fPbZ\/TmOMk7GXneb27ljea1mt87zpap\/repR\/\/8UdrNUz8DcL8Ie5\/fbm5CheluNlbFkrDTh+tCP0eSQ342O8LD4Vv4rto9mrfHZqnmkw87PcP5Lf1S9yoy5cPBQ\/26+qW6VJtv6F5pkGOrpHdtb\/F\/E\/5s\/csK6Oqv7tel5X9xU\/xjqz473gu1ztDNf3xKCrdadXl7\/M0o0B0zvyYxwuYxuHqp+o\/rPXXN2qGGD8mF8LMJ6TzeNWD\/O4javyyc02FQ+X\/05frWKQ+fFe5s5xuIxtTbh+jdfI9LruNZm1k3vWm5E\/z0PFn7UfjEzzqAGlI7RpZc5rxf9rX+s6E\/bQIJrjD60yPbK+xyy0MI+aO\/xB9oo\/x2Aa2hfGygw1xPSq+rwzd86KlbFXeUf+PaZ6CPqJte64QyNuZjPtV\/wsFmwuVfln\/ZPNP1b7Hfb8G4wB6oCxV3mPWLwn\/1j9u5mqzpqsf+K8dz0A54ObaU6XVd7PaU91vmCs6Ad+x2Yo6+3B90Fyn2OEGlNnEcXvYqHmnpphVe7VDM3c33D9NrQWZvKsqPnnxJc\/Z2aVd6dZd\/ZRZ678uXr3wx7yJPbB7xgjGv6G5R17iDtfK+27M2b1vqLOUNn3qsY7sWB9unPmY\/WvtM76cfedjemK3XOzz80h5SfuWeVK1b+69wMVvGzB",
          "encoding":"base64",
          "height":23,
          "id":1,
@@ -31,14 +30,14 @@
                         {
                          "name":"ReadMessage",
                          "type":"string",
-                         "value":"Adventurer, check the \"Valley of the M\"!"
+                         "value":"What a disappointment.  The decoded runes indicate\nthis is the civilization of Cruz, not Kroz.\nStill worth exploring, I guess."
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":24,
-                 "x":768,
-                 "y":36
+                 "x":288,
+                 "y":756
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -49,17 +48,6 @@
  "nextlayerid":3,
  "nextobjectid":2,
  "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"HideCreate",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"HideMBlock",
-         "type":"bool",
-         "value":true
-        }],
  "renderorder":"right-down",
  "tiledversion":"1.11.1",
  "tileheight":36,
