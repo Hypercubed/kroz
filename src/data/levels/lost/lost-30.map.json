@@ -1,70 +1,76 @@
-{ "class":"Lost30",
- "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
+{
+  "class": "Lost30",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzdlsFqAjEQhvdVVuyhHjyI0kJ7KehBULF4a8FTKVSqKOib+KSCd2dhFoYwziTuJO56+EgOyWa\/+ZPN9rIs6zkMkFygjQxJ32UNbIEf4B\/YAxtgBRyAPxy3x34xdof8Cs+la0rvWLIQcN1D\/ZekP\/Fsu0CftCFz3TWruJ8q+HO1ePPgWqbavHfDzIv984VY+ncjI\/m\/ECT3BRmXG\/uH4DqFoPn7YuVfB8bAXGHMzGuy\/62ZP5q\/z1l\/RH\/J2\/cZTfSv6lxgef9xfNbUm\/p\/NyB\/7S6\/tQax87d27hOs9kBeQ\/9rzi5WNfhgCPnPTu1tXYMZQxP8rfLvMKT2D3G3PPv3zl\/6xmnOvu4jhWeGFP6c+xTRnEMy1\/zvkb\/vnW6xzzX\/J4aY\/imcJf9Xh9T5x\/b19T8jS2RC+qX\/MZF7uXaMekv+LeACCjwLoQ==",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
         {
-         "compression":"zlib",
-         "data":"eJzdlsFqAjEQhvdVVuyhHjyI0kJ7KehBULF4a8FTKVSqKOib+KSCd2dhFoYwziTuJO56+EgOyWa\/+ZPN9rIs6zkMkFygjQxJ32UNbIEf4B\/YAxtgBRyAPxy3x34xdof8Cs+la0rvWLIQcN1D\/ZekP\/Fsu0CftCFz3TWruJ8q+HO1ePPgWqbavHfDzIv984VY+ncjI\/m\/ECT3BRmXG\/uH4DqFoPn7YuVfB8bAXGHMzGuy\/62ZP5q\/z1l\/RH\/J2\/cZTfSv6lxgef9xfNbUm\/p\/NyB\/7S6\/tQax87d27hOs9kBeQ\/9rzi5WNfhgCPnPTu1tXYMZQxP8rfLvMKT2D3G3PPv3zl\/6xmnOvu4jhWeGFP6c+xTRnEMy1\/zvkb\/vnW6xzzX\/J4aY\/imcJf9Xh9T5x\/b19T8jS2RC+qX\/MZF7uXaMekv+LeACCjwLoQ==",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "gid":34,
-                 "height":36,
-                 "id":1,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"ReadMessage",
-                         "type":"string",
-                         "value":"On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"If goodness is in my heart, that which flows shall...\"\n##RiverToGold\n\"...Turn to Gold!\""
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":1512,
-                 "y":828
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":3,
- "nextobjectid":2,
- "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"HideCreate",
-         "type":"bool",
-         "value":true
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+          "gid": 34,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "ReadMessage",
+              "type": "string",
+              "value": "On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"If goodness is in my heart, that which flows shall...\"\n##RiverToGold\n\"...Turn to Gold!\""
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1512,
+          "y": 828
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 2,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "HideCreate",
+      "type": "bool",
+      "value": true
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

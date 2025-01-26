@@ -1,64 +1,69 @@
-{ "class":"Lost11",
- "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
+{
+  "class": "Lost11",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzVmNtKAzEQhvMqK3ixVRRxYa\/FFg+o6EWxtA\/jQ\/SFNZhAGOacNG0vfrKnZuebP5lNOocQ5oa66az83k1See9V+O2b8V2rPw2g5WI6tMZGHrX0fqzUvUGj0T8Y64xcr+UvvenBr2Wg8mHlvyuO43zbJsG+vjsIy3vtXJAU+R8RfjjG1ul8A9or4vrS+PzayT8h\/K38P5b2TvbM\/4HomDyeMexh5\/hvOyvGd1HExdW9MvZSl4y43J2i\/xL7j1HUGDknfsp3SVwOTmn8vzD8Zbwe76kcnIP\/GLvHeywHPdfrGj0AUexe72EOpDXyZ\/j\/zrdoByU\/dszlIO7j9g38x\/hbemvlp+qVdRxI8z8fPwn8eU0ba9Ui5X2RzuGadDDIwu+pAxT7MtTxZ2n5nxX82tpk\/Q5QY4nLMXdfis\/rP8U\/BXzvotWM9DWBe1uFauqD5nmuNnnrETfnc7+YL18Gr64VucfeKz1fqtxnr4j2PWkg3ivVFcs4qvGT2jMfYj2ijVvzn5N3\/nHe7ir7rInjF8lmTvk=",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
         {
-         "compression":"zlib",
-         "data":"eJzVmNtKAzEQhvMqK3ixVRRxYa\/FFg+o6EWxtA\/jQ\/SFNZhAGOacNG0vfrKnZuebP5lNOocQ5oa66az83k1See9V+O2b8V2rPw2g5WI6tMZGHrX0fqzUvUGj0T8Y64xcr+UvvenBr2Wg8mHlvyuO43zbJsG+vjsIy3vtXJAU+R8RfjjG1ul8A9or4vrS+PzayT8h\/K38P5b2TvbM\/4HomDyeMexh5\/hvOyvGd1HExdW9MvZSl4y43J2i\/xL7j1HUGDknfsp3SVwOTmn8vzD8Zbwe76kcnIP\/GLvHeywHPdfrGj0AUexe72EOpDXyZ\/j\/zrdoByU\/dszlIO7j9g38x\/hbemvlp+qVdRxI8z8fPwn8eU0ba9Ui5X2RzuGadDDIwu+pAxT7MtTxZ2n5nxX82tpk\/Q5QY4nLMXdfis\/rP8U\/BXzvotWM9DWBe1uFauqD5nmuNnnrETfnc7+YL18Gr64VucfeKz1fqtxnr4j2PWkg3ivVFcs4qvGT2jMfYj2ijVvzn5N3\/nHe7ir7rInjF8lmTvk=",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "gid":34,
-                 "height":36,
-                 "id":1,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"ReadMessage",
-                         "type":"string",
-                         "value":"The tunnel below contains a magic spell."
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":840,
-                 "y":324
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":3,
- "nextobjectid":2,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+          "gid": 34,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "ReadMessage",
+              "type": "string",
+              "value": "The tunnel below contains a magic spell."
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 840,
+          "y": 324
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 2,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

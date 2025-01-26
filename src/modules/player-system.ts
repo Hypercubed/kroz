@@ -40,7 +40,13 @@ import { SPELL_DURATION, Timer } from './effects.ts';
 import type { Entity } from '../classes/entity.ts';
 import { Difficulty } from './world.ts';
 
-export async function update() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function update(_tick: number) {
+  await _update();
+  controls.clearActions(); // Clear was pressed actions after player acts
+}
+
+async function _update() {
   if (DEBUG && controls.wasActionDeactivated(Action.SlowerClock)) {
     world.game.clockScale = Math.min(20, world.game.clockScale + 1);
     console.log('Clock Scale:', world.game.clockScale);

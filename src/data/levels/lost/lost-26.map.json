@@ -1,75 +1,81 @@
-{ "class":"Lost26",
- "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
+{
+  "class": "Lost26",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJztmMGKwjAQQOdXFG8u3ZN70WsRxQUXXBAED3soelhZqCv+x\/6AH+MXuT\/gFCPUYZJM09i0ux4ebUpJ8jpJJk0fAPoNpkP4QDbIDvlEEuSbec9Uh4nQvpz\/i2KJRAz0OeffElBX\/4PyN3m\/quuv0P+NlEfINCCS+HOx5r4H5z+xxN4Wf1MfdUTC92z+V2Jwm8c+5n8o\/7J98EXd\/Lnx\/5\/8n3IUaevh\/zf8Xduy1e+So4r0iVtz6boe0t\/nmNH5Z7l4AG45WBeTJvkPHP1N\/S3ir8v9RfYXkvGq888854H923CbO59z0Lz6Tsrj3L2rv49\/kDL+1HHCPBuS8g8pnzz6dwP4zwxxtbFoePx9UsafrgNV+FdFXeMf2r9noGn+dB8u8b\/uf7h1JQa\/5yn5eZoiX8gKLueHCcjmsdRf8k9a9RlkVt8eLuemW1VeK\/dUXY93aLcunAGVVUe8",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
         {
-         "compression":"zlib",
-         "data":"eJztmMGKwjAQQOdXFG8u3ZN70WsRxQUXXBAED3soelhZqCv+x\/6AH+MXuT\/gFCPUYZJM09i0ux4ebUpJ8jpJJk0fAPoNpkP4QDbIDvlEEuSbec9Uh4nQvpz\/i2KJRAz0OeffElBX\/4PyN3m\/quuv0P+NlEfINCCS+HOx5r4H5z+xxN4Wf1MfdUTC92z+V2Jwm8c+5n8o\/7J98EXd\/Lnx\/5\/8n3IUaevh\/zf8Xduy1e+So4r0iVtz6boe0t\/nmNH5Z7l4AG45WBeTJvkPHP1N\/S3ir8v9RfYXkvGq888854H923CbO59z0Lz6Tsrj3L2rv49\/kDL+1HHCPBuS8g8pnzz6dwP4zwxxtbFoePx9UsafrgNV+FdFXeMf2r9noGn+dB8u8b\/uf7h1JQa\/5yn5eZoiX8gKLueHCcjmsdRf8k9a9RlkVt8eLuemW1VeK\/dUXY93aLcunAGVVUe8",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "gid":34,
-                 "height":36,
-                 "id":1,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"ReadMessage",
-                         "type":"string",
-                         "value":"No one has ever made it this far!\nYou have shown exceptional skills to reach this far...\nTherefore I grant you the power to see...\n##ShowIWalls\nBehold...your path awaits..."
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":144,
-                 "y":540
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":3,
- "nextobjectid":2,
- "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"HideCreate",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"HideGems",
-         "type":"bool",
-         "value":true
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+          "gid": 34,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "ReadMessage",
+              "type": "string",
+              "value": "No one has ever made it this far!\nYou have shown exceptional skills to reach this far...\nTherefore I grant you the power to see...\n##ShowIWalls\nBehold...your path awaits..."
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 144,
+          "y": 540
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 2,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "HideCreate",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "HideGems",
+      "type": "bool",
+      "value": true
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

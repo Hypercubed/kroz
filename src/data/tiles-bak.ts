@@ -291,7 +291,7 @@ export const MapLookup: Record<string, Type> = {
 
   à: Type.Trap6,
   á: Type.Trap7,
-  â: Type.Trap8, // FIX this
+  // â: Type.Trap8, // FIX this
   ã: Type.Trap9,
   ä: Type.Trap10,
   å: Type.Trap11,

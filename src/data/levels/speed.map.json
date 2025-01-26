@@ -1,0 +1,133 @@
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzt0TEOgCAMRuFepQknQM9B4v0v48ogTf0dJPCGt1ik+YKbmRNRutKlnlNnb3cpd2V21aT\/CIxnMGuC3x\/+GX3\/6s\/cGZ1TZzP4Z+j6cffu748fP378+PHjx48f\/05+IlqjG1hEwII=",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
+        {
+          "gid": 52,
+          "height": 36,
+          "id": 6,
+          "name": "",
+          "properties": [
+            {
+              "name": "AnimatedWalking",
+              "type": "string",
+              "value": "\u0dc6\u2375"
+            },
+            {
+              "name": "Attacks",
+              "propertytype": "Attacks",
+              "type": "class",
+              "value": {
+                "damage": 4
+              }
+            },
+            {
+              "name": "Speed",
+              "propertytype": "Speed",
+              "type": "class",
+              "value": {
+                "basePace": 2,
+                "baseSpeed": 4,
+                "hastedPace": 2,
+                "hastedSpeed": 1
+              }
+            },
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "ch": "W",
+                "fg": "LightBlue"
+              }
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "value": "Wasp"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1224,
+          "y": 180
+        },
+        {
+          "gid": 52,
+          "height": 36,
+          "id": 7,
+          "name": "",
+          "properties": [
+            {
+              "name": "Speed",
+              "propertytype": "Speed",
+              "type": "class",
+              "value": {
+                "basePace": 1,
+                "baseSpeed": 4,
+                "hastedPace": 1,
+                "hastedSpeed": 1
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1368,
+          "y": 180
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 9,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "id",
+      "type": "string",
+      "value": "Debug"
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
+}

@@ -1,63 +1,68 @@
-{ "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzFl0FOw1AMRP9VgrJkgZA4AysWqGxaKfffcwKKFEvuZGZsNYEurN807Y+fPbZ\/TmOMk7GXneb27ljea1mt87zpap\/repR\/\/8UdrNUz8DcL8Ie5\/fbm5CheluNlbFkrDTh+tCP0eSQ342O8LD4Vv4rto9mrfHZqnmkw87PcP5Lf1S9yoy5cPBQ\/26+qW6VJtv6F5pkGOrpHdtb\/F\/E\/5s\/csK6Oqv7tel5X9xU\/xjqz473gu1ztDNf3xKCrdadXl7\/M0o0B0zvyYxwuYxuHqp+o\/rPXXN2qGGD8mF8LMJ6TzeNWD\/O4javyyc02FQ+X\/05frWKQ+fFe5s5xuIxtTbh+jdfI9LruNZm1k3vWm5E\/z0PFn7UfjEzzqAGlI7RpZc5rxf9rX+s6E\/bQIJrjD60yPbK+xyy0MI+aO\/xB9oo\/x2Aa2hfGygw1xPSq+rwzd86KlbFXeUf+PaZ6CPqJte64QyNuZjPtV\/wsFmwuVfln\/ZPNP1b7Hfb8G4wB6oCxV3mPWLwn\/1j9u5mqzpqsf+K8dz0A54ObaU6XVd7PaU91vmCs6Ad+x2Yo6+3B90Fyn2OEGlNnEcXvYqHmnpphVe7VDM3c33D9NrQWZvKsqPnnxJc\/Z2aVd6dZd\/ZRZ678uXr3wx7yJPbB7xgjGv6G5R17iDtfK+27M2b1vqLOUNn3qsY7sWB9unPmY\/WvtM76cfedjemK3XOzz80h5SfuWeVK1b+69wMVvGzB",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
         {
-         "compression":"zlib",
-         "data":"eJzFl0FOw1AMRP9VgrJkgZA4AysWqGxaKfffcwKKFEvuZGZsNYEurN807Y+fPbZ\/TmOMk7GXneb27ljea1mt87zpap\/repR\/\/8UdrNUz8DcL8Ie5\/fbm5CheluNlbFkrDTh+tCP0eSQ342O8LD4Vv4rto9mrfHZqnmkw87PcP5Lf1S9yoy5cPBQ\/26+qW6VJtv6F5pkGOrpHdtb\/F\/E\/5s\/csK6Oqv7tel5X9xU\/xjqz473gu1ztDNf3xKCrdadXl7\/M0o0B0zvyYxwuYxuHqp+o\/rPXXN2qGGD8mF8LMJ6TzeNWD\/O4javyyc02FQ+X\/05frWKQ+fFe5s5xuIxtTbh+jdfI9LruNZm1k3vWm5E\/z0PFn7UfjEzzqAGlI7RpZc5rxf9rX+s6E\/bQIJrjD60yPbK+xyy0MI+aO\/xB9oo\/x2Aa2hfGygw1xPSq+rwzd86KlbFXeUf+PaZ6CPqJte64QyNuZjPtV\/wsFmwuVfln\/ZPNP1b7Hfb8G4wB6oCxV3mPWLwn\/1j9u5mqzpqsf+K8dz0A54ObaU6XVd7PaU91vmCs6Ad+x2Yo6+3B90Fyn2OEGlNnEcXvYqHmnpphVe7VDM3c33D9NrQWZvKsqPnnxJc\/Z2aVd6dZd\/ZRZ678uXr3wx7yJPbB7xgjGv6G5R17iDtfK+27M2b1vqLOUNn3qsY7sWB9unPmY\/WvtM76cfedjemK3XOzz80h5SfuWeVK1b+69wMVvGzB",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "gid":34,
-                 "height":36,
-                 "id":1,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"ReadMessage",
-                         "type":"string",
-                         "value":"What a disappointment.  The decoded runes indicate\nthis is the civilization of Cruz, not Kroz.\nStill worth exploring, I guess."
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":288,
-                 "y":756
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":3,
- "nextobjectid":2,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+          "gid": 34,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "ReadMessage",
+              "type": "string",
+              "value": "What a disappointment.  The decoded runes indicate\nthis is the civilization of Cruz, not Kroz.\nStill worth exploring, I guess."
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 288,
+          "y": 756
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 2,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

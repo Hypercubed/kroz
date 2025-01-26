@@ -1,6 +1,6 @@
 // 'The Forgotton Adventures of Kroz'
 const LEVELS = [
-  async () => (await import('../debug.map.json')).default, // Must be level 0
+  async () => (await import('../speed.map.json')).default, // Must be level 0
 
   // 1
   async () => (await import('./lost-1.map.json')).default, // Your Hut

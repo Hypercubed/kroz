@@ -4,6 +4,7 @@ import * as controls from './controls';
 import * as sound from './sound';
 
 import {
+  ENABLE_BOTS,
   FLOOR_CHAR,
   HEIGHT,
   TITLE,
@@ -618,7 +619,7 @@ async function getDifficulty() {
       world.stats.whipPower = 2;
       world.game.difficulty = Difficulty.Cheat;
       world.game.foundSet = true;
-      world.game.bot = true;
+      world.game.bot = ENABLE_BOTS;
       break;
   }
 

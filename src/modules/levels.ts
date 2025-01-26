@@ -8,11 +8,11 @@ import * as tiled from '@kayahr/tiled';
 import * as effects from './effects.ts';
 import * as events from './events.ts';
 
-// import LEVELS from '../data/levels/forgotton/index.ts';
+import LEVELS from '../data/levels/forgotton/index.ts';
 // import LEVELS from '../data/levels/kingdom/index.ts';
 // import LEVELS from '../data/levels/lost/index.ts';
 // import LEVELS from '../data/levels/caverns/index.ts';
-import LEVELS from '../data/levels/cruz/index.ts';
+// import LEVELS from '../data/levels/cruz/index.ts';
 
 import { mod } from 'rot-js/lib/util';
 import { isGenerator, isMobile, isPlayer } from '../classes/components.ts';

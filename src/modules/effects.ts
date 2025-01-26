@@ -78,32 +78,32 @@ export async function specialTriggers(t: string) {
   // #SETLEVELFEATURE(WaterFlow,1)
 
   switch (t) {
-    case 'HideGems':
+    case '##HideGems':
       await hideType(Type.Gem);
       break;
-    case 'HideRocks':
+    case '##HideRocks':
       await hideType(Type.Rock);
       break;
-    case 'HideStairs':
+    case '##HideStairs':
       await hideType(Type.Stairs);
       break;
-    case 'HideOpenWall':
+    case '##HideOpenWall':
       // be careful with this one, name is confusing
       // hides the open wall spell, not the wall itself
       await hideType(Type.OSpell1);
       await hideType(Type.OSpell2);
       await hideType(Type.OSpell3);
       break;
-    case 'HideCreate':
+    case '##HideCreate':
       await hideType(Type.Create);
       break;
-    case 'HideMBlock':
+    case '##HideMBlock':
       await hideType(Type.MBlock);
       break;
-    case 'HideTrap':
+    case '##HideTrap':
       await hideType(Type.Trap);
       break;
-    case 'HideLevel':
+    case '##HideLevel':
       for (let x = 0; x < world.level.map.width; x++) {
         for (let y = 0; y < world.level.map.height; y++) {
           const e = world.level.map.get(x, y)!;
@@ -113,7 +113,7 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case 'ShowIWalls':
+    case '##ShowIWalls':
       await world.level.map.forEach(async (x, y, e) => {
         if (e.type === Type.IWall) {
           sound.play(x * y, 1, 10);
@@ -123,7 +123,7 @@ export async function specialTriggers(t: string) {
         }
       });
       break;
-    case 'RiverToGold':
+    case '##RiverToGold':
       for (let x = 0; x <= XMax; x++) {
         for (let y = 0; y <= YMax; y++) {
           if (world.level.map.getType(x, y) === Type.River) {
@@ -134,7 +134,7 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case 'RiverToBlock':
+    case '##RiverToBlock':
       for (let x = 0; x <= XMax; x++) {
         for (let y = 0; y <= YMax; y++) {
           if (world.level.map.getType(x, y) === Type.River) {
@@ -145,7 +145,7 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case 'WallsToGold':
+    case '##WallsToGold':
       for (let x = 0; x <= XMax; x++) {
         for (let y = 0; y <= YMax; y++) {
           if (world.level.map.getType(x, y) === Type.CWall1) {
@@ -157,7 +157,7 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case 'PitsToRock':
+    case '##PitsToRock':
       for (let x = 0; x <= XMax; x++) {
         for (let y = 0; y <= YMax; y++) {
           if (world.level.map.getType(x, y) === Type.Pit) {
@@ -168,15 +168,15 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case 'OSpell1':
+    case '##OSpell1':
       await triggerOSpell(Type.OSpell1);
       await screen.flashTypeMessage(Type.OSpell1, true);
       break;
-    case 'DisguiseFast':
+    case '##DisguiseFast':
       await updateTilesByType(Type.Fast, { ch: '☺' });
       screen.renderPlayfield();
       break;
-    case 'FlashPlayer':
+    case '##FlashPlayer':
       flashPlayer();
       break;
   }
@@ -681,16 +681,17 @@ export async function readMessage(message: string | undefined) {
   if (!message) return;
 
   if (typeof message === 'string') {
-    const messages = message.split('\n');
-    for (const message of messages) {
-      if (!message) continue;
+    const lines = message.split('\n');
+    for (let line of lines) {
+      line = line.trim();
+      if (!line) continue;
 
-      if (message.startsWith('##')) {
-        await specialTriggers(message.slice(2));
-      } else if (message.startsWith('@@')) {
-        await specialSounds(message.slice(2));
+      if (line.startsWith('##')) {
+        await specialTriggers(line);
+      } else if (line.startsWith('@@')) {
+        await specialSounds(line);
       } else {
-        await screen.flashMessage(message);
+        await screen.flashMessage(line);
       }
     }
   }
@@ -698,10 +699,10 @@ export async function readMessage(message: string | undefined) {
 
 async function specialSounds(t: string) {
   switch (t) {
-    case 'Amulet':
+    case '@@Amulet':
       await sound.amulet();
       break;
-    case 'SecretMessage':
+    case '@@SecretMessage':
       await sound.secretMessage();
       break;
   }

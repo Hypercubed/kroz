@@ -1,4 +1,5 @@
 import { RNG } from 'rot-js';
+
 import { FLOOR_CHAR } from '../data/constants';
 import { Type, TypeColor } from '../data/tiles';
 
@@ -132,11 +133,6 @@ export class MagicTrigger {
   constructor(public type: Type) {}
 }
 
-export class SecretMessage {
-  constructor(public message: string) {}
-}
-
-// Combine with SecretMessage
 export class ReadMessage {
   constructor(public message: string) {}
 }
@@ -148,5 +144,15 @@ export class ChangeLevel {
   constructor(data: Partial<ChangeLevel>) {
     this.exactLevel = data.exactLevel ?? null;
     this.deltaLevel = data.deltaLevel ?? 0;
+  }
+}
+
+export class Speed {
+  basePace!: number;
+  hastedPace!: number;
+
+  constructor(data: Partial<Speed>) {
+    this.basePace = data.basePace || 1;
+    this.hastedPace = data.hastedPace || 1;
   }
 }

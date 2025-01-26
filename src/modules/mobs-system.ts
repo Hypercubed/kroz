@@ -1,6 +1,3 @@
-import { Scheduler, SpeedActor } from 'rot-js';
-import Speed from 'rot-js/lib/scheduler/speed';
-
 import * as world from './world';
 import * as sound from './sound';
 
@@ -17,68 +14,21 @@ import {
   Walkable,
   AnimatedWalking,
   isInvisible,
+  Speed,
 } from '../classes/components';
 import { Timer } from './effects';
 
-function getBaseSpeed(t: Type) {
-  switch (t) {
-    case Type.Player:
-      return TIME_SCALE;
-    case Type.Slow:
-      return TIME_SCALE / 4;
-    case Type.Medium:
-      return TIME_SCALE / 3;
-    case Type.Fast:
-      return TIME_SCALE / 2;
-    case Type.MBlock:
-      return TIME_SCALE / 2;
-  }
-}
+export async function update(tick: number) {
+  if (world.level.T[Timer.FreezeTime] > 0) return;
 
-export class SchedulerActor implements SpeedActor {
-  speed: number;
-
-  constructor(public readonly type: Type) {
-    this.speed = getBaseSpeed(this.type)!;
-  }
-
-  getSpeed() {
-    if (this.type === Type.Player)
-      return world.level.T[Timer.SlowTime] > 0 ? 10 : 1;
-    return world.level.T[Timer.SpeedTime] > 0 ? TIME_SCALE : this.speed;
-  }
-}
-
-let scheduler: Speed<SpeedActor>;
-
-// Dummy entities used for the scheduler
-const playerActor = new SchedulerActor(Type.Player);
-const slowActor = new SchedulerActor(Type.Slow);
-const mediumActor = new SchedulerActor(Type.Medium);
-const fastActor = new SchedulerActor(Type.Fast);
-const mBlocks = new SchedulerActor(Type.MBlock);
-
-export function init() {
-  scheduler = new Scheduler.Speed();
-  scheduler.add(playerActor, true);
-  scheduler.add(slowActor, true);
-  scheduler.add(mediumActor, true);
-  scheduler.add(fastActor, true);
-  scheduler.add(mBlocks, true);
-  return scheduler;
-}
-
-export async function update() {
-  while (true) {
-    const current = scheduler.next();
-    if (!current) return;
-    const type = current.type;
-    if (type === Type.Player) return;
-    if (world.level.T[Timer.FreezeTime] > 0) return;
-
-    for (const e of world.level.entities) {
-      if (e.type === type) await act(e);
-    }
+  for (const e of world.level.entities) {
+    const speed = e.get(Speed);
+    if (!speed) continue;
+    let pace =
+      world.level.T[Timer.SpeedTime] > 0 ? speed.hastedPace : speed.basePace;
+    if (world.level.T[Timer.SlowTime] > 0) pace = 2 * pace;
+    const p = pace * TIME_SCALE;
+    if (tick % p === p - 1) await act(e);
   }
 }
 

@@ -1,83 +1,87 @@
-{ "class":"Lost2",
- "compressionlevel":-1,
- "editorsettings":
+{
+  "class": "Lost2",
+  "compressionlevel": -1,
+  "editorsettings": {
+    "export": {
+      "format": "json1",
+      "target": "lost-2.json"
+    }
+  },
+  "height": 23,
+  "infinite": false,
+  "layers": [
     {
-     "export":
-        {
-         "format":"json1",
-         "target":"lost-2.json"
-        }
+      "compression": "zlib",
+      "data": "eJzNWLtuwzAM9K+4ENDNQIeu+YMOHbP3GaQPIE2X\/nwpgAYEQg+KOsYZDlFkmuTxSMvJfpqmPQgB6Gs0RkgwEx75M91v3YvO+xL1KcWdBX+E71vCsoG2Fh+yBsiYuRosoNqg9Fq5e+myKNZemtfqNk953RG5SHupeSjsW3LI7Zd6w3PmR4CaCY3urRohfFt7xasGWt01598Iv5FesOZ2rT3fymEZyHMuYFSb0f7oiRcUMUs8refZ1v0gecpz6s7A82YDHrXruwQtP9eqpWUudxXk7LXce94LenoPgRrnFZoZ1tbMQzfNM03aaHin3LX2Vt6IOiA19+Tu1cstn7U+LsHC3fN3UY99aVZzfnp4WnRHv7NqtLX4v\/ScyzpEnAnvhBf+\/sPrJ8KJ12dw3J56ePXryv2X8MWIXD\/42oH3os230F3bZ8jZ9PifUWp\/THi\/EZ6Z+yfhgYHOb4RXvPfeqEHIIHJ9TWpx4r0\/wj+pH8oy",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
     },
- "height":23,
- "infinite":false,
- "layers":[
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
         {
-         "compression":"zlib",
-         "data":"eJzNWLtuwzAM9K+4ENDNQIeu+YMOHbP3GaQPIE2X\/nwpgAYEQg+KOsYZDlFkmuTxSMvJfpqmPQgB6Gs0RkgwEx75M91v3YvO+xL1KcWdBX+E71vCsoG2Fh+yBsiYuRosoNqg9Fq5e+myKNZemtfqNk953RG5SHupeSjsW3LI7Zd6w3PmR4CaCY3urRohfFt7xasGWt01598Iv5FesOZ2rT3fymEZyHMuYFSb0f7oiRcUMUs8refZ1v0gecpz6s7A82YDHrXruwQtP9eqpWUudxXk7LXce94LenoPgRrnFZoZ1tbMQzfNM03aaHin3LX2Vt6IOiA19+Tu1cstn7U+LsHC3fN3UY99aVZzfnp4WnRHv7NqtLX4v\/ScyzpEnAnvhBf+\/sPrJ8KJ12dw3J56ePXryv2X8MWIXD\/42oH3os230F3bZ8jZ9PifUWp\/THi\/EZ6Z+yfhgYHOb4RXvPfeqEHIIHJ9TWpx4r0\/wj+pH8oy",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "gid":34,
-                 "height":36,
-                 "id":1,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"ReadMessage",
-                         "type":"string",
-                         "value":"Warning to all Adventurers:  No one returns from Kroz!"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":1200,
-                 "y":432
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":3,
- "nextobjectid":2,
- "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"HideGems",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"HideStairs",
-         "type":"bool",
-         "value":true
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+          "gid": 34,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "ReadMessage",
+              "type": "string",
+              "value": "Warning to all Adventurers:  No one returns from Kroz!"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1200,
+          "y": 432
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 2,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "HideGems",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "HideStairs",
+      "type": "bool",
+      "value": true
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

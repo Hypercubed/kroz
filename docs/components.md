@@ -44,8 +44,6 @@ A component that allows an entity to animate while walking.  It contains a list 
 
 ## MagicTrigger
 
-## SecretMessage
-
 ## ReadMessage
 
 ## ChangeLevel

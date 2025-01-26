@@ -1,70 +1,76 @@
-{ "class":"Lost64",
- "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
+{
+  "class": "Lost64",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzdl9tKw0AQhvdVKgWphF5VPCCIUAlCLRVUbF\/Gd1AEXy\/WUK9FvDaBGfwZZ\/bUE\/bio+3sZpJvZjdJB865wQ7RJYYQqxoOgJJiXw2HOwb7Y03Qv6TPirgmLgRnSgwpE+bK+bHHaMeFCPnLOqC\/dk3LeIby5dTHmsdxnz87I90N4POy6qXVSca0OTH9xzp0iAV8t3gDrDkz4hyuZd\/j4quHVR+OvSik9v+EeBS1WECuvsgb4z9z61tPyKcgdf+PG74Vf3yWdBL8Q1w2PBElfG\/jxwnw9RwJtBpVdC6NGP9bxT+WNt8N5Pb1Msf\/XTB3f98F7tzv804S4186fV2FkOukgDzPDSP6XLU\/I+ur7U30XwjWuW97QI5\/n5D+FnMjrvWfqSP7\/ADU4viWUwD7z2ziPmkR8s9B7vUx4Ov\/Nv4v+PyXAfvanmOyY\/6vRlxbY+w+gZi2\/v+Tv7VX2GWU0f\/eFrD8rf763PGZibXQ+r8N1xT\/HHf0x3dmq\/\/8LC4I\/t0T4zMxl8cLz7h2rMzfMiVy\/KW75W\/1H69Z84utjzZeCLT8mv+HgdwTmjv6x9z\/td5p\/lb\/Y\/2t\/Ja\/dGL\/0LvR0NP\/e0\/\/Q\/4568NyD\/mv6r2qHxjfxPrX3DX\/PWfvf2svpNwfasp\/5fFP9VvF\/a9dkz\/P0pCH",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
         {
-         "compression":"zlib",
-         "data":"eJzdl9tKw0AQhvdVKgWphF5VPCCIUAlCLRVUbF\/Gd1AEXy\/WUK9FvDaBGfwZZ\/bUE\/bio+3sZpJvZjdJB865wQ7RJYYQqxoOgJJiXw2HOwb7Y03Qv6TPirgmLgRnSgwpE+bK+bHHaMeFCPnLOqC\/dk3LeIby5dTHmsdxnz87I90N4POy6qXVSca0OTH9xzp0iAV8t3gDrDkz4hyuZd\/j4quHVR+OvSik9v+EeBS1WECuvsgb4z9z61tPyKcgdf+PG74Vf3yWdBL8Q1w2PBElfG\/jxwnw9RwJtBpVdC6NGP9bxT+WNt8N5Pb1Msf\/XTB3f98F7tzv804S4186fV2FkOukgDzPDSP6XLU\/I+ur7U30XwjWuW97QI5\/n5D+FnMjrvWfqSP7\/ADU4viWUwD7z2ziPmkR8s9B7vUx4Ov\/Nv4v+PyXAfvanmOyY\/6vRlxbY+w+gZi2\/v+Tv7VX2GWU0f\/eFrD8rf763PGZibXQ+r8N1xT\/HHf0x3dmq\/\/8LC4I\/t0T4zMxl8cLz7h2rMzfMiVy\/KW75W\/1H69Z84utjzZeCLT8mv+HgdwTmjv6x9z\/td5p\/lb\/Y\/2t\/Ja\/dGL\/0LvR0NP\/e0\/\/Q\/4568NyD\/mv6r2qHxjfxPrX3DX\/PWfvf2svpNwfasp\/5fFP9VvF\/a9dkz\/P0pCH",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "gid":34,
-                 "height":36,
-                 "id":1,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"ReadMessage",
-                         "type":"string",
-                         "value":"On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"Tnarg yna rerutnevda ohw sevivrus siht raf...\"\n##WallsToGold\n\"...Dlog!\""
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":24,
-                 "y":828
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":3,
- "nextobjectid":2,
- "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"StartText",
-         "type":"string",
-         "value":"##DisguiseFast\nPress any key to begin this level."
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+          "gid": 34,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "ReadMessage",
+              "type": "string",
+              "value": "On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"Tnarg yna rerutnevda ohw sevivrus siht raf...\"\n##WallsToGold\n\"...Dlog!\""
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 24,
+          "y": 828
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 2,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "StartText",
+      "type": "string",
+      "value": "##DisguiseFast\nPress any key to begin this level."
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

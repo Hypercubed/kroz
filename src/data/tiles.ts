@@ -18,10 +18,10 @@ import {
   isSecreted,
   Position,
   isPushable,
-  SecretMessage,
   ChangeLevel,
   ReadMessage,
   isPassable,
+  Speed,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -549,11 +549,11 @@ const SIMPLE_TAGS = {
 
 const SIMPLE_COMPONENTS = {
   Collectible,
-  SecretMessage,
   ReadMessage,
   AnimatedWalking,
   Attacks: AttacksPlayer, // TODO: Rename
   ChangeLevel,
+  Speed,
 };
 
 function addComponentsToEntity(

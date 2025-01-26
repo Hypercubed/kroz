@@ -168,6 +168,28 @@
             "useAs": [
                 "property"
             ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 6,
+            "members": [
+                {
+                    "name": "basePace",
+                    "type": "int",
+                    "value": 1
+                },
+                {
+                    "name": "hastedPace",
+                    "type": "int",
+                    "value": 1
+                }
+            ],
+            "name": "Speed",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
         }
     ]
 }

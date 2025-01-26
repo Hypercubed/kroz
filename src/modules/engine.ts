@@ -10,6 +10,7 @@ import * as mob from './mobs-system';
 import * as level from './levels';
 import * as effects from './effects-system';
 import * as debug from './debug-interface';
+import * as events from './events';
 
 import { DEBUG, XMax, YMax } from '../data/constants';
 import { Color } from '../data/colors';
@@ -69,15 +70,19 @@ export async function start() {
 }
 
 async function run() {
-  mob.init();
-
-  // Game loop
-  let speed = 16 * world.game.clockScale;
-
+  let tick = 0;
   let dt = 0;
   let previousTime = 0;
 
+  events.levelStart.add(() => {
+    tick = 0;
+    dt = 0;
+    previousTime = 0;
+  });
+
   const raf = async (currentTime: number) => {
+    const speed = (16 * world.game.clockScale) / 2;
+
     if (world.stats.gems < 0) {
       await player.dead();
       start();
@@ -96,18 +101,15 @@ async function run() {
 
     if (dt > speed) {
       dt %= speed;
+      tick++;
 
-      await player.update();
-      await mob.update();
+      await player.update(tick);
+      await mob.update(tick);
       await effects.update();
       screen.renderPlayfield();
-
-      controls.clearActions(); // Clear was pressed actions after player acts
     }
 
     screen.fastRender(); // TODO: can we only render blink elements?
-
-    speed = 16 * world.game.clockScale;
 
     stats?.end();
     requestAnimationFrame(raf);

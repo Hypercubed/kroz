@@ -1,34 +1,37 @@
-{ "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
-        {
-         "compression":"zlib",
-         "data":"eJzNl71OwzAQx\/0qBToUKiQ+CkNFxEe7FSQkJDIwAwMDchcW1MfjOQpzF+ABcKQ79c9x\/gquYPjJid00\/vl8l6Q2xtSEheOxowO8ZYDXDR2zAnQdD0rbjFVAH3ii+zdem8CWY8Px6Fh3XCsMhXsnA\/w9+jfzmDt2ldYq\/RbcJTswLv0r8hsCJ9RXgf++4znin+su1wD95zTveQZ8rRb7bsT\/ljgJ+N8E\/Nu64xqgvxb3UFub73tH2we5\/lb4H2X6p+S8zz8n7tI\/J\/\/Zf2q+58AGufP4vsfd5+9zDfWXir8W+1j+b9P9j4kS\/rF8\/wz4\/yb+bfKf\/bcJ6X+3Av9Q\/EP1PzX+sg608bd03Mn093nn7v\/S+d8XhPyx\/l\/CmCTFP1T7Qvu\/VP5z\/PtmWd8Q9rggpH9dwD82XjL+tYDzwTf\/FP8FXLMwef4pudE2\/vye1OZduc7wZ19cx4Xi\/1Eg\/lz\/EK0Px\/hanhvWOtk3SvAfm2V+TJW4Y\/xTHGO5Uer7ZwrrYGHuFZ3zeqB\/0z8Q\/jKHpDevxSq+f36D9fRz7Hk9eI04\/po\/XxOrf1qtL\/n9iznHfXcB5LOOrx2Jue8E\/CfCn98FfBxExlNIqVc5\/sfUhv6z8e8p\/pLXyNwPW\/gOBTn+GEfr8Wd4D+0pDMzP\/B\/QmvRobCT81+i+L2b5vpTKKRxb8q6hnSW08jgFzZ39ewJci57iX4rGeWKWNXhG5zPPOeY\/+1eCKfyW+\/6zf87+H0f8ted+qv97gv89tTFW+TvM\/2YNzzzObeMvawHH5i9cJVfCn9938Pko14LH2+7\/xv3c8QWROByX",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":2,
- "nextobjectid":1,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzNl71OwzAQx\/0qBToUKiQ+CkNFxEe7FSQkJDIwAwMDchcW1MfjOQpzF+ABcKQ79c9x\/gquYPjJid00\/vl8l6Q2xtSEheOxowO8ZYDXDR2zAnQdD0rbjFVAH3ii+zdem8CWY8Px6Fh3XCsMhXsnA\/w9+jfzmDt2ldYq\/RbcJTswLv0r8hsCJ9RXgf++4znin+su1wD95zTveQZ8rRb7bsT\/ljgJ+N8E\/Nu64xqgvxb3UFub73tH2we5\/lb4H2X6p+S8zz8n7tI\/J\/\/Zf2q+58AGufP4vsfd5+9zDfWXir8W+1j+b9P9j4kS\/rF8\/wz4\/yb+bfKf\/bcJ6X+3Av9Q\/EP1PzX+sg608bd03Mn093nn7v\/S+d8XhPyx\/l\/CmCTFP1T7Qvu\/VP5z\/PtmWd8Q9rggpH9dwD82XjL+tYDzwTf\/FP8FXLMwef4pudE2\/vye1OZduc7wZ19cx4Xi\/1Eg\/lz\/EK0Px\/hanhvWOtk3SvAfm2V+TJW4Y\/xTHGO5Uer7ZwrrYGHuFZ3zeqB\/0z8Q\/jKHpDevxSq+f36D9fRz7Hk9eI04\/po\/XxOrf1qtL\/n9iznHfXcB5LOOrx2Jue8E\/CfCn98FfBxExlNIqVc5\/sfUhv6z8e8p\/pLXyNwPW\/gOBTn+GEfr8Wd4D+0pDMzP\/B\/QmvRobCT81+i+L2b5vpTKKRxb8q6hnSW08jgFzZ39ewJci57iX4rGeWKWNXhG5zPPOeY\/+1eCKfyW+\/6zf87+H0f8ted+qv97gv89tTFW+TvM\/2YNzzzObeMvawHH5i9cJVfCn9938Pko14LH2+7\/xv3c8QWROByX",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }
