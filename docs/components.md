@@ -1,12 +1,12 @@
 # Tags
 
-## isMobile
+## isMob
 
 Entity is Mobile
 
 ## followsPlayer
 
-Entity will follow the player, must be used with isMobile
+Entity will follow the player, must be used with isMob
 
 ## isPlayer
 
@@ -45,7 +45,7 @@ Component to store the type of entity that can be eaten by this entity.
 
 Component to store the type of entity that can be destroyed by this entity.
 
-##  AttacksPlayer
+##  Attacks
 
 A component that allows an entity to attack the player.  It contains a damage value.
 

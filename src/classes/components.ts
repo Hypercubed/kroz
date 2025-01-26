@@ -5,14 +5,14 @@ import { Type, TypeColor } from '../data/tiles';
 
 /** # Tags */
 
-/**  ## isMobile
+/**  ## isMob
  *
  * Entity is Mobile */
-export const isMobile = Symbol('isMobile');
+export const isMob = Symbol('isMob');
 
 /**  ## followsPlayer
  *
- * Entity will follow the player, must be used with isMobile */
+ * Entity will follow the player, must be used with isMob */
 export const followsPlayer = Symbol('followsPlayer');
 
 /**  ## isPlayer */
@@ -37,6 +37,8 @@ export const isPushable = Symbol('isPushable');
  * Tile is able to be walked on by the player
  */
 export const isPassable = Symbol('isPassable');
+
+export const isBombable = Symbol('isBombable');
 
 /** # Components */
 
@@ -142,14 +144,14 @@ export class DestroyedBy {
 }
 
 /**
- * ##  AttacksPlayer
+ * ##  Attacks
  *
  * A component that allows an entity to attack the player.  It contains a damage value.
  */
-export class AttacksPlayer {
+export class Attacks {
   damage: number;
 
-  constructor(data: Partial<AttacksPlayer>) {
+  constructor(data: Partial<Attacks>) {
     this.damage = data.damage || 1;
   }
 }

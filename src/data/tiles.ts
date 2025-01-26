@@ -3,11 +3,11 @@ import { RNG } from 'rot-js';
 import * as world from '../modules/world';
 
 import {
-  AttacksPlayer,
+  Attacks,
   Eats,
   followsPlayer,
   isGenerator,
-  isMobile,
+  isMob,
   isPlayer,
   DestroyedBy,
   Renderable,
@@ -23,6 +23,7 @@ import {
   isPassable,
   Speed,
   Breakable,
+  isBombable,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -221,8 +222,6 @@ export const TRAPS = [
   ...ITRAPS,
 ];
 
-const IBLOCKS = [Type.IBlock, Type.IWall, Type.IDoor]; // 29..31
-
 export const KROZ = [
   // 48..51
   Type.K,
@@ -254,25 +253,6 @@ export const ROPE_DROP = [
   Type.DropRope4,
   Type.DropRope5,
 ]; // 76..80
-
-export const BOMBABLES = [
-  ...MOBS,
-  Type.Block,
-  ...IBLOCKS,
-  Type.ZBlock,
-  Type.GBlock,
-  Type.MBlock,
-  ...TBLOCKS,
-  Type.Door,
-  ...TRAPS,
-  Type.Forest,
-  Type.Quake,
-  Type.Stop,
-  Type.Create,
-  Type.Generator,
-  Type.Chance,
-  ...KROZ,
-];
 
 export const ROCKABLES = [
   Type.Floor,
@@ -532,7 +512,7 @@ export function createEntityFromTileId(
   }
   addComponentsToEntity(entity, properties || {});
 
-  if (entity.has(isPlayer) || entity.has(isMobile)) {
+  if (entity.has(isPlayer) || entity.has(isMob)) {
     entity.add(new Position({ x, y }));
   }
 
@@ -541,19 +521,20 @@ export function createEntityFromTileId(
 
 const SIMPLE_TAGS = {
   isPlayer,
-  isMobile,
+  isMob,
   isGenerator,
   isSecreted,
   isPushable,
   isPassable,
-  doesFollowsPlayer: followsPlayer, // TODO: Rename
+  followsPlayer,
+  isBombable,
 };
 
 const SIMPLE_COMPONENTS = {
   Collectible,
   ReadMessage,
   AnimatedWalking,
-  Attacks: AttacksPlayer, // TODO: Rename
+  Attacks: Attacks, // TODO: Rename
   ChangeLevel,
   Speed,
   Breakable,
@@ -576,7 +557,7 @@ function addComponentsToEntity(
     }
   }
 
-  if (entity.has(isMobile)) {
+  if (entity.has(isMob)) {
     if (type === Type.Fast || type === Type.Medium || type === Type.Slow) {
       entity
         .add(new Eats(MOB_EATS))

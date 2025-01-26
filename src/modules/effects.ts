@@ -3,7 +3,6 @@ import * as sound from './sound';
 import * as screen from './screen';
 
 import {
-  BOMBABLES,
   createEntityOfType,
   ROCKABLES,
   SPEAR_BLOCKS,
@@ -14,8 +13,9 @@ import {
 } from '../data/tiles';
 import {
   Breakable,
+  isBombable,
   isInvisible,
-  isMobile,
+  isMob,
   isPlayer,
   isSecreted,
   Position,
@@ -229,10 +229,10 @@ export async function bomb(x: number, y: number) {
     for (let x = x1; x <= x2; x++) {
       for (let y = y1; y <= y2; y++) {
         screen.drawOver(x, y, '█', Color.LightRed);
-        const block = (world.level.map.getType(x, y) as number) ?? Type.Floor;
-        if (BOMBABLES.includes(block as number)) {
-          if (block >= 1 && block <= 4) {
-            world.addScore(block);
+        const e = world.level.map.get(x, y);
+        if (e?.has(isBombable)) {
+          if (e.has(isMob)) {
+            world.addScore(e!.type as Type);
             world.killAt(x, y);
           }
         }
@@ -250,8 +250,8 @@ export async function bomb(x: number, y: number) {
 
   for (let x = x1; x <= x2; x++) {
     for (let y = y1; y <= y2; y++) {
-      const block = (world.level.map.getType(x, y) as number) ?? Type.Floor;
-      if (BOMBABLES.includes(block as number)) {
+      const e = world.level.map.get(x, y);
+      if (e?.has(isBombable)) {
         world.level.map.setType(x, y, Type.Floor);
       }
     }
@@ -567,9 +567,8 @@ export async function whip() {
       const b = entity.get(Breakable)!;
       const hardness = b.hardness || 0;
       if (hardness * Math.random() < world.stats.whipPower) {
-        if (entity.has(isMobile)) {
+        if (entity.has(isMob)) {
           // Split into killable?
-          console.log('hit mobile');
           world.killAt(x, y);
         }
         world.level.map.setType(x, y, Type.Floor);

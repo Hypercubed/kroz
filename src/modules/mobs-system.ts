@@ -5,7 +5,7 @@ import { Type } from '../data/tiles';
 import { TIME_SCALE, XMax, YMax } from '../data/constants';
 import type { Entity } from '../classes/entity';
 import {
-  AttacksPlayer,
+  Attacks,
   Eats,
   followsPlayer,
   DestroyedBy,
@@ -88,8 +88,8 @@ function tryMove(e: Entity, dx: number, dy: number) {
     return;
   }
 
-  if (e.has(AttacksPlayer) && block.type === Type.Player) {
-    const damage = e.get(AttacksPlayer)!.damage;
+  if (e.has(Attacks) && block.type === Type.Player) {
+    const damage = e.get(Attacks)!.damage;
     world.stats.gems -= damage;
     world.level.map.setType(ep.x, ep.y, Type.Floor);
     world.kill(e);

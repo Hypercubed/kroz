@@ -26,7 +26,7 @@ import { LEVELS } from './levels.ts';
 import dedent from 'ts-dedent';
 
 import {
-  AttacksPlayer,
+  Attacks,
   Collectible,
   isInvisible,
   MagicTrigger,
@@ -186,8 +186,8 @@ export async function tryMove(dx: number, dy: number) {
     move(x, y);
   }
 
-  if (e.has(AttacksPlayer)) {
-    const damage = e.get(AttacksPlayer)!.damage;
+  if (e.has(Attacks)) {
+    const damage = e.get(Attacks)!.damage;
     world.stats.gems -= damage;
     world.killAt(x, y);
     world.addScore(e.type as Type);

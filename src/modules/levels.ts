@@ -15,7 +15,7 @@ import LEVELS from '../data/levels/forgotton/index.ts';
 // import LEVELS from '../data/levels/cruz/index.ts';
 
 import { mod } from 'rot-js/lib/util';
-import { isGenerator, isMobile, isPlayer } from '../classes/components.ts';
+import { isGenerator, isMob, isPlayer } from '../classes/components.ts';
 import { ensureObject } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
@@ -238,7 +238,7 @@ function readLevelMapData(data: Entity[]) {
       if (entity.has(isPlayer)) {
         world.level.player = entity;
       }
-      if (entity.has(isMobile)) {
+      if (entity.has(isMob)) {
         world.level.entities.push(entity);
       }
       if (entity.has(isGenerator)) {
