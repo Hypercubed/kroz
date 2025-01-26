@@ -567,13 +567,15 @@ export async function whip() {
       const b = entity.get(Breakable)!;
       const hardness = b.hardness || 0;
       if (hardness * Math.random() < world.stats.whipPower) {
+        if (entity.has(isMobile)) {
+          // Split into killable?
+          console.log('hit mobile');
+          world.killAt(x, y);
+        }
         world.level.map.setType(x, y, Type.Floor);
         screen.drawEntity(x, y);
         const hitSound = b.hitSound || 'WhipHit';
         world.addScore(thing as Type);
-        if (entity.has(isMobile)) {
-          world.killAt(x, y);
-        }
         if (hitSound) await sound.triggerSound(hitSound);
 
         switch (thing) {
