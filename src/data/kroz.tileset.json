@@ -81,6 +81,15 @@
       "id": 34,
       "properties": [
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipBreak",
+            "hardness": 0
+          }
+        },
+        {
           "name": "Message",
           "type": "string",
           "value": "Super Kroz Bonus -- 10,000 points!"
@@ -124,11 +133,6 @@
             "ch": "\u2588",
             "fg": "Brown"
           }
-        },
-        {
-          "name": "isPushable",
-          "type": "bool",
-          "value": false
         },
         {
           "name": "name",
@@ -338,6 +342,15 @@
       "id": 46,
       "properties": [
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipBreak",
+            "hardness": 0
+          }
+        },
+        {
           "name": "Message",
           "type": "string",
           "value": "You activated a Teleport trap!"
@@ -373,6 +386,15 @@
       "id": 47,
       "properties": [
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipHit",
+            "hardness": 6
+          }
+        },
+        {
           "name": "Message",
           "type": "string",
           "value": "You cannot travel through forest terrain."
@@ -398,6 +420,15 @@
     {
       "id": 48,
       "properties": [
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipBreakRock",
+            "hardness": 30
+          }
+        },
         {
           "name": "Message",
           "type": "string",
@@ -439,6 +470,14 @@
           "type": "class",
           "value": {
             "damage": 1
+          }
+        },
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "hardness": 0
           }
         },
         {
@@ -501,6 +540,14 @@
           }
         },
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "hardness": 0
+          }
+        },
+        {
           "name": "Speed",
           "propertytype": "Speed",
           "type": "class",
@@ -552,6 +599,14 @@
           "type": "class",
           "value": {
             "damage": 3
+          }
+        },
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "hardness": 0
           }
         },
         {
@@ -744,6 +799,15 @@
       "id": 60,
       "properties": [
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipBreak",
+            "hardness": 0
+          }
+        },
+        {
           "name": "Tile",
           "propertytype": "Renderable",
           "type": "class",
@@ -798,6 +862,15 @@
     {
       "id": 62,
       "properties": [
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "",
+            "hardness": 50
+          }
+        },
         {
           "name": "Message",
           "type": "string",
@@ -1024,6 +1097,15 @@
       "id": 70,
       "properties": [
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipBreak",
+            "hardness": 0
+          }
+        },
+        {
           "name": "Message",
           "type": "string",
           "value": "You activated a Speed Creature spell."
@@ -1058,6 +1140,14 @@
     {
       "id": 71,
       "properties": [
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "hardness": 0
+          }
+        },
         {
           "name": "Message",
           "type": "string",
@@ -1110,6 +1200,15 @@
     {
       "id": 73,
       "properties": [
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipBreak",
+            "hardness": 0
+          }
+        },
         {
           "name": "Message",
           "type": "string",
@@ -1223,6 +1322,15 @@
       "id": 77,
       "properties": [
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipHit",
+            "hardness": 6
+          }
+        },
+        {
           "name": "Message",
           "type": "string",
           "value": "A Moving Wall blocks your way."
@@ -1300,6 +1408,15 @@
       "id": 79,
       "properties": [
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipHit",
+            "hardness": 6
+          }
+        },
+        {
           "name": "Tile",
           "propertytype": "Renderable",
           "type": "class",
@@ -1365,6 +1482,15 @@
     {
       "id": 81,
       "properties": [
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipBreak",
+            "hardness": 0
+          }
+        },
         {
           "name": "ChanceOdds",
           "type": "int",
@@ -1617,6 +1743,15 @@
       "id": 88,
       "properties": [
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipHit",
+            "hardness": 6
+          }
+        },
+        {
           "name": "Message",
           "type": "string",
           "value": "A Breakable Wall blocks your way"
@@ -1641,6 +1776,15 @@
     {
       "id": 89,
       "properties": [
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipHit",
+            "hardness": 6
+          }
+        },
         {
           "name": "Tile",
           "propertytype": "Renderable",
@@ -1698,6 +1842,15 @@
       "id": 91,
       "properties": [
         {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipBreak",
+            "hardness": 0
+          }
+        },
+        {
           "name": "Tile",
           "propertytype": "Renderable",
           "type": "class",
@@ -1722,6 +1875,15 @@
     {
       "id": 92,
       "properties": [
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipHit",
+            "hardness": 6
+          }
+        },
         {
           "name": "Message",
           "type": "string",
@@ -1804,6 +1966,15 @@
     {
       "id": 124,
       "properties": [
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipBreak",
+            "hardness": 0
+          }
+        },
         {
           "name": "Tile",
           "propertytype": "Renderable",
@@ -2606,6 +2777,15 @@
     {
       "id": 252,
       "properties": [
+        {
+          "name": "Breakable",
+          "propertytype": "Breakable",
+          "type": "class",
+          "value": {
+            "breakSound": "WhipHit",
+            "hardness": 6
+          }
+        },
         {
           "name": "ReadMessage",
           "type": "string",

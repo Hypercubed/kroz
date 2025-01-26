@@ -13,7 +13,9 @@ import {
   VISUAL_TELEPORTABLES,
 } from '../data/tiles';
 import {
+  Breakable,
   isInvisible,
+  isMobile,
   isPlayer,
   isSecreted,
   Position,
@@ -71,39 +73,39 @@ export async function updateTilesByType(
   });
 }
 
-export async function specialTriggers(t: string) {
+export async function triggerEffect(t: string) {
   // TODO: #CHANGE(INVISIBLE_SOLID_WALL,SOLID_WALL)
   // #GIVE(SCORE,25000)
   // #ITEMEFFECT(OPEN_SPELL1)
   // #SETLEVELFEATURE(WaterFlow,1)
 
   switch (t) {
-    case '##HideGems':
+    case 'HideGems':
       await hideType(Type.Gem);
       break;
-    case '##HideRocks':
+    case 'HideRocks':
       await hideType(Type.Rock);
       break;
-    case '##HideStairs':
+    case 'HideStairs':
       await hideType(Type.Stairs);
       break;
-    case '##HideOpenWall':
+    case 'HideOpenWall':
       // be careful with this one, name is confusing
       // hides the open wall spell, not the wall itself
       await hideType(Type.OSpell1);
       await hideType(Type.OSpell2);
       await hideType(Type.OSpell3);
       break;
-    case '##HideCreate':
+    case 'HideCreate':
       await hideType(Type.Create);
       break;
-    case '##HideMBlock':
+    case 'HideMBlock':
       await hideType(Type.MBlock);
       break;
-    case '##HideTrap':
+    case 'HideTrap':
       await hideType(Type.Trap);
       break;
-    case '##HideLevel':
+    case 'HideLevel':
       for (let x = 0; x < world.level.map.width; x++) {
         for (let y = 0; y < world.level.map.height; y++) {
           const e = world.level.map.get(x, y)!;
@@ -113,7 +115,7 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case '##ShowIWalls':
+    case 'ShowIWalls':
       await world.level.map.forEach(async (x, y, e) => {
         if (e.type === Type.IWall) {
           sound.play(x * y, 1, 10);
@@ -123,7 +125,7 @@ export async function specialTriggers(t: string) {
         }
       });
       break;
-    case '##RiverToGold':
+    case 'RiverToGold':
       for (let x = 0; x <= XMax; x++) {
         for (let y = 0; y <= YMax; y++) {
           if (world.level.map.getType(x, y) === Type.River) {
@@ -134,7 +136,7 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case '##RiverToBlock':
+    case 'RiverToBlock':
       for (let x = 0; x <= XMax; x++) {
         for (let y = 0; y <= YMax; y++) {
           if (world.level.map.getType(x, y) === Type.River) {
@@ -145,7 +147,7 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case '##WallsToGold':
+    case 'WallsToGold':
       for (let x = 0; x <= XMax; x++) {
         for (let y = 0; y <= YMax; y++) {
           if (world.level.map.getType(x, y) === Type.CWall1) {
@@ -157,7 +159,7 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case '##PitsToRock':
+    case 'PitsToRock':
       for (let x = 0; x <= XMax; x++) {
         for (let y = 0; y <= YMax; y++) {
           if (world.level.map.getType(x, y) === Type.Pit) {
@@ -168,15 +170,15 @@ export async function specialTriggers(t: string) {
         }
       }
       break;
-    case '##OSpell1':
+    case 'OSpell1':
       await triggerOSpell(Type.OSpell1);
       await screen.flashTypeMessage(Type.OSpell1, true);
       break;
-    case '##DisguiseFast':
+    case 'DisguiseFast':
       await updateTilesByType(Type.Fast, { ch: '☺' });
       screen.renderPlayfield();
       break;
-    case '##FlashPlayer':
+    case 'FlashPlayer':
       flashPlayer();
       break;
   }
@@ -561,107 +563,37 @@ export async function whip() {
       screen.drawEntity(x, y);
     }
 
-    // TODO: use lists
-    switch (thing) {
-      case Type.Slow: // Kill
-      case Type.Medium:
-      case Type.Fast:
-        world.killAt(x, y);
-        world.addScore(thing);
-        break;
-      case Type.Block:
-      case Type.Forest:
-      case Type.Tree:
-      case Type.Message:
-      case Type.MBlock:
-      case Type.ZBlock:
-      case Type.GBlock: {
-        // Destroy?
-        const w = world.stats.whipPower;
-        if (6 * Math.random() < w) {
-          if (thing === Type.MBlock) world.killAt(x, y);
-          world.level.map.setType(x, y, Type.Floor);
-          screen.drawEntity(x, y);
-          screen.drawOver(
-            x,
-            y,
-            ch,
-            ColorCodes[RNG.getUniformInt(0, 15) as Color],
-          );
-          sound.whipHit();
-        } else {
-          sound.whipMiss();
+    if (entity?.has(Breakable)) {
+      const b = entity.get(Breakable)!;
+      const hardness = b.hardness || 0;
+      if (hardness * Math.random() < world.stats.whipPower) {
+        world.level.map.setType(x, y, Type.Floor);
+        screen.drawEntity(x, y);
+        const hitSound = b.hitSound || 'WhipHit';
+        world.addScore(thing as Type);
+        if (entity.has(isMobile)) {
+          world.killAt(x, y);
         }
-        break;
+        if (hitSound) await sound.triggerSound(hitSound);
+
+        switch (thing) {
+          case Type.Statue:
+            world.level.T[Timer.StatueGemDrain] = -1;
+            await screen.flashMessage(
+              `You've destroyed the Statue!  Your Gems are now safe.`,
+            );
+            break;
+          case Type.Generator:
+            world.level.genNum--;
+            break;
+        }
+      } else {
+        sound.whipMiss();
       }
-      case Type.Invisible:
-      case Type.SpeedTime:
-      case Type.Trap:
-      case Type.Power:
-      case Type.K:
-      case Type.R:
-      case Type.O:
-      case Type.Z: // Break
-        world.level.map.setType(x, y, Type.Floor);
-        sound.whipBreak();
-        // TODO: Generator special case
-        break;
-      // case Type.Quake:
-      // case Type.IBlock:
-      // case Type.IWall:
-      // case Type.IDoor:
-      // case Type.Trap2:
-      // case Type.Trap3:
-      // case Type.Trap4:
-      // case Type.ShowGems:
-      // case Type.BlockSpell:
-      // case Type.Trap5:
-      // case Type.Trap6:
-      // case Type.Trap7:
-      // case Type.Trap8:
-      // case Type.Trap9:
-      // case Type.Trap10:
-      // case Type.Trap11:
-      // case Type.Trap12:
-      // case Type.Trap13:
-      // case Type.Stop:
-      //   // No break, no effect
-      //   break;
-      case Type.Rock:
-        if (30 * Math.random() < world.stats.whipPower) {
-          sound.whipBreakRock();
-          world.level.map.setType(x, y, Type.Floor);
-        } else {
-          sound.whipMiss();
-        }
-        break;
-      case Type.Statue:
-        // TODO: Sound
-        if (50 * Math.random() < world.stats.whipPower) {
-          // TODO: Sound
-          world.level.map.setType(x, y, Type.Floor);
-          world.addScore(thing);
-          world.level.T[Timer.StatueGemDrain] = -1;
-          await screen.flashMessage(
-            `You've destroyed the Statue!  Your Gems are now safe.`,
-          );
-        } else {
-          sound.whipMiss();
-        }
-        break;
-      case Type.Generator:
-        // TODO: Sound
-        world.addScore(thing);
-        world.level.map.setType(x, y, Type.Floor);
-        world.level.genNum--;
-        break;
-      // case Type.Wall:
-      //   break;
-      default:
-        break;
+
+      screen.renderStats();
     }
 
-    screen.renderStats();
     await delay(10);
   }
 }
@@ -687,23 +619,12 @@ export async function readMessage(message: string | undefined) {
       if (!line) continue;
 
       if (line.startsWith('##')) {
-        await specialTriggers(line);
+        await triggerEffect(line.slice(2));
       } else if (line.startsWith('@@')) {
-        await specialSounds(line);
+        await sound.triggerSound(line.slice(2));
       } else {
         await screen.flashMessage(line);
       }
     }
-  }
-}
-
-async function specialSounds(t: string) {
-  switch (t) {
-    case '@@Amulet':
-      await sound.amulet();
-      break;
-    case '@@SecretMessage':
-      await sound.secretMessage();
-      break;
   }
 }

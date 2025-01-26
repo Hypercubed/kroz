@@ -19,4 +19,4 @@ export const FLOOR_CHAR = ' ';
 export const TIME_SCALE = 1;
 export const CLOCK_SCALE = 16; // Lower is faster player movement (should be > 1, 8 is good)
 
-export const ENABLE_BOTS = false;
+export const ENABLE_BOTS = true;

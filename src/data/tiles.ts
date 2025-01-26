@@ -22,12 +22,13 @@ import {
   ReadMessage,
   isPassable,
   Speed,
+  Breakable,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
 import { FLOOR_CHAR } from './constants';
 
-// TODO: Load this dynamically
+// TODO: Load this dynamically?
 import tileset from './kroz.tileset.json';
 import { ensureObject, tileIdToChar } from '../utils/utils';
 
@@ -171,6 +172,7 @@ export function readTileset() {
     }
 
     if ('Message' in props) {
+      // TODO: remove this, use Component
       _TypeMessage[type] = props['Message' as keyof typeof props];
     }
   }
@@ -554,6 +556,7 @@ const SIMPLE_COMPONENTS = {
   Attacks: AttacksPlayer, // TODO: Rename
   ChangeLevel,
   Speed,
+  Breakable,
 };
 
 function addComponentsToEntity(
@@ -574,8 +577,6 @@ function addComponentsToEntity(
   }
 
   if (entity.has(isMobile)) {
-    // entity.add(isMobile);
-
     if (type === Type.Fast || type === Type.Medium || type === Type.Slow) {
       entity
         .add(new Eats(MOB_EATS))
@@ -649,7 +650,9 @@ export function getTileIdFromGID(gid: number): number {
   return (+gid % 256) - 1;
 }
 
-// Replace with tileset data
+// Replace with Components
+// Findable component (message, score, etc)
+// Breakable (score, etc)
 export function getScoreDelta(block: Type) {
   switch (block) {
     case Type.Border:

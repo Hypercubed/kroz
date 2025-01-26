@@ -221,3 +221,23 @@ export async function generateCreature() {
   }
   await delay(50);
 }
+
+export async function triggerSound(t: string) {
+  switch (t) {
+    case 'Amulet':
+      await amulet();
+      break;
+    case 'SecretMessage':
+      await secretMessage();
+      break;
+    case 'WhipHit':
+      await whipHit();
+      break;
+    case 'WhipBreak':
+      await whipBreak();
+      break;
+    case 'WhipBreakRock':
+      await whipBreakRock();
+      break;
+  }
+}

@@ -103,17 +103,6 @@ async function readLevel(i: number) {
   return level;
 }
 
-// const LEVEL_START_TRIGGERS = {
-//   HideGems: () => effects.specialTriggers('HideGems'),
-//   HideRocks: () => effects.specialTriggers('HideRocks'),
-//   HideStairs: () => effects.specialTriggers('HideStairs'),
-//   HideOpenWall: () => effects.specialTriggers('HideOpenWall'),
-//   HideCreate: () => effects.specialTriggers('HideCreate'),
-//   HideMBlock: () => effects.specialTriggers('HideMBlock'),
-//   HideTrap: () => effects.specialTriggers('HideTrap'),
-//   HideLevel: () => effects.specialTriggers('HideLevel'),
-// }
-
 // Reads the level data from a Tiled JSON file into a Level object
 function readLevelJSON(tilemap: tiled.Map): Level {
   const { layers, properties: _properties } = tilemap;
@@ -188,28 +177,28 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     world.level.lavaFlow = properties.LavaFlow ?? false;
 
     if (properties.HideGems) {
-      await effects.specialTriggers('HideGems');
+      await effects.triggerEffect('HideGems');
     }
     if (properties.HideRocks) {
-      await effects.specialTriggers('HideRocks');
+      await effects.triggerEffect('HideRocks');
     }
     if (properties.HideStairs) {
-      await effects.specialTriggers('HideStairs');
+      await effects.triggerEffect('HideStairs');
     }
     if (properties.HideOpenWall) {
-      await effects.specialTriggers('HideOpenWall');
+      await effects.triggerEffect('HideOpenWall');
     }
     if (properties.HideCreate) {
-      await effects.specialTriggers('HideCreate');
+      await effects.triggerEffect('HideCreate');
     }
     if (properties.HideMBlock) {
-      await effects.specialTriggers('HideMBlock');
+      await effects.triggerEffect('HideMBlock');
     }
     if (properties.HideTrap) {
-      await effects.specialTriggers('HideTrap');
+      await effects.triggerEffect('HideTrap');
     }
     if (properties.HideLevel) {
-      await effects.specialTriggers('HideLevel');
+      await effects.triggerEffect('HideLevel');
     }
   }
 

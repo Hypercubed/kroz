@@ -3,15 +3,46 @@ import { RNG } from 'rot-js';
 import { FLOOR_CHAR } from '../data/constants';
 import { Type, TypeColor } from '../data/tiles';
 
-export const followsPlayer = Symbol('followsPlayer');
-export const isPlayer = Symbol('isPlayer');
-export const isMobile = Symbol('isMobile');
-export const isGenerator = Symbol('isGenerator');
-export const isInvisible = Symbol('isInvisible');
-export const isSecreted = Symbol('isSecreted'); // Appears as ?
-export const isPushable = Symbol('isPushable');
-export const isPassable = Symbol('isPushable');
+/** # Tags */
 
+/**  ## isMobile
+ *
+ * Entity is Mobile */
+export const isMobile = Symbol('isMobile');
+
+/**  ## followsPlayer
+ *
+ * Entity will follow the player, must be used with isMobile */
+export const followsPlayer = Symbol('followsPlayer');
+
+/**  ## isPlayer */
+export const isPlayer = Symbol('isPlayer');
+
+/**  ## isGenerator */
+export const isGenerator = Symbol('isGenerator');
+
+/**  ## isInvisible */
+export const isInvisible = Symbol('isInvisible');
+
+/**  ## isSecreted
+ *
+ * Entity is hidden from the player, will appear as a Chance (?)
+ */
+export const isSecreted = Symbol('isSecreted');
+
+/**  ## isPushable */
+export const isPushable = Symbol('isPushable');
+
+/**  ## isPassable
+ * Tile is able to be walked on by the player
+ */
+export const isPassable = Symbol('isPassable');
+
+/** # Components */
+
+/**  ## Renderable
+ *
+ * A renderable is a component that can be rendered to the screen.  It contains values for the character, color, and background color. */
 export class Renderable {
   ch: string;
   fg: number | null;
@@ -26,6 +57,9 @@ export class Renderable {
   }
 }
 
+/**  ## Position
+ *
+ * A position is a component that contains the x and y coordinates of an entity.  It is used to place mobile entities on the screen. */
 export class Position {
   replacement = Type.Floor;
 
@@ -57,6 +91,8 @@ export class Position {
 }
 
 /**
+ * ##  Walkable
+ *
  * Component to store the type of entity that can walk on this tile.
  */
 export class Walkable {
@@ -71,6 +107,11 @@ export class Walkable {
   }
 }
 
+/**
+ * ##  Eats
+ *
+ * Component to store the type of entity that can be eaten by this entity.
+ */
 export class Eats {
   set: Set<Type | string>;
 
@@ -83,6 +124,11 @@ export class Eats {
   }
 }
 
+/**
+ * ##  DestroyedBy
+ *
+ * Component to store the type of entity that can be destroyed by this entity.
+ */
 export class DestroyedBy {
   set: Set<Type | string>;
 
@@ -95,6 +141,11 @@ export class DestroyedBy {
   }
 }
 
+/**
+ * ##  AttacksPlayer
+ *
+ * A component that allows an entity to attack the player.  It contains a damage value.
+ */
 export class AttacksPlayer {
   damage: number;
 
@@ -103,6 +154,11 @@ export class AttacksPlayer {
   }
 }
 
+/**
+ * ##  Collectible
+ *
+ * A component that allows an entity to be collected by the player.  It contains a count for each item to be collected.
+ * */
 export class Collectible {
   keys: number = 0;
   gems: number = 0;
@@ -120,7 +176,11 @@ export class Collectible {
   }
 }
 
-// TODO: Replace with using Renderable
+/**
+ * ##  AnimatedWalking
+ *
+ * A component that allows an entity to animate while walking.  It contains a list of character values to be displayed randomly.
+ */
 export class AnimatedWalking {
   constructor(public frames: string) {}
 
@@ -129,14 +189,24 @@ export class AnimatedWalking {
   }
 }
 
+/**
+ * ##  MagicTrigger
+ */
 export class MagicTrigger {
   constructor(public type: Type) {}
 }
 
+/**
+ * ##  ReadMessage
+ */
 export class ReadMessage {
   constructor(public message: string) {}
 }
 
+/**
+ * ##  ChangeLevel
+ */
+// TODO: Make magic MagicTrigger?
 export class ChangeLevel {
   exactLevel: number | null = null;
   deltaLevel: number = 0;
@@ -147,6 +217,9 @@ export class ChangeLevel {
   }
 }
 
+/**
+ * ##  Speed
+ */
 export class Speed {
   basePace!: number;
   hastedPace!: number;
@@ -154,5 +227,18 @@ export class Speed {
   constructor(data: Partial<Speed>) {
     this.basePace = data.basePace || 1;
     this.hastedPace = data.hastedPace || 1;
+  }
+}
+
+/**
+ * ##  Breakable
+ */
+export class Breakable {
+  hardness: number = 0;
+  hitSound: string | null = null;
+
+  constructor(data: Partial<Breakable>) {
+    this.hardness = data.hardness || 0;
+    this.hitSound = data.hitSound || null;
   }
 }

@@ -40,6 +40,28 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 9,
+            "members": [
+                {
+                    "name": "breakSound",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "hardness",
+                    "type": "int",
+                    "value": 0
+                }
+            ],
+            "name": "Breakable",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 5,
             "members": [
                 {
