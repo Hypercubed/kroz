@@ -198,6 +198,8 @@ export class AnimatedWalking {
 
 /**
  * ##  Trigger
+ *
+ * A component that allows an entity to trigger an event when it is interacted with.
  */
 export class Trigger {
   constructor(public message: string) {}
@@ -206,7 +208,6 @@ export class Trigger {
 /**
  * ##  ChangeLevel
  */
-// TODO: Make magic MagicTrigger?
 export class ChangeLevel {
   exactLevel: number | null = null;
   deltaLevel: number = 0;
@@ -219,6 +220,8 @@ export class ChangeLevel {
 
 /**
  * ##  Speed
+ *
+ * A component that allows an entity to move at different speeds.  It contains a base pace and a hasted pace.
  */
 export class Speed {
   basePace!: number;
@@ -232,6 +235,9 @@ export class Speed {
 
 /**
  * ##  Breakable
+ *
+ * A component that allows an entity to be broken when whipped.
+ * I contains a hardness value and a sound to play when hit.
  */
 export class Breakable {
   hardness: number = 0;

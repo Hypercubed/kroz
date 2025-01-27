@@ -103,7 +103,7 @@ async function run() {
       dt %= speed;
       tick++;
 
-      await player.update(tick);
+      await player.update();
       await mob.update(tick);
       await effects.update();
       screen.renderPlayfield();

@@ -46,7 +46,7 @@ type Weights = Record<string, number>;
 // TODO: Reset on level change
 const VISITED = new Map<string, number>();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 let lastAction: string | null = null;
 
 events.levelStart.add(() => {
@@ -155,7 +155,8 @@ async function tryStairs(): Promise<boolean> {
 
   const [x, y] = path[1];
 
-  console.log((lastAction = 'stairs'));
+  lastAction = 'stairs';
+  console.log(lastAction);
   return await tryMove(+x, +y);
 }
 

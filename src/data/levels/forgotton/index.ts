@@ -37,8 +37,6 @@ const LEVELS = [
 export default LEVELS;
 
 // Possible levels to add:
-// - final crusade of kroz - 1
-// - dungeon of kroz - 1
-// - dungeon of kroz - 3
-// - temple of kroz - 1
-// - castle of kroz - 1
+// - kingdom 10
+// - Kingdom 20
+// - Kingdom 25

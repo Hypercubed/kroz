@@ -16,7 +16,9 @@
     "publish": "npm run build && gh-pages -d dist",
     "prepare": "husky",
     "graph": " madge --image graph.svg ./src/main.ts --exclude '^levels/.*\\.ts'",
-    "docs": "mdextract ./src/classes/components.ts > ./docs/components.md"
+    "docs": "npm-run-all docs:**",
+    "docs:effects": "mdextract ./src/modules/effects.ts > ./docs/effects.md",
+    "docs:components": "mdextract ./src/classes/components.ts > ./docs/components.md"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

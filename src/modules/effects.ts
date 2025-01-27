@@ -644,6 +644,7 @@ async function HideOpenWall() {
   await hideType(Type.OSpell3);
 }
 
+/** # Effects */
 const EffectMap = {
   Bomb: (x: number, y: number) => bomb(x, y),
   Quake: quakeTrap,
@@ -684,23 +685,36 @@ const EffectMap = {
   TTree: (x: number, y: number) => TTrigger(x, y, Type.TTree),
   ShootRight: (x: number, y: number) => shoot(x, y, 1),
   ShootLeft: (x: number, y: number) => shoot(x, y, -1),
+  /** ## HideStairs */
   HideGems: () => hideType(Type.Gem),
+  /** ## HideRocks */
   HideRocks: () => hideType(Type.Rock),
+  /** ## HideStairs */
   HideStairs: () => hideType(Type.Stairs),
+  /** ## HideOpenWall */
   HideOpenWall: HideOpenWall,
+  /** ## HideCreate */
   HideCreate: () => hideType(Type.Create),
+  /** ## HideMBlock */
   HideMBlock: () => hideType(Type.MBlock),
+  /** ## HideTrap */
   HideTrap: () => hideType(Type.Trap),
   SlowTime: slowTimeSpell,
   SpeedTime: speedTimeSpell,
   Invisible: invisibleSpell,
   Freeze: freezeSpell,
+  /** ## HideLevel */
   HideLevel: hideLevel,
   ShowIWalls: showIWalls,
+  /** ## RiverToGold */
   RiverToGold: riverToGold,
+  /** ## RiverToBlock */
   RiverToBlock: riverToBlock,
+  /** ## WallsToGold */
   WallsToGold: wallsToGold,
+  /** ## WallsToGold */
   PitsToRock: pitsToRock,
+  /** ## DisguiseFast */
   DisguiseFast: disguiseFast,
   FlashPlayer: flashPlayer,
 };

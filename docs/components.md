@@ -23,6 +23,10 @@ Entity is hidden from the player, will appear as a Chance (?)
 ## isPassable
 Tile is able to be walked on by the player
 
+## isBombable
+
+Tile is destructible by bombs
+
 # Components
 
 ## Renderable
@@ -64,3 +68,7 @@ A component that allows an entity to animate while walking.  It contains a list 
 ##  Speed
 
 ##  Breakable
+
+##  FoundMessage
+
+A component that displays a message when the entity is first found.
