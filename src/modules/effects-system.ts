@@ -53,7 +53,7 @@ export async function update() {
       const block = world.level.map.getType(x, y);
       if (block === Type.CWall1) {
         world.level.map.setType(x, y, Type.EWall);
-        screen.drawEntity(x, y);
+        screen.drawEntityAt(x, y);
         break;
       }
     }
@@ -63,7 +63,7 @@ export async function update() {
       const block = world.level.map.getType(x, y);
       if (block === Type.EWall) {
         world.level.map.setType(x, y, Type.CWall1);
-        screen.drawEntity(x, y);
+        screen.drawEntityAt(x, y);
         break;
       }
     }
@@ -77,7 +77,7 @@ export async function update() {
       const block = world.level.map.getType(x, y);
       if (block === Type.River) {
         world.level.map.setType(x, y, Type.Floor);
-        screen.drawEntity(x, y);
+        screen.drawEntityAt(x, y);
         // TODO: Sound
       }
     }
@@ -104,7 +104,7 @@ export async function update() {
         if (world.level.map.getType(x, y - 1) === Type.Lava) done = true;
         if (done) {
           world.level.map.setType(x, y, Type.Lava);
-          screen.drawEntity(x, y);
+          screen.drawEntityAt(x, y);
         }
       }
     }
@@ -141,7 +141,7 @@ export async function update() {
         if (done) {
           const t = RNG.getUniformInt(0, 3) === 0 ? Type.Tree : Type.Forest;
           world.level.map.setType(x, y, t);
-          screen.drawEntity(x, y);
+          screen.drawEntityAt(x, y);
         }
       }
     }

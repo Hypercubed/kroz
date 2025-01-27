@@ -29,7 +29,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "Hey, look at this...\nIt's a message with cheat codes!\nEnter the following codes in the custom game\ntext box at the title screen to activate!\n\"dnkroz\" : god mode!\n\"!\" : enable in-game cheats!\nIf in-game cheats are enabled, use \"+\" and \"-\" to skip\none level forward or back, or \"\\\" to skip five levels!\nUse \"Z\" to destroy everything around the player.\nUse \"\/\" to give extra items!\nA word of warning:  if you use these codes,\nhigh scores and medal progress are disabled!\nThis has been a Mad Fish Production."
             }

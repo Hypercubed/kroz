@@ -5302,7 +5302,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "Up 4 steps, then left 16 steps."
             }

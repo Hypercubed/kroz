@@ -29,7 +29,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "Not all demolition magic is encased within a bomb."
             }
@@ -48,7 +48,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "Oh, yeah.\nI almost forgot; there are traps galore in ruins like these.\\n\n\nThose teleport scrolls are handy for getting out of\nthese situations.  The 'T' key teleports away.\nBut I must remember not to waste my scrolls--who knows\nhow many more traps exist?"
             }
@@ -67,7 +67,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "Ah, magic bombs.  Peculiar devices, these bombs.\nThey blast foes, walls, and doors,\nbut leave some features untouched.\nLucky for me, magic bombs shield the activator from the blast!"
             }

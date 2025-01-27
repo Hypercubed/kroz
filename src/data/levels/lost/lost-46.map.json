@@ -30,7 +30,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "Follow the sequence if you wish to be successful."
             }

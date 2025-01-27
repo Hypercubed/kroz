@@ -1,6 +1,8 @@
 import * as world from './world';
 import * as sound from './sound';
 import * as screen from './screen';
+import * as player from './player-system';
+import * as tiles from '../data/tiles';
 
 import {
   createEntityOfType,
@@ -33,6 +35,7 @@ import {
 import { RNG } from 'rot-js';
 import { delay } from '../utils/utils';
 import { Color, ColorCodes } from '../data/colors';
+import { Entity } from '../classes/entity';
 
 export const enum Timer { // TODO: Eliminate this, use type
   SlowTime = 4,
@@ -73,117 +76,6 @@ export async function updateTilesByType(
   });
 }
 
-export async function triggerEffect(t: string) {
-  // TODO: #CHANGE(INVISIBLE_SOLID_WALL,SOLID_WALL)
-  // #GIVE(SCORE,25000)
-  // #ITEMEFFECT(OPEN_SPELL1)
-  // #SETLEVELFEATURE(WaterFlow,1)
-
-  switch (t) {
-    case 'HideGems':
-      await hideType(Type.Gem);
-      break;
-    case 'HideRocks':
-      await hideType(Type.Rock);
-      break;
-    case 'HideStairs':
-      await hideType(Type.Stairs);
-      break;
-    case 'HideOpenWall':
-      // be careful with this one, name is confusing
-      // hides the open wall spell, not the wall itself
-      await hideType(Type.OSpell1);
-      await hideType(Type.OSpell2);
-      await hideType(Type.OSpell3);
-      break;
-    case 'HideCreate':
-      await hideType(Type.Create);
-      break;
-    case 'HideMBlock':
-      await hideType(Type.MBlock);
-      break;
-    case 'HideTrap':
-      await hideType(Type.Trap);
-      break;
-    case 'HideLevel':
-      for (let x = 0; x < world.level.map.width; x++) {
-        for (let y = 0; y < world.level.map.height; y++) {
-          const e = world.level.map.get(x, y)!;
-          if (e && !e.has(isPlayer)) {
-            e.add(isInvisible);
-          }
-        }
-      }
-      break;
-    case 'ShowIWalls':
-      await world.level.map.forEach(async (x, y, e) => {
-        if (e.type === Type.IWall) {
-          sound.play(x * y, 1, 10);
-          // await delay(1);
-          world.level.map.setType(x, y, Type.OWall3);
-          screen.drawEntity(x, y);
-        }
-      });
-      break;
-    case 'RiverToGold':
-      for (let x = 0; x <= XMax; x++) {
-        for (let y = 0; y <= YMax; y++) {
-          if (world.level.map.getType(x, y) === Type.River) {
-            await sound.play(x * y, 50, 10);
-            world.level.map.setType(x, y, Type.Nugget);
-            screen.drawEntity(x, y);
-          }
-        }
-      }
-      break;
-    case 'RiverToBlock':
-      for (let x = 0; x <= XMax; x++) {
-        for (let y = 0; y <= YMax; y++) {
-          if (world.level.map.getType(x, y) === Type.River) {
-            await sound.play(x * y, 50, 10);
-            world.level.map.setType(x, y, Type.Block);
-            screen.drawEntity(x, y);
-          }
-        }
-      }
-      break;
-    case 'WallsToGold':
-      for (let x = 0; x <= XMax; x++) {
-        for (let y = 0; y <= YMax; y++) {
-          if (world.level.map.getType(x, y) === Type.CWall1) {
-            await sound.play(x * y, 50, 10);
-            world.level.map.setType(x, y, Type.Nugget);
-            // ArtColor??
-            screen.drawEntity(x, y);
-          }
-        }
-      }
-      break;
-    case 'PitsToRock':
-      for (let x = 0; x <= XMax; x++) {
-        for (let y = 0; y <= YMax; y++) {
-          if (world.level.map.getType(x, y) === Type.Pit) {
-            await sound.play(x * y, 50, 10);
-            world.level.map.setType(x, y, Type.Rock);
-            screen.drawEntity(x, y);
-          }
-        }
-      }
-      break;
-    case 'OSpell1':
-      await triggerOSpell(Type.OSpell1);
-      await screen.flashTypeMessage(Type.OSpell1, true);
-      break;
-    case 'DisguiseFast':
-      await updateTilesByType(Type.Fast, { ch: '☺' });
-      screen.renderPlayfield();
-      break;
-    case 'FlashPlayer':
-      flashPlayer();
-      break;
-  }
-}
-
 export async function shoot(x: number, y: number, dx: number) {
   x += dx;
   while (x >= 0 && x <= XMax) {
@@ -208,7 +100,7 @@ export async function shoot(x: number, y: number, dx: number) {
       world.level.map.setType(x, y, Type.Floor);
     }
 
-    screen.drawEntity(x, y);
+    screen.drawEntityAt(x, y);
     x += dx;
   }
   screen.renderPlayfield();
@@ -270,7 +162,7 @@ export async function quakeTrap() {
       const block = world.level.map.getType(x, y);
       if (ROCKABLES.includes(block as number)) {
         world.level.map.setType(x, y, Type.Rock);
-        screen.drawEntity(x, y);
+        screen.drawEntityAt(x, y);
         break;
       }
     } while (Math.random() > 0.01);
@@ -323,7 +215,7 @@ export async function showGemsSpell() {
       if (block === Type.Floor) {
         done = true;
         world.level.map.setType(x, y, Type.Gem);
-        screen.drawEntity(x, y);
+        screen.drawEntityAt(x, y);
         await sound.showGem();
         await delay(90);
       }
@@ -337,14 +229,20 @@ export async function blockSpell() {
       if (world.level.map.getType(x, y) === Type.ZBlock) {
         sound.blockSpell();
         for (let i = 20; i > 0; i--) {
-          screen.drawType(x, y, Type.Block, RNG.getUniformInt(0, 15));
+          screen.drawAt(
+            x,
+            y,
+            tiles.common.BLOCK_CHAR,
+            RNG.getUniformInt(0, 15),
+            0,
+          );
         }
         await delay(1);
         world.level.map.setType(x, y, Type.Floor);
-        screen.drawEntity(x, y);
+        screen.drawEntityAt(x, y);
       } else if (world.level.map.getType(x, y) === Type.BlockSpell) {
         world.level.map.setType(x, y, Type.Floor);
-        screen.drawEntity(x, y);
+        screen.drawEntityAt(x, y);
       }
     }
   }
@@ -356,8 +254,8 @@ export async function krozBonus(block: Type) {
   if (block === Type.O && world.level.bonus === 2) world.level.bonus = 3;
   if (block === Type.Z && world.level.bonus === 3) {
     await sound.bonusSound();
+    await screen.flashMessage('Super Kroz Bonus -- 10,000 points!');
     world.addScore(block);
-    await screen.flashTypeMessage(block);
   }
 }
 
@@ -371,17 +269,18 @@ export async function triggerOSpell(block: Type) {
       const block = world.level.map.getType(x, y);
       if (block === s) {
         for (let i = 60; i > 0; i--) {
-          screen.drawType(
+          screen.drawAt(
             x,
             y,
             RNG.getItem(['▄', '▌', '▐', '▀']) as string,
             RNG.getUniformInt(0, 14),
+            0,
           );
           sound.play(i * 40, 5, 10);
           if (i % 5 === 0) await delay(1);
         }
         world.level.map.setType(x, y, Type.Floor);
-        screen.drawEntity(x, y);
+        screen.drawEntityAt(x, y);
       }
     }
   }
@@ -395,23 +294,195 @@ export async function triggerCSpell(block: Type) {
       const block = world.level.map.getType(x, y);
       if (block === s) {
         for (let i = 60; i > 0; i--) {
-          screen.drawType(
+          screen.drawAt(
             x,
             y,
             RNG.getItem(['▄', '▌', '▐', '▀']) as string,
             RNG.getUniformInt(0, 14),
+            0,
           );
           sound.play(i * 40, 5, 10);
           if (i % 5 === 0) await delay(1);
         }
         world.level.map.setType(x, y, Type.Wall);
-        screen.drawEntity(x, y);
+        screen.drawEntityAt(x, y);
       }
     }
   }
 }
 
-export async function triggers(x: number, y: number, block: Type) {
+export async function wallVanish() {
+  for (let i = 0; i < 75; i++) {
+    let done = false;
+    do {
+      const x = RNG.getUniformInt(0, XMax);
+      const y = RNG.getUniformInt(0, YMax);
+      const b = world.level.map.getType(x, y);
+      if (b === Type.Block) {
+        // TODO: sound
+        world.level.map.setType(x, y, Type.IBlock);
+        screen.drawEntityAt(x, y);
+        done = true;
+      }
+      if (b === Type.Wall) {
+        // TODO: sound
+        world.level.map.setType(x, y, Type.IWall);
+        screen.drawEntityAt(x, y);
+        done = true;
+      }
+    } while (!done && RNG.getUniformInt(0, 200) !== 0);
+  }
+}
+
+export async function teleport() {
+  await flashPlayer();
+
+  const p = world.level.player.get(Position)!;
+
+  world.level.map.setType(p.x, p.y, Type.Floor);
+  screen.drawEntityAt(p.x, p.y);
+
+  // Animation
+  const startTime = Date.now();
+  for (let i = 0; i < 700; i++) {
+    const x = RNG.getUniformInt(0, XMax);
+    const y = RNG.getUniformInt(0, YMax);
+    const block = world.level.map.getType(x, y);
+    if (VISUAL_TELEPORTABLES.indexOf(block as Type) > -1) {
+      screen.drawAt(
+        x,
+        y,
+        '☺',
+        RNG.getUniformInt(0, 15),
+        RNG.getUniformInt(0, 7),
+      );
+      await sound.teleport();
+      screen.drawEntityAt(x, y);
+    }
+    if (Date.now() - startTime > 1500) break;
+  }
+
+  const space = world.level.map.findRandomEmptySpace();
+  return player.move(...space);
+}
+
+export async function flashPlayer() {
+  const p = world.level.player.get(Position)!;
+
+  for (let i = 0; i < 160; i++) {
+    if (i % 5 === 0) {
+      screen.drawAt(
+        p.x,
+        p.y,
+        tiles.common.PLAYER_CHAR,
+        RNG.getUniformInt(0, 15),
+        RNG.getUniformInt(0, 8),
+      );
+      await delay();
+    }
+    sound.play(i / 2, 80, 10);
+  }
+  screen.renderPlayfield();
+}
+
+export async function whip() {
+  const p = world.level.player.get(Position)!;
+  const PX = p.x;
+  const PY = p.y;
+
+  sound.whip();
+  await hit(PX - 1, PY - 1, '\\');
+  await hit(PX - 1, PY, '-');
+  await hit(PX - 1, PY + 1, '/');
+  await hit(PX, PY + 1, '❘');
+  await hit(PX + 1, PY + 1, '\\');
+  await hit(PX + 1, PY, '-');
+  await hit(PX + 1, PY - 1, '/');
+  await hit(PX, PY - 1, '❘');
+  screen.renderPlayfield();
+
+  // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER/LOST4.TIT#L399
+  async function hit(x: number, y: number, ch: string) {
+    if (x < 0 || x > XMax || y < 0 || y > YMax) return;
+
+    const entity = world.level.map.get(x, y);
+    const thing = entity?.type || Type.Floor;
+
+    screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
+
+    if (entity?.has(isSecreted)) {
+      entity?.remove(isSecreted);
+      screen.drawEntityAt(x, y);
+    }
+
+    if (entity?.has(Breakable)) {
+      const b = entity.get(Breakable)!;
+      const hardness = b.hardness || 0;
+      if (hardness * Math.random() < world.stats.whipPower) {
+        if (entity.has(isMob)) {
+          // Split into killable?
+          world.killAt(x, y);
+        }
+        world.level.map.setType(x, y, Type.Floor);
+        screen.drawEntityAt(x, y);
+        const hitSound = b.hitSound || 'WhipHit';
+        world.addScore(thing as Type);
+        if (hitSound) await sound.triggerSound(hitSound);
+
+        switch (thing) {
+          case Type.Statue:
+            world.level.T[Timer.StatueGemDrain] = -1;
+            await screen.flashMessage(
+              `You've destroyed the Statue!  Your Gems are now safe.`,
+            );
+            break;
+          case Type.Generator:
+            world.level.genNum--;
+            break;
+        }
+      } else {
+        sound.whipMiss();
+      }
+
+      screen.renderStats();
+    }
+
+    await delay(10);
+  }
+}
+
+export function replaceEntities(a: Type | string, b: Type | string) {
+  const map = world.level.map;
+  for (let x = 0; x < map.width; x++) {
+    for (let y = 0; y < map.height; y++) {
+      if (map.getType(x, y) === a) {
+        map.set(x, y, createEntityOfType(b, x, y));
+      }
+    }
+  }
+}
+
+export async function processEffect(message: string | undefined, who: Entity) {
+  if (!message) return;
+
+  if (typeof message === 'string') {
+    const lines = message.split('\n');
+    for (let line of lines) {
+      line = line.trim();
+      if (!line) continue;
+
+      if (line.startsWith('##')) {
+        await triggerEffect(line.slice(2), who);
+      } else if (line.startsWith('@@')) {
+        await sound.triggerSound(line.slice(2));
+      } else {
+        await screen.flashMessage(line);
+      }
+    }
+  }
+}
+
+export async function TTrigger(x: number, y: number, block: Type) {
   let t = Type.Floor;
   switch (block) {
     case Type.TBlock:
@@ -451,8 +522,16 @@ export async function triggers(x: number, y: number, block: Type) {
 
         const b = world.level.map.getType(x + dx, y + dy);
         if (TRIGGERABLES.includes(b as Type)) {
-          screen.drawType(x + dx, y + dy, t, fg, bg);
-          if (place) world.level.map.setType(x + dx, y + dy, t);
+          if (place) {
+            world.level.map.setType(x + dx, y + dy, t);
+          } else {
+            world.level.map.setType(x + dx, y + dy, t);
+            const e = world.level.map.get(x + dx, y + dy);
+            if (!e) continue;
+            const r = e?.get(Renderable);
+            if (!r) continue;
+            screen.drawAt(x + dx, y + dy, r.ch, fg!, bg!);
+          }
         }
         await delay(5);
       }
@@ -460,172 +539,177 @@ export async function triggers(x: number, y: number, block: Type) {
   }
 }
 
-export async function wallVanish() {
-  for (let i = 0; i < 75; i++) {
-    let done = false;
-    do {
-      const x = RNG.getUniformInt(0, XMax);
-      const y = RNG.getUniformInt(0, YMax);
-      const b = world.level.map.getType(x, y);
-      if (b === Type.Block) {
-        // TODO: sound
-        world.level.map.setType(x, y, Type.IBlock);
-        screen.drawEntity(x, y);
-        done = true;
-      }
-      if (b === Type.Wall) {
-        // TODO: sound
-        world.level.map.setType(x, y, Type.IWall);
-        screen.drawEntity(x, y);
-        done = true;
-      }
-    } while (!done && RNG.getUniformInt(0, 200) !== 0);
-  }
-}
-
-export async function teleport() {
-  await flashPlayer();
-
-  const p = world.level.player.get(Position)!;
-
-  world.level.map.setType(p.x, p.y, Type.Floor);
-  screen.drawEntity(p.x, p.y);
-
-  // Animation
-  const startTime = Date.now();
-  for (let i = 0; i < 700; i++) {
-    const x = RNG.getUniformInt(0, XMax);
-    const y = RNG.getUniformInt(0, YMax);
-    const block = world.level.map.getType(x, y);
-    if (VISUAL_TELEPORTABLES.indexOf(block as Type) > -1) {
-      screen.drawType(
-        x,
-        y,
-        '☺',
-        RNG.getUniformInt(0, 15),
-        RNG.getUniformInt(0, 7),
-      );
-      await sound.teleport();
-      screen.drawType(x, y, block);
-    }
-    if (Date.now() - startTime > 1500) break;
-  }
-
-  // Teleport
-  return world.level.map.findRandomEmptySpace();
-}
-
-export async function flashPlayer() {
-  const p = world.level.player.get(Position)!;
-
-  for (let i = 0; i < 160; i++) {
-    if (i % 5 === 0) {
-      screen.drawType(
-        p.x,
-        p.y,
-        Type.Player,
-        RNG.getUniformInt(0, 15),
-        RNG.getUniformInt(0, 8),
-      );
-      await delay();
-    }
-    sound.play(i / 2, 80, 10);
-  }
+async function disguiseFast() {
+  await updateTilesByType(Type.Fast, { ch: '☺' });
   screen.renderPlayfield();
 }
 
-export async function whip() {
+async function pitsToRock() {
+  for (let x = 0; x <= XMax; x++) {
+    for (let y = 0; y <= YMax; y++) {
+      if (world.level.map.getType(x, y) === Type.Pit) {
+        await sound.play(x * y, 50, 10);
+        world.level.map.setType(x, y, Type.Rock);
+        screen.drawEntityAt(x, y);
+      }
+    }
+  }
+}
+
+async function wallsToGold() {
+  for (let x = 0; x <= XMax; x++) {
+    for (let y = 0; y <= YMax; y++) {
+      if (world.level.map.getType(x, y) === Type.CWall1) {
+        await sound.play(x * y, 50, 10);
+        world.level.map.setType(x, y, Type.Nugget);
+        // ArtColor??
+        screen.drawEntityAt(x, y);
+      }
+    }
+  }
+}
+
+async function riverToBlock() {
+  for (let x = 0; x <= XMax; x++) {
+    for (let y = 0; y <= YMax; y++) {
+      if (world.level.map.getType(x, y) === Type.River) {
+        await sound.play(x * y, 50, 10);
+        world.level.map.setType(x, y, Type.Block);
+        screen.drawEntityAt(x, y);
+      }
+    }
+  }
+}
+
+async function riverToGold() {
+  for (let x = 0; x <= XMax; x++) {
+    for (let y = 0; y <= YMax; y++) {
+      if (world.level.map.getType(x, y) === Type.River) {
+        await sound.play(x * y, 50, 10);
+        world.level.map.setType(x, y, Type.Nugget);
+        screen.drawEntityAt(x, y);
+      }
+    }
+  }
+}
+
+async function showIWalls() {
+  await world.level.map.forEach(async (x, y, e) => {
+    if (e.type === Type.IWall) {
+      sound.play(x * y, 1, 10);
+      // await delay(1);
+      world.level.map.setType(x, y, Type.OWall3);
+      screen.drawEntityAt(x, y);
+    }
+  });
+}
+
+function hideLevel() {
+  for (let x = 0; x < world.level.map.width; x++) {
+    for (let y = 0; y < world.level.map.height; y++) {
+      const e = world.level.map.get(x, y)!;
+      if (e && !e.has(isPlayer)) {
+        e.add(isInvisible);
+      }
+    }
+  }
+}
+
+function slowTimeSpell() {
+  world.level.T[Timer.SpeedTime] = 0;
+  world.level.T[Timer.FreezeTime] = 0;
+  world.level.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime];
+}
+
+function speedTimeSpell() {
+  world.level.T[Timer.SlowTime] = 0;
+  world.level.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime];
+}
+
+function invisibleSpell() {
+  world.level.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
+  world.level.player.add(isInvisible);
+
   const p = world.level.player.get(Position)!;
-  const PX = p.x;
-  const PY = p.y;
-
-  sound.whip();
-  await hit(PX - 1, PY - 1, '\\');
-  await hit(PX - 1, PY, '-');
-  await hit(PX - 1, PY + 1, '/');
-  await hit(PX, PY + 1, '❘');
-  await hit(PX + 1, PY + 1, '\\');
-  await hit(PX + 1, PY, '-');
-  await hit(PX + 1, PY - 1, '/');
-  await hit(PX, PY - 1, '❘');
-
-  // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER/LOST4.TIT#L399
-  async function hit(x: number, y: number, ch: string) {
-    if (x < 0 || x > XMax || y < 0 || y > YMax) return;
-
-    const entity = world.level.map.get(x, y);
-    const thing = entity?.type || Type.Floor;
-
-    screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
-
-    if (entity?.has(isSecreted)) {
-      entity?.remove(isSecreted);
-      screen.drawEntity(x, y);
-    }
-
-    if (entity?.has(Breakable)) {
-      const b = entity.get(Breakable)!;
-      const hardness = b.hardness || 0;
-      if (hardness * Math.random() < world.stats.whipPower) {
-        if (entity.has(isMob)) {
-          // Split into killable?
-          world.killAt(x, y);
-        }
-        world.level.map.setType(x, y, Type.Floor);
-        screen.drawEntity(x, y);
-        const hitSound = b.hitSound || 'WhipHit';
-        world.addScore(thing as Type);
-        if (hitSound) await sound.triggerSound(hitSound);
-
-        switch (thing) {
-          case Type.Statue:
-            world.level.T[Timer.StatueGemDrain] = -1;
-            await screen.flashMessage(
-              `You've destroyed the Statue!  Your Gems are now safe.`,
-            );
-            break;
-          case Type.Generator:
-            world.level.genNum--;
-            break;
-        }
-      } else {
-        sound.whipMiss();
-      }
-
-      screen.renderStats();
-    }
-
-    await delay(10);
-  }
+  screen.drawEntityAt(p.x, p.y);
 }
 
-export function replaceEntities(a: Type | string, b: Type | string) {
-  const map = world.level.map;
-  for (let x = 0; x < map.width; x++) {
-    for (let y = 0; y < map.height; y++) {
-      if (map.getType(x, y) === a) {
-        map.set(x, y, createEntityOfType(b, x, y));
-      }
-    }
-  }
+function freezeSpell() {
+  world.level.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
 }
 
-export async function readMessage(message: string | undefined) {
-  if (!message) return;
+async function HideOpenWall() {
+  await hideType(Type.OSpell1);
+  await hideType(Type.OSpell2);
+  await hideType(Type.OSpell3);
+}
 
-  if (typeof message === 'string') {
-    const lines = message.split('\n');
-    for (let line of lines) {
-      line = line.trim();
-      if (!line) continue;
+const EffectMap = {
+  Bomb: (x: number, y: number) => bomb(x, y),
+  Quake: quakeTrap,
+  Trap: () => teleport(),
+  Trap2: () => replaceEntities(Type.Trap2, Type.Floor),
+  Zap: zapTrap,
+  Create: createTrap,
+  ShowGems: showGemsSpell,
+  BlockSpell: blockSpell,
+  WallVanish: wallVanish,
+  K: () => krozBonus(Type.K),
+  R: () => krozBonus(Type.R),
+  O: () => krozBonus(Type.O),
+  Z: () => krozBonus(Type.Z),
+  OSpell1: () => triggerOSpell(Type.OSpell1),
+  OSpell2: () => triggerOSpell(Type.OSpell2),
+  OSpell3: () => triggerOSpell(Type.OSpell3),
+  CSpell1: () => triggerCSpell(Type.CSpell1),
+  CSpell2: () => triggerCSpell(Type.CSpell2),
+  CSpell3: () => triggerCSpell(Type.CSpell3),
+  Trap3: () => replaceEntities(Type.Trap3, Type.Floor),
+  Trap4: () => replaceEntities(Type.Trap4, Type.Floor),
+  Trap5: () => replaceEntities(Type.Trap5, Type.Floor),
+  Trap6: () => replaceEntities(Type.Trap6, Type.Floor),
+  Trap7: () => replaceEntities(Type.Trap7, Type.Floor),
+  Trap8: () => replaceEntities(Type.Trap8, Type.Floor),
+  Trap9: () => replaceEntities(Type.Trap9, Type.Floor),
+  Trap10: () => replaceEntities(Type.Trap10, Type.Floor),
+  Trap11: () => replaceEntities(Type.Trap11, Type.Floor),
+  Trap12: () => replaceEntities(Type.Trap12, Type.Floor),
+  Trap13: () => replaceEntities(Type.Trap13, Type.Floor),
+  TBlock: (x: number, y: number) => TTrigger(x, y, Type.TBlock),
+  TRock: (x: number, y: number) => TTrigger(x, y, Type.TRock),
+  TGem: (x: number, y: number) => TTrigger(x, y, Type.TGem),
+  TBlind: (x: number, y: number) => TTrigger(x, y, Type.TBlind),
+  TWhip: (x: number, y: number) => TTrigger(x, y, Type.TWhip),
+  TGold: (x: number, y: number) => TTrigger(x, y, Type.TGold),
+  TTree: (x: number, y: number) => TTrigger(x, y, Type.TTree),
+  ShootRight: (x: number, y: number) => shoot(x, y, 1),
+  ShootLeft: (x: number, y: number) => shoot(x, y, -1),
+  HideGems: () => hideType(Type.Gem),
+  HideRocks: () => hideType(Type.Rock),
+  HideStairs: () => hideType(Type.Stairs),
+  HideOpenWall: HideOpenWall,
+  HideCreate: () => hideType(Type.Create),
+  HideMBlock: () => hideType(Type.MBlock),
+  HideTrap: () => hideType(Type.Trap),
+  SlowTime: slowTimeSpell,
+  SpeedTime: speedTimeSpell,
+  Invisible: invisibleSpell,
+  Freeze: freezeSpell,
+  HideLevel: hideLevel,
+  ShowIWalls: showIWalls,
+  RiverToGold: riverToGold,
+  RiverToBlock: riverToBlock,
+  WallsToGold: wallsToGold,
+  PitsToRock: pitsToRock,
+  DisguiseFast: disguiseFast,
+  FlashPlayer: flashPlayer,
+};
 
-      if (line.startsWith('##')) {
-        await triggerEffect(line.slice(2));
-      } else if (line.startsWith('@@')) {
-        await sound.triggerSound(line.slice(2));
-      } else {
-        await screen.flashMessage(line);
-      }
-    }
+export async function triggerEffect(trigger: string, who: Entity) {
+  if (EffectMap[trigger as keyof typeof EffectMap]) {
+    const p = who.get(Position);
+    await EffectMap[trigger as keyof typeof EffectMap](p?.x || 0, p?.y || 0);
+    return;
   }
+  console.warn('Unknown effect:', trigger);
 }

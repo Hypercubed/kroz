@@ -111,7 +111,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "These walls will seek to entrap you!"
             }

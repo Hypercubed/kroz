@@ -30,7 +30,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"Barriers of water, like barriers in life, can always be...\"\n##RiverToBlock\n\"...Overcome!\""
             }

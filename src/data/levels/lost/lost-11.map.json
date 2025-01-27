@@ -30,7 +30,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "The tunnel below contains a magic spell."
             }

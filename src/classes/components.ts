@@ -1,7 +1,7 @@
 import { RNG } from 'rot-js';
 
-import { FLOOR_CHAR } from '../data/constants';
-import { Type, TypeColor } from '../data/tiles';
+import { Type } from '../data/tiles';
+import * as tiles from '../data/tiles';
 
 /** # Tags */
 
@@ -38,6 +38,11 @@ export const isPushable = Symbol('isPushable');
  */
 export const isPassable = Symbol('isPassable');
 
+/**
+ * ## isBombable
+ *
+ * Tile is destructible by bombs
+ */
 export const isBombable = Symbol('isBombable');
 
 /** # Components */
@@ -52,9 +57,9 @@ export class Renderable {
   blink: boolean = false;
 
   constructor(data: Partial<Renderable>) {
-    this.ch = data.ch ?? FLOOR_CHAR;
-    this.fg = data.fg ?? TypeColor[Type.Floor][0]!;
-    this.bg = data.bg ?? TypeColor[Type.Floor][1]!;
+    this.ch = data.ch ?? tiles.common.FLOOR_CHAR;
+    this.fg = data.fg ?? tiles.common.FLOOR_FG;
+    this.bg = data.bg ?? tiles.common.FLOOR_BG;
     this.blink = data.blink ?? false;
   }
 }
@@ -192,16 +197,9 @@ export class AnimatedWalking {
 }
 
 /**
- * ##  MagicTrigger
+ * ##  Trigger
  */
-export class MagicTrigger {
-  constructor(public type: Type) {}
-}
-
-/**
- * ##  ReadMessage
- */
-export class ReadMessage {
+export class Trigger {
   constructor(public message: string) {}
 }
 
@@ -243,4 +241,13 @@ export class Breakable {
     this.hardness = data.hardness || 0;
     this.hitSound = data.hitSound || null;
   }
+}
+
+/**
+ * ##  FoundMessage
+ *
+ * A component that displays a message when the entity is first found.
+ */
+export class FoundMessage {
+  constructor(public message: string) {}
 }

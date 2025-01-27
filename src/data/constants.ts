@@ -13,8 +13,6 @@ export const YTop = HEIGHT - 2;
 export const XMax = 63;
 export const YMax = 22;
 
-export const FLOOR_CHAR = ' ';
-
 // Overall time scale... impacts creatre move speed and spell duration
 export const TIME_SCALE = 1;
 export const CLOCK_SCALE = 16; // Lower is faster player movement (should be > 1, 8 is good)

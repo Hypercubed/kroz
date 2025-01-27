@@ -36,7 +36,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "Warning to all Adventurers:  No one returns from Kroz!"
             }

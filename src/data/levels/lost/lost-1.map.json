@@ -35,7 +35,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "Once again you uncover the hidden tunnel leading to Kroz!"
             }
@@ -54,7 +54,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "You notice a secret message carved into the old tree...\n\"Goodness of Heart Overcomes Adversity.\"\nReveal that you found this message to Scott Miller...\nAnd receive a \"MASTER KROZ CERTIFICATE\" to hang on your wall!!\nOnly the first 100 players to report this...\nWill be awarded the certificate.  Congratulations!"
             }

@@ -1,4 +1,5 @@
 import { RNG } from 'rot-js';
+import type { ExternalTileset } from '@kayahr/tiled';
 
 import * as world from '../modules/world';
 
@@ -14,23 +15,22 @@ import {
   Walkable,
   Collectible,
   AnimatedWalking,
-  MagicTrigger,
   isSecreted,
   Position,
   isPushable,
   ChangeLevel,
-  ReadMessage,
+  Trigger,
   isPassable,
   Speed,
   Breakable,
   isBombable,
+  FoundMessage,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
-import { FLOOR_CHAR } from './constants';
 
 // TODO: Load this dynamically?
-import tileset from './kroz.tileset.json';
+// import tileset from './kroz.tileset.json';
 import { ensureObject, tileIdToChar } from '../utils/utils';
 
 export enum Type {
@@ -132,23 +132,31 @@ export enum Type {
   Message = 252,
 }
 
-const _TypeChar: Partial<Record<Type, string>> = {
-  [Type.Border]: '▒',
-  [Type.Floor]: FLOOR_CHAR,
-};
-
 const TileIDToType: Record<number, Type> = {}; // TileID to type lookup
 const TypeToTileID: Record<number, Type> = {}; // TileID to type lookup
 
-const _TypeColor: Partial<Record<Type, [Color | null, Color | null]>> = {
-  [Type.Border]: [Color.LightBlue, Color.Black],
-  [Type.Floor]: [Color.Black, Color.Black],
-};
-const _TypeMessage: Partial<Record<Type, string>> = {
-  [Type.Border]: 'An Electrified Wall blocks your way.',
+let tileset: ExternalTileset;
+
+export const common = {
+  PLAYER_CHAR: '☺',
+
+  FLOOR_CHAR: ' ',
+  FLOOR_FG: 0,
+  FLOOR_BG: 0,
+
+  BORDER_CHAR: '▒',
+  BORDER_FG: 9,
+  BORDER_BG: 0,
+
+  CHANCE_CHAR: '?',
+  CHANCE_FG: 15,
+  CHANCE_BG: 0,
+
+  BLOCK_CHAR: '█',
 };
 
-export function readTileset() {
+export async function readTileset() {
+  tileset = (await import('./kroz.tileset.json')).default;
   if (!tileset.tiles) throw new Error('No tiles found in tileset');
 
   for (const tile of tileset.tiles!) {
@@ -162,34 +170,31 @@ export function readTileset() {
     const props = ensureObject(tile.properties);
     if (props.name !== Type[type]) throw new Error('Tile ID mismatch');
 
-    // TODO: remove this, use when creating entities
-    if ('Tile' in props) {
-      const tile = props['Tile' as keyof typeof props];
-      _TypeColor[type] = [
-        Color[tile.fg as keyof typeof Color] ?? tile.fg ?? null,
-        Color[tile.bg as keyof typeof Color] ?? tile.bg ?? null,
-      ]; // Allow explicit color?
-      _TypeChar[type] = tile.ch ?? FLOOR_CHAR;
-    }
-
-    if ('Message' in props) {
-      // TODO: remove this, use Component
-      _TypeMessage[type] = props['Message' as keyof typeof props];
+    switch (type) {
+      case Type.Floor:
+        common.FLOOR_CHAR = props.ch ?? common.FLOOR_CHAR;
+        common.FLOOR_FG = props.fg ?? common.FLOOR_FG;
+        common.FLOOR_BG = props.bg ?? common.FLOOR_BG;
+        break;
+      case Type.Block:
+        common.BLOCK_CHAR = props.ch ?? common.BLOCK_CHAR;
+        break;
+      case Type.Border:
+        common.BORDER_CHAR = props.ch ?? common.BORDER_CHAR;
+        common.BORDER_FG = props.fg ?? common.BORDER_FG;
+        common.BORDER_BG = props.bg ?? common.BORDER_BG;
+        break;
+      case Type.Chance:
+        common.CHANCE_CHAR = props.ch ?? common.CHANCE_CHAR;
+        common.CHANCE_FG = props.fg ?? common.CHANCE_FG;
+        common.CHANCE_BG = props.bg ?? common.CHANCE_BG;
+        break;
+      case Type.Player:
+        common.PLAYER_CHAR = props.ch ?? common.PLAYER_CHAR;
+        break;
     }
   }
 }
-
-readTileset();
-
-// export const MapLookup = _MapLookup as Record<string, Type>;
-export const TypeColor = _TypeColor as Record<
-  Type,
-  [Color | null, Color | null]
->;
-
-// TODO: Remove thesem use entity data
-export const TypeChar = _TypeChar as Record<Type, string>;
-export const TypeMessage = _TypeMessage as Record<Type, string>;
 
 export const MOBS = [Type.Fast, Type.Medium, Type.Slow]; // 1..3
 export const COLLECTABLES = [Type.Whip, Type.Gem, Type.Teleport, Type.Chest]; // 5, 9, 11
@@ -246,14 +251,6 @@ export const TBLOCKS = [
   Type.TTree,
 ];
 
-export const ROPE_DROP = [
-  Type.DropRope,
-  Type.DropRope2,
-  Type.DropRope3,
-  Type.DropRope4,
-  Type.DropRope5,
-]; // 76..80
-
 export const ROCKABLES = [
   Type.Floor,
   ...MOBS,
@@ -263,6 +260,8 @@ export const ROCKABLES = [
   Type.Stop,
 ];
 
+// Types that appear as a floor when a teleport is triggered
+// TODO: Same as `.has(isInvisible)`?
 export const VISUAL_TELEPORTABLES = [
   Type.Floor,
   Type.Stop,
@@ -275,6 +274,7 @@ export const VISUAL_TELEPORTABLES = [
   ...TBLOCKS,
 ];
 
+// Types that can be replaced when a TBlock is triggered
 export const TRIGGERABLES = [
   Type.Floor,
   Type.Stop,
@@ -312,7 +312,6 @@ export const ROCK_CRUSHABLES = [
   Type.Chance,
   ...KROZ,
   ...OSPELLS,
-  ...ROPE_DROP,
   Type.ShootRight,
   Type.ShootLeft,
 ];
@@ -362,30 +361,6 @@ export const SPEAR_IGNORE = [
   Type.Rope,
 ];
 
-// TODO: Remove this, use entity data
-function createTileDataForType(type: Type | string) {
-  let fg = TypeColor[Type.Floor][0]!;
-  let bg = TypeColor[Type.Floor][1]!;
-  let ch = FLOOR_CHAR;
-
-  if (typeof type === 'string') {
-    // TODO: remove these, add to tileset data
-    ch = type.toLocaleUpperCase();
-    fg = Color.HighIntensityWhite;
-    bg = Color.Brown;
-  } else {
-    ch = TypeChar[type];
-    fg = TypeColor[type]?.[0] ?? TypeColor[Type.Floor][0]!;
-    bg = TypeColor[type]?.[1] ?? TypeColor[Type.Floor][1]!;
-  }
-
-  fg ??= TypeColor[Type.Floor][0]!;
-  bg ??= TypeColor[Type.Floor][1]!;
-  ch ??= FLOOR_CHAR;
-
-  return { ch, fg, bg };
-}
-
 const MOB_WALKABLE = [
   Type.Floor,
   Type.TBlock,
@@ -432,52 +407,6 @@ const MOB_EATS = [
   Type.R,
   Type.O,
   Type.Z,
-  Type.ShootRight,
-  Type.ShootLeft,
-];
-
-export const MAGIC_TRIGGERS = [
-  Type.SlowTime,
-  Type.Invisible,
-  Type.SpeedTime,
-  Type.Trap,
-  Type.Bomb,
-  Type.Freeze,
-  Type.Quake,
-  Type.Trap2,
-  Type.Zap,
-  Type.Create,
-  Type.ShowGems,
-  Type.BlockSpell,
-  Type.WallVanish,
-  Type.K,
-  Type.R,
-  Type.O,
-  Type.Z,
-  Type.OSpell1,
-  Type.OSpell2,
-  Type.OSpell3,
-  Type.CSpell1,
-  Type.CSpell2,
-  Type.CSpell3,
-  Type.Trap3,
-  Type.Trap4,
-  Type.Trap5,
-  Type.Trap6,
-  Type.Trap7,
-  Type.Trap8,
-  Type.Trap9,
-  Type.Trap10,
-  Type.Trap11,
-  Type.Trap12,
-  Type.Trap13,
-  Type.TBlock,
-  Type.TRock,
-  Type.TGem,
-  Type.TBlind,
-  Type.TWhip,
-  Type.TGold,
-  Type.TTree,
   Type.ShootRight,
   Type.ShootLeft,
 ];
@@ -532,24 +461,28 @@ const SIMPLE_TAGS = {
 
 const SIMPLE_COMPONENTS = {
   Collectible,
-  ReadMessage,
+  Trigger,
   AnimatedWalking,
-  Attacks: Attacks, // TODO: Rename
+  Attacks,
   ChangeLevel,
   Speed,
   Breakable,
+  FoundMessage,
 };
 
 function addComponentsToEntity(
   entity: Entity,
   properties: Record<string, unknown>,
 ) {
-  const type = entity.type as Type;
-
   // TODO: Should be able to remove this by adding to tiles set
-  if (typeof type === 'string') {
-    entity.add(new Renderable(createTileDataForType(type)));
+  if (typeof entity.type === 'string') {
+    const ch = entity.type.toLocaleUpperCase();
+    const fg = Color.HighIntensityWhite;
+    const bg = Color.Brown;
+    entity.add(new Renderable({ ch, fg, bg }));
   }
+
+  const type = entity.type as Type;
 
   for (const tag in SIMPLE_TAGS) {
     if (properties[tag]) {
@@ -569,9 +502,6 @@ function addComponentsToEntity(
 
   if (MOB_WALKABLE.includes(type as Type)) {
     entity.add(new Walkable([Type.Fast, Type.Medium, Type.Slow]));
-  }
-  if (MAGIC_TRIGGERS.includes(type as Type)) {
-    entity.add(new MagicTrigger(type as Type));
   }
 
   if ('ChanceOdds' in properties) {
@@ -612,7 +542,7 @@ function addComponentsToEntity(
     ] as Partial<Renderable>;
     const fg = Color[tile.fg as unknown as keyof typeof Color] ?? null; // TODO: alow explict color strings
     const bg = Color[tile.bg as unknown as keyof typeof Color] ?? null;
-    const ch = tile.ch ?? FLOOR_CHAR;
+    const ch = tile.ch ?? common.FLOOR_CHAR;
     const blink = tile.blink ?? false;
     entity.add(new Renderable({ fg, bg, ch, blink }));
   }

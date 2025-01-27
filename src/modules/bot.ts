@@ -331,7 +331,7 @@ async function tryTeleport() {
 
   console.log((lastAction = 'teleport'));
   world.stats.teleports--;
-  player.move(...(await effects.teleport()));
+  await effects.teleport();
   return true;
 }
 

@@ -122,7 +122,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "The path is narrow...I can move diagonally with\nYou can use the numberpad move your man,\nor press two keys simultaneously."
             },
@@ -330,7 +330,7 @@
           "name": "Secret Message",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "@@SecretMessage\nYou notice a secret message carved into the old tree...\n\"Goodness of Heart Overcomes Adversity.\"\nReveal that you found this message to Scott Miller...\nAnd receive a \"MASTER KROZ CERTIFICATE\" to hang on your wall!!\nOnly the first 100 players to report this...\nWill be awarded the certificate.  Congratulations!"
             },

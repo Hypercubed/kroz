@@ -57,9 +57,7 @@ A component that allows an entity to be collected by the player.  It contains a 
 
 A component that allows an entity to animate while walking.  It contains a list of character values to be displayed randomly.
 
-##  MagicTrigger
-
-##  ReadMessage
+##  Trigger
 
 ##  ChangeLevel
 

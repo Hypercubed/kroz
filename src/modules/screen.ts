@@ -2,10 +2,10 @@ import * as display from './display';
 import * as world from './world';
 import * as controls from './controls';
 import * as sound from './sound';
+import * as tiles from '../data/tiles';
 
 import {
   ENABLE_BOTS,
-  FLOOR_CHAR,
   HEIGHT,
   TITLE,
   WIDTH,
@@ -18,7 +18,7 @@ import { default as RNG } from 'rot-js/lib/rng';
 import { Color, ColorCodes } from '../data/colors';
 import { delay } from '../utils/utils';
 import dedent from 'ts-dedent';
-import { Type, TypeChar, TypeColor, TypeMessage } from '../data/tiles';
+import { Type } from '../data/tiles';
 import { Entity } from '../classes/entity';
 import {
   isSecreted,
@@ -101,8 +101,9 @@ export function renderStats() {
 }
 
 export function renderBorder() {
-  const char = TypeChar[Type.Border];
-  const [fg, bg] = TypeColor[Type.Border];
+  const char = tiles.common.BORDER_CHAR;
+  const fg = world.level.borderFG;
+  const bg = world.level.borderBG;
 
   for (let x = XBot - 1; x <= XTop + 1; x++) {
     display.draw(x, 0, char, fg!, bg!);
@@ -294,7 +295,9 @@ export async function openSourceScreen() {
 }
 
 function pad(s: string, n: number, r: number) {
-  return s.padStart(n, FLOOR_CHAR).padEnd(r, FLOOR_CHAR);
+  return s
+    .padStart(n, tiles.common.FLOOR_CHAR)
+    .padEnd(r, tiles.common.FLOOR_CHAR);
 }
 
 export function renderPlayfield() {
@@ -314,7 +317,7 @@ export function renderPlayfield() {
         continue;
       }
 
-      drawEntity(x, y, e);
+      drawEntityAt(x, y, e);
     }
   }
 
@@ -322,19 +325,24 @@ export function renderPlayfield() {
     const e = world.level.entities[i];
     const p = e.get(Position)!;
     if (p.x === -1 || p.y === -1) continue; // dead
-    drawEntity(p.x, p.y, e);
+    drawEntityAt(p.x, p.y, e);
   }
 
   const p = world.level.player.get(Position)!;
-  if (p) drawEntity(p.x, p.y, world.level.player);
+  if (p) drawEntityAt(p.x, p.y, world.level.player);
 }
 
 function drawFloorAt(x: number, y: number) {
-  const [fg, bg] = TypeColor[Type.Floor];
-  display.draw(x + XBot, y + XBot, FLOOR_CHAR, fg!, bg!);
+  display.draw(
+    x + XBot,
+    y + XBot,
+    tiles.common.FLOOR_CHAR,
+    tiles.common.FLOOR_FG,
+    tiles.common.FLOOR_BG,
+  );
 }
 
-export function drawEntity(x: number, y: number, entity?: Entity | null) {
+export function drawEntityAt(x: number, y: number, entity?: Entity | null) {
   drawFloorAt(x, y);
 
   entity ??= world.level.map.get(x, y);
@@ -342,8 +350,13 @@ export function drawEntity(x: number, y: number, entity?: Entity | null) {
   if (entity.has(isInvisible)) return;
 
   if (entity.has(isSecreted)) {
-    const [fg, bg] = TypeColor[Type.Chance];
-    display.draw(x + XBot, y + YBot, TypeChar[Type.Chance], fg!, bg!);
+    display.draw(
+      x + XBot,
+      y + YBot,
+      tiles.common.CHANCE_CHAR,
+      tiles.common.CHANCE_FG,
+      tiles.common.CHANCE_BG,
+    ); // Read from tileset data
     return;
   }
 
@@ -355,67 +368,21 @@ export function drawEntity(x: number, y: number, entity?: Entity | null) {
   display.draw(x + XBot, y + YBot, t.ch, fg!, t.bg!);
 }
 
-export function drawType(
+export function drawAt(
   x: number,
   y: number,
-  block?: Type | string,
-  fg?: Color | string,
-  bg?: Color | string,
+  ch: string,
+  fg: Color | string,
+  bg: Color | string,
 ) {
-  block ??= world.level.map.getType(x, y);
-
-  let ch: string;
-
-  if (isType(block)) {
-    ch = TypeChar[block] ?? block ?? TypeChar[Type.Floor];
-    fg ??=
-      TypeColor[block as unknown as Type]?.[0] ?? TypeColor[Type.Floor][0]!;
-    bg ??=
-      TypeColor[block as unknown as Type]?.[1] ?? TypeColor[Type.Floor][1]!;
-  } else if (
-    // TODO: Add these to tileset data
-    (block >= 'a' && block <= 'z') ||
-    ['!', '·', '∙', '∩'].includes(block)
-  ) {
-    ch = block.toUpperCase();
-    fg = fg ?? Color.HighIntensityWhite;
-    bg = bg ?? Color.Brown;
-  } else {
-    ch = block as string;
-  }
-
-  switch (block) {
-    case Type.Stairs:
-      fg = typeof fg === 'number' && !world.game.paused ? fg | 16 : fg; // add blink
-      break;
-  }
-
-  display.draw(x + XBot, y + YBot, ch, fg!, bg!);
+  display.draw(x + XBot, y + YBot, ch, fg, bg);
 }
 
 export function drawOver(x: number, y: number, ch: string, fg: string | Color) {
-  const block = world.level.map.getType(x, y);
-
-  let bg: number;
-  if ((block >= 'a' && block <= 'z') || block === '!') {
-    bg = Color.Brown;
-  } else {
-    bg = TypeColor[block as unknown as Type]?.[1] ?? TypeColor[Type.Floor][1]!;
-  }
-
+  const e = world.level.map.get(x, y);
+  const r = e?.get(Renderable);
+  const bg = r?.bg ?? tiles.common.FLOOR_BG!;
   display.drawOver(x + XBot, y + YBot, ch, fg, bg);
-}
-
-export async function flashTypeMessage(msg: Type, once: boolean = false) {
-  if (once) {
-    if (world.game.foundSet === true || world.game.foundSet.has(msg)) return '';
-    world.game.foundSet.add(msg);
-  }
-
-  const str = TypeMessage[msg];
-  if (!str) return '';
-
-  return await flashMessage(str);
 }
 
 export async function flashMessage(msg: string): Promise<string> {
@@ -445,10 +412,6 @@ export function fullRender() {
 export function fastRender() {
   renderPlayfield();
   renderStats();
-}
-
-function isType(x: unknown): x is Type {
-  return typeof x === 'number';
 }
 
 export async function renderTitle() {
@@ -624,4 +587,96 @@ async function getDifficulty() {
   }
 
   return answer;
+}
+
+export async function endRoutine() {
+  await sound.footStep();
+  await delay(200);
+  await sound.footStep();
+  await delay(200);
+  await sound.footStep();
+
+  await flashMessage('Oh no, something strange is happening!');
+  await flashMessage('You are magically transported from Kroz!');
+
+  // Check for infinite items
+  const gems = (world.stats.gems = isFinite(world.stats.gems)
+    ? world.stats.gems
+    : 150);
+  const whips = (world.stats.whips = isFinite(world.stats.whips)
+    ? world.stats.whips
+    : 20);
+  const teleports = (world.stats.teleports = isFinite(world.stats.teleports)
+    ? world.stats.teleports
+    : 10);
+  const keys = (world.stats.keys = isFinite(world.stats.keys)
+    ? world.stats.keys
+    : 5);
+
+  await flashMessage('Your Gems are worth 100 points each...');
+
+  for (let i = 0; i < gems; i++) {
+    world.stats.gems--;
+    world.stats.score += 10;
+    renderStats();
+    await sound.play(i * 8 + 100, 20);
+  }
+
+  await flashMessage('Your Whips are worth 100 points each...');
+  for (let i = 0; i < whips; i++) {
+    world.stats.whips--;
+    world.stats.score += 10;
+    renderStats();
+    await sound.play(i * 8 + 100, 20);
+  }
+
+  await flashMessage('Your Teleport Scrolls are worth 200 points each...');
+  for (let i = 0; i < teleports; i++) {
+    world.stats.teleports--;
+    world.stats.score += 20;
+    renderStats();
+    await sound.play(i * 8 + 100, 20);
+  }
+
+  await flashMessage('Your Keys are worth 10,000 points each....');
+  for (let i = 0; i < keys; i++) {
+    world.stats.keys--;
+    world.stats.score += 1000;
+    renderStats();
+    await sound.play(i * 8 + 100, 20);
+  }
+
+  display.clear(Color.Blue);
+
+  display.drawText(25, 3, 'ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ', Color.White, Color.Blue);
+
+  display.drawText(
+    10,
+    5,
+    dedent`
+        Carefully, you place the ancient tome on your table and open
+        to the first page.  You read the book intently, quickly
+        deciphering the archaic writings.
+
+        You learn of Lord Dullwit, the once powerful and benevolent
+        ruler of Kroz, who sought wealth and education for his people.
+        The magnificent KINGDOM OF KROZ was once a great empire, until
+        it was overthrown by an evil Wizard, who wanted the riches of
+        Kroz for himself.
+
+        Using magic beyond understanding, the Wizard trapped Lord
+        Dullwit and his people in a chamber so deep in Kroz that any
+        hope of escape was fruitless.
+
+        The Wizard then built hundreds of deadly chambers that would
+        stop anyone from ever rescuing the good people of Kroz.
+        Once again your thoughts becomes clear:  To venture into the
+        depths once more and set free the people of Kroz.
+       `,
+    Color.White,
+    Color.Blue,
+  );
+
+  await flashMessage('Press any key, Adventurer.');
+  world.game.done = true;
 }

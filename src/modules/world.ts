@@ -57,6 +57,8 @@ function getDefaultLevelState() {
       0,
     ], // Timers
     startText: undefined as undefined | string,
+    borderFG: tiles.common.BORDER_FG,
+    borderBG: tiles.common.BORDER_BG,
   };
 }
 
@@ -156,7 +158,7 @@ export async function killAt(x: number, y: number) {
   const entity = level.map.get(x, y);
 
   level.map.setType(x, y, Type.Floor);
-  screen.drawEntity(x, y);
+  screen.drawEntityAt(x, y);
 
   if (entity && entity.has(Position)) {
     await kill(entity);
@@ -187,4 +189,22 @@ export async function generateCreatures(n: number = 1) {
       screen.renderPlayfield();
     } while (!done && RNG.getUniformInt(0, 50) !== 0);
   }
+}
+
+export async function quit() {
+  let answer = '';
+
+  while (answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
+    answer = await screen.flashMessage('Are you sure you want to quit? (Y/N)');
+  }
+
+  if (answer.toLowerCase() === 'y') {
+    game.done = true;
+  }
+}
+
+export async function pause() {
+  game.paused = true;
+  screen.fullRender();
+  await screen.flashMessage('Press any key to resume');
 }

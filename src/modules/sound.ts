@@ -222,22 +222,17 @@ export async function generateCreature() {
   await delay(50);
 }
 
+const soundMap = {
+  Amulet: amulet,
+  SecretMessage: secretMessage,
+  WhipHit: whipHit,
+  WhipBreak: whipBreak,
+  WhipBreakRock: whipBreakRock,
+};
+
 export async function triggerSound(t: string) {
-  switch (t) {
-    case 'Amulet':
-      await amulet();
-      break;
-    case 'SecretMessage':
-      await secretMessage();
-      break;
-    case 'WhipHit':
-      await whipHit();
-      break;
-    case 'WhipBreak':
-      await whipBreak();
-      break;
-    case 'WhipBreakRock':
-      await whipBreakRock();
-      break;
+  if (soundMap[t as keyof typeof soundMap]) {
+    return await soundMap[t as keyof typeof soundMap]();
   }
+  console.warn('No sound for trigger:', t);
 }

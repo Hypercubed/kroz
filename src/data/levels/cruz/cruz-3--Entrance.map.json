@@ -29,7 +29,7 @@
           "name": "",
           "properties": [
             {
-              "name": "ReadMessage",
+              "name": "Trigger",
               "type": "string",
               "value": "What a disappointment.  The decoded runes indicate\nthis is the civilization of Cruz, not Kroz.\nStill worth exploring, I guess."
             }

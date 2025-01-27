@@ -1,10 +1,10 @@
 import { default as RNG } from 'rot-js/lib/rng';
+import * as tiled from '@kayahr/tiled';
 
 import * as world from './world.ts';
 import * as tiles from '../data/tiles.ts';
 import * as controls from './controls.ts';
 import * as screen from './screen.ts';
-import * as tiled from '@kayahr/tiled';
 import * as effects from './effects.ts';
 import * as events from './events.ts';
 
@@ -19,7 +19,7 @@ import { isGenerator, isMob, isPlayer } from '../classes/components.ts';
 import { ensureObject } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
-import { Type, TypeColor } from '../data/tiles.ts';
+import { Type } from '../data/tiles.ts';
 import { Timer } from './effects.ts';
 
 export interface Level {
@@ -36,7 +36,7 @@ export async function loadLevel() {
   world.resetLevel();
 
   const i = findNextLevel(world.stats.levelIndex);
-  tiles.readTileset(); // Reset tileset
+  await tiles.readTileset(); // Reset tileset
   const level = await readLevel(i);
 
   await level?.onLevelStart?.();
@@ -44,7 +44,7 @@ export async function loadLevel() {
   screen.fullRender();
 
   if (world.level.startText) {
-    await effects.readMessage(world.level.startText);
+    await effects.processEffect(world.level.startText, world.level.player);
   } else {
     await screen.flashMessage('Press any key to begin this level.');
   }
@@ -97,8 +97,11 @@ async function readLevel(i: number) {
   readLevelMapData(level.data);
 
   // Randomize gem and border colors
-  effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
-  TypeColor[Type.Border] = [RNG.getUniformInt(8, 15), RNG.getUniformInt(1, 8)];
+  await effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
+  world.level.borderFG = RNG.getUniformInt(8, 15);
+  world.level.borderBG = RNG.getUniformInt(1, 8);
+
+  screen.renderPlayfield();
 
   return level;
 }
@@ -177,28 +180,28 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     world.level.lavaFlow = properties.LavaFlow ?? false;
 
     if (properties.HideGems) {
-      await effects.triggerEffect('HideGems');
+      await effects.triggerEffect('HideGems', world.level.player);
     }
     if (properties.HideRocks) {
-      await effects.triggerEffect('HideRocks');
+      await effects.triggerEffect('HideRocks', world.level.player);
     }
     if (properties.HideStairs) {
-      await effects.triggerEffect('HideStairs');
+      await effects.triggerEffect('HideStairs', world.level.player);
     }
     if (properties.HideOpenWall) {
-      await effects.triggerEffect('HideOpenWall');
+      await effects.triggerEffect('HideOpenWall', world.level.player);
     }
     if (properties.HideCreate) {
-      await effects.triggerEffect('HideCreate');
+      await effects.triggerEffect('HideCreate', world.level.player);
     }
     if (properties.HideMBlock) {
-      await effects.triggerEffect('HideMBlock');
+      await effects.triggerEffect('HideMBlock', world.level.player);
     }
     if (properties.HideTrap) {
-      await effects.triggerEffect('HideTrap');
+      await effects.triggerEffect('HideTrap', world.level.player);
     }
     if (properties.HideLevel) {
-      await effects.triggerEffect('HideLevel');
+      await effects.triggerEffect('HideLevel', world.level.player);
     }
   }
 
