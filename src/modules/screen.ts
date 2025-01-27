@@ -5,6 +5,7 @@ import * as sound from './sound';
 import * as tiles from '../data/tiles';
 
 import {
+  DEBUG,
   ENABLE_BOTS,
   HEIGHT,
   TITLE,
@@ -494,17 +495,15 @@ async function writeTitle() {
 
 const DIFFICULTY_LEVELS = {
   '!': 'SECRET MODE',
-  T: 'TOURIST',
+  T: DEBUG ? 'TOURIST' : null,
   N: 'NOVICE',
   E: 'EXPERENCED',
   A: 'ADVANCED',
-  B: 'BOT',
+  B: DEBUG ? 'BOT' : null,
 };
 
 async function getDifficulty() {
   let answer = '';
-
-  const KEYS = Object.keys(DIFFICULTY_LEVELS);
 
   const c1 = ColorCodes[Color.LightGreen];
   const c2 = ColorCodes[Color.HighIntensityWhite];
@@ -516,17 +515,20 @@ async function getDifficulty() {
     Color.Blue,
   );
 
-  while (KEYS.indexOf(answer.toUpperCase()) === -1) {
+  while (!DIFFICULTY_LEVELS[answer as keyof typeof DIFFICULTY_LEVELS]) {
     answer = await controls.repeatUntilKeyPressed(async () => {
       await writeTitle();
     });
+    answer = answer.toUpperCase();
   }
-  answer = answer.toUpperCase();
+
+  console.log(answer);
+  console.log(DIFFICULTY_LEVELS[answer as keyof typeof DIFFICULTY_LEVELS]);
 
   display.clearLine(19);
   display.writeCenter(
     19,
-    DIFFICULTY_LEVELS[answer as keyof typeof DIFFICULTY_LEVELS],
+    DIFFICULTY_LEVELS[answer as keyof typeof DIFFICULTY_LEVELS]!,
     Color.LightGreen,
     Color.Blue,
   );
