@@ -597,7 +597,7 @@ async function showIWalls() {
   await world.level.map.forEach(async (x, y, e) => {
     if (e.type === Type.IWall) {
       sound.play(x * y, 1, 10);
-      // await delay(1);
+      if (y === 0) await delay(2);
       world.level.map.setType(x, y, Type.OWall3);
       screen.drawEntityAt(x, y);
     }

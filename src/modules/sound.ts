@@ -92,6 +92,13 @@ export async function staticNoise() {
   }
 }
 
+export async function splat() {
+  for (let i = 8000; i >= 20; i--) {
+    play(RNG.getUniformInt(0, i), 1, 30);
+  }
+  await delay(300);
+}
+
 export async function bonusSound() {
   for (let i = 10; i < 45; i++) {
     for (let j = 1; j < 13; j++) {

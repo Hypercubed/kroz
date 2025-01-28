@@ -27,7 +27,7 @@ const LEVELS = [
 
   // 20
   async () => (await import('../lost/lost-52.map.json')).default,
-  async () => (await import('../lost/lost-59.map.json')).default, // Needs LavaFlow
+  async () => (await import('../lost/lost-59.map.json')).default,
   async () => (await import('../lost/lost-61.map.json')).default,
   async () => (await import('../lost/lost-64.map.json')).default,
   async () => (await import('../lost/lost-70.map.json')).default,

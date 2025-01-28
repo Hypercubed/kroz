@@ -1,5 +1,6 @@
 import * as world from './world';
 import * as sound from './sound';
+import * as player from './player-system';
 
 import { Type } from '../data/tiles';
 import { TIME_SCALE, XMax, YMax } from '../data/constants';
@@ -52,11 +53,11 @@ async function act(e: Entity) {
     if (pp.y < ep.y) dy = -1;
     if (pp.y > ep.y) dy = 1;
 
-    tryMove(e, dx, dy);
+    await tryMove(e, dx, dy);
   }
 }
 
-function tryMove(e: Entity, dx: number, dy: number) {
+async function tryMove(e: Entity, dx: number, dy: number) {
   const ep = e.get(Position)!;
 
   const x = ep.x + dx;
@@ -94,6 +95,8 @@ function tryMove(e: Entity, dx: number, dy: number) {
     world.level.map.setType(ep.x, ep.y, Type.Floor);
     world.kill(e);
     world.addScore(block.type as Type);
+
+    if (world.stats.gems < 0) await player.dead();
     return;
   }
 

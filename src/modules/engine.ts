@@ -83,12 +83,6 @@ async function run() {
   const raf = async (currentTime: number) => {
     const speed = (16 * world.game.clockScale) / 2;
 
-    if (world.stats.gems < 0) {
-      await player.dead();
-      start();
-      return;
-    }
-
     if (world.game.done) {
       start();
       return;

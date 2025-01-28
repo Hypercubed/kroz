@@ -138,7 +138,9 @@ const TypeToTileID: Record<number, Type> = {}; // TileID to type lookup
 let tileset: ExternalTileset;
 
 export const common = {
-  PLAYER_CHAR: '☺',
+  PLAYER_CHAR: '☻',
+  PLAYER_FG: 14,
+  PLAYER_BG: 0,
 
   FLOOR_CHAR: ' ',
   FLOOR_FG: 0,
@@ -172,25 +174,27 @@ export async function readTileset() {
 
     switch (type) {
       case Type.Floor:
-        common.FLOOR_CHAR = props.ch ?? common.FLOOR_CHAR;
-        common.FLOOR_FG = props.fg ?? common.FLOOR_FG;
-        common.FLOOR_BG = props.bg ?? common.FLOOR_BG;
+        common.FLOOR_CHAR = props.Tile?.ch ?? common.FLOOR_CHAR;
+        common.FLOOR_FG = props.Tile?.fg ?? common.FLOOR_FG;
+        common.FLOOR_BG = props.Tile?.bg ?? common.FLOOR_BG;
         break;
       case Type.Block:
-        common.BLOCK_CHAR = props.ch ?? common.BLOCK_CHAR;
+        common.BLOCK_CHAR = props.Tile?.ch ?? common.BLOCK_CHAR;
         break;
       case Type.Border:
-        common.BORDER_CHAR = props.ch ?? common.BORDER_CHAR;
-        common.BORDER_FG = props.fg ?? common.BORDER_FG;
-        common.BORDER_BG = props.bg ?? common.BORDER_BG;
+        common.BORDER_CHAR = props.Tile?.ch ?? common.BORDER_CHAR;
+        common.BORDER_FG = props.Tile?.fg ?? common.BORDER_FG;
+        common.BORDER_BG = props.Tile?.bg ?? common.BORDER_BG;
         break;
       case Type.Chance:
-        common.CHANCE_CHAR = props.ch ?? common.CHANCE_CHAR;
-        common.CHANCE_FG = props.fg ?? common.CHANCE_FG;
-        common.CHANCE_BG = props.bg ?? common.CHANCE_BG;
+        common.CHANCE_CHAR = props.Tile?.ch ?? common.CHANCE_CHAR;
+        common.CHANCE_FG = props.Tile?.fg ?? common.CHANCE_FG;
+        common.CHANCE_BG = props.Tile?.bg ?? common.CHANCE_BG;
         break;
       case Type.Player:
-        common.PLAYER_CHAR = props.ch ?? common.PLAYER_CHAR;
+        common.PLAYER_CHAR = props.Tile?.ch ?? common.PLAYER_CHAR;
+        common.PLAYER_FG = props.Tile?.fg ?? common.PLAYER_FG;
+        common.PLAYER_BG = props.Tile?.bg ?? common.PLAYER_BG;
         break;
     }
   }

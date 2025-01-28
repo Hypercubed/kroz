@@ -333,10 +333,18 @@ export function renderPlayfield() {
   if (p) drawEntityAt(p.x, p.y, world.level.player);
 }
 
+export function clearPlayfield() {
+  for (let x = 0; x < world.level.map.width; x++) {
+    for (let y = 0; y < world.level.map.height; y++) {
+      drawFloorAt(x, y);
+    }
+  }
+}
+
 function drawFloorAt(x: number, y: number) {
   display.draw(
     x + XBot,
-    y + XBot,
+    y + YBot,
     tiles.common.FLOOR_CHAR,
     tiles.common.FLOOR_FG,
     tiles.common.FLOOR_BG,

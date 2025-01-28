@@ -8,6 +8,7 @@ import * as world from './world.ts';
 import * as levels from './levels.ts';
 import * as effects from './effects.ts';
 import * as bot from './bot.ts';
+import * as tiles from '../data/tiles.ts';
 
 import {
   MOBS,
@@ -192,6 +193,8 @@ export async function tryMove(dx: number, dy: number) {
     world.killAt(x, y);
     world.addScore(e.type as Type);
     move(x, y);
+
+    if (world.stats.gems < 0) await dead();
   }
 
   if (e.has(Collectible)) {
@@ -287,9 +290,11 @@ export async function tryMove(dx: number, dy: number) {
     case Type.Lava: // Moves + Damage -> Damage Component?
       world.stats.gems -= 10;
       world.addScore(e.type);
+
+      if (world.stats.gems < 0) dead();
       break;
     case Type.Pit: // Moves + Kills -> Kills Component?
-      world.stats.gems = -1; // dead
+      await pitAnimation();
       break;
     case Type.Tome:
       // TODO: Make a Trigger effect
@@ -489,4 +494,60 @@ export async function pushRock(
   if (nogo) {
     await sound.blocked();
   }
+}
+
+async function pitAnimation() {
+  for (let x = 0; x < world.level.map.width; x++) {
+    for (let y = 0; y < world.level.map.height; y++) {
+      const c = x >= 31 && x <= 35 ? Color.Black : Color.Brown;
+      screen.drawAt(x, y, tiles.common.FLOOR_CHAR, c, c);
+    }
+  }
+
+  let x = 4000;
+  for (let i = 1; i <= 16; i++) {
+    if (i === 8) {
+      display.drawText(
+        38,
+        12,
+        '<--- HALF WAY!!!',
+        Color.HighIntensityWhite,
+        Color.Brown,
+      );
+    } else if (i === 9) {
+      display.drawText(
+        38,
+        12,
+        tiles.common.FLOOR_CHAR.repeat(16),
+        Color.HighIntensityWhite,
+        Color.Brown,
+      );
+    }
+
+    for (let y = 0; y <= YMax; y++) {
+      screen.drawAt(
+        33,
+        y,
+        tiles.common.PLAYER_CHAR,
+        tiles.common.PLAYER_FG,
+        tiles.common.PLAYER_BG,
+      );
+      await sound.play((x -= 8), 52 - 3 * i, 30);
+      screen.drawAt(
+        33,
+        y,
+        tiles.common.FLOOR_CHAR,
+        tiles.common.FLOOR_FG,
+        tiles.common.FLOOR_BG,
+      );
+    }
+  }
+
+  screen.drawAt(33, YMax, '_', tiles.common.PLAYER_FG, Color.Black);
+  await sound.splat();
+
+  display.drawText(XTop / 2 - 3, 0, '* SPLAT!! *', Color.Black, Color.Red);
+  await screen.flashMessage('Press any key to continue.');
+  world.stats.gems = -1; // dead
+  world.game.done = true;
 }
