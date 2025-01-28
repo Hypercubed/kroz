@@ -235,6 +235,9 @@ const soundMap = {
   WhipHit: whipHit,
   WhipBreak: whipBreak,
   WhipBreakRock: whipBreakRock,
+  BlockedWall: blockedWall,
+  Blocked: blocked,
+  StaticNoise: staticNoise,
 };
 
 export async function triggerSound(t: string) {

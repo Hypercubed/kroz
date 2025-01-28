@@ -81,7 +81,7 @@
     {
       "name": "StartText",
       "type": "string",
-      "value": "##FlashPlayer\nPress any key to begin this level."
+      "value": "##FlashEntity\nPress any key to begin this level."
     },
     {
       "name": "id",

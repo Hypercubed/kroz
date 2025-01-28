@@ -143,6 +143,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall"
+                }, 
+                {
                  "name":"name",
                  "type":"string",
                  "value":"Wall"
@@ -472,6 +477,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@Blocked"
+                }, 
+                {
                  "name":"isBombable",
                  "type":"bool",
                  "value":true
@@ -763,6 +773,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall"
+                }, 
+                {
                  "name":"name",
                  "type":"string",
                  "value":"OWall1"
@@ -784,6 +799,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall"
+                }, 
+                {
                  "name":"name",
                  "type":"string",
                  "value":"OWall2"
@@ -803,6 +823,11 @@
                      "ch":"\u2588",
                      "fg":"White"
                     }
+                }, 
+                {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall"
                 }, 
                 {
                  "name":"name",
@@ -860,6 +885,11 @@
          "id":58,
          "properties":[
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall\n##IWall"
+                }, 
+                {
                  "name":"isBombable",
                  "type":"bool",
                  "value":true
@@ -878,6 +908,11 @@
                  "name":"FoundMessage",
                  "type":"string",
                  "value":"An Invisible Crumbled Wall blocks your way."
+                }, 
+                {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall\n##IBlock"
                 }, 
                 {
                  "name":"isBombable",
@@ -955,6 +990,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"##PitFall"
+                }, 
+                {
                  "name":"isPassable",
                  "type":"bool",
                  "value":true
@@ -993,6 +1033,11 @@
                      "ch":"\u263a",
                      "fg":"HighIntensityWhite"
                     }
+                }, 
+                {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@Blocked"
                 }, 
                 {
                  "name":"name",
@@ -1083,7 +1128,7 @@
                 {
                  "name":"Trigger",
                  "type":"string",
-                 "value":"Congratulations, Adventurer, you finally did it!!!"
+                 "value":"Congratulations, Adventurer, you finally did it!!!\n##TomeToStairs"
                 }, 
                 {
                  "name":"name",
@@ -1313,6 +1358,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@Blocked"
+                }, 
+                {
                  "name":"isBombable",
                  "type":"bool",
                  "value":true
@@ -1524,6 +1574,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@Blocked"
+                }, 
+                {
                  "name":"description",
                  "type":"string",
                  "value":"Moving wall"
@@ -1602,6 +1657,11 @@
                      "ch":"\u2593",
                      "fg":"Brown"
                     }
+                }, 
+                {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall"
                 }, 
                 {
                  "name":"isBombable",
@@ -1736,6 +1796,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall"
+                }, 
+                {
                  "name":"name",
                  "type":"string",
                  "value":"River"
@@ -1815,6 +1880,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"##Trap"
+                }, 
+                {
                  "name":"isPassable",
                  "type":"bool",
                  "value":true
@@ -1843,6 +1913,11 @@
                      "ch":"\u2229",
                      "fg":"HighIntensityWhite"
                     }
+                }, 
+                {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"##Tunnel"
                 }, 
                 {
                  "name":"isPassable",
@@ -1874,6 +1949,11 @@
                      "ch":"\u2593",
                      "fg":"LightRed"
                     }
+                }, 
+                {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"##TouchLava"
                 }, 
                 {
                  "name":"isPassable",
@@ -1960,6 +2040,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall"
+                }, 
+                {
                  "name":"isBombable",
                  "type":"bool",
                  "value":true
@@ -1994,6 +2079,11 @@
                      "ch":"\u2593",
                      "fg":"White"
                     }
+                }, 
+                {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall"
                 }, 
                 {
                  "name":"isBombable",
@@ -2122,6 +2212,11 @@
                     }
                 }, 
                 {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@Blocked"
+                }, 
+                {
                  "name":"name",
                  "type":"string",
                  "value":"Tree"
@@ -2185,6 +2280,11 @@
                  "name":"FoundMessage",
                  "type":"string",
                  "value":"An Invisible Door blocks your way."
+                }, 
+                {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@BlockedWall\n##IWall"
                 }, 
                 {
                  "name":"isBombable",
@@ -2261,6 +2361,11 @@
                      "ch":"X",
                      "fg":"LightRed"
                     }
+                }, 
+                {
+                 "name":"Trigger",
+                 "type":"string",
+                 "value":"@@StaticNoise\n##EWall"
                 }, 
                 {
                  "name":"name",

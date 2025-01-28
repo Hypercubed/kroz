@@ -3,13 +3,20 @@ import * as sound from './sound';
 import * as screen from './screen';
 import * as player from './player-system';
 import * as tiles from '../data/tiles';
+import * as display from './display';
+import * as mobs from './mobs-system';
 
 import {
   createEntityOfType,
+  MOBS,
+  ROCK_CLIFFABLES,
+  ROCK_CRUSHABLES,
+  ROCK_MOVEABLES,
   ROCKABLES,
   SPEAR_BLOCKS,
   SPEAR_IGNORE,
   TRIGGERABLES,
+  TUNNELABLES,
   Type,
   VISUAL_TELEPORTABLES,
 } from '../data/tiles';
@@ -45,7 +52,7 @@ export const enum Timer { // TODO: Eliminate this, use type
   StatueGemDrain = 9,
 }
 
-export const SPELL_DURATION = {
+const SPELL_DURATION = {
   [Timer.SlowTime]: 70 * TIME_SCALE,
   [Timer.Invisible]: 75 * TIME_SCALE,
   [Timer.SpeedTime]: 80 * TIME_SCALE,
@@ -60,10 +67,7 @@ async function hideType(type: Type) {
   });
 }
 
-export async function updateTilesByType(
-  type: Type,
-  update: Partial<Renderable>,
-) {
+async function updateTilesByType(type: Type, update: Partial<Renderable>) {
   await world.level.map.forEach((_x, _y, e) => {
     if (e?.type === type) {
       if (e.has(Renderable)) {
@@ -76,7 +80,7 @@ export async function updateTilesByType(
   });
 }
 
-export async function shoot(x: number, y: number, dx: number) {
+async function shoot(x: number, y: number, dx: number) {
   x += dx;
   while (x >= 0 && x <= XMax) {
     const block = world.level.map.getType(x, y);
@@ -106,7 +110,7 @@ export async function shoot(x: number, y: number, dx: number) {
   screen.renderPlayfield();
 }
 
-export async function bomb(x: number, y: number) {
+async function bomb(x: number, y: number) {
   sound.bombFuse();
 
   let d = 0;
@@ -151,7 +155,7 @@ export async function bomb(x: number, y: number) {
   screen.renderPlayfield();
 }
 
-export async function quakeTrap() {
+async function quakeTrap() {
   await sound.quakeTrigger();
 
   await delay(50);
@@ -173,7 +177,7 @@ export async function quakeTrap() {
   await sound.quakeDone();
 }
 
-export async function zapTrap() {
+async function zapTrap() {
   let t = 0;
   let k = 0;
   while (t < 500 && k < 40) {
@@ -195,7 +199,7 @@ export async function zapTrap() {
   screen.renderStats();
 }
 
-export async function createTrap() {
+async function createTrap() {
   const SNum = world.level.entities.reduce((acc, e) => {
     if (e.type === Type.Slow) return acc + 1;
     return acc;
@@ -205,7 +209,7 @@ export async function createTrap() {
   }
 }
 
-export async function showGemsSpell() {
+async function showGemsSpell() {
   for (let i = 0; i < world.game.difficulty * 2 + 5; i++) {
     let done = false;
     do {
@@ -223,7 +227,7 @@ export async function showGemsSpell() {
   }
 }
 
-export async function blockSpell() {
+async function blockSpell() {
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
       if (world.level.map.getType(x, y) === Type.ZBlock) {
@@ -248,7 +252,7 @@ export async function blockSpell() {
   }
 }
 
-export async function krozBonus(block: Type) {
+async function krozBonus(block: Type) {
   if (block === Type.K && world.level.bonus === 0) world.level.bonus = 1;
   if (block === Type.R && world.level.bonus === 1) world.level.bonus = 2;
   if (block === Type.O && world.level.bonus === 2) world.level.bonus = 3;
@@ -259,7 +263,7 @@ export async function krozBonus(block: Type) {
   }
 }
 
-export async function triggerOSpell(block: Type) {
+async function triggerOSpell(block: Type) {
   let s = Type.OWall1;
   if (block === Type.OSpell2) s = Type.OWall2;
   if (block === Type.OSpell3) s = Type.OWall3;
@@ -286,7 +290,7 @@ export async function triggerOSpell(block: Type) {
   }
 }
 
-export async function triggerCSpell(block: Type) {
+async function triggerCSpell(block: Type) {
   const s = block - Type.CSpell1 + Type.CWall1;
 
   for (let x = 0; x <= XMax; x++) {
@@ -311,7 +315,7 @@ export async function triggerCSpell(block: Type) {
   }
 }
 
-export async function wallVanish() {
+async function wallVanish() {
   for (let i = 0; i < 75; i++) {
     let done = false;
     do {
@@ -334,10 +338,10 @@ export async function wallVanish() {
   }
 }
 
-export async function teleport() {
-  await flashPlayer();
+export async function teleport(e: Entity) {
+  await flashEntity(e);
 
-  const p = world.level.player.get(Position)!;
+  const p = e.get(Position)!;
 
   world.level.map.setType(p.x, p.y, Type.Floor);
   screen.drawEntityAt(p.x, p.y);
@@ -363,18 +367,28 @@ export async function teleport() {
   }
 
   const space = world.level.map.findRandomEmptySpace();
-  return player.move(...space);
+  return moveTo(e, ...space);
 }
 
-export async function flashPlayer() {
-  const p = world.level.player.get(Position)!;
+function moveTo(e: Entity, x: number, y: number) {
+  if (e.has(isMob)) {
+    mobs.moveTo(e, x, y);
+  }
+  if (e.has(isPlayer)) {
+    player.moveTo(x, y);
+  }
+}
+
+export async function flashEntity(e: Entity) {
+  const p = e.get(Position)!;
+  const t = e.get(Renderable)!;
 
   for (let i = 0; i < 160; i++) {
     if (i % 5 === 0) {
       screen.drawAt(
         p.x,
         p.y,
-        tiles.common.PLAYER_CHAR,
+        t.ch,
         RNG.getUniformInt(0, 15),
         RNG.getUniformInt(0, 8),
       );
@@ -385,84 +399,24 @@ export async function flashPlayer() {
   screen.renderPlayfield();
 }
 
-export async function whip() {
-  const p = world.level.player.get(Position)!;
-  const PX = p.x;
-  const PY = p.y;
-
-  sound.whip();
-  await hit(PX - 1, PY - 1, '\\');
-  await hit(PX - 1, PY, '-');
-  await hit(PX - 1, PY + 1, '/');
-  await hit(PX, PY + 1, '❘');
-  await hit(PX + 1, PY + 1, '\\');
-  await hit(PX + 1, PY, '-');
-  await hit(PX + 1, PY - 1, '/');
-  await hit(PX, PY - 1, '❘');
-  screen.renderPlayfield();
-
-  // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER/LOST4.TIT#L399
-  async function hit(x: number, y: number, ch: string) {
-    if (x < 0 || x > XMax || y < 0 || y > YMax) return;
-
-    const entity = world.level.map.get(x, y);
-    const thing = entity?.type || Type.Floor;
-
-    screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
-
-    if (entity?.has(isSecreted)) {
-      entity?.remove(isSecreted);
-      screen.drawEntityAt(x, y);
-    }
-
-    if (entity?.has(Breakable)) {
-      const b = entity.get(Breakable)!;
-      const hardness = b.hardness || 0;
-      if (hardness * Math.random() < world.stats.whipPower) {
-        if (entity.has(isMob)) {
-          // Split into killable?
-          world.killAt(x, y);
-        }
-        world.level.map.setType(x, y, Type.Floor);
-        screen.drawEntityAt(x, y);
-        const hitSound = b.hitSound || 'WhipHit';
-        world.addScore(thing as Type);
-        if (hitSound) await sound.triggerSound(hitSound);
-
-        switch (thing) {
-          case Type.Statue:
-            world.level.T[Timer.StatueGemDrain] = -1;
-            await screen.flashMessage(
-              `You've destroyed the Statue!  Your Gems are now safe.`,
-            );
-            break;
-          case Type.Generator:
-            world.level.genNum--;
-            break;
-        }
-      } else {
-        sound.whipMiss();
-      }
-
-      screen.renderStats();
-    }
-
-    await delay(10);
-  }
-}
-
-export function replaceEntities(a: Type | string, b: Type | string) {
+function replaceEntities(a: Type | string, b: Type | string) {
   const map = world.level.map;
   for (let x = 0; x < map.width; x++) {
     for (let y = 0; y < map.height; y++) {
       if (map.getType(x, y) === a) {
         map.set(x, y, createEntityOfType(b, x, y));
+        screen.drawEntityAt(x, y);
       }
     }
   }
 }
 
-export async function processEffect(message: string | undefined, who: Entity) {
+export async function processEffect(
+  message: string | undefined,
+  who?: Entity,
+  x?: number,
+  y?: number,
+) {
   if (!message) return;
 
   if (typeof message === 'string') {
@@ -472,7 +426,7 @@ export async function processEffect(message: string | undefined, who: Entity) {
       if (!line) continue;
 
       if (line.startsWith('##')) {
-        await triggerEffect(line.slice(2), who);
+        await triggerEffect(line.slice(2), who, x, y);
       } else if (line.startsWith('@@')) {
         await sound.triggerSound(line.slice(2));
       } else {
@@ -482,7 +436,7 @@ export async function processEffect(message: string | undefined, who: Entity) {
   }
 }
 
-export async function TTrigger(x: number, y: number, block: Type) {
+async function TTrigger(x: number, y: number, block: Type) {
   let t = Type.Floor;
   switch (block) {
     case Type.TBlock:
@@ -597,7 +551,7 @@ async function showIWalls() {
   await world.level.map.forEach(async (x, y, e) => {
     if (e.type === Type.IWall) {
       sound.play(x * y, 1, 10);
-      if (y === 0) await delay(2);
+      if (y === 0) await delay(1);
       world.level.map.setType(x, y, Type.OWall3);
       screen.drawEntityAt(x, y);
     }
@@ -626,11 +580,12 @@ function speedTimeSpell() {
   world.level.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime];
 }
 
-function invisibleSpell() {
+function invisibleSpell(e: Entity) {
+  // TODO: Move timer to component
   world.level.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
-  world.level.player.add(isInvisible);
+  e.add(isInvisible);
 
-  const p = world.level.player.get(Position)!;
+  const p = e.get(Position)!;
   screen.drawEntityAt(p.x, p.y);
 }
 
@@ -638,18 +593,130 @@ function freezeSpell() {
   world.level.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
 }
 
-async function HideOpenWall() {
+async function hideOpenWall() {
   await hideType(Type.OSpell1);
   await hideType(Type.OSpell2);
   await hideType(Type.OSpell3);
 }
 
+async function pitFall() {
+  for (let x = 0; x < world.level.map.width; x++) {
+    for (let y = 0; y < world.level.map.height; y++) {
+      const c = x >= 31 && x <= 35 ? Color.Black : Color.Brown;
+      screen.drawAt(x, y, tiles.common.FLOOR_CHAR, c, c);
+    }
+  }
+
+  let x = 4000;
+  for (let i = 1; i <= 16; i++) {
+    if (i === 8) {
+      display.drawText(
+        38,
+        12,
+        '<--- HALF WAY!!!',
+        Color.HighIntensityWhite,
+        Color.Brown,
+      );
+    } else if (i === 9) {
+      display.drawText(
+        38,
+        12,
+        tiles.common.FLOOR_CHAR.repeat(16),
+        Color.HighIntensityWhite,
+        Color.Brown,
+      );
+    }
+
+    for (let y = 0; y <= YMax; y++) {
+      screen.drawAt(
+        33,
+        y,
+        tiles.common.PLAYER_CHAR,
+        tiles.common.PLAYER_FG,
+        tiles.common.PLAYER_BG,
+      );
+      await sound.play((x -= 8), 52 - 3 * i, 30);
+      screen.drawAt(
+        33,
+        y,
+        tiles.common.FLOOR_CHAR,
+        tiles.common.FLOOR_FG,
+        tiles.common.FLOOR_BG,
+      );
+    }
+  }
+
+  screen.drawAt(33, YMax, '_', tiles.common.PLAYER_FG, Color.Black);
+  await sound.splat();
+
+  display.drawText(XTop / 2 - 3, 0, '* SPLAT!! *', Color.Black, Color.Red);
+  await screen.flashMessage('Press any key to continue.');
+  world.stats.gems = -1; // dead
+  world.game.done = true;
+}
+
+function touchLava() {
+  world.stats.gems -= 10;
+}
+
+function touchEWall() {
+  world.stats.gems--;
+}
+
+function ITrigger(type: Type, x: number, y: number) {
+  world.level.map.setType(x, y, type);
+  screen.drawEntityAt(x, y);
+}
+
+async function tunnel(e: Entity, x: number, y: number) {
+  await delay(350);
+  await sound.footStep();
+  await delay(500);
+  world.level.map.setType(x, y, Type.Tunnel);
+  screen.drawEntityAt(x, y);
+
+  // Find a random tunnel
+  let tx = x;
+  let ty = y;
+  for (let i = 0; i < 10000; i++) {
+    const a = RNG.getUniformInt(0, XMax);
+    const b = RNG.getUniformInt(0, YMax);
+    const t = world.level.map.getType(a, b) ?? Type.Floor;
+    if (t === Type.Tunnel && (a !== tx || b !== ty)) {
+      tx = a;
+      ty = b;
+      moveTo(e, tx, ty);
+      break;
+    }
+  }
+
+  world.level.map.setType(x, y, Type.Tunnel);
+  screen.drawEntityAt(x, y);
+
+  // Find a random empty space near exit
+  let ex = e.get(Position)!.x;
+  let ey = e.get(Position)!.y;
+  for (let i = 0; i < 100; i++) {
+    const a = RNG.getUniformInt(-1, 1);
+    const b = RNG.getUniformInt(-1, 1);
+    if (tx + a < 0 || tx + a > XMax || ty + b < 0 || ty + b > YMax) continue;
+    const e = world.level.map.getType(tx + a, ty + b) ?? Type.Floor;
+    if (TUNNELABLES.includes(e as Type)) {
+      ex = tx + a;
+      ey = ty + b;
+      break;
+    }
+  }
+  moveTo(e, ex, ey);
+  world.level.map.setType(tx, ty, Type.Tunnel);
+  screen.drawEntityAt(tx, ty);
+}
+
 /** # Effects */
 const EffectMap = {
-  Bomb: (x: number, y: number) => bomb(x, y),
+  Bomb: (_: Entity, x: number, y: number) => bomb(x, y),
   Quake: quakeTrap,
-  Trap: () => teleport(),
-  Trap2: () => replaceEntities(Type.Trap2, Type.Floor),
+  Trap: (e: Entity) => teleport(e),
   Zap: zapTrap,
   Create: createTrap,
   ShowGems: showGemsSpell,
@@ -666,6 +733,7 @@ const EffectMap = {
   CSpell2: () => triggerCSpell(Type.CSpell2),
   CSpell3: () => triggerCSpell(Type.CSpell3),
   Trap3: () => replaceEntities(Type.Trap3, Type.Floor),
+  Trap2: () => replaceEntities(Type.Trap2, Type.Floor),
   Trap4: () => replaceEntities(Type.Trap4, Type.Floor),
   Trap5: () => replaceEntities(Type.Trap5, Type.Floor),
   Trap6: () => replaceEntities(Type.Trap6, Type.Floor),
@@ -676,15 +744,15 @@ const EffectMap = {
   Trap11: () => replaceEntities(Type.Trap11, Type.Floor),
   Trap12: () => replaceEntities(Type.Trap12, Type.Floor),
   Trap13: () => replaceEntities(Type.Trap13, Type.Floor),
-  TBlock: (x: number, y: number) => TTrigger(x, y, Type.TBlock),
-  TRock: (x: number, y: number) => TTrigger(x, y, Type.TRock),
-  TGem: (x: number, y: number) => TTrigger(x, y, Type.TGem),
-  TBlind: (x: number, y: number) => TTrigger(x, y, Type.TBlind),
-  TWhip: (x: number, y: number) => TTrigger(x, y, Type.TWhip),
-  TGold: (x: number, y: number) => TTrigger(x, y, Type.TGold),
-  TTree: (x: number, y: number) => TTrigger(x, y, Type.TTree),
-  ShootRight: (x: number, y: number) => shoot(x, y, 1),
-  ShootLeft: (x: number, y: number) => shoot(x, y, -1),
+  TBlock: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TBlock),
+  TRock: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TRock),
+  TGem: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TGem),
+  TBlind: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TBlind),
+  TWhip: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TWhip),
+  TGold: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TGold),
+  TTree: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TTree),
+  ShootRight: (_: Entity, x: number, y: number) => shoot(x, y, 1),
+  ShootLeft: (_: Entity, x: number, y: number) => shoot(x, y, -1),
   /** ## HideStairs */
   HideGems: () => hideType(Type.Gem),
   /** ## HideRocks */
@@ -692,7 +760,7 @@ const EffectMap = {
   /** ## HideStairs */
   HideStairs: () => hideType(Type.Stairs),
   /** ## HideOpenWall */
-  HideOpenWall: HideOpenWall,
+  HideOpenWall: hideOpenWall,
   /** ## HideCreate */
   HideCreate: () => hideType(Type.Create),
   /** ## HideMBlock */
@@ -701,7 +769,7 @@ const EffectMap = {
   HideTrap: () => hideType(Type.Trap),
   SlowTime: slowTimeSpell,
   SpeedTime: speedTimeSpell,
-  Invisible: invisibleSpell,
+  Invisible: (e: Entity) => invisibleSpell(e),
   Freeze: freezeSpell,
   /** ## HideLevel */
   HideLevel: hideLevel,
@@ -716,14 +784,159 @@ const EffectMap = {
   PitsToRock: pitsToRock,
   /** ## DisguiseFast */
   DisguiseFast: disguiseFast,
-  FlashPlayer: flashPlayer,
+  FlashEntity: (e: Entity) => flashEntity(e),
+  PitFall: pitFall,
+  TomeToStairs: () => replaceEntities(Type.Tome, Type.Stairs),
+  TouchLava: touchLava,
+  IBlock: (_: Entity, x: number, y: number) => ITrigger(Type.IBlock, x, y),
+  IWall: (_: Entity, x: number, y: number) => ITrigger(Type.IWall, x, y),
+  IDoor: (_: Entity, x: number, y: number) => ITrigger(Type.IDoor, x, y),
+  TouchEWall: touchEWall,
+  Tunnel: (who: Entity, x: number, y: number) => tunnel(who, x, y),
 };
 
-export async function triggerEffect(trigger: string, who: Entity) {
+async function triggerEffect(
+  trigger: string,
+  who?: Entity,
+  x?: number,
+  y?: number,
+) {
   if (EffectMap[trigger as keyof typeof EffectMap]) {
-    const p = who.get(Position);
-    await EffectMap[trigger as keyof typeof EffectMap](p?.x || 0, p?.y || 0);
+    who ??= world.level.player;
+    x ??= who.get(Position)?.x ?? 0;
+    y ??= who.get(Position)?.y ?? 0;
+    await EffectMap[trigger as keyof typeof EffectMap](who, x, y);
     return;
   }
   console.warn('Unknown effect:', trigger);
+}
+
+// TODO: Make entity neutral
+export async function whip(e: Entity) {
+  const p = e.get(Position);
+  if (p!) return;
+
+  const PX = p!.x;
+  const PY = p!.y;
+
+  sound.whip();
+  await hit(PX - 1, PY - 1, '\\');
+  await hit(PX - 1, PY, '-');
+  await hit(PX - 1, PY + 1, '/');
+  await hit(PX, PY + 1, '❘');
+  await hit(PX + 1, PY + 1, '\\');
+  await hit(PX + 1, PY, '-');
+  await hit(PX + 1, PY - 1, '/');
+  await hit(PX, PY - 1, '❘');
+  screen.renderPlayfield();
+
+  // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER/LOST4.TIT#L399
+  async function hit(x: number, y: number, ch: string) {
+    if (x < 0 || x > XMax || y < 0 || y > YMax) return;
+
+    const entity = world.level.map.get(x, y);
+    const thing = entity?.type || Type.Floor;
+
+    screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
+
+    if (entity?.has(isSecreted)) {
+      entity?.remove(isSecreted);
+      screen.drawEntityAt(x, y);
+    }
+
+    if (entity?.has(Breakable)) {
+      const b = entity.get(Breakable)!;
+      const hardness = b.hardness || 0;
+      if (hardness * Math.random() < world.stats.whipPower) {
+        if (entity.has(isMob)) {
+          // Split into killable?
+          world.killAt(x, y);
+        }
+        world.level.map.setType(x, y, Type.Floor);
+        screen.drawEntityAt(x, y);
+        const hitSound = b.hitSound || 'WhipHit';
+        world.addScore(thing as Type);
+        if (hitSound) await sound.triggerSound(hitSound);
+
+        switch (thing) {
+          case Type.Statue:
+            world.level.T[Timer.StatueGemDrain] = -1;
+            await screen.flashMessage(
+              `You've destroyed the Statue!  Your Gems are now safe.`,
+            );
+            break;
+          case Type.Generator:
+            world.level.genNum--;
+            break;
+        }
+      } else {
+        sound.whipMiss();
+      }
+
+      screen.renderStats();
+    }
+
+    await delay(10);
+  }
+}
+
+export async function pushRock(
+  pusher: Entity,
+  pushable: Entity,
+  x: number,
+  y: number,
+  dx: number,
+  dy: number,
+) {
+  let nogo = false;
+
+  const p = pusher.get(Position);
+  if (!p) return;
+
+  const tx = p.x + dx * 2;
+  const ty = p.y + dy * 2;
+  if (tx < 0 || tx > XMax || ty < 0 || ty > YMax) nogo = true;
+
+  if (!nogo) {
+    const t = world.level.map.get(tx, ty);
+    if (!t) nogo = true;
+    const tb = t!.type;
+
+    async function moveRock(kill = false) {
+      nogo = false;
+      await sound.pushRock();
+      if (kill) world.killAt(tx, ty);
+      world.level.map.set(tx, ty, pushable);
+      moveTo(pusher, x, y);
+      screen.renderPlayfield();
+    }
+
+    // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST5.MOV#L1366
+    if (ROCK_MOVEABLES.includes(tb as number)) {
+      await moveRock();
+    } else if (ROCK_CRUSHABLES.includes(tb as number)) {
+      await moveRock();
+      await sound.grab();
+    } else if (MOBS.includes(tb as number)) {
+      await moveRock(true);
+      world.addScore(tb as Type);
+      await sound.rockCrushMob();
+    } else if (tb === Type.EWall) {
+      await moveRock();
+      world.level.map.setType(tx, ty, Type.Floor);
+      sound.rockVaporized();
+      await screen.flashMessage('The Boulder is vaporized!'); // TODO: show once?, change for pushed type
+    } else if (ROCK_CLIFFABLES.includes(tb as number)) {
+      nogo = false;
+      await sound.pushRock();
+      moveTo(pusher, x, y);
+      screen.drawEntityAt(tx, ty, pushable);
+      await sound.rockDropped();
+      screen.renderPlayfield();
+    }
+  }
+
+  if (nogo) {
+    await sound.blocked();
+  }
 }

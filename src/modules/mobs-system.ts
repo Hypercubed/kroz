@@ -104,7 +104,7 @@ async function tryMove(e: Entity, dx: number, dy: number) {
   moveTo(e, ep.x, ep.y);
 }
 
-function moveTo(e: Entity, x: number, y: number) {
+export function moveTo(e: Entity, x: number, y: number) {
   if (e.has(AnimatedWalking) && e.has(Renderable)) {
     const r = e.get(Renderable)!;
     const a = e.get(AnimatedWalking)!;
