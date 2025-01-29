@@ -1,66 +1,70 @@
-{ "class":"Lost59",
- "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
-        {
-         "compression":"zlib",
-         "data":"eJzdmM0KwjAMgPsqwlD0MPHgG2zgQQVPevKhFF\/UJ7BChiWka9olbd3ho2O\/+ZrsL40xpmFwtNxhbC03xNvSWxZMdsDSWeYc973GE8YXjA\/LCjgBHCeXq4fY88T6u+B9tsQ6LS\/ffnuA61ULQ9za\/lSOONuk8F0j1t9lT1Ayl5sJ+XehXM+IdWa3CyOXkvOIfbX9c89nLv8c97b0PJfIfyoa81van3om+dCYw1r8fe8k7e8Nyr8L+EvWIeV\/SPBPjQn7Y\/fY\/IfeyzjOGvM\/5\/u\/Nn8tpzn7Sz5\/pviH4qjheygUwz\/mXxLKv+T\/X0rNcI\/h\/v9J9j+0aiflvLn6H7H1l6vWpfxL9P\/GarxUX3Po\/1K9X7cHHOvfEf5j9BDDMLbm15N2e9Rcrw8c9vZ\/",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":2,
- "nextobjectid":1,
- "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"HideCreate",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"HideMBlock",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"HideOpenWall",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"HideTrap",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"LavaFlow",
-         "type":"bool",
-         "value":true
-        }, 
-        {
-         "name":"LavaRate",
-         "type":"int",
-         "value":140
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.1",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+{
+  "class": "Lost59",
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzdmM0KwjAMgPsqwlD0MPHgG2zgQQVPevKhFF\/UJ7BChiWka9olbd3ho2O\/+ZrsL40xpmFwtNxhbC03xNvSWxZMdsDSWeYc973GE8YXjA\/LCjgBHCeXq4fY88T6u+B9tsQ6LS\/ffnuA61ULQ9za\/lSOONuk8F0j1t9lT1Ayl5sJ+XehXM+IdWa3CyOXkvOIfbX9c89nLv8c97b0PJfIfyoa81van3om+dCYw1r8fe8k7e8Nyr8L+EvWIeV\/SPBPjQn7Y\/fY\/IfeyzjOGvM\/5\/u\/Nn8tpzn7Sz5\/pviH4qjheygUwz\/mXxLKv+T\/X0rNcI\/h\/v9J9j+0aiflvLn6H7H1l6vWpfxL9P\/GarxUX3Po\/1K9X7cHHOvfEf5j9BDDMLbm15N2e9Rcrw8c9vZ\/",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "HideCreate",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "HideMBlock",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "HideOpenWall",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "HideTrap",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "LavaFlow",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "LavaRate",
+      "type": "int",
+      "value": 140
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.1",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }
