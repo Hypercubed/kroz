@@ -16,6 +16,7 @@ export const enum Difficulty {
   Experienced = 5,
   Advanced = 2,
   Cheat = 9,
+  Tourist = 10,
 }
 
 function getDefaultStats() {

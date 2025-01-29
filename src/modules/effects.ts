@@ -67,7 +67,10 @@ async function hideType(type: Type) {
   });
 }
 
-async function updateTilesByType(type: Type, update: Partial<Renderable>) {
+export async function updateTilesByType(
+  type: Type,
+  update: Partial<Renderable>,
+) {
   await world.level.map.forEach((_x, _y, e) => {
     if (e?.type === type) {
       if (e.has(Renderable)) {
@@ -600,6 +603,8 @@ async function hideOpenWall() {
 }
 
 async function pitFall() {
+  if (world.game.difficulty > 9) return;
+
   for (let x = 0; x < world.level.map.width; x++) {
     for (let y = 0; y < world.level.map.height; y++) {
       const c = x >= 31 && x <= 35 ? Color.Black : Color.Brown;
@@ -664,6 +669,7 @@ function touchEWall() {
 }
 
 function ITrigger(type: Type, x: number, y: number) {
+  console.log('ITrigger', x, y, world.level.player.get(Position));
   world.level.map.setType(x, y, type);
   screen.drawEntityAt(x, y);
 }
@@ -788,14 +794,14 @@ const EffectMap = {
   PitFall: pitFall,
   TomeToStairs: () => replaceEntities(Type.Tome, Type.Stairs),
   TouchLava: touchLava,
-  IBlock: (_: Entity, x: number, y: number) => ITrigger(Type.IBlock, x, y),
-  IWall: (_: Entity, x: number, y: number) => ITrigger(Type.IWall, x, y),
-  IDoor: (_: Entity, x: number, y: number) => ITrigger(Type.IDoor, x, y),
+  IBlock: (_: Entity, x: number, y: number) => ITrigger(Type.Block, x, y),
+  IWall: (_: Entity, x: number, y: number) => ITrigger(Type.Wall, x, y),
+  IDoor: (_: Entity, x: number, y: number) => ITrigger(Type.Door, x, y),
   TouchEWall: touchEWall,
   Tunnel: (who: Entity, x: number, y: number) => tunnel(who, x, y),
 };
 
-async function triggerEffect(
+export async function triggerEffect(
   trigger: string,
   who?: Entity,
   x?: number,
@@ -811,10 +817,9 @@ async function triggerEffect(
   console.warn('Unknown effect:', trigger);
 }
 
-// TODO: Make entity neutral
 export async function whip(e: Entity) {
   const p = e.get(Position);
-  if (p!) return;
+  if (!p) return;
 
   const PX = p!.x;
   const PY = p!.y;

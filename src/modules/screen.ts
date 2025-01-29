@@ -582,7 +582,7 @@ async function getDifficulty() {
       world.stats.keys = 1;
       world.stats.whips = Infinity;
       world.stats.whipPower = 4;
-      world.game.difficulty = Difficulty.Cheat;
+      world.game.difficulty = Difficulty.Tourist;
       break;
     case 'B':
       world.stats.gems = Infinity;

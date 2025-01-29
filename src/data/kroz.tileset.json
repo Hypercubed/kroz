@@ -1880,11 +1880,6 @@
                     }
                 }, 
                 {
-                 "name":"Trigger",
-                 "type":"string",
-                 "value":"##Trap"
-                }, 
-                {
                  "name":"isPassable",
                  "type":"bool",
                  "value":true
@@ -2284,7 +2279,7 @@
                 {
                  "name":"Trigger",
                  "type":"string",
-                 "value":"@@BlockedWall\n##IWall"
+                 "value":"@@BlockedWall\n##IDoor"
                 }, 
                 {
                  "name":"isBombable",
@@ -2365,7 +2360,7 @@
                 {
                  "name":"Trigger",
                  "type":"string",
-                 "value":"@@StaticNoise\n##EWall"
+                 "value":"@@StaticNoise\n##TouchEWall"
                 }, 
                 {
                  "name":"name",
