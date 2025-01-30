@@ -12,7 +12,7 @@ import * as effects from './effects-system';
 import * as debug from './debug-interface';
 import * as events from './events';
 
-import { DEBUG, XMax, YMax } from '../data/constants';
+import { SHOW_DEBUG_CONTROLS, SHOW_STATS, XMax, YMax } from '../data/constants';
 import { Color } from '../data/colors';
 let stats: Stats;
 let gui: dat.GUI;
@@ -33,36 +33,34 @@ export async function start() {
   await screen.instructionsScreen();
   await level.loadLevel();
 
-  if (DEBUG) {
-    if (!stats) {
-      stats = new Stats();
-      stats.showPanel(0);
-      document.body.appendChild(stats.dom);
-    }
+  if (SHOW_STATS && !stats) {
+    stats = new Stats();
+    stats.showPanel(0);
+    document.body.appendChild(stats.dom);
+  }
 
-    if (!gui) {
-      gui = new dat.GUI({
-        closeFolders: true,
-        title: 'Debug',
-      });
+  if (SHOW_DEBUG_CONTROLS && !gui) {
+    gui = new dat.GUI({
+      closeFolders: true,
+      title: 'Debug',
+    });
 
-      const t = gui.addFolder('Timers');
-      t.add(debug.timers, 'SlowTime', 0, 400, 1).listen();
-      t.add(debug.timers, 'Invisible', 0, 400, 1).listen();
-      t.add(debug.timers, 'SpeedTime', 0, 400, 1).listen();
-      t.add(debug.timers, 'FreezeTime', 0, 400, 1).listen();
+    const t = gui.addFolder('Timers');
+    t.add(debug.timers, 'SlowTime', 0, 400, 1).listen();
+    t.add(debug.timers, 'Invisible', 0, 400, 1).listen();
+    t.add(debug.timers, 'SpeedTime', 0, 400, 1).listen();
+    t.add(debug.timers, 'FreezeTime', 0, 400, 1).listen();
 
-      const o = gui.addFolder('Objects');
-      o.add(debug.stats, 'gems', 0, 400, 1).listen();
-      o.add(debug.stats, 'whips', 0, 400, 1).listen();
-      o.add(debug.stats, 'keys', 0, 400, 1).listen();
-      o.add(debug.stats, 'teleports', 0, 400, 1).listen();
-      o.add(debug.stats, 'whipPower', 2, 7, 1).listen();
+    const o = gui.addFolder('Objects');
+    o.add(debug.stats, 'gems', 0, 400, 1).listen();
+    o.add(debug.stats, 'whips', 0, 400, 1).listen();
+    o.add(debug.stats, 'keys', 0, 400, 1).listen();
+    o.add(debug.stats, 'teleports', 0, 400, 1).listen();
+    o.add(debug.stats, 'whipPower', 2, 7, 1).listen();
 
-      const p = gui.addFolder('Player');
-      p.add(debug.player, 'x', 0, XMax, 1).listen();
-      p.add(debug.player, 'y', 0, YMax, 1).listen();
-    }
+    const p = gui.addFolder('Player');
+    p.add(debug.player, 'x', 0, XMax, 1).listen();
+    p.add(debug.player, 'y', 0, YMax, 1).listen();
   }
 
   screen.fullRender();

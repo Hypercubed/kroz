@@ -586,9 +586,9 @@ async function getDifficulty() {
       break;
     case 'B':
       world.stats.gems = Infinity;
-      world.stats.teleports = 0;
-      world.stats.keys = 0;
-      world.stats.whips = 0;
+      world.stats.teleports = Infinity;
+      world.stats.keys = Infinity;
+      world.stats.whips = Infinity;
       world.stats.whipPower = 2;
       world.game.difficulty = Difficulty.Cheat;
       world.game.foundSet = true;

@@ -8,12 +8,14 @@ import type { Entity } from '../classes/entity';
 import {
   Breakable,
   Collectible,
+  isInvisible,
   isMob,
   isPassable,
   isPushable,
   Position,
+  Renderable,
 } from '../classes/components';
-import { astar } from '../utils/astar';
+import AStar from '../utils/astar';
 
 const COLLECT = [
   ...COLLECTABLES,
@@ -30,6 +32,7 @@ const COLLECT = [
   ...OSPELLS,
   Type.Tome,
   Type.Bomb,
+  Type.Power,
 ];
 
 type Moves = [Entity, number, number];
@@ -99,7 +102,8 @@ function getTargets(predicate: (e: Entity, x: number, y: number) => boolean) {
 
 function getPath(goals: Array<[number, number]>): Array<[number, number]> {
   const p = world.level.player.get(Position)!;
-  const path = astar(p.x, p.y, passableCallback, hurestic, cost);
+  const astar = new AStar(passableCallback, hurestic, cost);
+  const path = astar.compute(p.x, p.y);
 
   // for (let i = 0; i < path.length; i++) {
   //   const [x, y] = path[i];
@@ -119,10 +123,9 @@ function getPath(goals: Array<[number, number]>): Array<[number, number]> {
     const e = world.level.map.get(x, y);
     if (!e) return 1;
     if (e.has(isPushable)) return 300; // Weight by number of whips?
-    if (e.has(Breakable)) return 10; // Weight by number of whips?
-    if (e.has(isMob)) return 20; // Weight by number of gems?
-    if (e.type === Type.Door) return 50; // Weight by number of gems?
-    if (e.type === Type.Door) return 50; // Weight by number of keys?
+    if (e.has(Breakable)) return 100; // Weight by number of whips?
+    if (e.has(isMob)) return 200; // Weight by number of gems?
+    if (e.type === Type.Door) return 500; // Weight by number of gems?
     return 1; // / (getScoreDelta(e.type as Type) + 1) + 1;
   }
 
@@ -135,9 +138,11 @@ function getPath(goals: Array<[number, number]>): Array<[number, number]> {
 
     const e = world.level.map.get(x, y);
     if (!e) return true;
+    if (e.has(isMob)) return world.stats.gems > 0 || world.stats.whips > 0;
     if (e.has(Breakable)) return world.stats.whips > 0;
-    if (e.has(isMob)) return world.stats.gems > 0;
     if (e.type === Type.Door) return world.stats.keys > 0;
+    if (e.has(isInvisible)) return true;
+    if (!e.has(Renderable)) return true;
     return isWalkable(e);
   }
 }
@@ -161,7 +166,6 @@ async function tryStairs(): Promise<boolean> {
   return await tryMove(+x, +y);
 }
 
-// const D = 10000;
 async function tryCollect() {
   const collectables = getTargets(
     (e) => COLLECT.includes(e.type as Type) || e.has(Collectible),
@@ -176,6 +180,7 @@ async function tryCollect() {
   return await tryMove(+x, +y);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function tryDoor() {
   if (world.stats.keys < 1) return false;
 
@@ -191,41 +196,18 @@ async function tryDoor() {
   return await tryMove(+x, +y);
 }
 
-// async function tryBreak() {
-//   if (world.stats.whips < 1) return false;
+async function tryTunnel() {
+  const tunnels = getTargets((e) => e.type === Type.Tunnel);
+  if (tunnels.length < 1) return false;
 
-//   const breakables = getTargets((e) => BREAKABLES.includes(e.type as Type));
-//   if (breakables.length < 1) return false;
+  const goals: Array<[number, number]> = tunnels.map((n) => [n[1], n[2]]);
+  const step = getStepToward(goals);
+  if (!step) return false;
+  const [x, y] = step;
 
-//   const paths = breakables.map(getPaths);
-//   const scores = breakables.map((_, i) => {
-//     if (paths[i].length < 1) return 0;
-//     return 1 / (paths[i].length + 1);
-//   });
-
-//   const maxScore = Math.max(...scores);
-//   const index = scores.indexOf(maxScore);
-//   const path = paths[index];
-//   if (!path) return false;
-//   if (path.length < 2) {
-//     console.log((lastAction = 'break'));
-//     world.stats.whips--;
-//     return await effects.whip(world.level.player);
-//   }
-
-//   const [x, y] = path[1];
-
-//   const p = world.level.player.get(Position)!;
-//   if (!p) return false;
-//   if (x === p.x && y === p.y) {
-//     console.log((lastAction = 'break'));
-//     world.stats.whips--;
-//     return await effects.whip(world.level.player);
-//   }
-
-//   console.log((lastAction = 'break'));
-//   return await tryMove(+x, +y);
-// }
+  console.log((lastAction = 'tunnel'));
+  return await tryMove(+x, +y);
+}
 
 async function tryExplore() {
   const unvisited = getTargets((e, x, y) => {
@@ -306,12 +288,13 @@ export async function botPlay() {
   neighbors = getNeighbors(p.x, p.y);
 
   if (await tryDefend()) return;
-  if (await tryStairs()) return;
   if (await tryCollect()) return;
+  // if (await tryDoor()) return;
+  if (await tryStairs()) return;
   if (await tryPush()) return;
   if (await tryExplore()) return;
-  if (await tryDoor()) return;
   if (await tryTeleport()) return;
+  if (await tryTunnel()) return;
   if (await trySearch()) return;
   return;
 }

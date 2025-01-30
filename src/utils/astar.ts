@@ -6,23 +6,9 @@ interface Node {
   prev: Node | null;
 }
 
-export function astar(
-  toX: number,
-  toY: number,
-  passableCallback: (x: number, y: number) => boolean,
-  hurestic: (x: number, y: number) => number,
-  cost: (x: number, y: number) => number,
-) {
-  const as = new AStar(toX, toY, passableCallback, hurestic, cost);
-  return as.compute();
-}
-
 export default class AStar {
   _todo: Node[] = [];
   _done: Record<string, Node> = {};
-
-  _toX: number;
-  _toY: number;
 
   _dirs: number[][];
 
@@ -31,16 +17,12 @@ export default class AStar {
   _g: (x: number, y: number) => number;
 
   constructor(
-    toX: number,
-    toY: number,
     passableCallback: typeof this._passableCallback,
     h: typeof this._h,
     g: typeof this._g,
   ) {
     this._h = h;
     this._g = g;
-    this._toX = toX;
-    this._toY = toY;
     this._passableCallback = passableCallback;
     this._dirs = [
       [0, -1],
@@ -72,10 +54,10 @@ export default class AStar {
    * Compute a path from a given point
    * @see ROT.Path#compute
    */
-  compute() {
+  compute(fromX: number, fromY: number) {
     this._todo = [];
     this._done = {};
-    this._add(this._toX, this._toY, null);
+    this._add(fromX, fromY, null);
 
     let finalNode: Node | null = null;
 
