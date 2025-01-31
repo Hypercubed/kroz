@@ -175,26 +175,42 @@ export async function readTileset() {
     switch (type) {
       case Type.Floor:
         common.FLOOR_CHAR = props.Tile?.ch ?? common.FLOOR_CHAR;
-        common.FLOOR_FG = props.Tile?.fg ?? common.FLOOR_FG;
-        common.FLOOR_BG = props.Tile?.bg ?? common.FLOOR_BG;
+        common.FLOOR_FG = props.Tile?.fg
+          ? Color[props.Tile?.fg as keyof typeof Color]
+          : common.FLOOR_FG;
+        common.FLOOR_BG = props.Tile?.bg
+          ? Color[props.Tile?.bg as keyof typeof Color]
+          : common.FLOOR_BG;
         break;
       case Type.Block:
         common.BLOCK_CHAR = props.Tile?.ch ?? common.BLOCK_CHAR;
         break;
       case Type.Border:
         common.BORDER_CHAR = props.Tile?.ch ?? common.BORDER_CHAR;
-        common.BORDER_FG = props.Tile?.fg ?? common.BORDER_FG;
-        common.BORDER_BG = props.Tile?.bg ?? common.BORDER_BG;
+        common.BORDER_FG = props.Tile?.fg
+          ? Color[props.Tile?.fg as keyof typeof Color]
+          : common.BORDER_FG;
+        common.BORDER_BG = props.Tile?.bg
+          ? Color[props.Tile?.bg as keyof typeof Color]
+          : common.BORDER_BG;
         break;
       case Type.Chance:
         common.CHANCE_CHAR = props.Tile?.ch ?? common.CHANCE_CHAR;
-        common.CHANCE_FG = props.Tile?.fg ?? common.CHANCE_FG;
-        common.CHANCE_BG = props.Tile?.bg ?? common.CHANCE_BG;
+        common.CHANCE_FG = props.Tile?.fg
+          ? Color[props.Tile?.fg as keyof typeof Color]
+          : common.CHANCE_FG;
+        common.CHANCE_BG = props.Tile?.bg
+          ? Color[props.Tile?.bg as keyof typeof Color]
+          : common.CHANCE_BG;
         break;
       case Type.Player:
         common.PLAYER_CHAR = props.Tile?.ch ?? common.PLAYER_CHAR;
-        common.PLAYER_FG = props.Tile?.fg ?? common.PLAYER_FG;
-        common.PLAYER_BG = props.Tile?.bg ?? common.PLAYER_BG;
+        common.PLAYER_FG = props.Tile?.fg
+          ? Color[props.Tile?.fg as keyof typeof Color]
+          : common.PLAYER_FG;
+        common.PLAYER_BG = props.Tile?.bg
+          ? Color[props.Tile?.bg as keyof typeof Color]
+          : common.PLAYER_BG;
         break;
     }
   }

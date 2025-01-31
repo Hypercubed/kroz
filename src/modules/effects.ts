@@ -669,7 +669,6 @@ function touchEWall() {
 }
 
 function ITrigger(type: Type, x: number, y: number) {
-  console.log('ITrigger', x, y, world.level.player.get(Position));
   world.level.map.setType(x, y, type);
   screen.drawEntityAt(x, y);
 }

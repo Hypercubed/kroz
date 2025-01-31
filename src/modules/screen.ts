@@ -530,9 +530,6 @@ async function getDifficulty() {
     answer = answer.toUpperCase();
   }
 
-  console.log(answer);
-  console.log(DIFFICULTY_LEVELS[answer as keyof typeof DIFFICULTY_LEVELS]);
-
   display.clearLine(19);
   display.writeCenter(
     19,

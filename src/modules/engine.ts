@@ -79,7 +79,7 @@ async function run() {
   });
 
   const raf = async (currentTime: number) => {
-    const speed = (16 * world.game.clockScale) / 2;
+    const speed = 8 * world.game.clockScale;
 
     if (world.game.done) {
       start();
