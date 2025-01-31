@@ -16,6 +16,7 @@ import {
   Renderable,
 } from '../classes/components';
 import AStar from '../utils/astar';
+import { delay } from '../utils/utils';
 
 const COLLECT = [
   ...COLLECTABLES,
@@ -44,7 +45,7 @@ const AVOID = [
   Type.Lava,
   Type.Invisible,
   Type.SpeedTime,
-  Type.Create,
+  // Type.Create,
 ];
 
 type Moves = [Entity, number, number];
@@ -301,12 +302,14 @@ export async function botPlay() {
 
   neighbors = getNeighbors(p.x, p.y);
 
+  await delay(20);
+
   if (await tryDefend()) return;
-  if (await tryCollect()) return;
+  if (await tryCollect()) return; // TODO: Only collect if it is worth it
   // if (await tryDoor()) return;
   if (await tryStairs()) return;
   if (await tryPush()) return;
-  if (await tryTunnel()) return;
+  if (await tryTunnel()) return; // TODO: Tunnel if there are unexplored area
   if (await tryExplore()) return;
   if (await tryTeleport()) return;
   if (await trySearch()) return;
