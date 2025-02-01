@@ -2,7 +2,7 @@ import * as world from './world';
 import * as sound from './sound';
 import * as player from './player-system';
 
-import { Type } from '../data/tiles';
+import { Type } from './tiles';
 import { TIME_SCALE, XMax, YMax } from '../data/constants';
 import type { Entity } from '../classes/entity';
 import {

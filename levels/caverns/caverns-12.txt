@@ -1,0 +1,23 @@
+333          F    .        RRRRRRRRR       .              3 XXX 
+3######D######            RRRRRRRRR     3                   XKX 
+3#3.........3#    3      RRRRRRRRR.           3     .       XXX 
+ #...........# .      .  RRRRRRRRRR       .                  .  
+ #....+L+....#          RRRRRRRRRRRR   3            .    3      
+ #3.........3#     .    RRRRRRRRRRRRR           .               
+F#############         RRRRRRRRRRRRRRR       3               3  
+               3      RRRRRRRRRRRRRRRRR.                   .    
+    .              .RRRRRR########RRRRRRR            ##D##      
+            .    RRRRRR#####  P  .##RRRRRR    .      ##1##      
+   3             RRRRR##           ##RRRRRR          ##1##      
+ .              RRRRR##  2   1  2  3##RRRRRR.  3     ##1##      
+      .        RRRRR## 3  12  3   13 ##RRRRRR    ######I######  
+3             .RRRR##3  23  31 2 3  2##RRRRRR    #+XXXXXXXXX+#  
+         3    RRRRRR##12  3 2 2 3  1##RRRRRR     #XXXWXXXWXXX#  
+              RRRRRRR###XXXXXXXXXXX##RRRRRR    . #XXXXXXXXXXX#  
+ .         .   RRRRRRRR#######K+WT##RRRRRR       #XXXXXWXXXXX#  
+                RRRRRRRRRRRR#######RRRRRR  .     #XXXXXXXXXXX#  
+  3        3       .RRRRRRRRRRRRRRRRRRR         3#XXXXX.XXXXX#  
+       .              RRRRRRRRRRRRRRR.      3    #XXXXXXXXXXX#  
+               .        RRRRRRRRRRRRR         .  #+XXWC.CWXX+#  
+ .          .      3      RRRRRRRRRRRRR    .     ############# +
+          3       .        .RRRRRRRRRRRRR                    + .

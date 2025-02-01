@@ -1,0 +1,49 @@
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzVmEsKwjAQhnsVobjsQtAT6FLEpVsRFfEFPjbeQore017AWUwhhCTNpDNpuviIbc1k\/vmTGJtnWZYDD+AJXJAtcALu+PwK7PDzEbjhvRfe86UAltgWxL59ZGXQr+LTT++jMmt4XlhidoWvflefUP0m5tp3F8QYFTBAKqUN0eILZ42p+vU5VGufIvX1xIKUfjWvkYbkPFU9V+dB6musaS\/gqGFXUHM31SJknwqp8xlYA3vgAGwC43DnLu1\/ibl9sP1q12WL2Lp+6p7O6b9v\/JB9XlI\/xf+Qc8Ubc3C1PnGk1oW0\/6bxpMegeMq9\/pt8ilXjlP1vwraOuc5Rrv8c0vpj1jHEfyq\/CFolzy0c82tsYShYky7PrSmsGZ8cpN4DcNS+bW7S\/rvy64v\/scaW\/O3i2OM5513q+lN495cifyPb9Fg=",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "HideOpenWall",
+      "type": "bool",
+      "value": true
+    },
+    {
+      "name": "HideStairs",
+      "type": "bool",
+      "value": true
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
+}

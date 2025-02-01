@@ -1,7 +1,7 @@
 import { RNG } from 'rot-js';
 import type { ExternalTileset } from '@kayahr/tiled';
 
-import * as world from '../modules/world';
+import * as world from './world';
 
 import {
   Attacks,
@@ -158,7 +158,7 @@ export const common = {
 };
 
 export async function readTileset() {
-  tileset = (await import('./kroz.tileset.json')).default;
+  tileset = (await import('../data/kroz.tileset.json')).default;
   if (!tileset.tiles) throw new Error('No tiles found in tileset');
 
   for (const tile of tileset.tiles!) {

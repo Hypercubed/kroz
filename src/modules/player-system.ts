@@ -7,11 +7,11 @@ import * as levels from './levels.ts';
 import * as effects from './effects.ts';
 import * as bot from './bot.ts';
 
-import { Type } from '../data/tiles.ts';
+import { Type } from './tiles.ts';
 import { DEBUG, XMax, XTop, YMax } from '../data/constants.ts';
 import { Action } from './controls.ts';
 
-import { Color } from '../data/colors.ts';
+import { Color } from './colors.ts';
 import { clamp, delay } from '../utils/utils.ts';
 import { LEVELS } from './levels.ts';
 

@@ -1,0 +1,23 @@
+X3 3 3 3 3 X+X             XX  L  XX             X3X 3 3 3 3 3X 
+ X+ + + + + X3XX           XX     XX           XX+X + + + + +X  
+  X3 3 3 3 3 X+XX     W    XX  3  XX    K     XX3X 3 3 3 3 3X   
+   X          X3XX         XX3 + 3XX         XX+X          X    
++   X3 3 3 3 3 X+XX   3    XX  3  XX    3   XX3X 3 3 3 3 3X    +
+#    X          X3XX       XX  +  XX       XX+X          X     #
+##    X3 3 3 3 3 X+XX      XX  3  XX      XX3X 3 3 3 3 3X     ##
+C##    X          X3XX     XX3 + 3XX     XX+X          X     ##C
++###    X3 3 3 3 3 X+XX    XX  3  XX    XX3X 3 3 3 3 3X     ###+
+ ####    XI I I I I X3XX   XX  +  XX   XX+X I I I I IX     #### 
+ #####    X3 3 3 3 3 X+XX  XX  3  XX  XX3X 3 3 3 3 3X     ##### 
+ ######    X          X3XX XX  +  XX XX+X          X     ###### 
+ #######    X3 3 3 3 3 X+XXXX  X  XXXX3X 3 3 3 3 3X     ####### 
+ ########    X          X3XXX  C  XXX+X          X     ######## 
+ #########    X3 3 3 3 3 X+XX  F  XX3X 3 3 3 3 3X     ######### 
+ ##########    X+ + + + +3X3X3 T 3X+X3+ + + + +X     ########## 
+ ###########    X          X       X          X     ########### 
+ ###     ####    X      XXXXXXXXXXXXXXX      X     ###run#for## 
+ ### CCC #####    X     X      S      X     X     ####your##### 
+ ###     ######    X    X             X    X     #####life!#### 
+ ###############    X   X             X   X     ############### 
+ ################    X  X   XXXXXXX   X  X     ################ 
+33333333333333333  3  X+X + XXXPXXX + X+X  3   33333333333333333

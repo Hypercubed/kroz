@@ -1,0 +1,23 @@
+RRRRRRR.                   K                  .RRRRRRRRRRRRRRRRR
+RRRR+                                              +RRRRRRRRRRRR
+RR      2       2       2       2       2       2        RRRRRRR
+.                                                              .
+.                                                               
+RRRRRRR+                                                        
+RRRRRRRRRRRRRRRRRRRRRRRRRRRRRR+                                .
+RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+.  3                   .RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+                          RRRRR3 . . . . . . . . . . . . RRRRRRR
+                            RRRR. . . . . .K. . . . . . . . . .+
+.                           .RRRRR . . . . . . . . . . . . . . .
+#########################FFFFFRRRRR . . . . . . . . . . . ......
+#C+222222222#3333333333L#      RRRRRR. . . . . . . . .+. . .....
+#+2222222222#33333333333#         RRRRRR. . . . . . . . . .....C
+#22222222222#33333333333#            RRRRRRR+. . . . . . . .....
+#22222222222D33333333333#               RRRRRRR . . . . . ......
+#D#######################                  .RRRRR. . . . . . . .
+#11111111111D           X                     RRRRR . . . . . . 
+#11111111111#           X                      RRRRRRR . . . . .
+#+1111111111#S          X                         3RRRRR. . . . 
+#C+111111111#          PX                           RRRRRRR. .K.
+#########################                             .RRRRRR . 

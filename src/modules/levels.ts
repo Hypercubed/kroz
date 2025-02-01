@@ -2,24 +2,25 @@ import { default as RNG } from 'rot-js/lib/rng';
 import * as tiled from '@kayahr/tiled';
 
 import * as world from './world.ts';
-import * as tiles from '../data/tiles.ts';
+import * as tiles from './tiles.ts';
 import * as controls from './controls.ts';
 import * as screen from './screen.ts';
 import * as effects from './effects.ts';
 import * as events from './events.ts';
+import * as colors from './colors.ts';
 
-import LEVELS from '../data/levels/forgotton/index.ts';
-// import LEVELS from '../data/levels/kingdom/index.ts';
-// import LEVELS from '../data/levels/lost/index.ts';
-// import LEVELS from '../data/levels/caverns/index.ts';
-// import LEVELS from '../data/levels/cruz/index.ts';
+// import LEVELS from '../data/forgotton/index.ts';
+import LEVELS from '../data/kingdom/index.ts';
+// import LEVELS from '../data/lost/index.ts';
+// import LEVELS from '../data/caverns/index.ts';
+// import LEVELS from '../data/cruz/index.ts';
 
 import { mod } from 'rot-js/lib/util';
 import { isGenerator, isMob, isPlayer } from '../classes/components.ts';
 import { ensureObject } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
-import { Type } from '../data/tiles.ts';
+import { Type } from './tiles.ts';
 import { Timer } from './effects.ts';
 
 export interface Level {
@@ -37,6 +38,7 @@ export async function loadLevel() {
 
   const i = findNextLevel(world.stats.levelIndex);
   await tiles.readTileset(); // Reset tileset
+  await colors.readColors(); // Reset colors
   const level = await readLevel(i);
 
   await level?.onLevelStart?.();

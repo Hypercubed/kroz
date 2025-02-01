@@ -2,7 +2,7 @@ import * as display from './display';
 import * as world from './world';
 import * as controls from './controls';
 import * as sound from './sound';
-import * as tiles from '../data/tiles';
+import * as tiles from './tiles';
 
 import {
   DEBUG,
@@ -16,10 +16,10 @@ import {
   YTop,
 } from '../data/constants';
 import { default as RNG } from 'rot-js/lib/rng';
-import { Color, ColorCodes } from '../data/colors';
+import { Color, ColorCodes } from './colors';
 import { delay } from '../utils/utils';
 import dedent from 'ts-dedent';
-import { Type } from '../data/tiles';
+import { Type } from './tiles';
 import { Entity } from '../classes/entity';
 import {
   isSecreted,

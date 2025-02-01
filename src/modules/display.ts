@@ -1,6 +1,6 @@
 import { default as Display } from 'rot-js/lib/display/display';
 import { HEIGHT, WIDTH } from '../data/constants';
-import { Color, ColorCodes } from '../data/colors';
+import { Color, ColorCodes } from './colors';
 
 let rotDisplay: Display;
 

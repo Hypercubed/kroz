@@ -25,6 +25,7 @@ const LEVELS = [
   async () => (await import('./lost-18.map.json')).default, // S and M
   null,
 
+  // 20
   async () => (await import('./lost-20.map.json')).default, // Trouble All Around
   null,
   async () => (await import('./lost-22.map.json')).default, // Key Shop
@@ -36,18 +37,20 @@ const LEVELS = [
   null,
   null,
 
+  // 30
   async () => (await import('./lost-30.map.json')).default, // Locksmith Shoppe
   null,
   null,
-  null, // lost33, // Needs to start with a key
+  async () => (await import('./lost-33.map.json')).default, // Locksmith Shoppe // Needs to start with a key
   async () => (await import('./lost-34.map.json')).default, // Dark Shocker
-  null, // Needs lava flow
+  async () => (await import('./lost-35.map.json')).default,
   null,
   null,
   null,
   null,
 
-  null, // Needs two keys to start
+  // 40
+  async () => (await import('./lost-40.map.json')).default, // Needs two keys to start
   null,
   async () => (await import('./lost-42.map.json')).default, // Klose Enkounters
   null,
@@ -84,7 +87,7 @@ const LEVELS = [
   null,
   null,
   null,
-  null, // lost74, // Heat Wave!
+  async () => (await import('./lost-74.map.json')).default, // Heat Wave!
   async () => (await import('./lost-75.map.json')).default,
 ];
 

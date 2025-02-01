@@ -44,6 +44,12 @@ const _player = {
   set y(v: number) {
     world.level.player.get(Position)!.y = v;
   },
+  get bot(): boolean {
+    return world.game.bot;
+  },
+  set bot(v: boolean) {
+    world.game.bot = v;
+  },
 };
 
 const _stats = {
