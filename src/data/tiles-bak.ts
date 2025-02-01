@@ -1,5 +1,5 @@
 import { getASCIICode } from '../utils/utils';
-import { Color } from './colors';
+import { Color } from '../modules/colors';
 
 const FLOOR_CHAR = ' ';
 

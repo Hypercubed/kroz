@@ -4,7 +4,7 @@ import * as sound from './sound';
 
 import { XMax, YMax } from '../data/constants';
 import { RNG } from 'rot-js';
-import { Type } from '../data/tiles';
+import { Type } from './tiles';
 import { isInvisible } from '../classes/components';
 import { Timer } from './effects';
 

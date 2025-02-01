@@ -1,9 +1,9 @@
 import { default as RNG } from 'rot-js/lib/rng';
 
-import * as tiles from '../data/tiles';
+import * as tiles from '../modules/tiles';
 
 import { XMax, YMax } from '../data/constants';
-import { Type } from '../data/tiles';
+import { Type } from '../modules/tiles';
 import { Entity } from './entity';
 
 export class PlayField {

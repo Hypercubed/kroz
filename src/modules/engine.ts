@@ -13,7 +13,7 @@ import * as debug from './debug-interface';
 import * as events from './events';
 
 import { SHOW_DEBUG_CONTROLS, SHOW_STATS, XMax, YMax } from '../data/constants';
-import { Color } from '../data/colors';
+import { Color } from './colors';
 let stats: Stats;
 let gui: dat.GUI;
 
@@ -58,7 +58,11 @@ export async function start() {
     o.add(debug.stats, 'teleports', 0, 400, 1).listen();
     o.add(debug.stats, 'whipPower', 2, 7, 1).listen();
 
+    const l = gui.addFolder('Level');
+    l.add(debug.levels, 'level', 0, level.LEVELS.length + 1, 1).listen();
+
     const p = gui.addFolder('Player');
+    p.add(debug.player, 'bot').listen();
     p.add(debug.player, 'x', 0, XMax, 1).listen();
     p.add(debug.player, 'y', 0, YMax, 1).listen();
   }

@@ -1,0 +1,37 @@
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJy9mN1KxTAMx\/sqk132so8wEEQvBAX3AkcQREE4Fz69PdBhCGnz0WQXoTtrk+WXf1q2s6eUSrVFMO7VchsXg+3I92kwp41bgL+EZ0f+uV1zI3yWNt+Rz0w8qImEg3rOwaXtg17ObwLGMpg77JFhn9GdimnpOakfzBlqYo2j3YvU2kys8eiD0nm+Vn8cx1P3W+6rsE4efYDX5MFctO5LYz+sxzXbB7P6R+gO2TemBp59YN3\/Ubpv6X8PnNEHFv2jdF9B\/dfE1+ChXXPjqA+0+5\/SXZKHhH0d3I\/qA43+kbpL+CPOA6n+kee8ht+7DyiNMf8Zumv4vfsA+m4d\/mjdtfxR58E9wX+G7hb+Xg0k31tHnnC8zb0ijgzmrd9xFh7peo+9MDPv0fMcvySmJm98rmlshv2n2rXaV\/v9Xu273ef4N2C9mkpzGnG8GBiluv823iti9tBfUwNNT1tjUbl9Vvtoul+q3Qn5tcbl6MXvsd8j+Lka9N7puf0+iuGZd3GwBcSCOVP\/S0LeZ4I\/d\/xxfK\/c\/wAF+gix",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
+}

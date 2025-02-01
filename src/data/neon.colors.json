@@ -1,0 +1,18 @@
+{
+  "Black": "#000000",
+  "Blue": "#0077FF",
+  "Green": "#00FF77",
+  "Cyan": "#00FFEE",
+  "Red": "#FF1A75",
+  "Magenta": "#FF00CC",
+  "Brown": "#FF6600",
+  "White": "#CCCCCC",
+  "Grey": "#444444",
+  "LightBlue": "#33BBFF",
+  "LightGreen": "#66FF99",
+  "LightCyan": "#66FFFF",
+  "LightRed": "#FF3366",
+  "LightMagenta": "#FF66FF",
+  "Yellow": "#FFFF33",
+  "HighIntensityWhite": "#FFFFFF"
+}

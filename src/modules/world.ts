@@ -1,7 +1,7 @@
 import * as screen from './screen.ts';
 import * as levels from './levels.ts';
 import * as sound from './sound.ts';
-import * as tiles from '../data/tiles.ts';
+import * as tiles from './tiles.ts';
 
 import {
   CLOCK_SCALE,
@@ -11,7 +11,7 @@ import {
 } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Level } from './levels.ts';
-import { Type } from '../data/tiles.ts';
+import { Type } from './tiles.ts';
 import { PlayField } from '../classes/map.ts';
 import { RNG } from 'rot-js';
 import { Position } from '../classes/components.ts';

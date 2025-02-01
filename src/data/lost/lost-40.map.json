@@ -1,0 +1,68 @@
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzNVksKwkAM7VWqCzdScOXKpRvRhQuhFK\/iKXpVD2ALIwzDTP6JLh7BT5O8vCRN33Vdn3AQYl4wLJiSLUHxMRTWAzXfK++7gn+N44DExPiXuAr5UbToO7n+kGYcPS005\/iA9LKMbdXLkB+o9jnG7DfrGbsw8tsoNGxxpczbqIhrhSkDlEtrbms7ghq75F\/WTFID7sxhqPm26tcRiKFBxIxH+dfUGtLPk9c\/1Np7\/9dqeiSAq1Vkv3C41nbEOcN7wS1hh\/Bv3UhSvaPv1e93XP0hnhoOs5IHJQ9pf3r54TxPuZEx7pocve9v6p6PmhlpXaxrTO1l77uHq5PUd+tWLfFg1ECrAfc\/nu+zCFDyp\/Rl1D0TxRnj4bUjI296SQ2otaPsDuz9xcH63J6IX\/RSa9d57W5u7lTb6gOsN6C+gz6fkn0m+0p2a8Sfy33FB5buGx0=",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
+        {
+          "gid": 34,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "You'll need two keys from level 38 to complete this level!"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 672,
+          "y": 180
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 2,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
+}

@@ -10,7 +10,7 @@ const LEVELS = [
   null,
   async () => (await import('./kingdom-6.map.json')).default, // Wicked Corridors
   null,
-  null,
+  null, // GravOn:=true;GravRate:=0;Sideways:=true; LavaFlow:=true; LavaRate:=75;
   null,
 
   // Level 10
@@ -30,7 +30,7 @@ const LEVELS = [
   null,
   async () => (await import('../lost/lost-30.map.json')).default, // Locksmith Shoppe, Same as level 30 of Lost Adventures
   null,
-  null,
+  null, // GravOn:=true;GravRate:=0;Sideways:=true;  LavaFlow:=true;LavaRate:=75;
   async () => (await import('./kingdom-25.map.json')).default, // The Sacred Temple
 ];
 

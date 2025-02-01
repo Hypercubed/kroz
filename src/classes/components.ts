@@ -1,7 +1,7 @@
 import { RNG } from 'rot-js';
 
-import { Type } from '../data/tiles';
-import * as tiles from '../data/tiles';
+import { Type } from '../modules/tiles';
+import * as tiles from '../modules/tiles';
 
 /** # Tags */
 

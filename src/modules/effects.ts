@@ -2,7 +2,7 @@ import * as world from './world';
 import * as sound from './sound';
 import * as screen from './screen';
 import * as player from './player-system';
-import * as tiles from '../data/tiles';
+import * as tiles from './tiles';
 import * as display from './display';
 import * as mobs from './mobs-system';
 
@@ -19,7 +19,7 @@ import {
   TUNNELABLES,
   Type,
   VISUAL_TELEPORTABLES,
-} from '../data/tiles';
+} from './tiles';
 import {
   Breakable,
   isBombable,
@@ -41,7 +41,7 @@ import {
 } from '../data/constants';
 import { RNG } from 'rot-js';
 import { delay } from '../utils/utils';
-import { Color, ColorCodes } from '../data/colors';
+import { Color, ColorCodes } from './colors';
 import { Entity } from '../classes/entity';
 
 export const enum Timer { // TODO: Eliminate this, use type
@@ -798,6 +798,7 @@ const EffectMap = {
   IDoor: (_: Entity, x: number, y: number) => ITrigger(Type.Door, x, y),
   TouchEWall: touchEWall,
   Tunnel: (who: Entity, x: number, y: number) => tunnel(who, x, y),
+  EvapoRate30: () => (world.level.evapoRate = 30),
 };
 
 export async function triggerEffect(

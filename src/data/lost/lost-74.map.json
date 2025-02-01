@@ -1,0 +1,75 @@
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzVl0tOwzAQhn2VQrOARVAVlVcKKAvEpiBBJYRUNrBA4gAINlyiCPUaPQQXKUfgucUWM+rIjMdO6rRk8Smx3Uzz\/+OM7ZZSqkXoWO1Q2ppbzY3mWnMHfQ\/QvoexF+i3ny8075oBQxaJLjDWXGmONT1gn9CxfNhlOKrok4uCUJcHVH8OJB7tVP83ud+oqJP6JsXgPJjXhy7DhaU\/NP+hOkN9eib4fIj1PWSg3+VB2dxyWrcZysatYy7Y+m0PuO\/AN585UPMnued8csXB\/ro8mKi\/NYDLf9V6FyP\/1K\/YPkwY7Vz+kxL4\/DJjRQCL+B5cuu38J4HxEhWW08ITx9bP+RnDA59upL0k6q6NqHkM8bjrkLyPeSbVnMN1Txi7FMYehbFVMjZU\/NpyGsmHZeV1HqZA6FyQfOhrdoDUwYj898jxG4zRJ7\/1xa4aNyP6Q+uCy4cQv1PH\/bxUjUv1c2tkGR\/O1KwGVFk\/FomkX1orJB9o3V+2vlj6y6wVTdRv1z\/f3lSaD1sNAmuhL8+uMyfXv94gMP+bSq6Pr4DLn5zcnzQIulbkcH0i7Q\/1O08yh\/6cgH1rDYLTT69TNauPqB+\/fdR9YHkgrcn\/FZd+fHcp\/z0r\/+b8i\/Wf7rti1Gs8H5hzgNnvm339oZrt\/VKhjfP6TfOlWbH003lP2z79tG3OGz9nQzEa",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
+        {
+          "gid": 34,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "##EvapoRate30\nSuddenly an intense heat sweeps over this entire chamber...\nYou begin to sweat profusely and drink some of your water!"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1008,
+          "y": 828
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 2,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "HideMBlock",
+      "type": "bool",
+      "value": true
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
+}

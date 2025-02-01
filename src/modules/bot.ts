@@ -3,7 +3,7 @@ import * as player from './player-system';
 import * as effects from './effects';
 import * as events from './events';
 
-import { COLLECTABLES, KROZ, MOBS, OSPELLS, Type } from '../data/tiles';
+import { COLLECTABLES, KROZ, MOBS, OSPELLS, Type } from './tiles';
 import type { Entity } from '../classes/entity';
 import {
   Breakable,
@@ -55,7 +55,6 @@ const VISITED = new Map<string, number>();
 let lastAction: string | null = null;
 
 events.levelStart.add(() => {
-  console.log(lastAction);
   VISITED.clear();
 });
 
@@ -137,12 +136,12 @@ function getPath(goals: Array<[number, number]>): Array<[number, number]> {
   function cost(x: number, y: number) {
     const e = world.level.map.get(x, y);
     if (!e) return 1;
-    if (e.has(isPushable)) return 30; // Weight by number of whips?
-    if (e.has(Breakable)) return 10; // Weight by number of whips?
-    if (e.has(isMob)) return 20; // Weight by number of gems?
-    if (e.type === Type.Door) return 30; // Weight by number of gems?
-    if (AVOID.includes(e.type as Type)) return 40;
-    return 1; // / (getScoreDelta(e.type as Type) + 1) + 1;
+    if (e.has(isPushable)) return 40; // Weight by number of whips?
+    if (e.has(Breakable)) return 20; // Weight by number of whips?
+    if (e.has(isMob)) return 30; // Weight by number of gems?
+    if (e.type === Type.Door) return 40; // Weight by number of gems?
+    if (AVOID.includes(e.type as Type)) return 50;
+    return VISITED.get(`${x}.${y}`) ? 1 : 2; // / (getScoreDelta(e.type as Type) + 1) + 1;
   }
 
   function passableCallback(x: number, y: number) {
@@ -182,6 +181,18 @@ async function tryStairs(): Promise<boolean> {
   return await tryMove(+x, +y);
 }
 
+async function tryTeleportTrap(): Promise<boolean> {
+  const traps = getTargets((e) => e.type === Type.Trap);
+  if (traps.length < 1) return false;
+
+  const goals: Array<[number, number]> = traps.map((n) => [n[1], n[2]]);
+  const step = getStepToward(goals);
+  if (!step) return false;
+  const [x, y] = step;
+  console.log((lastAction = 'traps'));
+  return await tryMove(+x, +y);
+}
+
 async function tryCollect() {
   const collectables = getTargets(
     (e) => COLLECT.includes(e.type as Type) || e.has(Collectible),
@@ -213,7 +224,10 @@ async function tryCollect() {
 
 async function tryTunnel() {
   const tunnels = getTargets((e) => e.type === Type.Tunnel);
-  if (tunnels.length < 1) return false;
+  const unvisited = getTargets((e, x, y) => {
+    return e.type === Type.Tunnel && !VISITED.get(`${x}.${y}`);
+  });
+  if (unvisited.length < 1) return false;
 
   const goals: Array<[number, number]> = tunnels.map((n) => [n[1], n[2]]);
   const step = getStepToward(goals);
@@ -310,6 +324,7 @@ export async function botPlay() {
   if (await tryStairs()) return;
   if (await tryPush()) return;
   if (await tryTunnel()) return; // TODO: Tunnel if there are unexplored area
+  if (await tryTeleportTrap()) return;
   if (await tryExplore()) return;
   if (await tryTeleport()) return;
   if (await trySearch()) return;
@@ -329,9 +344,11 @@ async function tryMove(x: number, y: number) {
     !(b?.has(isPassable) && !AVOID.includes(b.type as Type)) &&
     world.stats.whips > 0
   ) {
-    world.stats.whips--;
-    await effects.whip(world.level.player);
-    return true;
+    if (!(b.type === Type.Trap && lastAction === 'traps')) {
+      world.stats.whips--;
+      await effects.whip(world.level.player);
+      return true;
+    }
   }
 
   await player.tryMove(+x - p.x, +y - p.y);
