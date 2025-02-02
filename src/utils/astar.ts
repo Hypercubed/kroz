@@ -11,6 +11,8 @@ interface Options<STATE> {
   neighbors: (s: STATE) => Array<STATE>;
 }
 
+const MAX = 50_000;
+
 export default class AStar<STATE> {
   private h: (s: STATE) => number;
   private g: (s: STATE) => number;
@@ -39,7 +41,15 @@ export default class AStar<STATE> {
 
     let finalNode: Node<STATE> | null = null;
 
+    let i = 0;
+
+    // TODO: add a limit to the number of iterations
     while (this.todo.length) {
+      i++;
+      if (i > MAX) {
+        console.log('Max iterations reached');
+        return [];
+      }
       const item = this.todo.shift()!;
       const id = this.getId(item.s);
       if (id in this.done) {

@@ -39,7 +39,7 @@
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/..\/kroz.tileset.json"
+      "source": "..\/kroz.tileset.json"
     }
   ],
   "tilewidth": 24,

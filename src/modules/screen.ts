@@ -582,8 +582,8 @@ async function getDifficulty() {
       world.game.difficulty = Difficulty.Tourist;
       break;
     case 'B':
-      world.stats.gems = 2500; // Infinity;
-      world.stats.teleports = 500; // Infinity;
+      world.stats.gems = 500; // Infinity;
+      world.stats.teleports = 50; // Infinity;
       world.stats.keys = 0; // Infinity;
       world.stats.whips = 1000; // Infinity;
       world.stats.whipPower = 3;

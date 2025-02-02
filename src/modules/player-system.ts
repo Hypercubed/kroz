@@ -24,6 +24,7 @@ import {
   ChangeLevel,
   isPassable,
   FoundMessage,
+  isInvisible,
 } from '../classes/components.ts';
 import type { Entity } from '../classes/entity.ts';
 import { Difficulty } from './world.ts';
@@ -219,6 +220,11 @@ export async function tryMove(dx: number, dy: number) {
   }
 
   if (e.has(Trigger)) {
+    if (world.game.bot && e.has(isInvisible)) {
+      e.remove(isInvisible);
+      screen.drawEntityAt(x, y);
+    }
+
     // sound.grab(); // Make @@grab
     world.addScore(e.type as Type); // Make ##score
     const message = e.get(Trigger)?.message;

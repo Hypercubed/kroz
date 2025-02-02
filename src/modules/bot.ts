@@ -16,7 +16,6 @@ import {
   Renderable,
 } from '../classes/components';
 import AStar from '../utils/astar';
-import { delay } from '../utils/utils';
 
 const COLLECT = [
   ...COLLECTABLES,
@@ -200,12 +199,12 @@ function getPath(goals: Array<[number, number]>): Array<[number, number]> {
     const e = world.level.map.get(x, y);
     if (!e) return n;
 
-    if (e.has(isMob)) n.gems--;
-    if (e.has(Breakable)) n.whips--;
+    // if (e.has(isMob)) n.gems--;
+    // if (e.has(Breakable)) n.whips--;
     if (e.type === Type.Door) n.keys--;
     if (e.type === Type.Key) n.keys++;
-    if (e.type === Type.Gem) n.gems++;
-    if (e.type === Type.Whip) n.whips++;
+    // if (e.type === Type.Gem) n.gems++;
+    // if (e.type === Type.Whip) n.whips++;
     return n;
   }
 
@@ -356,6 +355,7 @@ async function trySearch() {
 
 async function tryDefend() {
   if (world.stats.whips < 1) return false;
+  if (world.stats.gems > 2 * world.stats.whips) return false;
 
   const p = world.level.player.get(Position)!;
   if (!p) return;
@@ -382,8 +382,6 @@ export async function botPlay() {
 
   neighbors = getNeighbors(p.x, p.y);
 
-  await delay(20);
-
   if (await tryDefend()) return;
   if (await tryCollect()) return; // TODO: Only collect if it is worth it
   // if (await tryDoor()) return;
@@ -405,18 +403,30 @@ async function tryMove(x: number, y: number) {
   VISITED.set(id, visited ? visited + 1 : 1);
 
   const b = world.level.map.get(x, y);
-  if (
-    b?.has(Breakable) &&
-    !(b?.has(isPassable) && !AVOID.includes(b.type as Type)) &&
-    world.stats.whips > 0
-  ) {
-    if (!(b.type === Type.Trap && lastAction === 'traps')) {
-      world.stats.whips--;
-      await effects.whip(world.level.player);
-      return true;
+  if (b) {
+    if (b?.has(isMob)) {
+      if (world.stats.gems > 2 * world.stats.whips) {
+        await whip();
+      }
+    } else if (
+      b?.has(Breakable) &&
+      !(b?.has(isPassable) && !AVOID.includes(b.type as Type)) &&
+      world.stats.whips > 0
+    ) {
+      if (!(b.type === Type.Trap && lastAction === 'traps')) {
+        world.stats.whips--;
+        await effects.whip(world.level.player);
+        return true;
+      }
     }
   }
 
   await player.tryMove(+x - p.x, +y - p.y);
+  return true;
+}
+
+async function whip() {
+  world.stats.whips--;
+  await effects.whip(world.level.player);
   return true;
 }

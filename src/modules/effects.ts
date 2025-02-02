@@ -120,10 +120,10 @@ async function bomb(x: number, y: number) {
   for (; d <= 4; ++d) {
     sound.play(100 - (d * 10) / 4, 4 * 10, 100);
 
-    const x1 = Math.max(x - d, XBot);
-    const x2 = Math.min(x + d, XTop);
-    const y1 = Math.max(y - d, YBot);
-    const y2 = Math.min(y + d, YTop);
+    const x1 = Math.max(x - d, 0);
+    const x2 = Math.min(x + d, XMax);
+    const y1 = Math.max(y - d, 0);
+    const y2 = Math.min(y + d, YMax);
 
     for (let x = x1; x <= x2; x++) {
       for (let y = y1; y <= y2; y++) {
