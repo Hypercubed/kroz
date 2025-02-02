@@ -582,11 +582,11 @@ async function getDifficulty() {
       world.game.difficulty = Difficulty.Tourist;
       break;
     case 'B':
-      world.stats.gems = Infinity;
-      world.stats.teleports = Infinity;
-      world.stats.keys = Infinity;
-      world.stats.whips = Infinity;
-      world.stats.whipPower = 2;
+      world.stats.gems = 2500; // Infinity;
+      world.stats.teleports = 500; // Infinity;
+      world.stats.keys = 0; // Infinity;
+      world.stats.whips = 1000; // Infinity;
+      world.stats.whipPower = 3;
       world.game.difficulty = Difficulty.Cheat;
       world.game.foundSet = true;
       world.game.bot = ENABLE_BOTS;

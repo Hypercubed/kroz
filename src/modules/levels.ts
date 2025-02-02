@@ -9,8 +9,8 @@ import * as effects from './effects.ts';
 import * as events from './events.ts';
 import * as colors from './colors.ts';
 
-// import LEVELS from '../data/forgotton/index.ts';
-import LEVELS from '../data/kingdom/index.ts';
+import LEVELS from '../data/forgotton/index.ts';
+// import LEVELS from '../data/kingdom/index.ts';
 // import LEVELS from '../data/lost/index.ts';
 // import LEVELS from '../data/caverns/index.ts';
 // import LEVELS from '../data/cruz/index.ts';

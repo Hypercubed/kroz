@@ -114,26 +114,58 @@ function getTargets(predicate: (e: Entity, x: number, y: number) => boolean) {
   return arr;
 }
 
+interface STATE {
+  x: number;
+  y: number;
+  keys: number;
+  gems: number;
+  whips: number;
+}
+
+const DIRS = [
+  [0, -1],
+  [1, 0],
+  [0, 1],
+  [-1, 0],
+  [1, -1],
+  [1, 1],
+  [-1, 1],
+  [-1, -1],
+];
+
 function getPath(goals: Array<[number, number]>): Array<[number, number]> {
   const p = world.level.player.get(Position)!;
-  const astar = new AStar(passableCallback, hurestic, cost);
-  const path = astar.compute(p.x, p.y);
+  const astar = new AStar<STATE>({
+    hurestic,
+    cost,
+    neighbors,
+  });
+
+  const path = astar.compute({
+    x: p.x,
+    y: p.y,
+    keys: world.stats.keys,
+    gems: world.stats.gems,
+    whips: world.stats.whips,
+  });
 
   // for (let i = 0; i < path.length; i++) {
   //   const [x, y] = path[i];
   //   display.drawOver(x, y, '*', 'red');
   // }
 
-  return path;
+  return path.map((s) => [s.x, s.y]);
 
-  function hurestic(x: number, y: number) {
+  function hurestic(s: STATE) {
+    const { x, y } = s;
     return goals.reduce((acc, goal) => {
       const d = chebyshevDistance(x, y, goal[0], goal[1]);
       return Math.min(acc, d);
     }, Infinity);
   }
 
-  function cost(x: number, y: number) {
+  function cost(s: STATE) {
+    const { x, y } = s;
     const e = world.level.map.get(x, y);
     if (!e) return 1;
     if (e.has(isPushable)) return 40; // Weight by number of whips?
@@ -144,21 +176,50 @@ function getPath(goals: Array<[number, number]>): Array<[number, number]> {
     return VISITED.get(`${x}.${y}`) ? 1 : 2; // / (getScoreDelta(e.type as Type) + 1) + 1;
   }
 
-  function passableCallback(x: number, y: number) {
+  function passable(x: number, y: number, s: STATE): boolean {
     if (x < 0 || y < 0) return false;
     if (x >= world.level.map.width || y >= world.level.map.height) return false;
 
     if (goals.some((g) => g[0] === x && g[1] === y)) return true;
     if (x === p.x && y === p.y) return true;
 
+    const { keys, gems, whips } = s;
+
     const e = world.level.map.get(x, y);
     if (!e) return true;
-    if (e.has(isMob)) return world.stats.gems > 0 || world.stats.whips > 0;
-    if (e.has(Breakable)) return world.stats.whips > 0;
-    if (e.type === Type.Door) return world.stats.keys > 0;
+    if (e.has(isMob)) return gems > 0 || whips > 0;
+    if (e.has(Breakable)) return whips > 0;
+    if (e.type === Type.Door) return keys > 0;
     if (e.has(isInvisible)) return true;
     if (!e.has(Renderable)) return true;
     return isWalkable(e);
+  }
+
+  function state(x: number, y: number, s: STATE): STATE {
+    const n = { ...s, x, y };
+    const e = world.level.map.get(x, y);
+    if (!e) return n;
+
+    if (e.has(isMob)) n.gems--;
+    if (e.has(Breakable)) n.whips--;
+    if (e.type === Type.Door) n.keys--;
+    if (e.type === Type.Key) n.keys++;
+    if (e.type === Type.Gem) n.gems++;
+    if (e.type === Type.Whip) n.whips++;
+    return n;
+  }
+
+  function neighbors(s: STATE): Array<STATE> {
+    const result: Array<STATE> = [];
+    for (let i = 0; i < DIRS.length; i++) {
+      const dir = DIRS[i];
+      const x = s.x + dir[0];
+      const y = s.y + dir[1];
+      if (passable(x, y, s)) {
+        result.push(state(x, y, s));
+      }
+    }
+    return result;
   }
 }
 
@@ -299,7 +360,12 @@ async function tryDefend() {
   const p = world.level.player.get(Position)!;
   if (!p) return;
 
-  const mobs = neighbors.filter((n) => MOBS.includes(n[0]?.type as Type));
+  const mobs = neighbors.filter(
+    (n) =>
+      MOBS.includes(n[0]?.type as Type) ||
+      n[0]?.type === Type.Generator ||
+      n[0]?.type === Type.Statue,
+  );
   if (mobs.length < 1) return false;
   if (mobs.length > 5 * world.stats.whips) return false;
 

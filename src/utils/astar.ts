@@ -1,107 +1,85 @@
-interface Node {
-  x: number;
-  y: number;
+interface Node<STATE> {
   g: number;
   h: number;
-  prev: Node | null;
+  s: STATE;
+  prev: Node<STATE> | null;
 }
 
-const DIRS = [
-  [0, -1],
-  [1, 0],
-  [0, 1],
-  [-1, 0],
-  [1, -1],
-  [1, 1],
-  [-1, 1],
-  [-1, -1],
-];
+interface Options<STATE> {
+  hurestic: (s: STATE) => number;
+  cost: (s: STATE) => number;
+  neighbors: (s: STATE) => Array<STATE>;
+}
 
-export default class AStar {
-  private todo: Node[] = [];
-  private done: Record<string, Node> = {};
+export default class AStar<STATE> {
+  private h: (s: STATE) => number;
+  private g: (s: STATE) => number;
+  private n: (s: STATE) => Array<STATE>;
 
-  private dirs = DIRS;
+  private todo: Node<STATE>[] = [];
+  private done: Record<string, Node<STATE>> = {};
 
-  constructor(
-    private passableCallback: (x: number, y: number) => boolean,
-    private h: (x: number, y: number) => number,
-    private g: (x: number, y: number) => number,
-  ) {}
-
-  private getNeighbors(cx: number, cy: number) {
-    const result = [];
-    for (let i = 0; i < this.dirs.length; i++) {
-      const dir = this.dirs[i];
-      const x = cx + dir[0];
-      const y = cy + dir[1];
-      if (!this.passableCallback(x, y)) {
-        continue;
-      }
-      result.push([x, y]);
-    }
-    return result;
+  constructor(options: Options<STATE>) {
+    this.h = options.hurestic;
+    this.g = options.cost;
+    this.n = options.neighbors;
   }
 
-  private getId(x: number, y: number) {
-    return x + ',' + y;
+  private getId(s: STATE) {
+    return JSON.stringify(s);
   }
 
   /**
    * Compute a path from a given point, ends when h(x, y) == 0
    */
-  compute(fromX: number, fromY: number) {
+  compute(s: STATE) {
     this.todo = [];
     this.done = {};
-    this._add(fromX, fromY, null);
+    this.add(s, null);
 
-    let finalNode: Node | null = null;
+    let finalNode: Node<STATE> | null = null;
 
     while (this.todo.length) {
       const item = this.todo.shift()!;
-      const id = this.getId(item.x, item.y);
+      const id = this.getId(item.s);
       if (id in this.done) {
         continue;
       }
       this.done[id] = item;
-      if (this.h(item.x, item.y) == 0) {
+      if (this.h(item.s) == 0) {
         finalNode = item;
         break;
       }
-      const neighbors = this.getNeighbors(item.x, item.y);
+      const neighbors = this.n(item.s);
       for (let i = 0; i < neighbors.length; i++) {
-        const neighbor = neighbors[i];
-        const x = neighbor[0];
-        const y = neighbor[1];
-        const id = this.getId(x, y);
+        const n = neighbors[i];
+        const id = this.getId(n);
         if (id in this.done) {
           continue;
         }
-        this._add(x, y, item);
+        this.add(n, item);
       }
     }
 
-    const path: Array<[number, number]> = [];
-    let item: Node | null = finalNode;
+    const path: Array<STATE> = [];
+    let item: Node<STATE> | null = finalNode;
     if (!item) {
       return path;
     }
     while (item) {
-      path.push([item.x, item.y]);
+      path.push(item.s);
       item = item.prev;
     }
     return path;
   }
 
-  _add(x: number, y: number, prev: Node | null) {
-    const h = this.h(x, y);
-    const g = this.g(x, y);
-    const obj = {
-      x: x,
-      y: y,
-      prev: prev,
-      g: prev ? prev.g + g : 0,
-      h: h,
+  private add(s: STATE, prev: Node<STATE> | null) {
+    const h = this.h(s);
+    const obj: Node<STATE> = {
+      prev,
+      g: prev ? prev.g + this.g(s) : 0,
+      h,
+      s,
     };
     /* insert into priority queue */
     const f = obj.g + obj.h;
