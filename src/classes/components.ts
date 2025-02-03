@@ -196,6 +196,23 @@ export class AnimatedWalking {
   }
 }
 
+export class Glitch {
+  i = 0;
+  ch = '';
+
+  constructor(public frames: string) {
+    this.ch = frames[0];
+  }
+
+  getFrame() {
+    this.i++;
+    if (this.i % 20 === 0) {
+      this.ch = this.frames[RNG.getUniformInt(0, this.frames.length - 1)];
+    }
+    return this.ch;
+  }
+}
+
 /**
  * ##  Trigger
  *

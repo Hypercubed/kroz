@@ -1,30 +1,34 @@
-interface Node<STATE> {
+export interface AStarNode<STATE> {
   g: number;
   h: number;
   s: STATE;
-  prev: Node<STATE> | null;
+  prev: AStarNode<STATE> | null;
 }
 
 interface Options<STATE> {
   hurestic: (s: STATE) => number;
   cost: (s: STATE) => number;
   neighbors: (s: STATE) => Array<STATE>;
+  debug?: (node: AStarNode<STATE>) => void | Promise<void>;
+  maxIterations?: number;
 }
 
-const MAX = 50_000;
-
 export default class AStar<STATE> {
-  private h: (s: STATE) => number;
-  private g: (s: STATE) => number;
-  private n: (s: STATE) => Array<STATE>;
+  private h: Options<STATE>['hurestic'];
+  private g: Options<STATE>['cost'];
+  private n: Options<STATE>['neighbors'];
+  private d: Options<STATE>['debug'] = () => {};
+  private maxIterations: number = 50000;
 
-  private todo: Node<STATE>[] = [];
-  private done: Record<string, Node<STATE>> = {};
+  private todo: AStarNode<STATE>[] = [];
+  private done: Record<string, AStarNode<STATE>> = {};
 
   constructor(options: Options<STATE>) {
     this.h = options.hurestic;
     this.g = options.cost;
     this.n = options.neighbors;
+    this.d = options.debug || this.d;
+    this.maxIterations = options.maxIterations || this.maxIterations;
   }
 
   private getId(s: STATE) {
@@ -34,19 +38,18 @@ export default class AStar<STATE> {
   /**
    * Compute a path from a given point, ends when h(x, y) == 0
    */
-  compute(s: STATE) {
+  async compute(s: STATE) {
     this.todo = [];
     this.done = {};
     this.add(s, null);
 
-    let finalNode: Node<STATE> | null = null;
+    let finalNode: AStarNode<STATE> | null = null;
 
     let i = 0;
 
     // TODO: add a limit to the number of iterations
     while (this.todo.length) {
-      i++;
-      if (i > MAX) {
+      if (i++ > this.maxIterations) {
         console.log('Max iterations reached');
         return [];
       }
@@ -56,7 +59,7 @@ export default class AStar<STATE> {
         continue;
       }
       this.done[id] = item;
-      if (this.h(item.s) == 0) {
+      if (item.h == 0) {
         finalNode = item;
         break;
       }
@@ -67,12 +70,13 @@ export default class AStar<STATE> {
         if (id in this.done) {
           continue;
         }
-        this.add(n, item);
+        const obj = this.add(n, item);
+        await this.d?.(obj);
       }
     }
 
     const path: Array<STATE> = [];
-    let item: Node<STATE> | null = finalNode;
+    let item: AStarNode<STATE> | null = finalNode;
     if (!item) {
       return path;
     }
@@ -83,11 +87,12 @@ export default class AStar<STATE> {
     return path;
   }
 
-  private add(s: STATE, prev: Node<STATE> | null) {
+  private add(s: STATE, prev: AStarNode<STATE> | null): AStarNode<STATE> {
     const h = this.h(s);
-    const obj: Node<STATE> = {
+    const g = this.g(s);
+    const obj: AStarNode<STATE> = {
       prev,
-      g: prev ? prev.g + this.g(s) : 0,
+      g: prev ? prev.g + g : 0,
       h,
       s,
     };
@@ -98,9 +103,10 @@ export default class AStar<STATE> {
       const itemF = item.g + item.h;
       if (f < itemF || (f == itemF && h < item.h)) {
         this.todo.splice(i, 0, obj);
-        return;
+        return obj;
       }
     }
     this.todo.push(obj);
+    return obj;
   }
 }

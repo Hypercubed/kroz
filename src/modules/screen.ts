@@ -26,6 +26,7 @@ import {
   isInvisible,
   Position,
   Renderable,
+  Glitch,
 } from '../classes/components';
 import { Difficulty } from './world';
 
@@ -372,9 +373,15 @@ export function drawEntityAt(x: number, y: number, entity?: Entity | null) {
   if (!entity.has(Renderable)) return;
 
   const t = entity.get(Renderable)!;
+  let ch = t.ch;
   let fg = t.fg;
   if (!world.game.paused && fg !== null && t.blink) fg |= 16; // add blink
-  display.draw(x + XBot, y + YBot, t.ch, fg!, t.bg!);
+
+  if (entity.has(Glitch)) {
+    ch = entity.get(Glitch)!.getFrame();
+  }
+
+  display.draw(x + XBot, y + YBot, ch, fg!, t.bg!);
 }
 
 export function drawAt(

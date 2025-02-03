@@ -25,12 +25,11 @@ import {
   Breakable,
   isBombable,
   FoundMessage,
+  Glitch,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
 
-// TODO: Load this dynamically?
-// import tileset from './kroz.tileset.json';
 import { ensureObject, tileIdToChar } from '../utils/utils';
 
 export enum Type {
@@ -488,6 +487,7 @@ const SIMPLE_COMPONENTS = {
   Speed,
   Breakable,
   FoundMessage,
+  Glitch,
 };
 
 function addComponentsToEntity(

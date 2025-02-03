@@ -2,6 +2,7 @@ import * as world from './world';
 import * as player from './player-system';
 import * as effects from './effects';
 import * as events from './events';
+import * as display from './display';
 
 import { COLLECTABLES, KROZ, MOBS, OSPELLS, Type } from './tiles';
 import type { Entity } from '../classes/entity';
@@ -15,7 +16,9 @@ import {
   Position,
   Renderable,
 } from '../classes/components';
-import AStar from '../utils/astar';
+import AStar, { AStarNode } from '../utils/astar';
+import { XBot, YBot } from '../data/constants';
+import { delay } from '../utils/utils';
 
 const COLLECT = [
   ...COLLECTABLES,
@@ -58,6 +61,17 @@ events.levelStart.add(() => {
 });
 
 let neighbors = [] as Array<Moves>;
+
+const DIRS = [
+  [0, -1],
+  [1, 0],
+  [0, 1],
+  [-1, 0],
+  [1, -1],
+  [1, 1],
+  [-1, 1],
+  [-1, -1],
+];
 
 function getNeighbors(x: number, y: number) {
   const n: Array<Moves> = [];
@@ -121,26 +135,22 @@ interface STATE {
   whips: number;
 }
 
-const DIRS = [
-  [0, -1],
-  [1, 0],
-  [0, 1],
-  [-1, 0],
-  [1, -1],
-  [1, 1],
-  [-1, 1],
-  [-1, -1],
-];
+let gMax = 0;
+let hMax = 0;
+const DEBUG_PATH = false;
 
-function getPath(goals: Array<[number, number]>): Array<[number, number]> {
+async function getPath(
+  goals: Array<[number, number]>,
+): Promise<Array<[number, number]>> {
   const p = world.level.player.get(Position)!;
   const astar = new AStar<STATE>({
     hurestic,
     cost,
     neighbors,
+    debug: DEBUG_PATH ? debug : undefined,
   });
 
-  const path = astar.compute({
+  const path = await astar.compute({
     x: p.x,
     y: p.y,
     keys: world.stats.keys,
@@ -148,12 +158,20 @@ function getPath(goals: Array<[number, number]>): Array<[number, number]> {
     whips: world.stats.whips,
   });
 
-  // for (let i = 0; i < path.length; i++) {
-  //   const [x, y] = path[i];
-  //   display.drawOver(x, y, '*', 'red');
-  // }
-
   return path.map((s) => [s.x, s.y]);
+
+  async function debug({ s, g, h }: AStarNode<STATE>) {
+    console.log(s, g, h);
+    gMax = Math.max(gMax, g);
+    hMax = Math.max(hMax, h);
+    display.drawOver(s.x + XBot, s.y + YBot, '•', c(h / hMax), c(1 - g / gMax)); // ~~(g / 10) + 1
+    await delay(0);
+  }
+
+  function c(v: number) {
+    v = ~~(v * 255);
+    return `rgba(${v}, ${v}, ${v}, 50)`;
+  }
 
   function hurestic(s: STATE) {
     const { x, y } = s;
@@ -163,7 +181,7 @@ function getPath(goals: Array<[number, number]>): Array<[number, number]> {
     }, Infinity);
   }
 
-  function cost(s: STATE) {
+  function cost(s: STATE): number {
     const { x, y } = s;
     const e = world.level.map.get(x, y);
     if (!e) return 1;
@@ -222,8 +240,8 @@ function getPath(goals: Array<[number, number]>): Array<[number, number]> {
   }
 }
 
-function getStepToward(goals: Array<[number, number]>) {
-  const path = getPath(goals);
+async function getStepToward(goals: Array<[number, number]>) {
+  const path = await getPath(goals);
   if (!path || path.length < 1) return null;
   path.pop();
   return path.pop()!;
@@ -234,7 +252,7 @@ async function tryStairs(): Promise<boolean> {
   if (stairs.length < 1) return false;
 
   const goals: Array<[number, number]> = stairs.map((n) => [n[1], n[2]]);
-  const step = getStepToward(goals);
+  const step = await getStepToward(goals);
   if (!step) return false;
   const [x, y] = step;
   console.log((lastAction = 'stairs'));
@@ -246,7 +264,7 @@ async function tryTeleportTrap(): Promise<boolean> {
   if (traps.length < 1) return false;
 
   const goals: Array<[number, number]> = traps.map((n) => [n[1], n[2]]);
-  const step = getStepToward(goals);
+  const step = await getStepToward(goals);
   if (!step) return false;
   const [x, y] = step;
   console.log((lastAction = 'traps'));
@@ -260,7 +278,7 @@ async function tryCollect() {
   if (collectables.length < 1) return false;
 
   const goals: Array<[number, number]> = collectables.map((n) => [n[1], n[2]]);
-  const step = getStepToward(goals);
+  const step = await getStepToward(goals);
   if (!step) return false;
   const [x, y] = step;
   console.log((lastAction = 'collect'));
@@ -290,7 +308,7 @@ async function tryTunnel() {
   if (unvisited.length < 1) return false;
 
   const goals: Array<[number, number]> = tunnels.map((n) => [n[1], n[2]]);
-  const step = getStepToward(goals);
+  const step = await getStepToward(goals);
   if (!step) return false;
   const [x, y] = step;
 
@@ -306,7 +324,7 @@ async function tryExplore() {
   if (unvisited.length < 1) return false;
 
   const goals: Array<[number, number]> = unvisited.map((n) => [n[1], n[2]]);
-  const step = getStepToward(goals);
+  const step = await getStepToward(goals);
   if (!step) return false;
   const [x, y] = step;
 
@@ -319,7 +337,7 @@ async function tryPush() {
   if (rocks.length < 1) return false;
 
   const goals: Array<[number, number]> = rocks.map((n) => [n[1], n[2]]);
-  const step = getStepToward(goals);
+  const step = await getStepToward(goals);
   if (!step) return false;
   const [x, y] = step;
 
@@ -345,7 +363,7 @@ async function trySearch() {
   if (emptySpace.length < 1) return false;
 
   const goals: Array<[number, number]> = emptySpace.map((n) => [n[1], n[2]]);
-  const step = getStepToward(goals);
+  const step = await getStepToward(goals);
   if (!step) return false;
   const [x, y] = step;
 
@@ -404,7 +422,7 @@ async function tryMove(x: number, y: number) {
 
   const b = world.level.map.get(x, y);
   if (b) {
-    if (b?.has(isMob)) {
+    if (b?.has(isMob) && b.type !== Type.MBlock) {
       if (world.stats.gems > 2 * world.stats.whips) {
         await whip();
       }
