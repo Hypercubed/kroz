@@ -9,11 +9,11 @@ import * as effects from './effects.ts';
 import * as events from './events.ts';
 import * as colors from './colors.ts';
 
-import LEVELS from '../data/forgotton/index.ts';
+// import LEVELS from '../data/forgotton/index.ts';
 // import LEVELS from '../data/kingdom/index.ts';
 // import LEVELS from '../data/lost/index.ts';
 // import LEVELS from '../data/caverns/index.ts';
-// import LEVELS from '../data/cruz/index.ts';
+import LEVELS from '../data/cruz/index.ts';
 
 import { mod } from 'rot-js/lib/util';
 import { isGenerator, isMob, isPlayer } from '../classes/components.ts';
@@ -130,7 +130,7 @@ function readLevelJSON(tilemap: tiled.Map): Level {
 
   function readObjectGroup(layer: tiled.ObjectGroup, output: Entity[]) {
     for (const obj of layer.objects) {
-      const { gid, x, y, height, width, properties } = obj;
+      const { gid, x, y, height, width, properties, type } = obj;
       if (!gid || x < 0 || y < 0 || !height || !width) continue;
       const tileId = tiles.getTileIdFromGID(obj.gid!);
       if (tileId > -1) {
@@ -141,6 +141,7 @@ function readLevelJSON(tilemap: tiled.Map): Level {
           xx,
           yy,
           ensureObject(properties),
+          type ? +type : undefined,
         );
       }
     }

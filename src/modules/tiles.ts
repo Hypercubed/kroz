@@ -129,6 +129,10 @@ export enum Type {
   Trap13 = 231,
 
   Message = 252,
+
+  // Custom
+  BlockSpell2 = 253,
+  ZBlock2 = 254,
 }
 
 const TileIDToType: Record<number, Type> = {}; // TileID to type lookup
@@ -450,8 +454,9 @@ export function createEntityFromTileId(
   y: number,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   properties?: Record<string, any>,
+  type?: Type,
 ) {
-  const type = TileIDToType[tileId] ?? tileIdToChar(tileId) ?? 0;
+  type ??= TileIDToType[tileId] ?? tileIdToChar(tileId) ?? 0;
   const entity = new Entity(type);
 
   const tileDefinition = getTileDefinition(tileId);

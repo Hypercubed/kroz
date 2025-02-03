@@ -230,10 +230,10 @@ async function showGemsSpell() {
   }
 }
 
-async function blockSpell() {
+async function blockSpell(block: Type, spell: Type) {
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
-      if (world.level.map.getType(x, y) === Type.ZBlock) {
+      if (world.level.map.getType(x, y) === block) {
         sound.blockSpell();
         for (let i = 20; i > 0; i--) {
           screen.drawAt(
@@ -247,7 +247,7 @@ async function blockSpell() {
         await delay(1);
         world.level.map.setType(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
-      } else if (world.level.map.getType(x, y) === Type.BlockSpell) {
+      } else if (world.level.map.getType(x, y) === spell) {
         world.level.map.setType(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
       }
@@ -725,7 +725,8 @@ const EffectMap = {
   Zap: zapTrap,
   Create: createTrap,
   ShowGems: showGemsSpell,
-  BlockSpell: blockSpell,
+  BlockSpell: () => blockSpell(Type.ZBlock, Type.BlockSpell),
+  BlockSpell2: () => blockSpell(Type.ZBlock2, Type.BlockSpell2),
   WallVanish: wallVanish,
   K: () => krozBonus(Type.K),
   R: () => krozBonus(Type.R),
