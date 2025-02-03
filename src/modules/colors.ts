@@ -46,3 +46,38 @@ export async function readColors() {
     ColorCodes[code] = colors[k];
   }
 }
+
+export function getColor(c: string | Color, alpha: number = 1): string {
+  if (typeof c === 'number') {
+    if (c > 15) {
+      // Add blink
+      c %= 16;
+      const v = 500;
+      const f = Date.now() % v < v / 2;
+      if (!f) alpha = 0;
+    }
+    c = ColorCodes[c];
+  }
+
+  if (alpha < 1) {
+    c =
+      c +
+      Math.round(alpha * 255)
+        .toString(16)
+        .padStart(2, '0');
+  }
+  return c;
+}
+
+type Tuple<T, N, R extends T[] = []> = R['length'] extends N
+  ? R
+  : Tuple<T, N, [...R, T]>;
+
+export function getColors<N extends number = 2>(
+  ...args: Tuple<string | Color, N>
+): Tuple<string, N> {
+  return (args as Array<string | Color>).map((c) => getColor(c)) as Tuple<
+    string,
+    N
+  >;
+}

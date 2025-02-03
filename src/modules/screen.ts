@@ -3,6 +3,7 @@ import * as world from './world';
 import * as controls from './controls';
 import * as sound from './sound';
 import * as tiles from './tiles';
+import * as colors from './colors';
 
 import {
   DEBUG,
@@ -39,7 +40,7 @@ export function renderScreen() {
   display.drawText(x - 2, 12, 'Teleports', Color.Yellow, Color.Blue);
   display.drawText(x, 15, 'Keys', Color.Yellow, Color.Blue);
 
-  const [fg, bg] = display.getColors(Color.HighIntensityWhite, Color.Blue);
+  const [fg, bg] = colors.getColors(Color.HighIntensityWhite, Color.Blue);
   display.drawText(69, 18, 'OPTIONS', fg, Color.Red);
   display.drawText(69, 19, `%c{${fg}}W%c{}hip`, Color.White, bg);
   display.drawText(69, 20, `%c{${fg}}T%c{}eleport`, Color.White, bg);
@@ -394,10 +395,13 @@ export function drawAt(
   display.draw(x + XBot, y + YBot, ch, fg, bg);
 }
 
-export function drawOver(x: number, y: number, ch: string, fg: string | Color) {
-  const e = world.level.map.get(x, y);
-  const r = e?.get(Renderable);
-  const bg = r?.bg ?? tiles.common.FLOOR_BG!;
+export function drawOver(
+  x: number,
+  y: number,
+  ch: string,
+  fg: string | Color,
+  bg: string | Color = '#00000000',
+) {
   display.drawOver(x + XBot, y + YBot, ch, fg, bg);
 }
 

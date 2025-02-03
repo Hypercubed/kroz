@@ -5,6 +5,7 @@ import * as player from './player-system';
 import * as tiles from './tiles';
 import * as display from './display';
 import * as mobs from './mobs-system';
+import * as colors from './colors';
 
 import {
   createEntityOfType,
@@ -127,7 +128,7 @@ async function bomb(x: number, y: number) {
 
     for (let x = x1; x <= x2; x++) {
       for (let y = y1; y <= y2; y++) {
-        screen.drawOver(x, y, '█', Color.LightRed);
+        screen.drawOver(x, y, '█', colors.getColor(Color.LightRed, 0.5));
         const e = world.level.map.get(x, y);
         if (e?.has(isBombable)) {
           if (e.has(isMob)) {
@@ -843,7 +844,7 @@ export async function whip(e: Entity) {
     const entity = world.level.map.get(x, y);
     const thing = entity?.type || Type.Floor;
 
-    screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(0, 15) as Color]);
+    screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(1, 15) as Color]);
 
     if (entity?.has(isSecreted)) {
       entity?.remove(isSecreted);
