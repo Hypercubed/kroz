@@ -24,6 +24,7 @@ import {
 import {
   Breakable,
   isBombable,
+  isImpervious,
   isInvisible,
   isMob,
   isPlayer,
@@ -87,8 +88,12 @@ export async function updateTilesByType(
 async function shoot(x: number, y: number, dx: number) {
   x += dx;
   while (x >= 0 && x <= XMax) {
-    const block = world.level.map.getType(x, y);
-    if (typeof block !== 'number' || SPEAR_BLOCKS.includes(block)) {
+    const e = world.level.map.get(x, y)!;
+    if (
+      typeof e.type !== 'number' ||
+      SPEAR_BLOCKS.includes(e.type) ||
+      e?.has(isImpervious)
+    ) {
       // These objects stop the Spear
       break;
     }
@@ -99,10 +104,14 @@ async function shoot(x: number, y: number, dx: number) {
       await delay(1);
     }
 
-    if (!SPEAR_IGNORE.includes(block as number)) {
+    if (!SPEAR_IGNORE.includes(e.type as Type)) {
       // These objects are ignored
       await sound.spearHit();
-      if (block === Type.Slow || block === Type.Medium || block === Type.Fast) {
+      if (
+        e.type === Type.Slow ||
+        e.type === Type.Medium ||
+        e.type === Type.Fast
+      ) {
         await world.killAt(x, y);
       }
       world.level.map.setType(x, y, Type.Floor);
@@ -231,7 +240,7 @@ async function showGemsSpell() {
   }
 }
 
-async function blockSpell(block: Type, spell: Type) {
+async function blockSpell(block: Type | string, spell: Type | string) {
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
       if (world.level.map.getType(x, y) === block) {
@@ -328,13 +337,13 @@ async function wallVanish() {
       const b = world.level.map.getType(x, y);
       if (b === Type.Block) {
         // TODO: sound
-        world.level.map.setType(x, y, Type.IBlock);
+        world.level.map.setType(x, y, Type.IBlock); // Replace with adding isInvisible component?
         screen.drawEntityAt(x, y);
         done = true;
       }
       if (b === Type.Wall) {
         // TODO: sound
-        world.level.map.setType(x, y, Type.IWall);
+        world.level.map.setType(x, y, Type.IWall); // Replace with adding isInvisible component?
         screen.drawEntityAt(x, y);
         done = true;
       }
@@ -410,31 +419,6 @@ function replaceEntities(a: Type | string, b: Type | string) {
       if (map.getType(x, y) === a) {
         map.set(x, y, createEntityOfType(b, x, y));
         screen.drawEntityAt(x, y);
-      }
-    }
-  }
-}
-
-export async function processEffect(
-  message: string | undefined,
-  who?: Entity,
-  x?: number,
-  y?: number,
-) {
-  if (!message) return;
-
-  if (typeof message === 'string') {
-    const lines = message.split('\n');
-    for (let line of lines) {
-      line = line.trim();
-      if (!line) continue;
-
-      if (line.startsWith('##')) {
-        await triggerEffect(line.slice(2), who, x, y);
-      } else if (line.startsWith('@@')) {
-        await sound.triggerSound(line.slice(2));
-      } else {
-        await screen.flashMessage(line);
       }
     }
   }
@@ -718,56 +702,64 @@ async function tunnel(e: Entity, x: number, y: number) {
   screen.drawEntityAt(tx, ty);
 }
 
+interface EffectsParams {
+  who: Entity;
+  what: Entity;
+  x: number;
+  y: number;
+  args: string[];
+}
+
+type EffectFn = (o: EffectsParams) => Promise<void> | void;
+
+export async function processEffect(
+  message: string | undefined,
+  options: Partial<EffectsParams> = {},
+) {
+  if (!message) return;
+
+  if (typeof message === 'string') {
+    const lines = message.split('\n');
+    for (let line of lines) {
+      line = line.trim();
+      if (!line) continue;
+
+      if (line.startsWith('##')) {
+        await triggerEffect(line.slice(2), options);
+      } else if (line.startsWith('@@')) {
+        await sound.triggerSound(line.slice(2));
+      } else {
+        await screen.flashMessage(line);
+      }
+    }
+  }
+}
+
 /** # Effects */
-const EffectMap = {
-  Bomb: (_: Entity, x: number, y: number) => bomb(x, y),
+const EffectMap: Record<string, EffectFn> = {
+  Bomb: ({ x, y }) => bomb(x, y),
   Quake: quakeTrap,
-  Trap: (e: Entity) => teleport(e),
+  Trap: ({ who }) => teleport(who!),
   Zap: zapTrap,
   Create: createTrap,
   ShowGems: showGemsSpell,
-  BlockSpell: () => blockSpell(Type.ZBlock, Type.BlockSpell),
-  BlockSpell2: () => blockSpell(Type.ZBlock2, Type.BlockSpell2),
+  BlockSpell: ({ what, args }) =>
+    blockSpell(tiles.getType(args[0]) || Type.ZBlock, what.type),
   WallVanish: wallVanish,
-  K: () => krozBonus(Type.K),
-  R: () => krozBonus(Type.R),
-  O: () => krozBonus(Type.O),
-  Z: () => krozBonus(Type.Z),
-  OSpell1: () => triggerOSpell(Type.OSpell1),
-  OSpell2: () => triggerOSpell(Type.OSpell2),
-  OSpell3: () => triggerOSpell(Type.OSpell3),
-  CSpell1: () => triggerCSpell(Type.CSpell1),
-  CSpell2: () => triggerCSpell(Type.CSpell2),
-  CSpell3: () => triggerCSpell(Type.CSpell3),
-  Trap3: () => replaceEntities(Type.Trap3, Type.Floor),
-  Trap2: () => replaceEntities(Type.Trap2, Type.Floor),
-  Trap4: () => replaceEntities(Type.Trap4, Type.Floor),
-  Trap5: () => replaceEntities(Type.Trap5, Type.Floor),
-  Trap6: () => replaceEntities(Type.Trap6, Type.Floor),
-  Trap7: () => replaceEntities(Type.Trap7, Type.Floor),
-  Trap8: () => replaceEntities(Type.Trap8, Type.Floor),
-  Trap9: () => replaceEntities(Type.Trap9, Type.Floor),
-  Trap10: () => replaceEntities(Type.Trap10, Type.Floor),
-  Trap11: () => replaceEntities(Type.Trap11, Type.Floor),
-  Trap12: () => replaceEntities(Type.Trap12, Type.Floor),
-  Trap13: () => replaceEntities(Type.Trap13, Type.Floor),
-  TBlock: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TBlock),
-  TRock: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TRock),
-  TGem: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TGem),
-  TBlind: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TBlind),
-  TWhip: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TWhip),
-  TGold: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TGold),
-  TTree: (_: Entity, x: number, y: number) => TTrigger(x, y, Type.TTree),
-  ShootRight: (_: Entity, x: number, y: number) => shoot(x, y, 1),
-  ShootLeft: (_: Entity, x: number, y: number) => shoot(x, y, -1),
+  KROZ: ({ what }) => krozBonus(what.type as Type),
+  OSpell: ({ what }) => triggerOSpell(what.type as Type),
+  CSpell: ({ what }) => triggerCSpell(what.type as Type),
+  FTrap: ({ what }) => replaceEntities(what.type as Type, Type.Floor),
+  TTrigger: ({ x, y, what }) => TTrigger(x, y, what.type as Type), // Replace with a isInvisible component?
+  Shoot: ({ x, y, args }) => shoot(x, y, +args[0]),
   /** ## HideStairs */
-  HideGems: () => hideType(Type.Gem),
+  HideGems: () => hideType(Type.Gem), // Replace with "##HideType Gem"
   /** ## HideRocks */
   HideRocks: () => hideType(Type.Rock),
   /** ## HideStairs */
   HideStairs: () => hideType(Type.Stairs),
   /** ## HideOpenWall */
-  HideOpenWall: hideOpenWall,
+  HideOpenWall: hideOpenWall, // Replace with "##HideType OSpell1 OSpell2 OSpell3"
   /** ## HideCreate */
   HideCreate: () => hideType(Type.Create),
   /** ## HideMBlock */
@@ -776,7 +768,7 @@ const EffectMap = {
   HideTrap: () => hideType(Type.Trap),
   SlowTime: slowTimeSpell,
   SpeedTime: speedTimeSpell,
-  Invisible: (e: Entity) => invisibleSpell(e),
+  Invisible: ({ who }) => invisibleSpell(who),
   Freeze: freezeSpell,
   /** ## HideLevel */
   HideLevel: hideLevel,
@@ -791,29 +783,32 @@ const EffectMap = {
   PitsToRock: pitsToRock,
   /** ## DisguiseFast */
   DisguiseFast: disguiseFast,
-  FlashEntity: (e: Entity) => flashEntity(e),
+  FlashEntity: ({ who }) => flashEntity(who),
   PitFall: pitFall,
   TomeToStairs: () => replaceEntities(Type.Tome, Type.Stairs),
   TouchLava: touchLava,
-  IBlock: (_: Entity, x: number, y: number) => ITrigger(Type.Block, x, y),
-  IWall: (_: Entity, x: number, y: number) => ITrigger(Type.Wall, x, y),
-  IDoor: (_: Entity, x: number, y: number) => ITrigger(Type.Door, x, y),
+  ITrigger: ({ x, y, args }) => ITrigger(tiles.getType(args[0]) as Type, x, y),
+  IWall: ({ x, y }) => ITrigger(Type.Wall, x, y),
+  IDoor: ({ x, y }) => ITrigger(Type.Door, x, y),
   TouchEWall: touchEWall,
-  Tunnel: (who: Entity, x: number, y: number) => tunnel(who, x, y),
-  EvapoRate30: () => (world.level.evapoRate = 30),
+  Tunnel: ({ who, x, y }) => tunnel(who, x, y),
+  EvapoRate30: () => {
+    world.level.evapoRate = 30;
+  },
 };
 
 export async function triggerEffect(
   trigger: string,
-  who?: Entity,
-  x?: number,
-  y?: number,
+  options: Partial<EffectsParams> = {},
 ) {
-  if (EffectMap[trigger as keyof typeof EffectMap]) {
-    who ??= world.level.player;
-    x ??= who.get(Position)?.x ?? 0;
-    y ??= who.get(Position)?.y ?? 0;
-    await EffectMap[trigger as keyof typeof EffectMap](who, x, y);
+  options.args = trigger.split(' ');
+  trigger = options.args.shift()! as keyof typeof EffectMap;
+  const fn = EffectMap[trigger];
+  if (fn) {
+    options.who ??= world.level.player;
+    options.x ??= options.who.get(Position)?.x ?? 0;
+    options.y ??= options.who.get(Position)?.y ?? 0;
+    await fn(options as EffectsParams);
     return;
   }
   console.warn('Unknown effect:', trigger);

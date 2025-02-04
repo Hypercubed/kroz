@@ -16,10 +16,46 @@
       "width": 64,
       "x": 0,
       "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
+        {
+          "gid": 290,
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "properties": [
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "Brown",
+                "ch": "!",
+                "fg": "HighIntensityWhite"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1392,
+          "y": 720
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
     }
   ],
-  "nextlayerid": 2,
-  "nextobjectid": 1,
+  "nextlayerid": 3,
+  "nextobjectid": 2,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.2",
@@ -28,6 +64,10 @@
     {
       "firstgid": 1,
       "source": "..\/kroz.tileset.json"
+    },
+    {
+      "firstgid": 257,
+      "source": "..\/neon.tileset.json"
     }
   ],
   "tilewidth": 24,

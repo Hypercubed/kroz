@@ -46,7 +46,9 @@ export async function loadLevel() {
   screen.fullRender();
 
   if (world.level.startText) {
-    await effects.processEffect(world.level.startText, world.level.player);
+    await effects.processEffect(world.level.startText, {
+      who: world.level.player,
+    });
   } else {
     await screen.flashMessage('Press any key to begin this level.');
   }
@@ -132,8 +134,8 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     for (const obj of layer.objects) {
       const { gid, x, y, height, width, properties, type } = obj;
       if (!gid || x < 0 || y < 0 || !height || !width) continue;
-      const tileId = tiles.getTileIdFromGID(obj.gid!);
-      if (tileId > -1) {
+      if (gid > 0) {
+        const tileId = getTileIdFromGID(obj.gid!);
         const xx = x / width;
         const yy = y / height - 1;
         output[yy * tilemap.width + xx] = tiles.createEntityFromTileId(
@@ -141,7 +143,7 @@ function readLevelJSON(tilemap: tiled.Map): Level {
           xx,
           yy,
           ensureObject(properties),
-          type ? +type : undefined,
+          type,
         );
       }
     }
@@ -157,7 +159,7 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     if (!data) return output;
 
     for (let i = 0; i < data.length; i++) {
-      const tileId = tiles.getTileIdFromGID(+data[i]);
+      const tileId = getTileIdFromGID(+data[i]);
       if (tileId > -1) {
         const x = i % tilemap.width;
         const y = Math.floor(i / tilemap.width);
@@ -183,28 +185,28 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     world.level.lavaFlow = properties.LavaFlow ?? false;
 
     if (properties.HideGems) {
-      await effects.triggerEffect('HideGems', world.level.player);
+      await effects.triggerEffect('HideGems');
     }
     if (properties.HideRocks) {
-      await effects.triggerEffect('HideRocks', world.level.player);
+      await effects.triggerEffect('HideRocks');
     }
     if (properties.HideStairs) {
-      await effects.triggerEffect('HideStairs', world.level.player);
+      await effects.triggerEffect('HideStairs');
     }
     if (properties.HideOpenWall) {
-      await effects.triggerEffect('HideOpenWall', world.level.player);
+      await effects.triggerEffect('HideOpenWall');
     }
     if (properties.HideCreate) {
-      await effects.triggerEffect('HideCreate', world.level.player);
+      await effects.triggerEffect('HideCreate');
     }
     if (properties.HideMBlock) {
-      await effects.triggerEffect('HideMBlock', world.level.player);
+      await effects.triggerEffect('HideMBlock');
     }
     if (properties.HideTrap) {
-      await effects.triggerEffect('HideTrap', world.level.player);
+      await effects.triggerEffect('HideTrap');
     }
     if (properties.HideLevel) {
-      await effects.triggerEffect('HideLevel', world.level.player);
+      await effects.triggerEffect('HideLevel');
     }
   }
 
@@ -220,6 +222,11 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     startText,
     properties,
   };
+}
+
+function getTileIdFromGID(gid: number): number {
+  if (!gid || gid < 0) return -1;
+  return (+gid % 256) - 1;
 }
 
 // Reads the level data into the world

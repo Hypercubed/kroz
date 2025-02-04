@@ -38,6 +38,8 @@ export const isPushable = Symbol('isPushable');
  */
 export const isPassable = Symbol('isPassable');
 
+export const isImpervious = Symbol('isImpervious');
+
 /**
  * ## isBombable
  *

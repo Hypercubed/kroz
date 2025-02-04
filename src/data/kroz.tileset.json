@@ -13,7 +13,7 @@
   "name": "Kroz Tileset",
   "spacing": 0,
   "tilecount": 256,
-  "tiledversion": "1.11.1",
+  "tiledversion": "1.11.2",
   "tileheight": 36,
   "tiles": [
     {
@@ -101,7 +101,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Z"
+          "value": "##KROZ"
         },
         {
           "name": "isBombable",
@@ -158,7 +158,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap5"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -250,7 +250,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap4"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -276,7 +276,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap3"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -879,7 +879,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "@@BlockedWall\n##IWall"
+          "value": "@@BlockedWall\n##ITrigger Wall"
         },
         {
           "name": "isBombable",
@@ -905,7 +905,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "@@BlockedWall\n##IBlock"
+          "value": "@@BlockedWall\n##ITrigger Block "
         },
         {
           "name": "isBombable",
@@ -944,7 +944,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##K"
+          "value": "##KROZ"
         },
         {
           "name": "isBombable",
@@ -2137,7 +2137,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##R"
+          "value": "##KROZ"
         },
         {
           "name": "isBombable",
@@ -2258,7 +2258,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "@@BlockedWall\n##IDoor"
+          "value": "@@BlockedWall\n##ITrigger IDoor"
         },
         {
           "name": "isBombable",
@@ -2272,6 +2272,526 @@
         }
       ],
       "type": "31"
+    },
+    {
+      "id": 97,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "A",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "B",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "C",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "D",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "E",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "F",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "G",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "H",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "I",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "J",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "K",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "L",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "M",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "N",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "O",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "P",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "Q",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "R",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "S",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 116,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "T",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 117,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "U",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 118,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "V",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "W",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 120,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "X",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "Z",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "properties": [
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "Brown",
+            "ch": "Z",
+            "fg": "HighIntensityWhite"
+          }
+        },
+        {
+          "name": "isImpervious",
+          "type": "bool",
+          "value": true
+        }
+      ]
     },
     {
       "id": 124,
@@ -2297,7 +2817,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##O"
+          "value": "##KROZ"
         },
         {
           "name": "isBombable",
@@ -2354,7 +2874,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TBlock"
+          "value": "##TTrigger"
         },
         {
           "name": "isBombable",
@@ -2380,7 +2900,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TRock"
+          "value": "##TTrigger"
         },
         {
           "name": "isBombable",
@@ -2406,7 +2926,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TGem"
+          "value": "##TTrigger"
         },
         {
           "name": "isBombable",
@@ -2432,7 +2952,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TBlind"
+          "value": "##TTrigger"
         },
         {
           "name": "isBombable",
@@ -2458,7 +2978,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TWhip"
+          "value": "##TTrigger"
         },
         {
           "name": "isBombable",
@@ -2484,7 +3004,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TGold"
+          "value": "##TTrigger"
         },
         {
           "name": "isBombable",
@@ -2510,7 +3030,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TTree"
+          "value": "##TTrigger"
         },
         {
           "name": "isBombable",
@@ -2585,7 +3105,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##ShootLeft"
+          "value": "##Shoot -1"
         },
         {
           "name": "isPassable",
@@ -2620,7 +3140,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##ShootRight"
+          "value": "##Shoot 1"
         },
         {
           "name": "isPassable",
@@ -2859,7 +3379,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap6"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -2885,7 +3405,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap7"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -2911,7 +3431,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap8"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -2937,7 +3457,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap9"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -2963,7 +3483,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap10"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -2989,7 +3509,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap11"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -3015,7 +3535,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap12"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -3041,7 +3561,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap13"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -3096,7 +3616,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##OSpell1"
+          "value": "##OSpell"
         },
         {
           "name": "isPassable",
@@ -3131,7 +3651,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##OSpell2"
+          "value": "##OSpell"
         },
         {
           "name": "isPassable",
@@ -3166,7 +3686,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##OSpell3"
+          "value": "##OSpell"
         },
         {
           "name": "isPassable",
@@ -3192,7 +3712,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##CSpell1"
+          "value": "##CSpell"
         },
         {
           "name": "isPassable",
@@ -3218,7 +3738,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##CSpell2"
+          "value": "##CSpell"
         },
         {
           "name": "isPassable",
@@ -3244,7 +3764,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##CSpell3"
+          "value": "##CSpell"
         },
         {
           "name": "isPassable",

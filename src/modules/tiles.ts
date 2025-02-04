@@ -26,6 +26,7 @@ import {
   isBombable,
   FoundMessage,
   Glitch,
+  isImpervious,
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -129,10 +130,6 @@ export enum Type {
   Trap13 = 231,
 
   Message = 252,
-
-  // Custom
-  BlockSpell2 = 253,
-  ZBlock2 = 254,
 }
 
 const TileIDToType: Record<number, Type> = {}; // TileID to type lookup
@@ -454,12 +451,13 @@ export function createEntityFromTileId(
   y: number,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   properties?: Record<string, any>,
-  type?: Type,
+  type?: Type | string,
 ) {
-  type ??= TileIDToType[tileId] ?? tileIdToChar(tileId) ?? 0;
+  const tileDefinition = getTileDefinition(tileId);
+  type =
+    getType(type) ?? TileIDToType[tileId] ?? tileIdToChar(tileId) ?? Type.Floor;
   const entity = new Entity(type);
 
-  const tileDefinition = getTileDefinition(tileId);
   if (tileDefinition && tileDefinition.properties) {
     addComponentsToEntity(entity, ensureObject(tileDefinition.properties));
   }
@@ -472,6 +470,16 @@ export function createEntityFromTileId(
   return entity;
 }
 
+export function getType(
+  type: Type | string | undefined,
+): Type | string | undefined {
+  if (typeof type === 'number') return type as Type;
+  if (typeof type === 'undefined' || type === '') return undefined;
+  if (typeof type === 'string' && !isNaN(+type)) return +type as Type;
+  if (type in Type) return Type[type as keyof typeof Type];
+  return type;
+}
+
 const SIMPLE_TAGS = {
   isPlayer,
   isMob,
@@ -481,6 +489,7 @@ const SIMPLE_TAGS = {
   isPassable,
   followsPlayer,
   isBombable,
+  isImpervious,
 };
 
 const SIMPLE_COMPONENTS = {
@@ -499,14 +508,6 @@ function addComponentsToEntity(
   entity: Entity,
   properties: Record<string, unknown>,
 ) {
-  // TODO: Should be able to remove this by adding to tiles set
-  if (typeof entity.type === 'string') {
-    const ch = entity.type.toLocaleUpperCase();
-    const fg = Color.HighIntensityWhite;
-    const bg = Color.Brown;
-    entity.add(new Renderable({ ch, fg, bg }));
-  }
-
   const type = entity.type as Type;
 
   for (const tag in SIMPLE_TAGS) {
@@ -579,11 +580,6 @@ function addComponentsToEntity(
       entity.add(new Ctor(properties[key] as any));
     }
   }
-}
-
-export function getTileIdFromGID(gid: number): number {
-  if (!gid || gid < 0) return -1;
-  return (+gid % 256) - 1;
 }
 
 // Replace with Components

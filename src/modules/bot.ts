@@ -401,7 +401,7 @@ export async function botPlay() {
   neighbors = getNeighbors(p.x, p.y);
 
   if (await tryDefend()) return;
-  if (await tryCollect()) return; // TODO: Only collect if it is worth it
+  if (await tryCollect()) return; // TODO: Only collect if it is worth it, Don't open doors unless needed
   // if (await tryDoor()) return;
   if (await tryStairs()) return;
   if (await tryPush()) return;

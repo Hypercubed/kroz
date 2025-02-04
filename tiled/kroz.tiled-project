@@ -26,15 +26,7 @@
             "name": "Attacks",
             "type": "class",
             "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
-                "project"
+                "property"
             ]
         },
         {
@@ -78,15 +70,7 @@
             "name": "ChangeLevel",
             "type": "class",
             "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
-                "project"
+                "property"
             ]
         },
         {

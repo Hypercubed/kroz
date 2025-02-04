@@ -229,7 +229,12 @@ export async function tryMove(dx: number, dy: number) {
     world.addScore(e.type as Type); // Make ##score
     const message = e.get(Trigger)?.message;
     if (message) {
-      await effects.processEffect(message, world.level.player, x, y);
+      await effects.processEffect(message, {
+        who: world.level.player,
+        what: e,
+        x,
+        y,
+      });
     }
     if (!world.game.done && world.stats.gems < 0) dead();
   }
