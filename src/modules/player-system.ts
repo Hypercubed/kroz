@@ -13,7 +13,6 @@ import { Action } from './controls.ts';
 
 import { Color } from './colors.ts';
 import { clamp, delay } from '../utils/utils.ts';
-import { LEVELS } from './levels.ts';
 
 import {
   Attacks,
@@ -242,7 +241,7 @@ export async function tryMove(dx: number, dy: number) {
   if (e.has(ChangeLevel)) {
     const c = e.get(ChangeLevel)!;
     if (c.deltaLevel > 0) {
-      if (world.stats.levelIndex === LEVELS.length - 1) {
+      if (world.stats.levelIndex === levels.getLevelsCount() - 1) {
         await screen.endRoutine();
         return;
       }

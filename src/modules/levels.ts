@@ -7,13 +7,6 @@ import * as controls from './controls.ts';
 import * as screen from './screen.ts';
 import * as effects from './effects.ts';
 import * as events from './events.ts';
-import * as colors from './colors.ts';
-
-import LEVELS from '../data/forgotton/index.ts';
-// import LEVELS from '../data/kingdom/index.ts';
-// import LEVELS from '../data/lost/index.ts';
-// import LEVELS from '../data/caverns/index.ts';
-// import LEVELS from '../data/cruz/index.ts';
 
 import { mod } from 'rot-js/lib/util';
 import { isGenerator, isMob, isPlayer } from '../classes/components.ts';
@@ -31,14 +24,20 @@ export interface Level {
   startText?: string;
 }
 
-export { LEVELS };
+let LEVELS = [] as Array<(() => Promise<tiled.Map>) | null>;
+
+export function addLevels(levels: typeof LEVELS) {
+  LEVELS = levels;
+}
+
+export function getLevelsCount() {
+  return LEVELS.length;
+}
 
 export async function loadLevel() {
   world.resetLevel();
 
   const i = findNextLevel(world.stats.levelIndex);
-  await tiles.readTileset(); // Reset tileset
-  await colors.readColors(); // Reset colors
   const level = await readLevel(i);
 
   await level?.onLevelStart?.();

@@ -157,8 +157,8 @@ export const common = {
   BLOCK_CHAR: '█',
 };
 
-export async function readTileset() {
-  tileset = (await import('../data/kroz.tileset.json')).default;
+export async function setTileset(_tileset: ExternalTileset) {
+  tileset = _tileset;
   if (!tileset.tiles) throw new Error('No tiles found in tileset');
 
   for (const tile of tileset.tiles!) {

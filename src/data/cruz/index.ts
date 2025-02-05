@@ -1,4 +1,4 @@
-const LEVELS = [
+export const LEVELS = [
   null,
   // async () => (await import('../debug.map.json')).default, // Must be level 0
 
@@ -18,4 +18,10 @@ const LEVELS = [
   // async () => (await import('./cruz-160.map.json')).default,
 ];
 
-export default LEVELS;
+export async function readTileset() {
+  return (await import('../kroz.tileset.json')).default;
+}
+
+export async function readColor() {
+  return (await import('../kroz.colors.json')).default;
+}

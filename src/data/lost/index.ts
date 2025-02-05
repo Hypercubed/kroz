@@ -1,5 +1,5 @@
 // LOST ADVENTURES OF KROZ Levels
-const LEVELS = [
+export const LEVELS = [
   null, // Must be level 0
 
   // 1
@@ -91,4 +91,10 @@ const LEVELS = [
   async () => (await import('./lost-75.map.json')).default,
 ];
 
-export default LEVELS;
+export async function readTileset() {
+  return (await import('../kroz.tileset.json')).default;
+}
+
+export async function readColor() {
+  return (await import('../kroz.colors.json')).default;
+}

@@ -38,8 +38,7 @@ export const ColorCodes = {
   [Color.HighIntensityWhite]: '#FFFFFF',
 };
 
-export async function readColors() {
-  const colors = (await import('../data/kroz.colors.json')).default;
+export async function setColors(colors: Record<string, string>) {
   for (const k in colors) {
     const code = Color[k as keyof typeof Color];
     if (!k) continue;

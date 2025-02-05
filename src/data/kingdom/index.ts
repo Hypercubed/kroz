@@ -1,5 +1,5 @@
 // KINGDOM OF KROZ II Levels
-const LEVELS = [
+export const LEVELS = [
   null, // Must be level 0
 
   // Level 1
@@ -34,4 +34,10 @@ const LEVELS = [
   async () => (await import('./kingdom-25.map.json')).default, // The Sacred Temple
 ];
 
-export default LEVELS;
+export async function readTileset() {
+  return (await import('../kroz.tileset.json')).default;
+}
+
+export async function readColor() {
+  return (await import('../kroz.colors.json')).default;
+}

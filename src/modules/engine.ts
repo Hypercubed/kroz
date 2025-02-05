@@ -11,6 +11,14 @@ import * as level from './levels';
 import * as effects from './effects-system';
 import * as debug from './debug-interface';
 import * as events from './events';
+import * as tiles from './tiles';
+import * as colors from './colors';
+
+import * as game from '../data/forgotton/index.ts';
+// import * as game from '../data/kingdom/index.ts';
+// import * as game from '../data/lost/index.ts';
+// import * as game from '../data/caverns/index.ts';
+// import * as game from '../data/cruz/index.ts';
 
 import { SHOW_DEBUG_CONTROLS, SHOW_STATS, XMax, YMax } from '../data/constants';
 import { Color } from './colors';
@@ -31,6 +39,11 @@ export async function start() {
   await screen.introScreen();
   await screen.renderTitle();
   await screen.instructionsScreen();
+
+  level.addLevels(game.LEVELS);
+  tiles.setTileset(await game.readTileset());
+  colors.setColors(await game.readColor());
+
   await level.loadLevel();
 
   if (SHOW_STATS && !stats) {
@@ -59,7 +72,7 @@ export async function start() {
     o.add(debug.stats, 'whipPower', 2, 7, 1).listen();
 
     const l = gui.addFolder('Level');
-    l.add(debug.levels, 'level', 0, level.LEVELS.length + 1, 1).listen();
+    l.add(debug.levels, 'level', 0, level.getLevelsCount() + 1, 1).listen();
 
     const p = gui.addFolder('Player');
     p.add(debug.player, 'bot').listen();

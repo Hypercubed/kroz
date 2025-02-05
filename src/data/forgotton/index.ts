@@ -1,5 +1,5 @@
 // 'The Forgotton Adventures of Kroz'
-const LEVELS = [
+export const LEVELS = [
   async () => (await import('../debug/debug.map.json')).default, // Must be level 0
 
   // 1
@@ -34,7 +34,13 @@ const LEVELS = [
   async () => (await import('../lost/lost-75.map.json')).default, // The Sacred Chamber of Kroz
 ];
 
-export default LEVELS;
+export async function readTileset() {
+  return (await import('../kroz.tileset.json')).default;
+}
+
+export async function readColor() {
+  return (await import('../kroz.colors.json')).default;
+}
 
 // Possible levels to add:
 // - kingdom 10
