@@ -1,4 +1,4 @@
-const LEVELS = [
+export const LEVELS = [
   null, // Must be level 0
 
   // 1
@@ -51,7 +51,13 @@ const LEVELS = [
   async () => (await import('./caverns-40.map.json')).default,
 ];
 
-export default LEVELS;
+export async function readTileset() {
+  return (await import('../kroz.tileset.json')).default;
+}
+
+export async function readColor() {
+  return (await import('../kroz.colors.json')).default;
+}
 
 // Possible levels to add:
 // - caverns-9

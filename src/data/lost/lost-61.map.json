@@ -32,7 +32,7 @@
             {
               "name": "Trigger",
               "type": "string",
-              "value": "Walls that block your progress shall be removed...\n##OSpell1"
+              "value": "Walls that block your progress shall be removed...\n##OSpell"
             }
           ],
           "rotation": 0,
@@ -55,7 +55,7 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "StartText",
+      "name": "StartTrigger",
       "type": "string",
       "value": "##DisguiseFast\nPress any key to begin this level."
     }

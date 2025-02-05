@@ -23,14 +23,9 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "HideOpenWall",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "HideStairs",
-      "type": "bool",
-      "value": true
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##HideType Stairs\n##HideType OSpell1\n##HideType OSpell2\n##HideType OSpell3"
     }
   ],
   "renderorder": "right-down",

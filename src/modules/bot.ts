@@ -401,10 +401,13 @@ export async function botPlay() {
   neighbors = getNeighbors(p.x, p.y);
 
   if (await tryDefend()) return;
+  // TODO: Destroy statues and generators
   if (await tryCollect()) return; // TODO: Only collect if it is worth it, Don't open doors unless needed
+  // TODO: Only open doors if there are no other options
   // if (await tryDoor()) return;
   if (await tryStairs()) return;
   if (await tryPush()) return;
+  // TODO: Try to push rocks into ewalls
   if (await tryTunnel()) return; // TODO: Tunnel if there are unexplored area
   if (await tryTeleportTrap()) return;
   if (await tryExplore()) return;

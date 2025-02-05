@@ -40,7 +40,7 @@ function getDefaultLevelState() {
   return {
     bonus: 0, // Bonus count for K R O Z
     genNum: 0, // Number for creature generators
-    magicEwalls: false, // Magic Ewalls
+    magicEWalls: false, // Magic Ewalls
     evapoRate: 0, // Evaporation rate (TODO)
     treeRate: 0, // Tree rate (TODO)
     lavaRate: 0, // Lava rate (TODO)
@@ -62,7 +62,7 @@ function getDefaultLevelState() {
       0,
       0,
     ], // Timers
-    startText: undefined as undefined | string,
+    startTrigger: undefined as undefined | string,
     borderFG: tiles.common.BORDER_FG,
     borderBG: tiles.common.BORDER_BG,
   };

@@ -46,7 +46,7 @@ export async function update() {
   }
 
   // Magic EWalls
-  if (world.level.magicEwalls && RNG.getUniformInt(0, 7) === 0) {
+  if (world.level.magicEWalls && RNG.getUniformInt(0, 7) === 0) {
     for (let i = 0; i < 100; i++) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);

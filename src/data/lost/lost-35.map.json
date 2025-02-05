@@ -23,14 +23,9 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "LavaFlow",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "LavaRate",
-      "type": "int",
-      "value": 15
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##LavaRate 15"
     }
   ],
   "renderorder": "right-down",

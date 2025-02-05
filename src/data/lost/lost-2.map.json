@@ -61,18 +61,13 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "HideGems",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "HideStairs",
-      "type": "bool",
-      "value": true
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##HideType Gem\n##HideType Stairs"
     }
   ],
   "renderorder": "right-down",
-  "tiledversion": "1.11.1",
+  "tiledversion": "1.11.2",
   "tileheight": 36,
   "tilesets": [
     {

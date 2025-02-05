@@ -24,13 +24,13 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "HideOpenWall",
-      "type": "bool",
-      "value": true
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##HideType OSpell1\n##HideType OSpell2\n##HideType OSpell3"
     }
   ],
   "renderorder": "right-down",
-  "tiledversion": "1.11.1",
+  "tiledversion": "1.11.2",
   "tileheight": 36,
   "tilesets": [
     {

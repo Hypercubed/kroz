@@ -24,38 +24,13 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "HideCreate",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "HideMBlock",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "HideOpenWall",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "HideTrap",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "LavaFlow",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "LavaRate",
-      "type": "int",
-      "value": 140
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##LavaRate 140\n##HideType Create\n##HideType MBlock\n##HideType OSpell1\n##HideType OSpell2\n##HideType OSpell3\n##HideType Trap"
     }
   ],
   "renderorder": "right-down",
-  "tiledversion": "1.11.1",
+  "tiledversion": "1.11.2",
   "tileheight": 36,
   "tilesets": [
     {

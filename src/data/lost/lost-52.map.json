@@ -5327,18 +5327,13 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "HideCreate",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "HideMBlock",
-      "type": "bool",
-      "value": true
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##HideType Create\n##HideType MBlock"
     }
   ],
   "renderorder": "right-down",
-  "tiledversion": "1.11.1",
+  "tiledversion": "1.11.2",
   "tileheight": 36,
   "tilesets": [
     {

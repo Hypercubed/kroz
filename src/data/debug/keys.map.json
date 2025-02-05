@@ -113,38 +113,6 @@
   "nextlayerid": 3,
   "nextobjectid": 3,
   "orientation": "orthogonal",
-  "properties": [
-    {
-      "name": "EvapoRate",
-      "type": "int",
-      "value": 100
-    },
-    {
-      "name": "LavaFlow",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "LavaRate",
-      "type": "int",
-      "value": 100
-    },
-    {
-      "name": "MagicEWalls",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "TreeRate",
-      "type": "int",
-      "value": 100
-    },
-    {
-      "name": "id",
-      "type": "string",
-      "value": "Debug"
-    }
-  ],
   "renderorder": "right-down",
   "tiledversion": "1.11.2",
   "tileheight": 36,

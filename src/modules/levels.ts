@@ -20,8 +20,7 @@ export interface Level {
   id: string;
   data: Entity[];
   properties?: Record<string, unknown>;
-  onLevelStart?: () => Promise<void>;
-  startText?: string;
+  startTrigger?: string;
 }
 
 let LEVELS = [] as Array<(() => Promise<tiled.Map>) | null>;
@@ -38,16 +37,13 @@ export async function loadLevel() {
   world.resetLevel();
 
   const i = findNextLevel(world.stats.levelIndex);
-  const level = await readLevel(i);
+  await readLevel(i);
 
-  await level?.onLevelStart?.();
   world.storeLevelStartState();
   screen.fullRender();
 
-  if (world.level.startText) {
-    await effects.processEffect(world.level.startText, {
-      who: world.level.player,
-    });
+  if (world.level.startTrigger) {
+    await effects.processEffect(world.level.startTrigger);
   } else {
     await screen.flashMessage('Press any key to begin this level.');
   }
@@ -95,7 +91,7 @@ async function readLevel(i: number) {
   const levelLoadPromise = LEVELS[world.stats.levelIndex]!;
   const levelData = await levelLoadPromise();
   const level = readLevelJSON(levelData as tiled.Map);
-  world.level.startText = level!.startText;
+  world.level.startTrigger = level!.startTrigger;
 
   readLevelMapData(level.data);
 
@@ -168,57 +164,15 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     return output;
   }
 
-  async function onLevelStart() {
-    if ('onLevelStart' in tilemap) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await tilemap.onLevelStart();
-    }
-
-    if (!properties) return;
-
-    world.level.magicEwalls = properties.MagicEWalls ?? false;
-    world.level.evapoRate = properties.EvapoRate ?? 0;
-    world.level.treeRate = properties.TreeRate ?? 0;
-    world.level.lavaRate = properties.LavaRate ?? 0;
-    world.level.lavaFlow = properties.LavaFlow ?? false;
-
-    if (properties.HideGems) {
-      await effects.triggerEffect('HideGems');
-    }
-    if (properties.HideRocks) {
-      await effects.triggerEffect('HideRocks');
-    }
-    if (properties.HideStairs) {
-      await effects.triggerEffect('HideStairs');
-    }
-    if (properties.HideOpenWall) {
-      await effects.triggerEffect('HideOpenWall');
-    }
-    if (properties.HideCreate) {
-      await effects.triggerEffect('HideCreate');
-    }
-    if (properties.HideMBlock) {
-      await effects.triggerEffect('HideMBlock');
-    }
-    if (properties.HideTrap) {
-      await effects.triggerEffect('HideTrap');
-    }
-    if (properties.HideLevel) {
-      await effects.triggerEffect('HideLevel');
-    }
-  }
-
-  const startText =
+  const startTrigger =
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    tilemap.StartText ?? properties?.StartText ?? undefined;
+    tilemap.StartTrigger ?? properties?.StartTrigger ?? undefined;
 
   return {
     id: (properties?.id || '') as string,
     data,
-    onLevelStart,
-    startText,
+    startTrigger,
     properties,
   };
 }

@@ -22,14 +22,15 @@
   "nextlayerid": 2,
   "nextobjectid": 1,
   "orientation": "orthogonal",
-  "properties": {
-    "HideLevel": true
-  },
-  "propertytypes": {
-    "HideLevel": "bool"
-  },
+  "properties": [
+    {
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##HideLevel"
+    }
+  ],
   "renderorder": "right-down",
-  "tiledversion": "1.11.1",
+  "tiledversion": "1.11.2",
   "tileheight": 36,
   "tilesets": [
     {
@@ -39,6 +40,6 @@
   ],
   "tilewidth": 24,
   "type": "map",
-  "version": 1.1,
+  "version": "1.10",
   "width": 64
 }

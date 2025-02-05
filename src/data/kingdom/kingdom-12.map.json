@@ -55,18 +55,13 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "LavaFlow",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "LavaRate",
-      "type": "int",
-      "value": 30
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##LavaRate 30"
     }
   ],
   "renderorder": "right-down",
-  "tiledversion": "1.11.1",
+  "tiledversion": "1.11.2",
   "tileheight": 36,
   "tilesets": [
     {

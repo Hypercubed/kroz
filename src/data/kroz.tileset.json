@@ -879,7 +879,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "@@BlockedWall\n##ITrigger Wall"
+          "value": "@@BlockedWall\n##BECOME Wall"
         },
         {
           "name": "isBombable",
@@ -905,7 +905,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "@@BlockedWall\n##ITrigger Block "
+          "value": "@@BlockedWall\n##BECOME Block "
         },
         {
           "name": "isBombable",
@@ -1079,7 +1079,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##Trap2"
+          "value": "##FTrap"
         },
         {
           "name": "isBombable",
@@ -1120,7 +1120,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "Congratulations, Adventurer, you finally did it!!!\n##TomeToStairs"
+          "value": "Congratulations, Adventurer, you finally did it!!!\n##CHANGE Tome Stairs"
         },
         {
           "name": "name",
@@ -2258,7 +2258,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "@@BlockedWall\n##ITrigger IDoor"
+          "value": "@@BlockedWall\n##BECOME Door"
         },
         {
           "name": "isBombable",

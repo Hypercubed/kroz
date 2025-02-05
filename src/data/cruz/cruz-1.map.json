@@ -121,7 +121,7 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "StartText",
+      "name": "StartTrigger",
       "type": "string",
       "value": "Amazing!  All this time, these lost lands were\nwaiting to be discovered only a few paces away\nfrom my hut.  Very convenient."
     }

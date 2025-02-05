@@ -12,7 +12,7 @@
       "name": "",
       "opacity": 1,
       "type": "tilelayer",
-      "visible": true,
+      "visible": false,
       "width": 64,
       "x": 0,
       "y": 0
@@ -31,7 +31,7 @@
             {
               "name": "Trigger",
               "type": "string",
-              "value": "##EvapoRate30\nSuddenly an intense heat sweeps over this entire chamber...\nYou begin to sweat profusely and drink some of your water!"
+              "value": "##EvapoRate 30\nSuddenly an intense heat sweeps over this entire chamber...\nYou begin to sweat profusely and drink some of your water!"
             }
           ],
           "rotation": 0,
@@ -54,9 +54,9 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "HideMBlock",
-      "type": "bool",
-      "value": true
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##HideType MBlock"
     }
   ],
   "renderorder": "right-down",

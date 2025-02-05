@@ -55,28 +55,18 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "EvapoRate",
-      "type": "int",
-      "value": 22
-    },
-    {
-      "name": "HideCreate",
-      "type": "bool",
-      "value": true
-    },
-    {
       "name": "MagicEwalls",
       "type": "bool",
       "value": true
     },
     {
-      "name": "StartText",
+      "name": "StartTrigger",
       "type": "string",
-      "value": "You've finally reached the deepest chamber of Kroz!"
+      "value": "##HideType Create\n##EvapoRate 22\nYou've finally reached the deepest chamber of Kroz!"
     }
   ],
   "renderorder": "right-down",
-  "tiledversion": "1.11.1",
+  "tiledversion": "1.11.2",
   "tileheight": 36,
   "tilesets": [
     {

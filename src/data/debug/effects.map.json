@@ -107,29 +107,9 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "EvapoRate",
-      "type": "int",
-      "value": 100
-    },
-    {
-      "name": "LavaFlow",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "LavaRate",
-      "type": "int",
-      "value": 100
-    },
-    {
-      "name": "MagicEWalls",
-      "type": "bool",
-      "value": true
-    },
-    {
-      "name": "TreeRate",
-      "type": "int",
-      "value": 100
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##LavaRate 100\n##TreeRate 100\n##EvapoRate 100\n##MagicEWalls"
     },
     {
       "name": "id",

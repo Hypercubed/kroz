@@ -55,7 +55,7 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "StartText",
+      "name": "StartTrigger",
       "type": "string",
       "value": "##DisguiseFast\nPress any key to begin this level."
     }

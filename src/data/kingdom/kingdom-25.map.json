@@ -24,22 +24,22 @@
   "orientation": "orthogonal",
   "properties": [
     {
-      "name": "MagicEWalls",
-      "type": "bool",
-      "value": true
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##MagicEWalls"
     }
   ],
   "renderorder": "right-down",
-  "tiledversion": "1.11.1",
+  "tiledversion": "1.11.2",
   "tileheight": 36,
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/..\/..\/..\/tiled\/Display.tsx"
+      "source": "..\/..\/..\/tiled\/Display.tsx"
     }
   ],
   "tilewidth": 24,
   "type": "map",
-  "version": "1.11",
+  "version": "1.10",
   "width": 64
 }

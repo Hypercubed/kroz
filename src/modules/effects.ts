@@ -33,6 +33,7 @@ import {
   Renderable,
 } from '../classes/components';
 import {
+  DEBUG,
   TIME_SCALE,
   XBot,
   XMax,
@@ -412,7 +413,7 @@ export async function flashEntity(e: Entity) {
   screen.renderPlayfield();
 }
 
-function replaceEntities(a: Type | string, b: Type | string) {
+function change(a: Type | string, b: Type | string) {
   const map = world.level.map;
   for (let x = 0; x < map.width; x++) {
     for (let y = 0; y < map.height; y++) {
@@ -581,12 +582,6 @@ function freezeSpell() {
   world.level.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
 }
 
-async function hideOpenWall() {
-  await hideType(Type.OSpell1);
-  await hideType(Type.OSpell2);
-  await hideType(Type.OSpell3);
-}
-
 async function pitFall() {
   if (world.game.difficulty > 9) return;
 
@@ -653,7 +648,7 @@ function touchEWall() {
   world.stats.gems--;
 }
 
-function ITrigger(type: Type, x: number, y: number) {
+function become(type: Type, x: number, y: number) {
   world.level.map.setType(x, y, type);
   screen.drawEntityAt(x, y);
 }
@@ -737,6 +732,11 @@ export async function processEffect(
 
 /** # Effects */
 const EffectMap: Record<string, EffectFn> = {
+  /** BECOME */
+  BECOME: ({ x, y, args }) => become(tiles.getType(args[0]) as Type, x, y),
+  /** CHANGE */
+  CHANGE: ({ args }) =>
+    change(tiles.getType(args[0]) as Type, tiles.getType(args[1]) as Type),
   Bomb: ({ x, y }) => bomb(x, y),
   Quake: quakeTrap,
   Trap: ({ who }) => teleport(who!),
@@ -749,23 +749,12 @@ const EffectMap: Record<string, EffectFn> = {
   KROZ: ({ what }) => krozBonus(what.type as Type),
   OSpell: ({ what }) => triggerOSpell(what.type as Type),
   CSpell: ({ what }) => triggerCSpell(what.type as Type),
-  FTrap: ({ what }) => replaceEntities(what.type as Type, Type.Floor),
+  // TODO: Replace with ##CHANGE Trap3 Floor?
+  FTrap: ({ what }) => change(what.type as Type, Type.Floor),
   TTrigger: ({ x, y, what }) => TTrigger(x, y, what.type as Type), // Replace with a isInvisible component?
   Shoot: ({ x, y, args }) => shoot(x, y, +args[0]),
-  /** ## HideStairs */
-  HideGems: () => hideType(Type.Gem), // Replace with "##HideType Gem"
-  /** ## HideRocks */
-  HideRocks: () => hideType(Type.Rock),
-  /** ## HideStairs */
-  HideStairs: () => hideType(Type.Stairs),
-  /** ## HideOpenWall */
-  HideOpenWall: hideOpenWall, // Replace with "##HideType OSpell1 OSpell2 OSpell3"
-  /** ## HideCreate */
-  HideCreate: () => hideType(Type.Create),
-  /** ## HideMBlock */
-  HideMBlock: () => hideType(Type.MBlock),
-  /** ## HideTrap */
-  HideTrap: () => hideType(Type.Trap),
+  /** ## HideType */
+  HideType: ({ args }) => hideType(tiles.getType(args[0]) as Type),
   SlowTime: slowTimeSpell,
   SpeedTime: speedTimeSpell,
   Invisible: ({ who }) => invisibleSpell(who),
@@ -785,17 +774,32 @@ const EffectMap: Record<string, EffectFn> = {
   DisguiseFast: disguiseFast,
   FlashEntity: ({ who }) => flashEntity(who),
   PitFall: pitFall,
-  TomeToStairs: () => replaceEntities(Type.Tome, Type.Stairs),
   TouchLava: touchLava,
-  ITrigger: ({ x, y, args }) => ITrigger(tiles.getType(args[0]) as Type, x, y),
-  IWall: ({ x, y }) => ITrigger(Type.Wall, x, y),
-  IDoor: ({ x, y }) => ITrigger(Type.Door, x, y),
   TouchEWall: touchEWall,
   Tunnel: ({ who, x, y }) => tunnel(who, x, y),
-  EvapoRate30: () => {
-    world.level.evapoRate = 30;
+  /** EvapoRate */
+  EvapoRate: ({ args }) => {
+    world.level.evapoRate = +args[0];
+  },
+  LavaRate: ({ args }) => {
+    world.level.lavaFlow = true;
+    world.level.lavaRate = +args[0];
+  },
+  TreeRate: ({ args }) => {
+    world.level.treeRate = +args[0];
+  },
+  MagicEWalls: () => {
+    world.level.magicEWalls = true;
   },
 };
+
+// TODO:
+// ##GIVE
+// ##TAKE
+// ##MagicEwalls
+// #DIE
+// #ENDGAME
+// #CHAR
 
 export async function triggerEffect(
   trigger: string,
@@ -811,7 +815,11 @@ export async function triggerEffect(
     await fn(options as EffectsParams);
     return;
   }
-  console.warn('Unknown effect:', trigger);
+  if (DEBUG) {
+    throw new Error('Unknown effect: ' + trigger);
+  } else {
+    console.warn('Unknown effect:', trigger);
+  }
 }
 
 export async function whip(e: Entity) {
