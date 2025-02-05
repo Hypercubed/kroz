@@ -14,7 +14,7 @@ import {
   XBot,
   XTop,
   YBot,
-  YTop,
+  YTop
 } from '../data/constants';
 import { default as RNG } from 'rot-js/lib/rng';
 import { Color, ColorCodes } from './colors';
@@ -27,7 +27,7 @@ import {
   isInvisible,
   Position,
   Renderable,
-  Glitch,
+  Glitch
 } from '../classes/components';
 import { Difficulty } from './world';
 
@@ -70,21 +70,21 @@ export function renderStats() {
     1,
     pad((world.stats.score * 10).toString(), width + 1, size),
     Color.Red,
-    Color.Grey,
+    Color.Grey
   );
   display.drawText(
     x,
     4,
     pad(world.stats.levelIndex.toString(), width, size),
     Color.Red,
-    Color.Grey,
+    Color.Grey
   );
   display.drawText(
     x,
     7,
     pad(world.stats.gems.toString(), width + 1, size),
     gc,
-    Color.Grey,
+    Color.Grey
   );
   display.drawText(x, 10, pad(whipStr, width, size), Color.Red, Color.Grey);
   display.drawText(
@@ -92,14 +92,14 @@ export function renderStats() {
     13,
     pad(world.stats.teleports.toString(), width, size),
     Color.Red,
-    Color.Grey,
+    Color.Grey
   );
   display.drawText(
     x,
     16,
     pad(world.stats.keys.toString(), width, size),
     Color.Red,
-    Color.Grey,
+    Color.Grey
   );
 }
 
@@ -126,13 +126,13 @@ export async function introScreen() {
   display.writeCenter(
     21,
     'Original Level Design (C) 1990 Scott Miller',
-    Color.Yellow,
+    Color.Yellow
   );
 
   display.writeCenter(
     HEIGHT - 1,
     'Press any key to continue.',
-    Color.HighIntensityWhite,
+    Color.HighIntensityWhite
   );
 
   return controls.repeatUntilKeyPressed(async () => {
@@ -154,7 +154,7 @@ export async function introScreen() {
       ███░░    ███████████████████████████████████████████████████████████
       ░░░      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
     `,
-      RNG.getUniformInt(1, 15),
+      RNG.getUniformInt(1, 15)
     );
 
     await delay(500);
@@ -180,7 +180,7 @@ export async function instructionsScreen() {
   your life!  Whips can be used to kill nearby creatures, but they are better used
   to smash through crumbled walls and forest terrain.`,
     Color.LightBlue,
-    Color.Black,
+    Color.Black
   );
 
   display.drawText(
@@ -193,7 +193,7 @@ export async function instructionsScreen() {
     and the four              /|\\      /|\\
     normal cursor keys       n m ,    1 2 3`,
     Color.LightBlue,
-    Color.Black,
+    Color.Black
   );
 
   display.drawText(
@@ -203,20 +203,20 @@ export async function instructionsScreen() {
     It's a good idea to save (S) your game at every new level,  therefore,  if you
     die you can easily restore (R) the game at that level and try again.`,
     Color.LightBlue,
-    Color.Black,
+    Color.Black
   );
 
   display.writeCenter(
     22,
     'Have fun and good-luck...',
     Color.HighIntensityWhite,
-    Color.Black,
+    Color.Black
   );
   display.writeCenter(
     HEIGHT - 1,
     'Press any key to continue.',
     Color.HighIntensityWhite,
-    Color.Black,
+    Color.Black
   );
 
   await controls.waitForKeypress();
@@ -235,14 +235,14 @@ export async function openSourceScreen() {
     published by Apogee Software in the late 1980s and early 1990s.  In March
     2009, the whole Kroz series was released as freeware by Apogee, and the
     source code was released as free software under the GPL license.`,
-    Color.White,
+    Color.White
   );
 
   display.writeCenter(
     HEIGHT - 1,
     'Press any key to continue.',
     Color.HighIntensityWhite,
-    Color.Black,
+    Color.Black
   );
   await controls.waitForKeypress();
   controls.clearKeys();
@@ -255,14 +255,14 @@ export async function openSourceScreen() {
     playable in the browser.  The source code completly open-source.  If you
     enjoy this game you are asked by the author to please add a star to the
     github repo at https://github.com/Hypercubed/kroz.`,
-    Color.White,
+    Color.White
   );
 
   display.writeCenter(
     HEIGHT - 1,
     'Press any key to continue.',
     Color.HighIntensityWhite,
-    Color.Black,
+    Color.Black
   );
   await controls.waitForKeypress();
   controls.clearKeys();
@@ -274,14 +274,14 @@ export async function openSourceScreen() {
     Better yet, contribute to the game yourself; or maybe fork it and add your
     own levels.  That might make a nice 7DRL challenge entry
     (https://7drl.com/).`,
-    Color.White,
+    Color.White
   );
 
   display.writeCenter(
     HEIGHT - 1,
     'Press any key to continue.',
     Color.HighIntensityWhite,
-    Color.Black,
+    Color.Black
   );
   await controls.waitForKeypress();
   controls.clearKeys();
@@ -291,7 +291,7 @@ export async function openSourceScreen() {
     HEIGHT - 1,
     'Press any key to continue.',
     Color.HighIntensityWhite,
-    Color.Black,
+    Color.Black
   );
   await controls.waitForKeypress();
   controls.clearKeys();
@@ -349,7 +349,7 @@ function drawFloorAt(x: number, y: number) {
     y + YBot,
     tiles.common.FLOOR_CHAR,
     tiles.common.FLOOR_FG,
-    tiles.common.FLOOR_BG,
+    tiles.common.FLOOR_BG
   );
 }
 
@@ -366,7 +366,7 @@ export function drawEntityAt(x: number, y: number, entity?: Entity | null) {
       y + YBot,
       tiles.common.CHANCE_CHAR,
       tiles.common.CHANCE_FG,
-      tiles.common.CHANCE_BG,
+      tiles.common.CHANCE_BG
     ); // Read from tileset data
     return;
   }
@@ -390,7 +390,7 @@ export function drawAt(
   y: number,
   ch: string,
   fg: Color | string,
-  bg: Color | string,
+  bg: Color | string
 ) {
   display.draw(x + XBot, y + YBot, ch, fg, bg);
 }
@@ -400,7 +400,7 @@ export function drawOver(
   y: number,
   ch: string,
   fg: string | Color,
-  bg: string | Color = '#00000000',
+  bg: string | Color = '#00000000'
 ) {
   display.drawOver(x + XBot, y + YBot, ch, fg, bg);
 }
@@ -452,7 +452,7 @@ export async function renderTitle() {
 
   `,
     Color.LightCyan,
-    Color.Blue,
+    Color.Blue
   );
 
   display.drawText(
@@ -460,14 +460,14 @@ export async function renderTitle() {
     16,
     `Use the cursor keys to move yourself (%c{${ColorCodes[Color.Yellow]}}☻%c{${ColorCodes[Color.LightGreen]}}) through the caverns.`,
     Color.LightGreen,
-    Color.Blue,
+    Color.Blue
   );
 
   display.writeCenter(
     17,
     `Use your whip (press W) to destroy all nearby creatures.`,
     Color.LightGreen,
-    Color.Blue,
+    Color.Blue
   );
 
   await sound.play(220, 100, 50);
@@ -478,7 +478,7 @@ export async function renderTitle() {
     HEIGHT - 1,
     'Press any key.',
     Color.HighIntensityWhite,
-    Color.Blue,
+    Color.Blue
   );
 
   await controls.repeatUntilKeyPressed(async () => {
@@ -493,21 +493,21 @@ async function writeTitle() {
     1,
     ' '.repeat(TITLE.length + 2),
     RNG.getUniformInt(0, 16),
-    Color.Red,
+    Color.Red
   );
   display.drawText(
     x,
     2,
     ' ' + TITLE + ' ',
     RNG.getUniformInt(0, 16),
-    Color.Red,
+    Color.Red
   );
   display.drawText(
     x,
     3,
     ' '.repeat(TITLE.length + 2),
     RNG.getUniformInt(0, 16),
-    Color.Red,
+    Color.Red
   );
   await delay(500);
 }
@@ -518,7 +518,7 @@ const DIFFICULTY_LEVELS = {
   N: 'NOVICE',
   E: 'EXPERENCED',
   A: 'ADVANCED',
-  B: DEBUG ? 'BOT' : null,
+  B: DEBUG ? 'BOT' : null
 };
 
 async function getDifficulty() {
@@ -531,7 +531,7 @@ async function getDifficulty() {
     19,
     `Are you a %c{${c2}}N%c{${c1}}ovice, %c{${c2}}E%c{${c1}}xperenced or and %c{${c2}}A%c{${c1}}dvanced player?`,
     c1,
-    Color.Blue,
+    Color.Blue
   );
 
   while (!DIFFICULTY_LEVELS[answer as keyof typeof DIFFICULTY_LEVELS]) {
@@ -546,7 +546,7 @@ async function getDifficulty() {
     19,
     DIFFICULTY_LEVELS[answer as keyof typeof DIFFICULTY_LEVELS]!,
     Color.LightGreen,
-    Color.Blue,
+    Color.Blue
   );
 
   switch (answer) {
@@ -692,7 +692,7 @@ export async function endRoutine() {
         depths once more and set free the people of Kroz.
        `,
     Color.White,
-    Color.Blue,
+    Color.Blue
   );
 
   await flashMessage('Press any key, Adventurer.');

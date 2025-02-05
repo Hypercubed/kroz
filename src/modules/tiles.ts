@@ -26,7 +26,7 @@ import {
   isBombable,
   FoundMessage,
   Glitch,
-  isImpervious,
+  isImpervious
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -129,7 +129,7 @@ export enum Type {
   Trap12 = 230,
   Trap13 = 231,
 
-  Message = 252,
+  Message = 252
 }
 
 const TileIDToType: Record<number, Type> = {}; // TileID to type lookup
@@ -154,7 +154,7 @@ export const common = {
   CHANCE_FG: 15,
   CHANCE_BG: 0,
 
-  BLOCK_CHAR: '█',
+  BLOCK_CHAR: '█'
 };
 
 export async function setTileset(_tileset: ExternalTileset) {
@@ -222,7 +222,7 @@ export const SPELLS = [
   Type.SlowTime,
   Type.Invisible,
   Type.SpeedTime,
-  Type.Freeze,
+  Type.Freeze
 ]; // 8, 10, 15, 26
 
 export const ITRAPS = [
@@ -238,13 +238,13 @@ export const ITRAPS = [
   Type.Trap10,
   Type.Trap11,
   Type.Trap12,
-  Type.Trap13,
+  Type.Trap13
 ];
 
 export const TRAPS = [
   // 16, 33, 37, 39, 67, 224..231
   Type.Trap,
-  ...ITRAPS,
+  ...ITRAPS
 ];
 
 export const KROZ = [
@@ -252,7 +252,7 @@ export const KROZ = [
   Type.K,
   Type.R,
   Type.O,
-  Type.Z,
+  Type.Z
 ];
 
 export const OWALLS = [Type.OWall1, Type.OWall2, Type.OWall3]; // 52..54
@@ -268,7 +268,7 @@ export const TBLOCKS = [
   Type.TBlind,
   Type.TWhip,
   Type.TGold,
-  Type.TTree,
+  Type.TTree
 ];
 
 export const ROCKABLES = [
@@ -277,7 +277,7 @@ export const ROCKABLES = [
   ...COLLECTABLES,
   ...SPELLS,
   ...TRAPS,
-  Type.Stop,
+  Type.Stop
 ];
 
 // Types that appear as a floor when a teleport is triggered
@@ -291,7 +291,7 @@ export const VISUAL_TELEPORTABLES = [
   Type.WallVanish,
   ...CWALLS,
   ...CSPELLS,
-  ...TBLOCKS,
+  ...TBLOCKS
 ];
 
 // Types that can be replaced when a TBlock is triggered
@@ -301,7 +301,7 @@ export const TRIGGERABLES = [
   ...ITRAPS,
   Type.ShowGems,
   Type.WallVanish,
-  ...TBLOCKS,
+  ...TBLOCKS
 ];
 
 export const ROCK_MOVEABLES = [
@@ -313,7 +313,7 @@ export const ROCK_MOVEABLES = [
   ...CWALLS,
   ...CSPELLS,
   ...TBLOCKS,
-  ...ITRAPS,
+  ...ITRAPS
 ];
 
 export const ROCK_CRUSHABLES = [
@@ -333,7 +333,7 @@ export const ROCK_CRUSHABLES = [
   ...KROZ,
   ...OSPELLS,
   Type.ShootRight,
-  Type.ShootLeft,
+  Type.ShootLeft
 ];
 
 export const ROCK_CLIFFABLES = [Type.Stairs, Type.Pit];
@@ -357,7 +357,7 @@ export const SPEAR_BLOCKS = [
   Type.GBlock,
   Type.Rock,
   Type.EWall,
-  Type.Amulet,
+  Type.Amulet
 ];
 
 export const SPEAR_IGNORE = [
@@ -378,7 +378,7 @@ export const SPEAR_IGNORE = [
   ...CWALLS,
   ...CSPELLS,
   ...TBLOCKS,
-  Type.Rope,
+  Type.Rope
 ];
 
 const MOB_WALKABLE = [
@@ -407,7 +407,7 @@ const MOB_WALKABLE = [
   Type.O,
   Type.Z,
   Type.ShootRight,
-  Type.ShootLeft,
+  Type.ShootLeft
 ];
 
 const MOB_EATS = [
@@ -428,7 +428,7 @@ const MOB_EATS = [
   Type.O,
   Type.Z,
   Type.ShootRight,
-  Type.ShootLeft,
+  Type.ShootLeft
 ];
 
 export function getTileDefinition(tileId: number) {
@@ -451,7 +451,7 @@ export function createEntityFromTileId(
   y: number,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   properties?: Record<string, any>,
-  type?: Type | string,
+  type?: Type | string
 ) {
   const tileDefinition = getTileDefinition(tileId);
   type =
@@ -471,7 +471,7 @@ export function createEntityFromTileId(
 }
 
 export function getType(
-  type: Type | string | undefined,
+  type: Type | string | undefined
 ): Type | string | undefined {
   if (typeof type === 'number') return type as Type;
   if (typeof type === 'undefined' || type === '') return undefined;
@@ -489,7 +489,7 @@ const SIMPLE_TAGS = {
   isPassable,
   followsPlayer,
   isBombable,
-  isImpervious,
+  isImpervious
 };
 
 const SIMPLE_COMPONENTS = {
@@ -501,12 +501,12 @@ const SIMPLE_COMPONENTS = {
   Speed,
   Breakable,
   FoundMessage,
-  Glitch,
+  Glitch
 };
 
 function addComponentsToEntity(
   entity: Entity,
-  properties: Record<string, unknown>,
+  properties: Record<string, unknown>
 ) {
   const type = entity.type as Type;
 
@@ -521,7 +521,7 @@ function addComponentsToEntity(
       entity
         .add(new Eats(MOB_EATS))
         .add(
-          new DestroyedBy([Type.Block, Type.MBlock, Type.ZBlock, Type.GBlock]),
+          new DestroyedBy([Type.Block, Type.MBlock, Type.ZBlock, Type.GBlock])
         );
     }
   }
@@ -544,15 +544,15 @@ function addComponentsToEntity(
   switch (type) {
     case Type.Floor:
       entity.add(
-        new Walkable([Type.Fast, Type.Medium, Type.Slow, Type.MBlock]),
+        new Walkable([Type.Fast, Type.Medium, Type.Slow, Type.MBlock])
       );
       break;
     case Type.Chest:
       entity.add(
         new Collectible({
           whips: RNG.getUniformInt(2, 5),
-          gems: RNG.getUniformInt(5, world.game.difficulty + 2),
-        }),
+          gems: RNG.getUniformInt(5, world.game.difficulty + 2)
+        })
       );
       break;
     case Type.Chance: {

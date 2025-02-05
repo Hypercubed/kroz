@@ -63,11 +63,18 @@ A component that allows an entity to animate while walking.  It contains a list 
 
 ##  Trigger
 
+A component that allows an entity to trigger an event when it is interacted with.
+
 ##  ChangeLevel
 
 ##  Speed
 
+A component that allows an entity to move at different speeds.  It contains a base pace and a hasted pace.
+
 ##  Breakable
+
+A component that allows an entity to be broken when whipped.
+I contains a hardness value and a sound to play when hit.
 
 ##  FoundMessage
 

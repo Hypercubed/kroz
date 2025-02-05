@@ -48,7 +48,7 @@ export const LEVELS = [
   null,
   null, //TBD
 
-  async () => (await import('./caverns-40.map.json')).default,
+  async () => (await import('./caverns-40.map.json')).default
 ];
 
 export async function readTileset() {

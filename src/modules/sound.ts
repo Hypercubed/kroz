@@ -20,8 +20,8 @@ export function play(frequency: number, duration: number, volume: number = 1) {
       frequency, // frequency
       0, // attack
       duration / 1000, // sustain
-      0, //duration / 1000, // release
-    ],
+      0 //duration / 1000, // release
+    ]
   );
 
   return delay(duration);
@@ -73,7 +73,7 @@ export async function pushRock() {
 }
 
 const blockedWallSample = ZZFX.buildSamples(
-  ...[10, 0, 40, , 0.1, 0, , 0, , , , , , 1],
+  ...[10, 0, 40, , 0.1, 0, , 0, , , , , , 1]
 );
 export async function blockedWall() {
   ZZFX.playSamples(blockedWallSample);
@@ -237,7 +237,7 @@ const soundMap = {
   WhipBreakRock: whipBreakRock,
   BlockedWall: blockedWall,
   Blocked: blocked,
-  StaticNoise: staticNoise,
+  StaticNoise: staticNoise
 };
 
 export async function triggerSound(t: string) {

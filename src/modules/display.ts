@@ -16,7 +16,7 @@ export function init() {
     fontFamily: 'IBM_VGA, monospace',
     bg: colors.getColor(Color.Black), // background
     fg: colors.getColor(Color.White), // foreground
-    fontSize: 64, // canvas fontsize,
+    fontSize: 64 // canvas fontsize,
   });
 
   const originalDrawOver = rotDisplay.drawOver;
@@ -40,7 +40,7 @@ export function writeCenter(
   y: number,
   s: string,
   fg: string | Color = rotDisplay.getOptions().fg,
-  bg: string | Color = rotDisplay.getOptions().bg,
+  bg: string | Color = rotDisplay.getOptions().bg
 ) {
   const x = Math.floor((WIDTH - s.length) / 2);
   drawText(x, y, s, ...colors.getColors(fg, bg));
@@ -49,7 +49,7 @@ export function writeCenter(
 export function clearLine(
   y: number,
   fg: string | Color = rotDisplay.getOptions().fg,
-  bg: string | Color = rotDisplay.getOptions().bg,
+  bg: string | Color = rotDisplay.getOptions().bg
 ) {
   drawText(0, y, ' '.repeat(WIDTH), ...colors.getColors(fg, bg));
 }
@@ -64,7 +64,7 @@ export function draw(
   y: number,
   ch: string | null,
   fg: string | Color = rotDisplay.getOptions().fg,
-  bg: string | Color = rotDisplay.getOptions().bg,
+  bg: string | Color = rotDisplay.getOptions().bg
 ) {
   rotDisplay.draw(x, y, ch, ...colors.getColors(fg, bg));
 }
@@ -74,7 +74,7 @@ export function drawOver(
   y: number,
   ch: string | null,
   fg: string | Color = rotDisplay.getOptions().fg,
-  bg: string | Color = rotDisplay.getOptions().bg,
+  bg: string | Color = rotDisplay.getOptions().bg
 ) {
   rotDisplay.drawOver(x, y, ch, ...colors.getColors(fg, bg));
 }
@@ -84,7 +84,7 @@ export function drawText(
   y: number,
   s: string,
   fg: string | Color = rotDisplay.getOptions().fg,
-  bg: string | Color = rotDisplay.getOptions().bg,
+  bg: string | Color = rotDisplay.getOptions().bg
 ) {
   [fg, bg] = colors.getColors(fg, bg);
   return rotDisplay.drawText(x, y, `%c{${fg}}%b{${bg}}${s}%c{}%b{}`);

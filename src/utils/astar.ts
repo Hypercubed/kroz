@@ -94,7 +94,7 @@ export default class AStar<STATE> {
       prev,
       g: prev ? prev.g + g : 0,
       h,
-      s,
+      s
     };
     /* insert into priority queue */
     const f = obj.g + obj.h;

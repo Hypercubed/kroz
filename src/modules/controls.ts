@@ -37,7 +37,7 @@ export enum Action { // cannot be const enum
   Save,
   Restore,
   SlowerClock,
-  FasterClock,
+  FasterClock
 }
 
 export const keyState: Partial<Record<string, number>> = {};
@@ -91,7 +91,7 @@ const KEY_BINDING: Record<string, Action | null> = {
   r: Action.Restore,
   R: Action.Restore,
   F11: Action.SlowerClock,
-  F12: Action.FasterClock,
+  F12: Action.FasterClock
 };
 
 const GAMEPAD_BINDING: Record<string, string | null> = {
@@ -113,7 +113,7 @@ const GAMEPAD_BINDING: Record<string, string | null> = {
   button12: 'ArrowUp',
   button13: 'ArrowDown',
   button14: 'ArrowLeft',
-  button15: 'ArrowRight',
+  button15: 'ArrowRight'
 };
 
 // const TOUCH_BINDING = {
@@ -171,7 +171,7 @@ export function enableTouchControls() {
     threshold: 0.5,
     dynamicPage: true,
     position: { left: '50px', bottom: '50px' },
-    restOpacity: 0.3,
+    restOpacity: 0.3
   });
 
   touch_manager.on('move end' as JoystickManagerEventTypes, (_, output) => {
@@ -208,7 +208,7 @@ export function enableTouchControls() {
     lockY: true,
     dynamicPage: true,
     restOpacity: 0.3,
-    position: { left: '50px', bottom: '50px' },
+    position: { left: '50px', bottom: '50px' }
   });
 
   button0.on('start', () => keyDown.dispatch(GAMEPAD_BINDING['button0']!));
@@ -222,7 +222,7 @@ export function enableTouchControls() {
     lockY: true,
     dynamicPage: true,
     restOpacity: 0.3,
-    position: { right: '50px', top: '50px' },
+    position: { right: '50px', top: '50px' }
   });
 
   button1.on('start', () => keyDown.dispatch(GAMEPAD_BINDING['button1']!));
@@ -345,7 +345,7 @@ export async function waitForKeypress() {
 
 export async function repeatUntilKeyPressed(
   cb?: () => void | Promise<void>,
-  d = 50,
+  d = 50
 ) {
   const waitFor = waitForKeypress();
   do {

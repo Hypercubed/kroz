@@ -23,7 +23,7 @@ import {
   ChangeLevel,
   isPassable,
   FoundMessage,
-  isInvisible,
+  isInvisible
 } from '../classes/components.ts';
 import type { Entity } from '../classes/entity.ts';
 import { Difficulty } from './world.ts';
@@ -89,7 +89,7 @@ async function readControls() {
   if (controls.wasActionDeactivated(Action.HideFound)) {
     world.game.foundSet = true;
     await screen.flashMessage(
-      'References to new objects will not be displayed.',
+      'References to new objects will not be displayed.'
     );
     return;
   }
@@ -202,12 +202,12 @@ export async function tryMove(dx: number, dy: number) {
     switch (e.type) {
       case Type.Chest:
         await screen.flashMessage(
-          `You found ${collect.gems} gems and ${collect.whips} whips inside the chest!`,
+          `You found ${collect.gems} gems and ${collect.whips} whips inside the chest!`
         );
         break;
       case Type.Chance:
         await screen.flashMessage(
-          `You found a Pouch containing ${collect.gems} Gems!`,
+          `You found a Pouch containing ${collect.gems} Gems!`
         );
         break;
     }
@@ -232,7 +232,7 @@ export async function tryMove(dx: number, dy: number) {
         who: world.level.player,
         what: e,
         x,
-        y,
+        y
       });
     }
     if (!world.game.done && world.stats.gems < 0) dead();
@@ -303,7 +303,7 @@ export async function dead() {
     0,
     ' YOU HAVE DIED!! ',
     Color.Black | 16,
-    Color.Red,
+    Color.Red
   );
   await screen.flashMessage('Press any key to continue.');
   world.game.done = true;

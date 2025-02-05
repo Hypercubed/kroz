@@ -7,7 +7,7 @@ import {
   CLOCK_SCALE,
   ENABLE_DEBUG_LEVEL,
   XMax,
-  YMax,
+  YMax
 } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Level } from './levels.ts';
@@ -21,7 +21,7 @@ export const enum Difficulty {
   Experienced = 5,
   Advanced = 2,
   Cheat = 9,
-  Tourist = 10,
+  Tourist = 10
 }
 
 function getDefaultStats() {
@@ -32,7 +32,7 @@ function getDefaultStats() {
     whips: 0,
     teleports: 0,
     keys: 0,
-    whipPower: 2,
+    whipPower: 2
   };
 }
 
@@ -60,11 +60,11 @@ function getDefaultLevelState() {
       0, // 6 - Speed Time
       0, // 7 - Freeze Time
       0,
-      0,
+      0
     ], // Timers
     startTrigger: undefined as undefined | string,
     borderFG: tiles.common.BORDER_FG,
-    borderBG: tiles.common.BORDER_BG,
+    borderBG: tiles.common.BORDER_BG
   };
 }
 
@@ -75,7 +75,7 @@ function getDefaultGameState() {
     paused: false,
     done: false,
     foundSet: new Set<Type>() as Set<Type> | true,
-    bot: false,
+    bot: false
   };
 }
 
@@ -134,7 +134,7 @@ export async function restore() {
     answer.toLowerCase() !== 't'
   ) {
     answer = await screen.flashMessage(
-      'Are you sure you want to RESTORE? (Y/N)',
+      'Are you sure you want to RESTORE? (Y/N)'
     );
   }
 

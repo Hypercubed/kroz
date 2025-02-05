@@ -28,7 +28,7 @@ const _timers = {
   },
   set FreezeTime(v: number) {
     world.level.T[Timer.FreezeTime] = v;
-  },
+  }
 };
 
 const _player = {
@@ -49,7 +49,7 @@ const _player = {
   },
   set bot(v: boolean) {
     world.game.bot = v;
-  },
+  }
 };
 
 const _stats = {
@@ -82,7 +82,7 @@ const _stats = {
   },
   set whipPower(v: number) {
     world.stats.whipPower = v;
-  },
+  }
 };
 
 const _levels = {
@@ -91,21 +91,21 @@ const _levels = {
   },
   set level(v: number) {
     levels.setLevel(v);
-  },
+  }
 };
 
 export {
   _timers as timers,
   _player as player,
   _stats as stats,
-  _levels as levels,
+  _levels as levels
 };
 
 const api = {
   timers: _timers,
   player: _player,
   stats: _stats,
-  levels: _levels,
+  levels: _levels
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

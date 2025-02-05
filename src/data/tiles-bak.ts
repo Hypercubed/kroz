@@ -99,7 +99,7 @@ export enum Type {
   Trap12 = 230,
   Trap13 = 231,
 
-  Message = 252,
+  Message = 252
 }
 
 export const TypeChar: Record<Type, string> = {
@@ -198,7 +198,7 @@ export const TypeChar: Record<Type, string> = {
   [Type.Trap12]: FLOOR_CHAR,
   [Type.Trap13]: FLOOR_CHAR,
 
-  [Type.Message]: '♣',
+  [Type.Message]: '♣'
 };
 
 export const MapLookup: Record<string, Type> = {
@@ -298,7 +298,7 @@ export const MapLookup: Record<string, Type> = {
   æ: Type.Trap12,
   ç: Type.Trap13,
 
-  ü: Type.Message,
+  ü: Type.Message
 };
 
 export const TypeColor: Record<Type, [Color | null, Color | null]> = {
@@ -396,7 +396,7 @@ export const TypeColor: Record<Type, [Color | null, Color | null]> = {
   [Type.ShootLeft]: [Color.White, null],
   [Type.Amulet]: [Color.HighIntensityWhite | 16, null], // 31
 
-  [Type.Message]: [Color.Brown, Color.Green],
+  [Type.Message]: [Color.Brown, Color.Green]
 };
 
 export const TypeMessage: Partial<Record<Type, string>> = {
@@ -450,7 +450,7 @@ export const TypeMessage: Partial<Record<Type, string>> = {
   [Type.Rock]: 'You pushed a big Boulder!',
   [Type.EWall]: 'You hit a Electrified Wall!  You lose one Gem.',
   [Type.Rope]: 'You grabbed a Rope.',
-  [Type.Amulet]: 'YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!',
+  [Type.Amulet]: 'YOUR QUEST FOR THE AMULET WAS SUCCESSFUL!'
 };
 
 let keys = Object.keys(MapLookup).sort((a, b) => MapLookup[a] - MapLookup[b]);

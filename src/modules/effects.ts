@@ -19,7 +19,7 @@ import {
   TRIGGERABLES,
   TUNNELABLES,
   Type,
-  VISUAL_TELEPORTABLES,
+  VISUAL_TELEPORTABLES
 } from './tiles';
 import {
   Breakable,
@@ -30,7 +30,7 @@ import {
   isPlayer,
   isSecreted,
   Position,
-  Renderable,
+  Renderable
 } from '../classes/components';
 import {
   DEBUG,
@@ -40,7 +40,7 @@ import {
   XTop,
   YBot,
   YMax,
-  YTop,
+  YTop
 } from '../data/constants';
 import { RNG } from 'rot-js';
 import { delay } from '../utils/utils';
@@ -52,14 +52,14 @@ export const enum Timer { // TODO: Eliminate this, use type
   Invisible = 5,
   SpeedTime = 6,
   FreezeTime = 7,
-  StatueGemDrain = 9,
+  StatueGemDrain = 9
 }
 
 const SPELL_DURATION = {
   [Timer.SlowTime]: 70 * TIME_SCALE,
   [Timer.Invisible]: 75 * TIME_SCALE,
   [Timer.SpeedTime]: 80 * TIME_SCALE,
-  [Timer.FreezeTime]: 55 * TIME_SCALE,
+  [Timer.FreezeTime]: 55 * TIME_SCALE
 };
 
 async function hideType(type: Type) {
@@ -72,7 +72,7 @@ async function hideType(type: Type) {
 
 export async function updateTilesByType(
   type: Type,
-  update: Partial<Renderable>,
+  update: Partial<Renderable>
 ) {
   await world.level.map.forEach((_x, _y, e) => {
     if (e?.type === type) {
@@ -252,7 +252,7 @@ async function blockSpell(block: Type | string, spell: Type | string) {
             y,
             tiles.common.BLOCK_CHAR,
             RNG.getUniformInt(0, 15),
-            0,
+            0
           );
         }
         await delay(1);
@@ -292,7 +292,7 @@ async function triggerOSpell(block: Type) {
             y,
             RNG.getItem(['▄', '▌', '▐', '▀']) as string,
             RNG.getUniformInt(0, 14),
-            0,
+            0
           );
           sound.play(i * 40, 5, 10);
           if (i % 5 === 0) await delay(1);
@@ -317,7 +317,7 @@ async function triggerCSpell(block: Type) {
             y,
             RNG.getItem(['▄', '▌', '▐', '▀']) as string,
             RNG.getUniformInt(0, 14),
-            0,
+            0
           );
           sound.play(i * 40, 5, 10);
           if (i % 5 === 0) await delay(1);
@@ -372,7 +372,7 @@ export async function teleport(e: Entity) {
         y,
         '☺',
         RNG.getUniformInt(0, 15),
-        RNG.getUniformInt(0, 7),
+        RNG.getUniformInt(0, 7)
       );
       await sound.teleport();
       screen.drawEntityAt(x, y);
@@ -404,7 +404,7 @@ export async function flashEntity(e: Entity) {
         p.y,
         t.ch,
         RNG.getUniformInt(0, 15),
-        RNG.getUniformInt(0, 8),
+        RNG.getUniformInt(0, 8)
       );
       await delay();
     }
@@ -600,7 +600,7 @@ async function pitFall() {
         12,
         '<--- HALF WAY!!!',
         Color.HighIntensityWhite,
-        Color.Brown,
+        Color.Brown
       );
     } else if (i === 9) {
       display.drawText(
@@ -608,7 +608,7 @@ async function pitFall() {
         12,
         tiles.common.FLOOR_CHAR.repeat(16),
         Color.HighIntensityWhite,
-        Color.Brown,
+        Color.Brown
       );
     }
 
@@ -618,7 +618,7 @@ async function pitFall() {
         y,
         tiles.common.PLAYER_CHAR,
         tiles.common.PLAYER_FG,
-        tiles.common.PLAYER_BG,
+        tiles.common.PLAYER_BG
       );
       await sound.play((x -= 8), 52 - 3 * i, 30);
       screen.drawAt(
@@ -626,7 +626,7 @@ async function pitFall() {
         y,
         tiles.common.FLOOR_CHAR,
         tiles.common.FLOOR_FG,
-        tiles.common.FLOOR_BG,
+        tiles.common.FLOOR_BG
       );
     }
   }
@@ -709,7 +709,7 @@ type EffectFn = (o: EffectsParams) => Promise<void> | void;
 
 export async function processEffect(
   message: string | undefined,
-  options: Partial<EffectsParams> = {},
+  options: Partial<EffectsParams> = {}
 ) {
   if (!message) return;
 
@@ -732,11 +732,19 @@ export async function processEffect(
 
 /** # Effects */
 const EffectMap: Record<string, EffectFn> = {
-  /** BECOME */
+  /** ## `##BECOME A`
+   * Changes the triggered item to the specified type.
+   */
   BECOME: ({ x, y, args }) => become(tiles.getType(args[0]) as Type, x, y),
-  /** CHANGE */
+  /** ## `##CHANGE A B`
+   * Changes every specified item with type A to type B.
+   */
   CHANGE: ({ args }) =>
     change(tiles.getType(args[0]) as Type, tiles.getType(args[1]) as Type),
+  /** ## `##HideType A`
+   * Hides all tiles of the specified type.
+   */
+  HideType: ({ args }) => hideType(tiles.getType(args[0]) as Type),
   Bomb: ({ x, y }) => bomb(x, y),
   Quake: quakeTrap,
   Trap: ({ who }) => teleport(who!),
@@ -752,45 +760,55 @@ const EffectMap: Record<string, EffectFn> = {
   // TODO: Replace with ##CHANGE Trap3 Floor?
   FTrap: ({ what }) => change(what.type as Type, Type.Floor),
   TTrigger: ({ x, y, what }) => TTrigger(x, y, what.type as Type), // Replace with a isInvisible component?
+  /**
+   * ## `##Shoot N`
+   * Shoots a spear in the specified direction.
+   */
   Shoot: ({ x, y, args }) => shoot(x, y, +args[0]),
-  /** ## HideType */
-  HideType: ({ args }) => hideType(tiles.getType(args[0]) as Type),
   SlowTime: slowTimeSpell,
   SpeedTime: speedTimeSpell,
   Invisible: ({ who }) => invisibleSpell(who),
   Freeze: freezeSpell,
-  /** ## HideLevel */
+  /** ## `##HideLevel`
+   * Hides all tiles except the player.
+   */
   HideLevel: hideLevel,
   ShowIWalls: showIWalls,
-  /** ## RiverToGold */
   RiverToGold: riverToGold,
-  /** ## RiverToBlock */
   RiverToBlock: riverToBlock,
-  /** ## WallsToGold */
   WallsToGold: wallsToGold,
-  /** ## WallsToGold */
   PitsToRock: pitsToRock,
-  /** ## DisguiseFast */
   DisguiseFast: disguiseFast,
   FlashEntity: ({ who }) => flashEntity(who),
   PitFall: pitFall,
   TouchLava: touchLava,
   TouchEWall: touchEWall,
   Tunnel: ({ who, x, y }) => tunnel(who, x, y),
-  /** EvapoRate */
+  /** `##EvapoRate N`
+   * Sets the evaporation rate for the level.
+   */
   EvapoRate: ({ args }) => {
     world.level.evapoRate = +args[0];
   },
+  /** ## `##LavaRate N`
+   * Sets the lava rate for the level.
+   */
   LavaRate: ({ args }) => {
     world.level.lavaFlow = true;
     world.level.lavaRate = +args[0];
   },
+  /** ## `##TreeRate N`
+   * Sets the tree rate for the level.
+   */
   TreeRate: ({ args }) => {
     world.level.treeRate = +args[0];
   },
+  /** ## `##MagicEWalls`
+   * Enables magic walls for the level
+   */
   MagicEWalls: () => {
     world.level.magicEWalls = true;
-  },
+  }
 };
 
 // TODO:
@@ -803,7 +821,7 @@ const EffectMap: Record<string, EffectFn> = {
 
 export async function triggerEffect(
   trigger: string,
-  options: Partial<EffectsParams> = {},
+  options: Partial<EffectsParams> = {}
 ) {
   options.args = trigger.split(' ');
   trigger = options.args.shift()! as keyof typeof EffectMap;
@@ -872,7 +890,7 @@ export async function whip(e: Entity) {
           case Type.Statue:
             world.level.T[Timer.StatueGemDrain] = -1;
             await screen.flashMessage(
-              `You've destroyed the Statue!  Your Gems are now safe.`,
+              `You've destroyed the Statue!  Your Gems are now safe.`
             );
             break;
           case Type.Generator:
@@ -896,7 +914,7 @@ export async function pushRock(
   x: number,
   y: number,
   dx: number,
-  dy: number,
+  dy: number
 ) {
   let nogo = false;
 

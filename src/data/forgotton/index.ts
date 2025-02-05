@@ -31,7 +31,7 @@ export const LEVELS = [
   async () => (await import('../lost/lost-61.map.json')).default,
   async () => (await import('../lost/lost-64.map.json')).default,
   async () => (await import('../lost/lost-70.map.json')).default,
-  async () => (await import('../lost/lost-75.map.json')).default, // The Sacred Chamber of Kroz
+  async () => (await import('../lost/lost-75.map.json')).default // The Sacred Chamber of Kroz
 ];
 
 export async function readTileset() {

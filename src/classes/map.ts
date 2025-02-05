@@ -11,7 +11,7 @@ export class PlayField {
 
   constructor(
     public width = XMax + 1,
-    public height = YMax + 1,
+    public height = YMax + 1
   ) {}
 
   get(x: number, y: number): Entity | null {
@@ -58,7 +58,7 @@ export class PlayField {
   }
 
   async forEach(
-    callback: (x: number, y: number, e: Entity) => Promise<void> | void,
+    callback: (x: number, y: number, e: Entity) => Promise<void> | void
   ) {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
@@ -71,7 +71,7 @@ export class PlayField {
 
   // Rename.... this is not a map
   async map(
-    callback: (x: number, y: number, e: Entity) => Promise<Entity> | Entity,
+    callback: (x: number, y: number, e: Entity) => Promise<Entity> | Entity
   ) {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {

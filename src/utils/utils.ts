@@ -17,7 +17,7 @@ const extendedASCIIMap = {
   8226: 149, // • - TWhip
   8211: 150, // – - TGold
   8212: 151, // — - TTree
-  402: 159, // ƒ - Amulet
+  402: 159 // ƒ - Amulet
 };
 
 const reverseExtendedASCIIMap = {
@@ -28,7 +28,7 @@ const reverseExtendedASCIIMap = {
   149: 8226, // • - TWhip
   150: 8211, // – - TGold
   151: 8212, // — - TTree
-  159: 402, // ƒ - Amulet
+  159: 402 // ƒ - Amulet
 };
 
 export function getASCIICode(char: string) {

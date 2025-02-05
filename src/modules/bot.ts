@@ -14,7 +14,7 @@ import {
   isPassable,
   isPushable,
   Position,
-  Renderable,
+  Renderable
 } from '../classes/components';
 import AStar, { AStarNode } from '../utils/astar';
 import { XBot, YBot } from '../data/constants';
@@ -38,7 +38,7 @@ const COLLECT = [
   Type.Power,
   Type.Amulet,
   Type.BlockSpell,
-  Type.ShowGems,
+  Type.ShowGems
 ];
 
 const AVOID = [
@@ -46,7 +46,7 @@ const AVOID = [
   Type.Trap,
   Type.Lava,
   Type.Invisible,
-  Type.SpeedTime,
+  Type.SpeedTime
   // Type.Create,
 ];
 
@@ -70,7 +70,7 @@ const DIRS = [
   [1, -1],
   [1, 1],
   [-1, 1],
-  [-1, -1],
+  [-1, -1]
 ];
 
 function getNeighbors(x: number, y: number) {
@@ -140,14 +140,14 @@ let hMax = 0;
 const DEBUG_PATH = false;
 
 async function getPath(
-  goals: Array<[number, number]>,
+  goals: Array<[number, number]>
 ): Promise<Array<[number, number]>> {
   const p = world.level.player.get(Position)!;
   const astar = new AStar<STATE>({
     hurestic,
     cost,
     neighbors,
-    debug: DEBUG_PATH ? debug : undefined,
+    debug: DEBUG_PATH ? debug : undefined
   });
 
   const path = await astar.compute({
@@ -155,7 +155,7 @@ async function getPath(
     y: p.y,
     keys: world.stats.keys,
     gems: world.stats.gems,
-    whips: world.stats.whips,
+    whips: world.stats.whips
   });
 
   return path.map((s) => [s.x, s.y]);
@@ -273,7 +273,7 @@ async function tryTeleportTrap(): Promise<boolean> {
 
 async function tryCollect() {
   const collectables = getTargets(
-    (e) => COLLECT.includes(e.type as Type) || e.has(Collectible),
+    (e) => COLLECT.includes(e.type as Type) || e.has(Collectible)
   );
   if (collectables.length < 1) return false;
 
@@ -382,7 +382,7 @@ async function tryDefend() {
     (n) =>
       MOBS.includes(n[0]?.type as Type) ||
       n[0]?.type === Type.Generator ||
-      n[0]?.type === Type.Statue,
+      n[0]?.type === Type.Statue
   );
   if (mobs.length < 1) return false;
   if (mobs.length > 5 * world.stats.whips) return false;

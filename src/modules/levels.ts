@@ -138,7 +138,7 @@ function readLevelJSON(tilemap: tiled.Map): Level {
           xx,
           yy,
           ensureObject(properties),
-          type,
+          type
         );
       }
     }
@@ -148,7 +148,7 @@ function readLevelJSON(tilemap: tiled.Map): Level {
 
   function readUnencodedTileLayer(
     layer: tiled.UnencodedTileLayer,
-    output: Entity[],
+    output: Entity[]
   ) {
     const { data } = layer;
     if (!data) return output;
@@ -173,7 +173,7 @@ function readLevelJSON(tilemap: tiled.Map): Level {
     id: (properties?.id || '') as string,
     data,
     startTrigger,
-    properties,
+    properties
   };
 }
 

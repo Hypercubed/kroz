@@ -15,7 +15,7 @@ import {
   Walkable,
   AnimatedWalking,
   isInvisible,
-  Speed,
+  Speed
 } from '../classes/components';
 import { Timer } from './effects';
 

@@ -12,7 +12,7 @@ export const LEVELS = [
   null,
   null,
   null,
-  null,
+  null
 
   // async () => (await import('./cruz-158.map.json')).default,
   // async () => (await import('./cruz-160.map.json')).default,

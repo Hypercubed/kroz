@@ -1,27 +1,28 @@
 # Effects
 
-## HideStairs
+## `##BECOME A`
+Changes the triggered item to the specified type.
 
-## HideRocks
+## `##CHANGE A B`
+Changes every specified item with type A to type B.
 
-## HideStairs
+## `##HideType A`
+Hides all tiles of the specified type.
 
-## HideOpenWall
+## `##Shoot N`
+Shoots a spear in the specified direction.
 
-## HideCreate
+## `##HideLevel`
+Hides all tiles except the player.
 
-## HideMBlock
+`##EvapoRate N`
+Sets the evaporation rate for the level.
 
-## HideTrap
+## `##LavaRate N`
+Sets the lava rate for the level.
 
-## HideLevel
+## `##TreeRate N`
+Sets the tree rate for the level.
 
-## RiverToGold
-
-## RiverToBlock
-
-## WallsToGold
-
-## WallsToGold
-
-## DisguiseFast
+## `##MagicEWalls`
+Enables magic walls for the level

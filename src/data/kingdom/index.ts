@@ -31,7 +31,7 @@ export const LEVELS = [
   async () => (await import('../lost/lost-30.map.json')).default, // Locksmith Shoppe, Same as level 30 of Lost Adventures
   null,
   null, // GravOn:=true;GravRate:=0;Sideways:=true;  LavaFlow:=true;LavaRate:=75;
-  async () => (await import('./kingdom-25.map.json')).default, // The Sacred Temple
+  async () => (await import('./kingdom-25.map.json')).default // The Sacred Temple
 ];
 
 export async function readTileset() {

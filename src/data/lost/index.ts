@@ -88,7 +88,7 @@ export const LEVELS = [
   null,
   null,
   async () => (await import('./lost-74.map.json')).default, // Heat Wave!
-  async () => (await import('./lost-75.map.json')).default,
+  async () => (await import('./lost-75.map.json')).default
 ];
 
 export async function readTileset() {

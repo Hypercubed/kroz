@@ -15,7 +15,7 @@ export enum Color {
   LightRed = 12,
   LightMagenta = 13,
   Yellow = 14,
-  HighIntensityWhite = 15,
+  HighIntensityWhite = 15
 }
 
 // PASCAL colors
@@ -35,7 +35,7 @@ export const ColorCodes = {
   [Color.LightRed]: '#FF5555',
   [Color.LightMagenta]: '#FF55FF',
   [Color.Yellow]: '#FFFF55',
-  [Color.HighIntensityWhite]: '#FFFFFF',
+  [Color.HighIntensityWhite]: '#FFFFFF'
 };
 
 export async function setColors(colors: Record<string, string>) {

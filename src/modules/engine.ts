@@ -55,7 +55,7 @@ export async function start() {
   if (SHOW_DEBUG_CONTROLS && !gui) {
     gui = new dat.GUI({
       closeFolders: true,
-      title: 'Debug',
+      title: 'Debug'
     });
 
     const t = gui.addFolder('Timers');
