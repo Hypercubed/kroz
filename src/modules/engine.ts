@@ -15,8 +15,8 @@ import * as tiles from './tiles';
 import * as colors from './colors';
 
 // import * as game from '../data/forgotton/index.ts';
-import * as game from '../data/kingdom/index.ts';
-// import * as game from '../data/lost/index.ts';
+// import * as game from '../data/kingdom/index.ts';
+import * as game from '../data/lost/index.ts';
 // import * as game from '../data/caverns/index.ts';
 // import * as game from '../data/cruz/index.ts';
 

@@ -6,9 +6,11 @@ export const ENABLE_BOTS = DEBUG;
 
 export const TITLE = 'The Forgotton Adventures of Kroz';
 
+// Screen Size
 export const WIDTH = 80;
 export const HEIGHT = 25;
 
+// Playing Field
 export const XBot = 1;
 export const XTop = WIDTH - 16;
 export const YBot = 1;

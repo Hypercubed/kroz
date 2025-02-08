@@ -108,10 +108,40 @@
       "visible": true,
       "x": 0,
       "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 3,
+      "name": "Object Layer 2",
+      "objects": [
+        {
+          "height": 36,
+          "id": 3,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Courier",
+            "kerning": false,
+            "pixelsize": 35,
+            "text": "Hello World",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 240,
+          "x": 984,
+          "y": 180
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
     }
   ],
-  "nextlayerid": 3,
-  "nextobjectid": 3,
+  "nextlayerid": 4,
+  "nextobjectid": 4,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.2",

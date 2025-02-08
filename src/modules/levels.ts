@@ -10,7 +10,7 @@ import * as events from './events.ts';
 
 import { mod } from 'rot-js/lib/util';
 import { isGenerator, isMob, isPlayer } from '../classes/components.ts';
-import { ensureObject } from '../utils/utils.ts';
+import { ensureObject, getASCIICode } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Type } from './tiles.ts';
@@ -23,7 +23,7 @@ export interface Level {
   startTrigger?: string;
 }
 
-let LEVELS = [] as Array<(() => Promise<tiled.Map>) | null>;
+let LEVELS = [] as Array<(() => Promise<tiled.Map | string>) | null>;
 
 export function addLevels(levels: typeof LEVELS) {
   LEVELS = levels;
@@ -88,25 +88,60 @@ export async function prevLevel(dl: number = 1) {
 async function readLevel(i: number) {
   world.stats.levelIndex = i;
 
-  const levelLoadPromise = LEVELS[world.stats.levelIndex]!;
-  const levelData = await levelLoadPromise();
-  const level = readLevelJSON(levelData as tiled.Map);
-  world.level.startTrigger = level!.startTrigger;
-
-  readLevelMapData(level.data);
-
-  // Randomize gem and border colors
-  await effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
-  world.level.borderFG = RNG.getUniformInt(8, 15);
-  world.level.borderBG = RNG.getUniformInt(1, 8);
-
+  const data = await LEVELS[world.stats.levelIndex]!();
+  const level =
+    typeof data === 'string'
+      ? readRandomLevel(data)
+      : readLevelJSONLevel(data as tiled.Map);
+  await loadLevelData(level);
   screen.renderPlayfield();
+  screen.renderBorder();
 
   return level;
 }
 
+function readRandomLevel(levelData: string): Level {
+  const data: Entity[] = [];
+  let tileKeys = '';
+  const lines = levelData.split('\n');
+
+  for (let y = 0; y < lines.length; y++) {
+    const keys = lines[y];
+    const counts = lines[++y];
+
+    for (let i = 0; i < keys.length; i += 3) {
+      const key = keys.substring(i, i + 3).trim();
+      const count = key === 'P' ? 1 : +counts.substring(i, i + 3);
+      tileKeys += key.repeat(count);
+    }
+  }
+
+  const width = XMax + 1;
+  const height = YMax + 1;
+  const size = width * height;
+  if (tileKeys.length < size) {
+    tileKeys += ' '.repeat(size - tileKeys.length);
+  }
+
+  const tileArray = shuffle(tileKeys.split(''));
+
+  for (let i = 0; i < size; i++) {
+    const tileId = getASCIICode(tileArray[i]);
+    const x = i % width;
+    const y = Math.floor(i / width);
+    data[i] = tiles.createEntityFromTileId(tileId, x, y);
+  }
+
+  return {
+    id: '',
+    data,
+    startTrigger: undefined,
+    properties: {}
+  };
+}
+
 // Reads the level data from a Tiled JSON file into a Level object
-function readLevelJSON(tilemap: tiled.Map): Level {
+function readLevelJSONLevel(tilemap: tiled.Map): Level {
   const { layers, properties: _properties } = tilemap;
   const properties = ensureObject(_properties);
 
@@ -177,13 +212,12 @@ function readLevelJSON(tilemap: tiled.Map): Level {
   };
 }
 
-function getTileIdFromGID(gid: number): number {
-  if (!gid || gid < 0) return -1;
-  return (+gid % 256) - 1;
-}
-
 // Reads the level data into the world
-function readLevelMapData(data: Entity[]) {
+async function loadLevelData(level: Level) {
+  const { data, startTrigger } = level;
+
+  world.level.startTrigger = startTrigger;
+
   const map = world.level.map;
 
   let i = 0;
@@ -212,4 +246,33 @@ function readLevelMapData(data: Entity[]) {
       }
     }
   }
+
+  // Randomize gem and border colors
+  await effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
+  world.level.borderFG = RNG.getUniformInt(8, 15);
+  world.level.borderBG = RNG.getUniformInt(1, 8);
+}
+
+function getTileIdFromGID(gid: number): number {
+  if (!gid || gid < 0) return -1;
+  return (+gid % 256) - 1;
+}
+
+function shuffle<T>(array: T[]) {
+  let currentIndex = array.length;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+    // Pick a remaining element...
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex]
+    ];
+  }
+
+  return array;
 }
