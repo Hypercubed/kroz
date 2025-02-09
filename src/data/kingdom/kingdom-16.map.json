@@ -26,7 +26,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##HideType Stairs\n##HideType OSpell1\n##HideType OSpell2\n##HideType OSpell3"
+      "value": "##HIDE Stairs\n##HIDE OSpell1\n##HIDE OSpell2\n##HIDE OSpell3"
     }
   ],
   "renderorder": "right-down",

@@ -5329,7 +5329,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##HideType Create\n##HideType MBlock"
+      "value": "##HIDE Create\n##HIDE MBlock"
     }
   ],
   "renderorder": "right-down",

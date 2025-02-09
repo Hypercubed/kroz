@@ -1084,7 +1084,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap Floor"
+          "value": "##CHANGE Trap2 Floor"
         },
         {
           "name": "isBombable",
@@ -1943,7 +1943,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TouchLava"
+          "value": "##TAKE Gem 10"
         },
         {
           "name": "isPassable",
@@ -2390,7 +2390,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "@@StaticNoise\n##TouchEWall"
+          "value": "@@StaticNoise\n##TAKE Gem 1"
         },
         {
           "name": "name",

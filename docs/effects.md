@@ -6,7 +6,7 @@ Changes the triggered item to the specified type.
 ## `##CHANGE A B`
 Changes every specified item with type A to type B.
 
-## `##HideType A`
+## `##HIDE A`
 Hides all tiles of the specified type.
 
 ## `##Shoot N`

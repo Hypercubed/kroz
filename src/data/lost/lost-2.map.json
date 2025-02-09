@@ -63,7 +63,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##HideType Gem\n##HideType Stairs"
+      "value": "##HIDE Gem\n##HIDE Stairs"
     }
   ],
   "renderorder": "right-down",

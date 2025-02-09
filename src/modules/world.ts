@@ -174,7 +174,7 @@ export async function killAt(x: number, y: number) {
 }
 
 // Only works for base types, those defined in the tileset
-export function setTypeAt(x: number, y: number, type: Type) {
+export function setTypeAt(x: number, y: number, type: Type | string) {
   level.map.set(x, y, tiles.createEntityOfType(type, x, y));
 }
 

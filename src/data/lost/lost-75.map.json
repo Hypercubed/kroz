@@ -32,7 +32,7 @@
             {
               "name": "Trigger",
               "type": "string",
-              "value": "On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"Ttocs Rellim Setalutargnoc Uoy!\"\nYour palms sweat as the words echo through the chamber...\n##PitsToRock\n...Your eyes widen with anticipation!"
+              "value": "On the Ancient Tablet is a short Mantra, a prayer...\nYou take a deep breath and speak the words aloud...\n\"Ttocs Rellim Setalutargnoc Uoy!\"\nYour palms sweat as the words echo through the chamber...\n##MagicSwap Pit Rock\n...Your eyes widen with anticipation!"
             }
           ],
           "rotation": 0,
@@ -62,7 +62,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##HideType Create\n##EvapoRate 22\nYou've finally reached the deepest chamber of Kroz!"
+      "value": "##HIDE Create\n##EvapoRate 22\nYou've finally reached the deepest chamber of Kroz!"
     }
   ],
   "renderorder": "right-down",

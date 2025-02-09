@@ -158,7 +158,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap4 Floor"
         },
         {
           "name": "isBombable",
@@ -250,7 +250,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap4 Floor"
         },
         {
           "name": "isBombable",
@@ -276,10 +276,15 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap3 Floor"
         },
         {
           "name": "isBombable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isPassable",
           "type": "bool",
           "value": true
         },
@@ -1079,7 +1084,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap2 Floor"
         },
         {
           "name": "isBombable",
@@ -1931,7 +1936,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TouchLava"
+          "value": "##TAKE Gem 10"
         },
         {
           "name": "isPassable",
@@ -2858,7 +2863,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "@@StaticNoise\n##TouchEWall"
+          "value": "@@StaticNoise\n##TAKE Gem 1"
         },
         {
           "name": "name",
@@ -3404,7 +3409,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap6 Floor"
         },
         {
           "name": "isBombable",
@@ -3430,7 +3435,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap7 Floor"
         },
         {
           "name": "isBombable",
@@ -3456,7 +3461,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap8 Floor"
         },
         {
           "name": "isBombable",
@@ -3482,7 +3487,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap9 Floor"
         },
         {
           "name": "isBombable",
@@ -3508,7 +3513,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap10 Floor"
         },
         {
           "name": "isBombable",
@@ -3534,7 +3539,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap11 Floor"
         },
         {
           "name": "isBombable",
@@ -3560,7 +3565,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap12 Floor"
         },
         {
           "name": "isBombable",
@@ -3586,7 +3591,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##FTrap"
+          "value": "##CHANGE Trap13 Floor"
         },
         {
           "name": "isBombable",

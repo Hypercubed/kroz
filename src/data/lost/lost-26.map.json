@@ -57,7 +57,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##HideType Gem\n##HideType Create"
+      "value": "##HIDE Gem\n##HIDE Create"
     }
   ],
   "renderorder": "right-down",

@@ -56,7 +56,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##HideType MBlock"
+      "value": "##HIDE MBlock"
     }
   ],
   "renderorder": "right-down",

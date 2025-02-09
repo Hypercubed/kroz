@@ -62,7 +62,7 @@ const SPELL_DURATION = {
   [Timer.FreezeTime]: 55 * TIME_SCALE
 };
 
-async function hideType(type: Type) {
+async function hideType(type: Type | string) {
   await world.level.map.forEach((_x, _y, e) => {
     if (e?.type === type) {
       e.add(isInvisible);
@@ -93,7 +93,7 @@ async function shoot(x: number, y: number, dx: number) {
     if (
       typeof e.type !== 'number' ||
       SPEAR_BLOCKS.includes(e.type) ||
-      e?.has(isImpervious)
+      e?.has(isImpervious) // TODO: OnSpear ??
     ) {
       // These objects stop the Spear
       break;
@@ -162,6 +162,7 @@ async function bomb(x: number, y: number) {
     for (let y = y1; y <= y2; y++) {
       const e = world.level.map.get(x, y);
       if (e?.has(isBombable)) {
+        // TODO: OnBomb: ##DIE ?
         world.setTypeAt(x, y, Type.Floor);
       }
     }
@@ -425,7 +426,7 @@ function change(a: Type | string, b: Type | string) {
   }
 }
 
-async function TTrigger(x: number, y: number, block: Type) {
+async function tTrigger(x: number, y: number, block: Type | string) {
   switch (block) {
     case Type.TBlock:
       block = Type.Block;
@@ -486,49 +487,13 @@ async function disguiseFast() {
   screen.renderPlayfield();
 }
 
-async function pitsToRock() {
+// TODO: Use global rate
+async function magicSwap(a: Type | string, b: Type | string) {
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
-      if (world.level.map.getType(x, y) === Type.Pit) {
+      if (world.level.map.getType(x, y) === a) {
         await sound.play(x * y, 50, 10);
-        world.setTypeAt(x, y, Type.Rock);
-        screen.drawEntityAt(x, y);
-      }
-    }
-  }
-}
-
-async function wallsToGold() {
-  for (let x = 0; x <= XMax; x++) {
-    for (let y = 0; y <= YMax; y++) {
-      if (world.level.map.getType(x, y) === Type.CWall1) {
-        await sound.play(x * y, 50, 10);
-        world.setTypeAt(x, y, Type.Nugget);
-        // ArtColor??
-        screen.drawEntityAt(x, y);
-      }
-    }
-  }
-}
-
-async function riverToBlock() {
-  for (let x = 0; x <= XMax; x++) {
-    for (let y = 0; y <= YMax; y++) {
-      if (world.level.map.getType(x, y) === Type.River) {
-        await sound.play(x * y, 50, 10);
-        world.setTypeAt(x, y, Type.Block);
-        screen.drawEntityAt(x, y);
-      }
-    }
-  }
-}
-
-async function riverToGold() {
-  for (let x = 0; x <= XMax; x++) {
-    for (let y = 0; y <= YMax; y++) {
-      if (world.level.map.getType(x, y) === Type.River) {
-        await sound.play(x * y, 50, 10);
-        world.setTypeAt(x, y, Type.Nugget);
+        world.setTypeAt(x, y, b);
         screen.drawEntityAt(x, y);
       }
     }
@@ -639,15 +604,18 @@ async function pitFall() {
   world.game.done = true;
 }
 
-function touchLava() {
-  world.stats.gems -= 10;
+function give(type: string, n: number) {
+  switch (type) {
+    case 'Gem':
+      world.stats.gems += n;
+      break;
+    case 'Whip':
+      world.stats.whipPower += n;
+      break;
+  }
 }
 
-function touchEWall() {
-  world.stats.gems--;
-}
-
-function become(type: Type, x: number, y: number) {
+function become(type: Type | string, x: number, y: number) {
   world.setTypeAt(x, y, type);
   screen.drawEntityAt(x, y);
 }
@@ -696,150 +664,6 @@ async function tunnel(e: Entity, x: number, y: number) {
   screen.drawEntityAt(tx, ty);
 }
 
-interface EffectsParams {
-  who: Entity;
-  what: Entity;
-  x: number;
-  y: number;
-  args: string[];
-}
-
-type EffectFn = (o: EffectsParams) => Promise<void> | void;
-
-export async function processEffect(
-  message: string | undefined,
-  options: Partial<EffectsParams> = {}
-) {
-  if (!message) return;
-
-  if (typeof message === 'string') {
-    const lines = message.split('\n');
-    for (let line of lines) {
-      line = line.trim();
-      if (!line) continue;
-
-      if (line.startsWith('##')) {
-        await triggerEffect(line.slice(2), options);
-      } else if (line.startsWith('@@')) {
-        await sound.triggerSound(line.slice(2));
-      } else {
-        await screen.flashMessage(line);
-      }
-    }
-  }
-}
-
-/** # Effects */
-const EffectMap: Record<string, EffectFn> = {
-  /** ## `##BECOME A`
-   * Changes the triggered item to the specified type.
-   */
-  BECOME: ({ x, y, args }) => become(tiles.getType(args[0]) as Type, x, y),
-  /** ## `##CHANGE A B`
-   * Changes every specified item with type A to type B.
-   */
-  CHANGE: ({ args }) =>
-    change(tiles.getType(args[0]) as Type, tiles.getType(args[1]) as Type),
-  /** ## `##HideType A`
-   * Hides all tiles of the specified type.
-   */
-  HideType: ({ args }) => hideType(tiles.getType(args[0]) as Type),
-  Bomb: ({ x, y }) => bomb(x, y),
-  Quake: quakeTrap,
-  Trap: ({ who }) => teleport(who!),
-  Zap: zapTrap,
-  Create: createTrap,
-  ShowGems: showGemsSpell,
-  BlockSpell: ({ what, args }) =>
-    blockSpell(tiles.getType(args[0]) || Type.ZBlock, what.type),
-  WallVanish: wallVanish,
-  KROZ: ({ what }) => krozBonus(what.type as Type),
-  OSpell: ({ what }) => triggerOSpell(what.type as Type),
-  CSpell: ({ what }) => triggerCSpell(what.type as Type),
-  // TODO: Replace with ##CHANGE Trap3 Floor?
-  FTrap: ({ what }) => change(what.type as Type, Type.Floor),
-  TTrigger: ({ x, y, what, args }) =>
-    TTrigger(x, y, (tiles.getType(args[0]) as Type) || (what.type as Type)),
-  /**
-   * ## `##Shoot N`
-   * Shoots a spear in the specified direction.
-   */
-  Shoot: ({ x, y, args }) => shoot(x, y, +args[0]),
-  SlowTime: slowTimeSpell,
-  SpeedTime: speedTimeSpell,
-  Invisible: ({ who }) => invisibleSpell(who),
-  Freeze: freezeSpell,
-  /** ## `##HideLevel`
-   * Hides all tiles except the player.
-   */
-  HideLevel: hideLevel,
-  ShowIWalls: showIWalls,
-  RiverToGold: riverToGold,
-  RiverToBlock: riverToBlock,
-  WallsToGold: wallsToGold,
-  PitsToRock: pitsToRock,
-  DisguiseFast: disguiseFast,
-  FlashEntity: ({ who }) => flashEntity(who),
-  PitFall: pitFall,
-  TouchLava: touchLava,
-  TouchEWall: touchEWall,
-  Tunnel: ({ who, x, y }) => tunnel(who, x, y),
-  /** `##EvapoRate N`
-   * Sets the evaporation rate for the level.
-   */
-  EvapoRate: ({ args }) => {
-    world.level.evapoRate = +args[0];
-  },
-  /** ## `##LavaRate N`
-   * Sets the lava rate for the level.
-   */
-  LavaRate: ({ args }) => {
-    world.level.lavaFlow = true;
-    world.level.lavaRate = +args[0];
-  },
-  /** ## `##TreeRate N`
-   * Sets the tree rate for the level.
-   */
-  TreeRate: ({ args }) => {
-    world.level.treeRate = +args[0];
-  },
-  /** ## `##MagicEWalls`
-   * Enables magic walls for the level
-   */
-  MagicEWalls: () => {
-    world.level.magicEWalls = true;
-  }
-};
-
-// TODO:
-// ##GIVE
-// ##TAKE
-// ##MagicEwalls
-// #DIE
-// #ENDGAME
-// #CHAR
-
-export async function triggerEffect(
-  trigger: string,
-  options: Partial<EffectsParams> = {}
-) {
-  options.args = trigger.split(' ');
-  trigger = options.args.shift()! as keyof typeof EffectMap;
-  const fn = EffectMap[trigger];
-  if (fn) {
-    options.who ??= world.level.player;
-    options.x ??= options.who.get(Position)?.x ?? 0;
-    options.y ??= options.who.get(Position)?.y ?? 0;
-    await fn(options as EffectsParams);
-    return;
-  }
-  if (DEBUG) {
-    throw new Error('Unknown effect: ' + trigger);
-  } else {
-    console.warn('Unknown effect:', trigger);
-  }
-}
-
 export async function whip(e: Entity) {
   const p = e.get(Position);
   if (!p) return;
@@ -873,7 +697,7 @@ export async function whip(e: Entity) {
     }
 
     if (entity?.has(Breakable)) {
-      const b = entity.get(Breakable)!;
+      const b = entity.get(Breakable)!; // TODO: OnWhip: ##DIE ?
       const hardness = b.hardness || 0;
       if (hardness * Math.random() < world.stats.whipPower) {
         if (entity.has(isMob)) {
@@ -966,5 +790,148 @@ export async function pushRock(
 
   if (nogo) {
     await sound.blocked();
+  }
+}
+
+interface EffectsParams {
+  who: Entity;
+  what: Entity;
+  x: number;
+  y: number;
+  args: string[];
+}
+
+type EffectFn = (o: EffectsParams) => Promise<void> | void;
+
+export async function processEffect(
+  message: string | undefined,
+  options: Partial<EffectsParams> = {}
+) {
+  if (!message) return;
+
+  if (typeof message === 'string') {
+    const lines = message.split('\n');
+    for (let line of lines) {
+      line = line.trim();
+      if (!line) continue;
+
+      if (line.startsWith('##')) {
+        await triggerEffect(line.slice(2), options);
+      } else if (line.startsWith('@@')) {
+        await sound.triggerSound(line.slice(2));
+      } else {
+        await screen.flashMessage(line);
+      }
+    }
+  }
+}
+
+/** # Effects */
+const EffectMap: Record<string, EffectFn> = {
+  /** ## `##BECOME A`
+   * Changes the triggered item to the specified type.
+   */
+  BECOME: ({ x, y, args }) => become(tiles.getType(args[0])!, x, y),
+  /** ## `##CHANGE A B`
+   * Changes every specified item with type A to type B.
+   */
+  CHANGE: ({ args }) =>
+    change(tiles.getType(args[0])!, tiles.getType(args[1])!),
+  /** ## `##HIDE A`
+   * Hides all tiles of the specified type.
+   */
+  HIDE: ({ args }) => hideType(tiles.getType(args[0])!),
+  /** ## `GIVE A N`
+   * Gives the player N of the specified item.
+   */
+  GIVE: ({ args }) => give(args[0]!, +args[1]),
+  /** ## `TAKE A N`
+   * Takes N of the specified item from the player.
+   */
+  TAKE: ({ args }) => give(args[0]!, -args[1]),
+  Bomb: ({ x, y }) => bomb(x, y),
+  Quake: quakeTrap,
+  Trap: ({ who }) => teleport(who!),
+  Zap: zapTrap,
+  Create: createTrap,
+  ShowGems: showGemsSpell,
+  BlockSpell: ({ what, args }) =>
+    blockSpell(tiles.getType(args[0]) || Type.ZBlock, what.type),
+  WallVanish: wallVanish,
+  KROZ: ({ what }) => krozBonus(what.type as Type),
+  OSpell: ({ what }) => triggerOSpell(what.type as Type),
+  CSpell: ({ what }) => triggerCSpell(what.type as Type),
+  TTrigger: ({ x, y, what, args }) =>
+    tTrigger(x, y, tiles.getType(args[0]) || what.type),
+  /**
+   * ## `##Shoot N`
+   * Shoots a spear in the specified direction.
+   */
+  Shoot: ({ x, y, args }) => shoot(x, y, +args[0]),
+  SlowTime: slowTimeSpell,
+  SpeedTime: speedTimeSpell,
+  Invisible: ({ who }) => invisibleSpell(who),
+  Freeze: freezeSpell,
+  /** ## `##HideLevel`
+   * Hides all tiles except the player.
+   */
+  HideLevel: hideLevel,
+  ShowIWalls: showIWalls,
+  MagicSwap: ({ args }) =>
+    magicSwap(tiles.getType(args[0])!, tiles.getType(args[1])!),
+  DisguiseFast: disguiseFast,
+  FlashEntity: ({ who }) => flashEntity(who),
+  PitFall: pitFall,
+  Tunnel: ({ who, x, y }) => tunnel(who, x, y),
+  /** `##EvapoRate N`
+   * Sets the evaporation rate for the level.
+   */
+  EvapoRate: ({ args }) => {
+    world.level.evapoRate = +args[0];
+  },
+  /** ## `##LavaRate N`
+   * Sets the lava rate for the level.
+   */
+  LavaRate: ({ args }) => {
+    world.level.lavaFlow = true;
+    world.level.lavaRate = +args[0];
+  },
+  /** ## `##TreeRate N`
+   * Sets the tree rate for the level.
+   */
+  TreeRate: ({ args }) => {
+    world.level.treeRate = +args[0];
+  },
+  /** ## `##MagicEWalls`
+   * Enables magic walls for the level
+   */
+  MagicEWalls: () => {
+    world.level.magicEWalls = true;
+  }
+};
+
+// TODO:
+// #DIE
+// #ENDGAME
+// #CHAR
+
+export async function triggerEffect(
+  trigger: string,
+  options: Partial<EffectsParams> = {}
+) {
+  options.args = trigger.split(' ');
+  trigger = options.args.shift()! as keyof typeof EffectMap;
+  const fn = EffectMap[trigger];
+  if (fn) {
+    options.who ??= world.level.player;
+    options.x ??= options.who.get(Position)?.x ?? 0;
+    options.y ??= options.who.get(Position)?.y ?? 0;
+    await fn(options as EffectsParams);
+    return;
+  }
+  if (DEBUG) {
+    throw new Error('Unknown effect: ' + trigger);
+  } else {
+    console.warn('Unknown effect:', trigger);
   }
 }
