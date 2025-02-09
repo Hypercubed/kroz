@@ -2869,12 +2869,37 @@
       "type": "66"
     },
     {
+      "id": 140,
+      "properties": [
+        {
+          "name": "Trigger",
+          "type": "string",
+          "value": "##TTrigger Key"
+        },
+        {
+          "name": "isBombable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isPassable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "value": "TKey"
+        }
+      ]
+    },
+    {
       "id": 145,
       "properties": [
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TTrigger"
+          "value": "##TTrigger Block"
         },
         {
           "name": "isBombable",
@@ -2900,7 +2925,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TTrigger"
+          "value": "##TTrigger Rock"
         },
         {
           "name": "isBombable",
@@ -2926,7 +2951,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TTrigger"
+          "value": "##TTrigger Gem"
         },
         {
           "name": "isBombable",
@@ -2952,7 +2977,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TTrigger"
+          "value": "##TTrigger Invisible"
         },
         {
           "name": "isBombable",
@@ -2978,7 +3003,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TTrigger"
+          "value": "##TTrigger Whip"
         },
         {
           "name": "isBombable",
@@ -3004,7 +3029,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TTrigger"
+          "value": "##TTrigger Nugget"
         },
         {
           "name": "isBombable",
@@ -3030,7 +3055,7 @@
         {
           "name": "Trigger",
           "type": "string",
-          "value": "##TTrigger"
+          "value": "##TTrigger Tree"
         },
         {
           "name": "isBombable",

@@ -170,7 +170,8 @@ export async function setTileset(_tileset: ExternalTileset) {
     if (!tile.properties) continue;
 
     const props = ensureObject(tile.properties);
-    if (props.name !== Type[type]) throw new Error('Tile ID mismatch');
+    if (Type[type] && props.name !== Type[type])
+      throw new Error('Tile ID mismatch');
 
     switch (type) {
       case Type.Floor:

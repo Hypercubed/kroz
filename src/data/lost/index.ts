@@ -64,6 +64,7 @@ export const LEVELS = [
   async () => (await import('./lost-48.map.json')).default, // The Swamp
   async () => (await import('./lost-49.txt?raw')).default,
 
+  // 50
   async () => (await import('./lost-50.txt?raw')).default,
   async () => (await import('./lost-51.txt?raw')).default,
   async () => (await import('./lost-52.map.json')).default, // Follow the Bread Crumbs
@@ -75,6 +76,7 @@ export const LEVELS = [
   async () => (await import('./lost-58.txt?raw')).default,
   async () => (await import('./lost-59.map.json')).default, // Cornered
 
+  // 60
   async () => (await import('./lost-60.txt?raw')).default,
   async () => (await import('./lost-61.map.json')).default, // Chamber of Horror
   async () => (await import('./lost-62.txt?raw')).default,
@@ -86,6 +88,7 @@ export const LEVELS = [
   null,
   async () => (await import('./lost-69.txt?raw')).default,
 
+  // 70
   async () => (await import('./lost-70.map.json')).default, // Legions of Trouble
   async () => (await import('./lost-71.txt?raw')).default,
   null,

@@ -426,28 +426,27 @@ function change(a: Type | string, b: Type | string) {
 }
 
 async function TTrigger(x: number, y: number, block: Type) {
-  let t = Type.Floor;
   switch (block) {
     case Type.TBlock:
-      t = Type.Block;
+      block = Type.Block;
       break;
     case Type.TRock:
-      t = Type.Rock;
+      block = Type.Rock;
       break;
     case Type.TGem:
-      t = Type.Gem;
+      block = Type.Gem;
       break;
     case Type.TBlind:
-      t = Type.Invisible;
+      block = Type.Invisible;
       break;
     case Type.TWhip:
-      t = Type.Whip;
+      block = Type.Whip;
       break;
     case Type.TGold:
-      t = Type.Nugget;
+      block = Type.Nugget;
       break;
     case Type.TTree:
-      t = Type.Tree;
+      block = Type.Tree;
       break;
   }
 
@@ -466,9 +465,9 @@ async function TTrigger(x: number, y: number, block: Type) {
         const b = world.level.map.getType(x + dx, y + dy);
         if (TRIGGERABLES.includes(b as Type)) {
           if (place) {
-            world.setTypeAt(x + dx, y + dy, t);
+            world.setTypeAt(x + dx, y + dy, block);
           } else {
-            world.setTypeAt(x + dx, y + dy, t);
+            world.setTypeAt(x + dx, y + dy, block);
             const e = world.level.map.get(x + dx, y + dy);
             if (!e) continue;
             const r = e?.get(Renderable);
@@ -759,7 +758,8 @@ const EffectMap: Record<string, EffectFn> = {
   CSpell: ({ what }) => triggerCSpell(what.type as Type),
   // TODO: Replace with ##CHANGE Trap3 Floor?
   FTrap: ({ what }) => change(what.type as Type, Type.Floor),
-  TTrigger: ({ x, y, what }) => TTrigger(x, y, what.type as Type), // Replace with a isInvisible component?
+  TTrigger: ({ x, y, what, args }) =>
+    TTrigger(x, y, (tiles.getType(args[0]) as Type) || (what.type as Type)),
   /**
    * ## `##Shoot N`
    * Shoots a spear in the specified direction.

@@ -132,15 +132,20 @@ export async function introScreen() {
     Color.HighIntensityWhite
   );
 
+  const k = gameKingdom.LEVELS.filter(Boolean).length;
+  const c = gameCaverns.LEVELS.filter(Boolean).length;
+  const l = gameLost.LEVELS.filter(Boolean).length;
+  const z = gameCruz.LEVELS.filter(Boolean).length;
+
   display.drawText(
-    8,
-    18,
+    4,
+    17,
     dedent`
 
-    1) Kingdom of Kroz II (C) Scott Miller - 1987)
-    2) Caverns of Kroz II (C) Scott Miller - 1989)
-    3) Lost Adventures of Kroz (C) Scott Miller - 1990)
-    4) The Underground Empire of Cruz (C) Christopher Allen - 2011)
+    1) ${k} levels from Kingdom of Kroz II (C) Scott Miller - 1987
+    2) ${c} levels from Caverns of Kroz II (C) Scott Miller - 1989
+    3) ${l} levels from Lost Adventures of Kroz (C) Scott Miller - 1990
+    4) ${z} levels from The Underground Empire of Cruz (C) C. Allen - 2011
 
   `,
     Color.White,
@@ -154,7 +159,7 @@ export async function introScreen() {
     game = await controls.repeatUntilKeyPressed(async () => {
       display.drawText(
         5,
-        5,
+        3,
         dedent`
         ███     ███     ██████████         ███████████        █████████████  (R)
         ███░░  ███░░░   ███░░░░░███░      ███░░░░░░░███░        ░░░░░░████░░░

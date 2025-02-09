@@ -1,0 +1,118 @@
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzll1EKgzAMhr3KYM+CFxD24AF2gh1nsMdNVnbbraAQQtK0SbROH350rab58jc6+6ZpeqQWCM8dQZF7PDh\/Lf9PQCV5liondo3aR+6R4cf5e\/BbY3jvlZT\/sC+tmmNeHWIFR\/6oGzOeW3sply37XyJpP6fqJtUlp17WXK3141hfxFgQ1srNz8L\/ZuLjfHN5Pf3n+hg+c2r7T\/mozWVt\/7l1U+Ma\/y15lOYg5WN5tmr6ISrn\/9MS\/LOeDtyamkL+MB3vO\/A\/1fM1\/Jfu18y16Nzi\/5r97zEn8ZassRY\/976Ge5Wao76p4+\/HQvzdTwOhPfp\/JjQw17TgXFuHpWThvwBx\/PD+LfBb3hkU\/2c6RvbuT\/i13\/SS\/3itrfJ7+Y9F8UvXHE1f3jtLjA==",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
+        {
+          "gid": 148,
+          "height": 36,
+          "id": 4,
+          "name": "",
+          "properties": [
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "##TTrigger Key"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1464,
+          "y": 720
+        },
+        {
+          "gid": 148,
+          "height": 36,
+          "id": 5,
+          "name": "",
+          "properties": [
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "##TTrigger Stairs"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1248,
+          "y": 720
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 7,
+          "name": "BridgeCasterRight",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 888,
+          "y": 216
+        },
+        {
+          "gid": 33,
+          "height": 36,
+          "id": 8,
+          "name": "BridgeCasterRight",
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1320,
+          "y": 468
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 11,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "Here's where I earn my pay as daring adventurer...\nOne step off the walkway and I fall into the bottomless pit!"
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
+}

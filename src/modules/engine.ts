@@ -38,7 +38,6 @@ export async function start() {
   world.resetState();
 
   const game = await screen.introScreen();
-  console.log(game);
   world.game.title = game.title || TITLE;
 
   await screen.renderTitle();
