@@ -1,33 +1,35 @@
 import { default as RNG } from 'rot-js/lib/rng';
 
-import * as tiles from '../modules/tiles';
-
 import { XMax, YMax } from '../data/constants';
 import { Type } from '../modules/tiles';
 import { Entity } from './entity';
 
 export class PlayField {
-  private PF = [] as Entity[][];
+  private PF: Entity[] = [];
 
   constructor(
     public width = XMax + 1,
     public height = YMax + 1
   ) {}
 
+  protected getIndex(x: number, y: number): number {
+    return y * this.width + x;
+  }
+
   get(x: number, y: number): Entity | null {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
       return null;
     }
-    return this.PF?.[x]?.[y];
+    const index = this.getIndex(x, y);
+    return this.PF[index];
   }
 
   set(x: number, y: number, entity: Entity): void {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
       return;
     }
-
-    this.PF[x] ??= [];
-    this.PF[x][y] = entity;
+    const index = this.getIndex(x, y);
+    this.PF[index] = entity;
   }
 
   getType(x: number, y: number): Type | string {
@@ -39,11 +41,6 @@ export class PlayField {
       return type;
     }
     return type ?? Type.Floor;
-  }
-
-  // Only works for base types, those defined in the tileset
-  setType(x: number, y: number, type: Type) {
-    this.set(x, y, tiles.createEntityOfType(type, x, y));
   }
 
   findRandomEmptySpace(): [number, number] {
@@ -69,15 +66,10 @@ export class PlayField {
     }
   }
 
-  // Rename.... this is not a map
-  async map(
-    callback: (x: number, y: number, e: Entity) => Promise<Entity> | Entity
-  ) {
-    for (let x = 0; x < this.width; x++) {
-      for (let y = 0; y < this.height; y++) {
-        const e = this.get(x, y);
-        if (!e) continue;
-        this.set(x, y, await callback(x, y, e));
+  fill(callback: (x: number, y: number) => Entity) {
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        this.set(x, y, callback(x, y));
       }
     }
   }

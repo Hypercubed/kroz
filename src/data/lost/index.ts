@@ -1,4 +1,7 @@
 // LOST ADVENTURES OF KROZ Levels
+
+export const title = 'Lost Adventures of Kroz';
+
 export const LEVELS = [
   null, // Must be level 0
 

@@ -80,8 +80,8 @@ async function tryMove(e: Entity, dx: number, dy: number) {
   }
 
   if (e.get(DestroyedBy)?.has(block.type)) {
-    world.level.map.setType(ep.x, ep.y, Type.Floor);
-    world.level.map.setType(x, y, Type.Floor);
+    world.setTypeAt(ep.x, ep.y, Type.Floor);
+    world.setTypeAt(x, y, Type.Floor);
     world.kill(e);
     world.addScore(block.type as Type);
     sound.play(800, 18);
@@ -92,7 +92,7 @@ async function tryMove(e: Entity, dx: number, dy: number) {
   if (e.has(Attacks) && block.type === Type.Player) {
     const damage = e.get(Attacks)!.damage;
     world.stats.gems -= damage;
-    world.level.map.setType(ep.x, ep.y, Type.Floor);
+    world.setTypeAt(ep.x, ep.y, Type.Floor);
     world.kill(e);
     world.addScore(block.type as Type);
 
@@ -118,7 +118,7 @@ export function moveTo(e: Entity, x: number, y: number) {
     e.remove(isInvisible);
   }
 
-  world.level.map.setType(p.x, p.y, Type.Floor);
+  world.setTypeAt(p.x, p.y, Type.Floor);
   world.level.map.set(x, y, e);
   p.moveTo(x, y);
 }

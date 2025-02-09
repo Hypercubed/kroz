@@ -1,3 +1,5 @@
+export const title = 'The Caverns of Kroz';
+
 export const LEVELS = [
   null, // Must be level 0
 

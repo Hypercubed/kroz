@@ -115,7 +115,7 @@ async function shoot(x: number, y: number, dx: number) {
       ) {
         await world.killAt(x, y);
       }
-      world.level.map.setType(x, y, Type.Floor);
+      world.setTypeAt(x, y, Type.Floor);
     }
 
     screen.drawEntityAt(x, y);
@@ -162,7 +162,7 @@ async function bomb(x: number, y: number) {
     for (let y = y1; y <= y2; y++) {
       const e = world.level.map.get(x, y);
       if (e?.has(isBombable)) {
-        world.level.map.setType(x, y, Type.Floor);
+        world.setTypeAt(x, y, Type.Floor);
       }
     }
   }
@@ -179,7 +179,7 @@ async function quakeTrap() {
       const y = RNG.getUniformInt(0, YMax);
       const block = world.level.map.getType(x, y);
       if (ROCKABLES.includes(block as number)) {
-        world.level.map.setType(x, y, Type.Rock);
+        world.setTypeAt(x, y, Type.Rock);
         screen.drawEntityAt(x, y);
         break;
       }
@@ -232,7 +232,7 @@ async function showGemsSpell() {
       const block = world.level.map.getType(x, y);
       if (block === Type.Floor) {
         done = true;
-        world.level.map.setType(x, y, Type.Gem);
+        world.setTypeAt(x, y, Type.Gem);
         screen.drawEntityAt(x, y);
         await sound.showGem();
         await delay(90);
@@ -256,10 +256,10 @@ async function blockSpell(block: Type | string, spell: Type | string) {
           );
         }
         await delay(1);
-        world.level.map.setType(x, y, Type.Floor);
+        world.setTypeAt(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
       } else if (world.level.map.getType(x, y) === spell) {
-        world.level.map.setType(x, y, Type.Floor);
+        world.setTypeAt(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
       }
     }
@@ -297,7 +297,7 @@ async function triggerOSpell(block: Type) {
           sound.play(i * 40, 5, 10);
           if (i % 5 === 0) await delay(1);
         }
-        world.level.map.setType(x, y, Type.Floor);
+        world.setTypeAt(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
       }
     }
@@ -322,7 +322,7 @@ async function triggerCSpell(block: Type) {
           sound.play(i * 40, 5, 10);
           if (i % 5 === 0) await delay(1);
         }
-        world.level.map.setType(x, y, Type.Wall);
+        world.setTypeAt(x, y, Type.Wall);
         screen.drawEntityAt(x, y);
       }
     }
@@ -338,13 +338,13 @@ async function wallVanish() {
       const b = world.level.map.getType(x, y);
       if (b === Type.Block) {
         // TODO: sound
-        world.level.map.setType(x, y, Type.IBlock); // Replace with adding isInvisible component?
+        world.setTypeAt(x, y, Type.IBlock); // Replace with adding isInvisible component?
         screen.drawEntityAt(x, y);
         done = true;
       }
       if (b === Type.Wall) {
         // TODO: sound
-        world.level.map.setType(x, y, Type.IWall); // Replace with adding isInvisible component?
+        world.setTypeAt(x, y, Type.IWall); // Replace with adding isInvisible component?
         screen.drawEntityAt(x, y);
         done = true;
       }
@@ -357,7 +357,7 @@ export async function teleport(e: Entity) {
 
   const p = e.get(Position)!;
 
-  world.level.map.setType(p.x, p.y, Type.Floor);
+  world.setTypeAt(p.x, p.y, Type.Floor);
   screen.drawEntityAt(p.x, p.y);
 
   // Animation
@@ -466,9 +466,9 @@ async function TTrigger(x: number, y: number, block: Type) {
         const b = world.level.map.getType(x + dx, y + dy);
         if (TRIGGERABLES.includes(b as Type)) {
           if (place) {
-            world.level.map.setType(x + dx, y + dy, t);
+            world.setTypeAt(x + dx, y + dy, t);
           } else {
-            world.level.map.setType(x + dx, y + dy, t);
+            world.setTypeAt(x + dx, y + dy, t);
             const e = world.level.map.get(x + dx, y + dy);
             if (!e) continue;
             const r = e?.get(Renderable);
@@ -492,7 +492,7 @@ async function pitsToRock() {
     for (let y = 0; y <= YMax; y++) {
       if (world.level.map.getType(x, y) === Type.Pit) {
         await sound.play(x * y, 50, 10);
-        world.level.map.setType(x, y, Type.Rock);
+        world.setTypeAt(x, y, Type.Rock);
         screen.drawEntityAt(x, y);
       }
     }
@@ -504,7 +504,7 @@ async function wallsToGold() {
     for (let y = 0; y <= YMax; y++) {
       if (world.level.map.getType(x, y) === Type.CWall1) {
         await sound.play(x * y, 50, 10);
-        world.level.map.setType(x, y, Type.Nugget);
+        world.setTypeAt(x, y, Type.Nugget);
         // ArtColor??
         screen.drawEntityAt(x, y);
       }
@@ -517,7 +517,7 @@ async function riverToBlock() {
     for (let y = 0; y <= YMax; y++) {
       if (world.level.map.getType(x, y) === Type.River) {
         await sound.play(x * y, 50, 10);
-        world.level.map.setType(x, y, Type.Block);
+        world.setTypeAt(x, y, Type.Block);
         screen.drawEntityAt(x, y);
       }
     }
@@ -529,7 +529,7 @@ async function riverToGold() {
     for (let y = 0; y <= YMax; y++) {
       if (world.level.map.getType(x, y) === Type.River) {
         await sound.play(x * y, 50, 10);
-        world.level.map.setType(x, y, Type.Nugget);
+        world.setTypeAt(x, y, Type.Nugget);
         screen.drawEntityAt(x, y);
       }
     }
@@ -541,7 +541,7 @@ async function showIWalls() {
     if (e.type === Type.IWall) {
       sound.play(x * y, 1, 10);
       if (y === 0) await delay(1);
-      world.level.map.setType(x, y, Type.OWall3);
+      world.setTypeAt(x, y, Type.OWall3);
       screen.drawEntityAt(x, y);
     }
   });
@@ -649,7 +649,7 @@ function touchEWall() {
 }
 
 function become(type: Type, x: number, y: number) {
-  world.level.map.setType(x, y, type);
+  world.setTypeAt(x, y, type);
   screen.drawEntityAt(x, y);
 }
 
@@ -657,7 +657,7 @@ async function tunnel(e: Entity, x: number, y: number) {
   await delay(350);
   await sound.footStep();
   await delay(500);
-  world.level.map.setType(x, y, Type.Tunnel);
+  world.setTypeAt(x, y, Type.Tunnel);
   screen.drawEntityAt(x, y);
 
   // Find a random tunnel
@@ -675,7 +675,7 @@ async function tunnel(e: Entity, x: number, y: number) {
     }
   }
 
-  world.level.map.setType(x, y, Type.Tunnel);
+  world.setTypeAt(x, y, Type.Tunnel);
   screen.drawEntityAt(x, y);
 
   // Find a random empty space near exit
@@ -693,7 +693,7 @@ async function tunnel(e: Entity, x: number, y: number) {
     }
   }
   moveTo(e, ex, ey);
-  world.level.map.setType(tx, ty, Type.Tunnel);
+  world.setTypeAt(tx, ty, Type.Tunnel);
   screen.drawEntityAt(tx, ty);
 }
 
@@ -880,7 +880,7 @@ export async function whip(e: Entity) {
           // Split into killable?
           world.killAt(x, y);
         }
-        world.level.map.setType(x, y, Type.Floor);
+        world.setTypeAt(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
         const hitSound = b.hitSound || 'WhipHit';
         world.addScore(thing as Type);
@@ -951,7 +951,7 @@ export async function pushRock(
       await sound.rockCrushMob();
     } else if (tb === Type.EWall) {
       await moveRock();
-      world.level.map.setType(tx, ty, Type.Floor);
+      world.setTypeAt(tx, ty, Type.Floor);
       sound.rockVaporized();
       await screen.flashMessage('The Boulder is vaporized!'); // TODO: show once?, change for pushed type
     } else if (ROCK_CLIFFABLES.includes(tb as number)) {

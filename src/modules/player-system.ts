@@ -63,7 +63,7 @@ async function readControls() {
     controls.wasActionDeactivated(Action.NextLevelCheat)
   ) {
     const p = world.level.player.get(Position)!;
-    world.level.map.setType(p.x + 1, p.y, Type.Stairs);
+    world.setTypeAt(p.x + 1, p.y, Type.Stairs);
     await sound.cheat();
     return;
   }
@@ -315,7 +315,7 @@ export function moveTo(x: number, y: number) {
   const e = world.level.player;
   const p = e.get(Position)!;
 
-  world.level.map.setType(p.x, p.y, p.replacement);
+  world.setTypeAt(p.x, p.y, p.replacement);
   screen.drawEntityAt(p.x, p.y);
 
   const b = world.level.map.getType(x, y) as Type;

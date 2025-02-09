@@ -221,31 +221,24 @@ async function loadLevelData(level: Level) {
   const map = world.level.map;
 
   let i = 0;
-  for (let y = 0; y <= YMax; y++) {
-    for (let x = 0; x <= XMax; x++) {
-      const entity = data[i++];
-      map.set(x, y, entity);
-    }
-  }
 
-  for (let y = 0; y <= YMax; y++) {
-    for (let x = 0; x <= XMax; x++) {
-      const entity = map.get(x, y);
-      if (!entity) continue;
-      if (entity.type === Type.Statue) {
-        world.level.T[Timer.StatueGemDrain] = 32000;
-      }
-      if (entity.has(isPlayer)) {
-        world.level.player = entity;
-      }
-      if (entity.has(isMob)) {
-        world.level.entities.push(entity);
-      }
-      if (entity.has(isGenerator)) {
-        world.level.genNum++;
-      }
+  map.fill(() => data[i++]);
+
+  map.forEach((_x, _y, entity) => {
+    if (!entity) return;
+    if (entity.type === Type.Statue) {
+      world.level.T[Timer.StatueGemDrain] = 32000;
     }
-  }
+    if (entity.has(isPlayer)) {
+      world.level.player = entity;
+    }
+    if (entity.has(isMob)) {
+      world.level.entities.push(entity);
+    }
+    if (entity.has(isGenerator)) {
+      world.level.genNum++;
+    }
+  });
 
   // Randomize gem and border colors
   await effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });

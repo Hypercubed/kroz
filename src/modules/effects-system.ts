@@ -52,7 +52,7 @@ export async function update() {
       const y = RNG.getUniformInt(0, YMax);
       const block = world.level.map.getType(x, y);
       if (block === Type.CWall1) {
-        world.level.map.setType(x, y, Type.EWall);
+        world.setTypeAt(x, y, Type.EWall);
         screen.drawEntityAt(x, y);
         break;
       }
@@ -62,7 +62,7 @@ export async function update() {
       const y = RNG.getUniformInt(0, YMax);
       const block = world.level.map.getType(x, y);
       if (block === Type.EWall) {
-        world.level.map.setType(x, y, Type.CWall1);
+        world.setTypeAt(x, y, Type.CWall1);
         screen.drawEntityAt(x, y);
         break;
       }
@@ -76,7 +76,7 @@ export async function update() {
       const y = RNG.getUniformInt(0, YMax);
       const block = world.level.map.getType(x, y);
       if (block === Type.River) {
-        world.level.map.setType(x, y, Type.Floor);
+        world.setTypeAt(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
         // TODO: Sound
       }
@@ -102,7 +102,7 @@ export async function update() {
         if (world.level.map.getType(x, y + 1) === Type.Lava) done = true;
         if (world.level.map.getType(x, y - 1) === Type.Lava) done = true;
         if (done) {
-          world.level.map.setType(x, y, Type.Lava);
+          world.setTypeAt(x, y, Type.Lava);
           screen.drawEntityAt(x, y);
         }
       }
@@ -139,7 +139,7 @@ export async function update() {
           done = true;
         if (done) {
           const t = RNG.getUniformInt(0, 3) === 0 ? Type.Tree : Type.Forest;
-          world.level.map.setType(x, y, t);
+          world.setTypeAt(x, y, t);
           screen.drawEntityAt(x, y);
         }
       }

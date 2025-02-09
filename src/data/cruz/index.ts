@@ -1,3 +1,5 @@
+export const title = 'The Underground Empire of Cruz';
+
 export const LEVELS = [
   null,
   // async () => (await import('../debug.map.json')).default, // Must be level 0

@@ -5,11 +5,16 @@ import * as sound from './sound';
 import * as tiles from './tiles';
 import * as colors from './colors';
 
+import * as gameForgotton from '../data/forgotton/index.ts';
+import * as gameKingdom from '../data/kingdom/index.ts';
+import * as gameLost from '../data/lost/index.ts';
+import * as gameCaverns from '../data/caverns/index.ts';
+import * as gameCruz from '../data/cruz/index.ts';
+
 import {
   DEBUG,
   ENABLE_BOTS,
   HEIGHT,
-  TITLE,
   WIDTH,
   XBot,
   XTop,
@@ -121,50 +126,75 @@ export function renderBorder() {
 export async function introScreen() {
   display.clear(Color.Black);
 
-  display.writeCenter(20, TITLE, Color.Yellow);
-
-  display.writeCenter(
-    21,
-    'Original Level Design (C) 1990 Scott Miller',
-    Color.Yellow
-  );
-
   display.writeCenter(
     HEIGHT - 1,
-    'Press any key to continue.',
+    'Choose a game to start',
     Color.HighIntensityWhite
   );
 
-  return controls.repeatUntilKeyPressed(async () => {
-    display.drawText(
-      5,
-      5,
-      dedent`
-      ███     ███     ██████████         ███████████        █████████████  (R)
-      ███░░  ███░░░   ███░░░░░███░      ███░░░░░░░███░        ░░░░░░████░░░
-      ███░░ ███░░░    ███░░   ███░░     ███░░     ███░░            ███░░░░
-      ███░░███░░░     ███░░   ███░░    ███░░░      ███░           ███░░░
-      ███░███░░░      ██████████░░░    ███░░       ███░░         ███░░░
-      ██████░░░       ███░░███░░░░     ███░░       ███░░        ███░░░
-      ███░███░        ███░░ ███░        ███░      ███░░░       ███░░░
-      ███░░███░       ███░░  ███░       ███░░     ███░░      ████░░░
-      ███░░ ███░      ███░░   ███░       ███████████░░░     █████████████
-      ███░░  ███░       ░░░     ░░░        ░░░░░░░░░░░        ░░░░░░░░░░░░░
-      ███░░   ███░
-      ███░░    ███████████████████████████████████████████████████████████
-      ░░░      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-    `,
-      RNG.getUniformInt(1, 15)
-    );
+  display.drawText(
+    8,
+    18,
+    dedent`
 
-    await delay(500);
-  });
+    1) Kingdom of Kroz II (C) Scott Miller - 1987)
+    2) Caverns of Kroz II (C) Scott Miller - 1989)
+    3) Lost Adventures of Kroz (C) Scott Miller - 1990)
+    4) The Underground Empire of Cruz (C) Christopher Allen - 2011)
+
+  `,
+    Color.White,
+    Color.Black
+  );
+
+  display.writeCenter(HEIGHT - 1, 'Choose a game to start', Color.White);
+
+  let game = '-1';
+  while (game < '0' || game > '4') {
+    game = await controls.repeatUntilKeyPressed(async () => {
+      display.drawText(
+        5,
+        5,
+        dedent`
+        ███     ███     ██████████         ███████████        █████████████  (R)
+        ███░░  ███░░░   ███░░░░░███░      ███░░░░░░░███░        ░░░░░░████░░░
+        ███░░ ███░░░    ███░░   ███░░     ███░░     ███░░            ███░░░░
+        ███░░███░░░     ███░░   ███░░    ███░░░      ███░           ███░░░
+        ███░███░░░      ██████████░░░    ███░░       ███░░         ███░░░
+        ██████░░░       ███░░███░░░░     ███░░       ███░░        ███░░░
+        ███░███░        ███░░ ███░        ███░      ███░░░       ███░░░
+        ███░░███░       ███░░  ███░       ███░░     ███░░      ████░░░
+        ███░░ ███░      ███░░   ███░       ███████████░░░     █████████████
+        ███░░  ███░       ░░░     ░░░        ░░░░░░░░░░░        ░░░░░░░░░░░░░
+        ███░░   ███░
+        ███░░    ███████████████████████████████████████████████████████████
+        ░░░      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+      `,
+        RNG.getUniformInt(1, 15)
+      );
+
+      await delay(500);
+    });
+  }
+
+  switch (game) {
+    case '1':
+      return gameKingdom;
+    case '2':
+      return gameCaverns;
+    case '3':
+      return gameLost;
+    case '4':
+      return gameCruz;
+    default:
+      return gameForgotton;
+  }
 }
 
 export async function instructionsScreen() {
   display.clear(Color.Black);
 
-  display.writeCenter(0, TITLE, Color.Yellow, Color.Black);
+  display.writeCenter(0, world.game.title, Color.Yellow, Color.Black);
   display.writeCenter(1, 'INSTRUCTIONS', Color.HighIntensityWhite, Color.Black);
   display.writeCenter(2, '------------', Color.HighIntensityWhite, Color.Black);
 
@@ -223,9 +253,11 @@ export async function instructionsScreen() {
 }
 
 export async function openSourceScreen() {
+  if (world.game.bot) return;
+
   display.clear(Color.Black);
 
-  display.writeCenter(1, TITLE, Color.Yellow);
+  display.writeCenter(1, world.game.title, Color.Yellow);
 
   display.drawText(
     2,
@@ -487,25 +519,26 @@ export async function renderTitle() {
 }
 
 async function writeTitle() {
-  const x = WIDTH / 2 - TITLE.length / 2;
+  const title = world.game.title;
+  const x = WIDTH / 2 - title.length / 2;
   display.drawText(
     x,
     1,
-    ' '.repeat(TITLE.length + 2),
+    ' '.repeat(title.length + 2),
     RNG.getUniformInt(0, 16),
     Color.Red
   );
   display.drawText(
     x,
     2,
-    ' ' + TITLE + ' ',
+    ' ' + title + ' ',
     RNG.getUniformInt(0, 16),
     Color.Red
   );
   display.drawText(
     x,
     3,
-    ' '.repeat(TITLE.length + 2),
+    ' '.repeat(title.length + 2),
     RNG.getUniformInt(0, 16),
     Color.Red
   );

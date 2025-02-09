@@ -1,4 +1,7 @@
 // KINGDOM OF KROZ II Levels
+
+export const title = 'Kingdom of Kroz II';
+
 export const LEVELS = [
   null, // Must be level 0
 

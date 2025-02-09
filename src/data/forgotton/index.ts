@@ -1,4 +1,7 @@
 // 'The Forgotton Adventures of Kroz'
+
+export const title = 'The Forgotton Adventures of Kroz';
+
 export const LEVELS = [
   async () => (await import('../debug/debug.map.json')).default, // Must be level 0
 

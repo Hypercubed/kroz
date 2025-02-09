@@ -14,14 +14,15 @@ import * as events from './events';
 import * as tiles from './tiles';
 import * as colors from './colors';
 
-// import * as game from '../data/forgotton/index.ts';
-// import * as game from '../data/kingdom/index.ts';
-import * as game from '../data/lost/index.ts';
-// import * as game from '../data/caverns/index.ts';
-// import * as game from '../data/cruz/index.ts';
-
-import { SHOW_DEBUG_CONTROLS, SHOW_STATS, XMax, YMax } from '../data/constants';
+import {
+  SHOW_DEBUG_CONTROLS,
+  SHOW_STATS,
+  TITLE,
+  XMax,
+  YMax
+} from '../data/constants';
 import { Color } from './colors';
+
 let stats: Stats;
 let gui: dat.GUI;
 
@@ -36,7 +37,10 @@ export async function start() {
   display.clear(Color.Black);
   world.resetState();
 
-  await screen.introScreen();
+  const game = await screen.introScreen();
+  console.log(game);
+  world.game.title = game.title || TITLE;
+
   await screen.renderTitle();
   await screen.instructionsScreen();
 

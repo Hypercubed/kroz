@@ -6,6 +6,7 @@ import * as tiles from './tiles.ts';
 import {
   CLOCK_SCALE,
   ENABLE_DEBUG_LEVEL,
+  TITLE,
   XMax,
   YMax
 } from '../data/constants.ts';
@@ -75,7 +76,8 @@ function getDefaultGameState() {
     paused: false,
     done: false,
     foundSet: new Set<Type>() as Set<Type> | true,
-    bot: false
+    bot: false,
+    title: TITLE
   };
 }
 
@@ -163,12 +165,17 @@ export function addScore(block: Type) {
 export async function killAt(x: number, y: number) {
   const entity = level.map.get(x, y);
 
-  level.map.setType(x, y, Type.Floor);
+  setTypeAt(x, y, Type.Floor);
   screen.drawEntityAt(x, y);
 
   if (entity && entity.has(Position)) {
     await kill(entity);
   }
+}
+
+// Only works for base types, those defined in the tileset
+export function setTypeAt(x: number, y: number, type: Type) {
+  level.map.set(x, y, tiles.createEntityOfType(type, x, y));
 }
 
 export async function kill(e: Entity) {
