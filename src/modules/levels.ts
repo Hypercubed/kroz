@@ -9,7 +9,12 @@ import * as effects from './effects.ts';
 import * as events from './events.ts';
 
 import { mod } from 'rot-js/lib/util';
-import { isGenerator, isMob, isPlayer } from '../classes/components.ts';
+import {
+  isGenerator,
+  isMob,
+  isPlayer,
+  Renderable
+} from '../classes/components.ts';
 import { ensureObject, getASCIICode } from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
@@ -162,6 +167,11 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
 
   function readObjectGroup(layer: tiled.ObjectGroup, output: Entity[]) {
     for (const obj of layer.objects) {
+      if (obj.text) {
+        readTextObject(obj, output);
+        continue;
+      }
+
       const { gid, x, y, height, width, properties, type } = obj;
       if (!gid || x < 0 || y < 0 || !height || !width) continue;
       if (gid > 0) {
@@ -179,6 +189,30 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
     }
 
     return output;
+  }
+
+  function readTextObject(obj: tiled.MapObject, output: Entity[]) {
+    const { x, y, height, width, properties, text } = obj;
+    console.log(obj);
+    if (!x || !y || !height || !width) return;
+    const tileId = 97; // Solid Wall
+    const type = Type.Wall;
+
+    const xx = x / 24;
+    const yy = y / 36;
+
+    const str = text!.text!;
+    for (let i = 0; i < str.length; i++) {
+      const e = tiles.createEntityFromTileId(
+        tileId,
+        xx + i,
+        yy,
+        ensureObject(properties),
+        type
+      );
+      e.get(Renderable)!.ch = str[i];
+      output[yy * tilemap.width + xx + i] = e;
+    }
   }
 
   function readUnencodedTileLayer(

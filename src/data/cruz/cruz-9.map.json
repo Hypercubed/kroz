@@ -5,7 +5,7 @@
   "layers": [
     {
       "compression": "zlib",
-      "data": "eJzFl0FOw1AMRP9VgrJkgZA4AysWqGxaKfffcwKKFEvuZGZsNYEurN807Y+fPbZ\/TmOMk7GXneb27ljea1mt87zpap\/repR\/\/8UdrNUz8DcL8Ie5\/fbm5CheluNlbFkrDTh+tCP0eSQ342O8LD4Vv4rto9mrfHZqnmkw87PcP5Lf1S9yoy5cPBQ\/26+qW6VJtv6F5pkGOrpHdtb\/F\/E\/5s\/csK6Oqv7tel5X9xU\/xjqz473gu1ztDNf3xKCrdadXl7\/M0o0B0zvyYxwuYxuHqp+o\/rPXXN2qGGD8mF8LMJ6TzeNWD\/O4javyyc02FQ+X\/05frWKQ+fFe5s5xuIxtTbh+jdfI9LruNZm1k3vWm5E\/z0PFn7UfjEzzqAGlI7RpZc5rxf9rX+s6E\/bQIJrjD60yPbK+xyy0MI+aO\/xB9oo\/x2Aa2hfGygw1xPSq+rwzd86KlbFXeUf+PaZ6CPqJte64QyNuZjPtV\/wsFmwuVfln\/ZPNP1b7Hfb8G4wB6oCxV3mPWLwn\/1j9u5mqzpqsf+K8dz0A54ObaU6XVd7PaU91vmCs6Ad+x2Yo6+3B90Fyn2OEGlNnEcXvYqHmnpphVe7VDM3c33D9NrQWZvKsqPnnxJc\/Z2aVd6dZd\/ZRZ678uXr3wx7yJPbB7xgjGv6G5R17iDtfK+27M2b1vqLOUNn3qsY7sWB9unPmY\/WvtM76cfedjemK3XOzz80h5SfuWeVK1b+69wMVvGzB",
+      "data": "eJzdWMtuwzAM869k2Afs1g\/wYacddhsKZP\/\/EwPWAg3gcZJI2tllB8KJ44ckUqrdrbW2Dbje0G\/Y\/wleCDbA5dE\/zu3iWogZe87E3n7agTYp\/ketGnf0N7PhL3jv0I7PCv+RzRhLJe5RO6upHrxHMWacjX2R\/xWXjDdVO+p3Ngdj3skYl3+WSz0Zw\/jHfuQSuXbzUI1nlf\/4O1Dpq\/LH4dnl3cFYBxj\/zj7MNtyTraPobwXjOlfAJdiH1RBXm0rdyL6pfCj1tRP\/szmM\/1mNRvNm816dw\/yf3c\/VwSrvVb2pYuzyr\/A+tizvK52iT6s8RN+U\/J\/ZT6kPqkYYH8yOShuM\/4y\/7JyRnckyXar6HmvaCOW8k3Gg1L\/VOhPtyXTp6oDprdKM4r+qO1ef0RhnDfR3pmZk\/jv6dHP4rNri8nLob+x7ar\/Pfw6wJlRxY7azM7OqA2zfijl4\/n02EN0VXfuq+U48qntYxckr+P854T\/L0+wup+bUKv9VnA\/\/3xf4v6\/zRWKe2ZnZpdQ\/Nc+idY\/3M\/Qf8ZY9V33sf9cVHWS6vPv88cBZ+a\/cdZUxVX1UcmkP9sPx33shh9Y=",
       "encoding": "base64",
       "height": 23,
       "id": 1,
@@ -23,74 +23,89 @@
       "name": "Object Layer 1",
       "objects": [
         {
-          "gid": 34,
           "height": 36,
-          "id": 1,
+          "id": 14,
           "name": "",
-          "properties": [
-            {
-              "name": "Trigger",
-              "type": "string",
-              "value": "What a disappointment.  The decoded runes indicate\nthis is the civilization of Cruz, not Kroz.\nStill worth exploring, I guess."
-            }
-          ],
           "rotation": 0,
+          "text": {
+            "fontfamily": "Lucida Console",
+            "pixelsize": 40,
+            "text": "Doorbell",
+            "wrap": true
+          },
           "type": "",
           "visible": true,
-          "width": 24,
-          "x": 288,
+          "width": 192,
+          "x": 120,
           "y": 756
         },
         {
           "height": 36,
-          "id": 2,
+          "id": 15,
           "name": "",
           "rotation": 0,
           "text": {
             "fontfamily": "Lucida Console",
             "pixelsize": 40,
-            "text": "CRUZ",
+            "text": "\u25c4",
             "wrap": true
           },
           "type": "",
           "visible": true,
-          "width": 96,
-          "x": 240,
-          "y": 432
+          "width": 24,
+          "x": 144,
+          "y": 684
         },
         {
           "height": 36,
-          "id": 3,
+          "id": 16,
           "name": "",
           "rotation": 0,
           "text": {
             "fontfamily": "Lucida Console",
             "pixelsize": 40,
-            "text": "Ancient",
+            "text": "\u25c4",
             "wrap": true
           },
           "type": "",
           "visible": true,
-          "width": 168,
-          "x": 216,
-          "y": 504
+          "width": 24,
+          "x": 192,
+          "y": 684
         },
         {
           "height": 36,
-          "id": 4,
+          "id": 17,
           "name": "",
           "rotation": 0,
           "text": {
             "fontfamily": "Lucida Console",
             "pixelsize": 40,
-            "text": "Ruins",
+            "text": "\u25c4",
             "wrap": true
           },
           "type": "",
           "visible": true,
-          "width": 120,
+          "width": 24,
           "x": 240,
-          "y": 576
+          "y": 684
+        },
+        {
+          "height": 36,
+          "id": 18,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Lucida Console",
+            "pixelsize": 40,
+            "text": "\u25c4",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 288,
+          "y": 684
         }
       ],
       "opacity": 1,
@@ -101,7 +116,7 @@
     }
   ],
   "nextlayerid": 3,
-  "nextobjectid": 5,
+  "nextobjectid": 19,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.2",

@@ -483,10 +483,10 @@ export function createEntityFromTileId(
 export function getType(
   type: Type | string | undefined
 ): Type | number | undefined {
-  // if (typeof type === 'number') return type as Type;
+  if (typeof type === 'number') return type as Type;
   if (typeof type === 'undefined' || type === '') return undefined;
-  // if (typeof type === 'string' && !isNaN(+type)) return +type as Type;
-  // if (type in Type) return Type[type as keyof typeof Type];
+  if (typeof type === 'string' && !isNaN(+type)) return +type as Type;
+  if (type in Type) return Type[type as keyof typeof Type];
   return TypeNameToType[type] ?? type;
 }
 

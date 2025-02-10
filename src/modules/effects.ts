@@ -64,7 +64,6 @@ const SPELL_DURATION = {
 
 async function hideType(type: Type | string) {
   await world.level.map.forEach((x, y, e) => {
-    console.log(type, e?.type);
     if (e?.type === type) {
       e.add(isInvisible);
       screen.drawEntityAt(x, y);

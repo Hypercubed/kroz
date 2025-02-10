@@ -16,10 +16,60 @@
       "width": 64,
       "x": 0,
       "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 7,
+      "name": "Object Layer 2",
+      "objects": [
+        {
+          "height": 36,
+          "id": 23,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "color": "#000000",
+            "fontfamily": "Lucida Console",
+            "kerning": false,
+            "pixelsize": 40,
+            "text": "!!!",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 72,
+          "x": 1224,
+          "y": 612
+        },
+        {
+          "height": 36,
+          "id": 24,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "color": "#000000",
+            "fontfamily": "Lucida Console",
+            "kerning": false,
+            "pixelsize": 40,
+            "text": "???",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 72,
+          "x": 1440,
+          "y": 756
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
     }
   ],
-  "nextlayerid": 5,
-  "nextobjectid": 13,
+  "nextlayerid": 8,
+  "nextobjectid": 26,
   "orientation": "orthogonal",
   "properties": [
     {

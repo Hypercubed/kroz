@@ -1,0 +1,96 @@
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJztmD1ug0AQhfcqVBERoiCurbhJlyJK4RvkKAHfOqDsU55fZlnYH9KkeLIMi3e+mdmZwVfn3LWg3ivoXEgPsx5FJdlz+U+z+lldJf6zZ\/7I5B9El0T+Ub73Xk0ldkshRral858W\/yXAj2daH9eTwd\/L94b01\/yD+8nFxZ6bwQ929g3sbv2zLfkglg81+J8kjlv5Y\/nP7GOAH3vCBzn8ndwfN\/JzHjeF+Jkd0hrY0r3F9tsGfqzj+gc7G0Nb+GPPpPB3Eo+L+81fuv9hr560hx\/2lubX+leLH\/st3DjTpeOPeoe9Jvd91o+cAUL8qaqR\/\/\/8x\/Ln+IDP\/lH86gPMtbDlaP5Y\/FFPJ\/+pLEPgOjR5rp7Wse3ag0vkwOTW5xrlD\/UM8A+0Tvn6wHXuBw39jvJrDEqcA\/SA2CzAtt0C\/DFZM86e\/OcZOpb\/i516XjDvMb++n6Sejy0s+v5TswbyfGPlTU4vSOWHj4\/gt+bcmu+EiC\/XQGX9TIh\/qg+YV995avFbvtb4j3LN+n9gcve5stYDsV75lZl9kdsPeXbG\/uB7W+G3NDj7jPLzaz0QnCV64R5+tYPrG9sW4w\/xcK3M6XM1fGCdrRjn86yXDetK1sBa\/KhjYH+d9QXMjJOe",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
+        {
+          "gid": 52,
+          "height": 36,
+          "id": 1,
+          "name": "Enemy4",
+          "properties": [
+            {
+              "name": "AnimatedWalking",
+              "type": "string",
+              "value": "wW"
+            },
+            {
+              "name": "Attacks",
+              "propertytype": "Attacks",
+              "type": "class",
+              "value": {
+                "damage": 4
+              }
+            },
+            {
+              "name": "Speed",
+              "propertytype": "Speed",
+              "type": "class",
+              "value": {
+                "basePace": 4,
+                "baseSpeed": 4,
+                "hastedPace": 2,
+                "hastedSpeed": 1
+              }
+            },
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "ch": "w",
+                "fg": "LightRed"
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 1464,
+          "y": 72
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 2,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
+}

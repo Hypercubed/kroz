@@ -12,7 +12,7 @@
       "name": "",
       "opacity": 1,
       "type": "tilelayer",
-      "visible": false,
+      "visible": true,
       "width": 64,
       "x": 0,
       "y": 0
@@ -325,6 +325,74 @@
           "width": 24,
           "x": 768,
           "y": 36
+        },
+        {
+          "height": 36,
+          "id": 18,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Lucida Console",
+            "pixelsize": 40,
+            "text": "\u25ba\u25ba",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 48,
+          "x": 504,
+          "y": 324
+        },
+        {
+          "height": 36,
+          "id": 19,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Lucida Console",
+            "pixelsize": 40,
+            "text": "\u25c4\u25c4",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 48,
+          "x": 1008,
+          "y": 324
+        },
+        {
+          "height": 36,
+          "id": 20,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Lucida Console",
+            "pixelsize": 40,
+            "text": "Destroy!!",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 216,
+          "x": 480,
+          "y": 396
+        },
+        {
+          "height": 36,
+          "id": 21,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Lucida Console",
+            "pixelsize": 40,
+            "text": "Destroy!!",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 216,
+          "x": 864,
+          "y": 396
         }
       ],
       "opacity": 1,
@@ -335,7 +403,7 @@
     }
   ],
   "nextlayerid": 3,
-  "nextobjectid": 18,
+  "nextobjectid": 22,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.2",
