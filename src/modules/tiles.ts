@@ -132,8 +132,11 @@ export enum Type {
   Message = 252
 }
 
-const TileIDToType: Record<number, Type> = {}; // TileID to type lookup
-const TypeToTileID: Record<number, Type> = {}; // TileID to type lookup
+let nextTypeId = 255;
+
+let TileIDToType: Record<number, Type> = {}; // TileID to type lookup
+let TypeToTileID: Record<number, Type> = {}; // Type to TileID lookup
+let TypeNameToType: Record<string, Type> = {}; // Type name to Type lookup
 
 let tileset: ExternalTileset;
 
@@ -158,20 +161,26 @@ export const common = {
 };
 
 export async function setTileset(_tileset: ExternalTileset) {
+  TileIDToType = {};
+  TypeToTileID = {};
+  TypeNameToType = {};
+
   tileset = _tileset;
   if (!tileset.tiles) throw new Error('No tiles found in tileset');
 
   for (const tile of tileset.tiles!) {
-    const tileId = tile.id!;
-    const type = +tile.type! as Type;
-    TileIDToType[+tileId] = type;
-    TypeToTileID[type] = +tileId;
+    const tileId = +tile.id;
+    const type = tile.type ? (+tile.type! as Type) : nextTypeId++;
+    TileIDToType[tileId] = type;
+    TypeToTileID[type] = tileId;
 
-    if (!tile.properties) continue;
-
-    const props = ensureObject(tile.properties);
+    const props = ensureObject(tile?.properties ?? {});
     if (Type[type] && props.name !== Type[type])
       throw new Error('Tile ID mismatch');
+    const name = Type[type] ?? props.name ?? '' + type;
+    if (TypeNameToType[name]) throw new Error('Duplicate type name: ' + name);
+
+    TypeNameToType[name] = type;
 
     switch (type) {
       case Type.Floor:
@@ -473,12 +482,12 @@ export function createEntityFromTileId(
 
 export function getType(
   type: Type | string | undefined
-): Type | string | undefined {
-  if (typeof type === 'number') return type as Type;
+): Type | number | undefined {
+  // if (typeof type === 'number') return type as Type;
   if (typeof type === 'undefined' || type === '') return undefined;
-  if (typeof type === 'string' && !isNaN(+type)) return +type as Type;
-  if (type in Type) return Type[type as keyof typeof Type];
-  return type;
+  // if (typeof type === 'string' && !isNaN(+type)) return +type as Type;
+  // if (type in Type) return Type[type as keyof typeof Type];
+  return TypeNameToType[type] ?? type;
 }
 
 const SIMPLE_TAGS = {

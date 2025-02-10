@@ -16,66 +16,6 @@
       "width": 64,
       "x": 0,
       "y": 0
-    },
-    {
-      "draworder": "topdown",
-      "id": 4,
-      "name": "Object Layer 1",
-      "objects": [
-        {
-          "gid": 137,
-          "height": 36,
-          "id": 11,
-          "name": "",
-          "properties": [
-            {
-              "name": "Tile",
-              "propertytype": "Renderable",
-              "type": "class",
-              "value": {
-                "bg": "None",
-                "ch": "\u00a0",
-                "fg": "White"
-              }
-            }
-          ],
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 24,
-          "x": 888,
-          "y": 216
-        },
-        {
-          "gid": 135,
-          "height": 36,
-          "id": 12,
-          "name": "",
-          "properties": [
-            {
-              "name": "Tile",
-              "propertytype": "Renderable",
-              "type": "class",
-              "value": {
-                "bg": "None",
-                "ch": "\u00a0",
-                "fg": "White"
-              }
-            }
-          ],
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 24,
-          "x": 1320,
-          "y": 468
-        }
-      ],
-      "opacity": 1,
-      "type": "objectgroup",
-      "visible": true,
-      "x": 0,
-      "y": 0
     }
   ],
   "nextlayerid": 5,

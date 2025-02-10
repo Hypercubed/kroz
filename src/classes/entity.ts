@@ -8,7 +8,7 @@ export class Entity {
   protected _components = new Map<string, object>();
   protected _tags = new Set<string | symbol>();
 
-  constructor(public readonly type: number | string) {}
+  constructor(public readonly type: number) {}
 
   add<T extends object>(x: T): this;
   add(x: symbol | string): this;
