@@ -2874,6 +2874,146 @@
       "type": "66"
     },
     {
+      "id": 133,
+      "properties": [
+        {
+          "name": "FoundMessage",
+          "type": "string",
+          "value": "A new bridge forms before you"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "None",
+            "ch": "\u2b70",
+            "fg": "White"
+          }
+        },
+        {
+          "name": "Trigger",
+          "type": "string",
+          "value": "##BridgeCaster -1 0"
+        },
+        {
+          "name": "isPassable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "value": "BridgeCasterLeft"
+        }
+      ]
+    },
+    {
+      "id": 134,
+      "properties": [
+        {
+          "name": "FoundMessage",
+          "type": "string",
+          "value": "A new bridge forms before you"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "None",
+            "ch": "\u2b72",
+            "fg": "White"
+          }
+        },
+        {
+          "name": "Trigger",
+          "type": "string",
+          "value": "##BridgeCaster 1 0"
+        },
+        {
+          "name": "isPassable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "value": "BridgeCasterRight"
+        }
+      ]
+    },
+    {
+      "id": 135,
+      "properties": [
+        {
+          "name": "FoundMessage",
+          "type": "string",
+          "value": "A new bridge forms before you"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "None",
+            "ch": "\u2b71",
+            "fg": "White"
+          }
+        },
+        {
+          "name": "Trigger",
+          "type": "string",
+          "value": "##BridgeCaster 0 -1"
+        },
+        {
+          "name": "isPassable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "value": "BridgeCasterUp"
+        }
+      ]
+    },
+    {
+      "id": 136,
+      "properties": [
+        {
+          "name": "FoundMessage",
+          "type": "string",
+          "value": "A new bridge forms before you"
+        },
+        {
+          "name": "Tile",
+          "propertytype": "Renderable",
+          "type": "class",
+          "value": {
+            "bg": "None",
+            "ch": "\u2b73",
+            "fg": "White"
+          }
+        },
+        {
+          "name": "Trigger",
+          "type": "string",
+          "value": "##BridgeCaster 0 1"
+        },
+        {
+          "name": "isPassable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "value": "BridgeCasterDown"
+        }
+      ]
+    },
+    {
       "id": 140,
       "properties": [
         {
@@ -3079,6 +3219,31 @@
         }
       ],
       "type": "74"
+    },
+    {
+      "id": 152,
+      "properties": [
+        {
+          "name": "Trigger",
+          "type": "string",
+          "value": "##TTrigger Stairs"
+        },
+        {
+          "name": "isBombable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isPassable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "value": "TStairs"
+        }
+      ]
     },
     {
       "id": 159,

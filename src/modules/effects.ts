@@ -793,6 +793,24 @@ export async function pushRock(
   }
 }
 
+async function bridgeCaster(x: number, y: number, dx: number, dy: number) {
+  let xx = x;
+  let yy = y;
+  while (true) {
+    xx += dx;
+    yy += dy;
+    if (xx < 0 || xx > XMax || yy < 0 || yy > YMax) break;
+    const t = world.level.map.getType(xx, yy);
+    if (t === Type.Pit || t === Type.River || t === Type.Lava) {
+      // TODO: Animation and sound
+      world.setTypeAt(xx, yy, Type.Floor);
+      screen.drawEntityAt(xx, yy);
+    } else {
+      break;
+    }
+  }
+}
+
 interface EffectsParams {
   who: Entity;
   what: Entity;
@@ -907,7 +925,8 @@ const EffectMap: Record<string, EffectFn> = {
    */
   MagicEWalls: () => {
     world.level.magicEWalls = true;
-  }
+  },
+  BridgeCaster: ({ x, y, args }) => bridgeCaster(x, y, +args[0], +args[1])
 };
 
 // TODO:
