@@ -14,17 +14,14 @@ import {
   ROCK_CRUSHABLES,
   ROCK_MOVEABLES,
   ROCKABLES,
-  SPEAR_BLOCKS,
-  SPEAR_IGNORE,
   TRIGGERABLES,
   TUNNELABLES,
-  Type,
-  VISUAL_TELEPORTABLES
+  Type
 } from './tiles';
 import {
   Breakable,
   isBombable,
-  isImpervious,
+  isImperviousToSpears,
   isInvisible,
   isMob,
   isPlayer,
@@ -93,8 +90,7 @@ async function shoot(x: number, y: number, dx: number) {
     const e = world.level.map.get(x, y)!;
     if (
       typeof e.type !== 'number' ||
-      SPEAR_BLOCKS.includes(e.type) ||
-      e?.has(isImpervious) // TODO: OnSpear ??
+      e?.has(isImperviousToSpears) // TODO: OnSpear ??
     ) {
       // These objects stop the Spear
       break;
@@ -106,8 +102,10 @@ async function shoot(x: number, y: number, dx: number) {
       await delay(1);
     }
 
-    if (!SPEAR_IGNORE.includes(e.type as Type)) {
-      // These objects are ignored
+    if (e.type === Type.Floor || !e.has(Renderable) || e.has(isInvisible)) {
+      // Spears ignore these objects
+      screen.drawEntityAt(x, y);
+    } else {
       await sound.spearHit();
       if (
         e.type === Type.Slow ||
@@ -117,9 +115,9 @@ async function shoot(x: number, y: number, dx: number) {
         await world.killAt(x, y);
       }
       world.setTypeAt(x, y, Type.Floor);
+      screen.drawEntityAt(x, y);
     }
 
-    screen.drawEntityAt(x, y);
     x += dx;
   }
   screen.renderPlayfield();
@@ -367,8 +365,12 @@ export async function teleport(e: Entity) {
   for (let i = 0; i < 700; i++) {
     const x = RNG.getUniformInt(0, XMax);
     const y = RNG.getUniformInt(0, YMax);
-    const block = world.level.map.getType(x, y);
-    if (VISUAL_TELEPORTABLES.indexOf(block as Type) > -1) {
+    const block = world.level.map.get(x, y)!;
+    if (
+      block.type === Type.Floor ||
+      block?.has(isInvisible) ||
+      !block?.has(Renderable)
+    ) {
       screen.drawAt(
         x,
         y,

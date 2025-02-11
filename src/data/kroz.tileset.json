@@ -65,6 +65,11 @@
           "value": ""
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "isPassable",
           "type": "bool",
           "value": true
@@ -143,6 +148,11 @@
           "name": "Trigger",
           "type": "string",
           "value": "@@BlockedWall"
+        },
+        {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -524,6 +534,11 @@
           }
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "isPushable",
           "type": "bool",
           "value": true
@@ -771,6 +786,11 @@
           "value": "@@BlockedWall"
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "name",
           "type": "string",
           "value": "OWall1"
@@ -797,6 +817,11 @@
           "value": "@@BlockedWall"
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "name",
           "type": "string",
           "value": "OWall2"
@@ -821,6 +846,11 @@
           "name": "Trigger",
           "type": "string",
           "value": "@@BlockedWall"
+        },
+        {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -1036,6 +1066,11 @@
           "value": "@@Blocked"
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "name",
           "type": "string",
           "value": "Statue"
@@ -1235,6 +1270,11 @@
           "value": true
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "name",
           "type": "string",
           "value": "Door"
@@ -1365,6 +1405,11 @@
         },
         {
           "name": "isGenerator",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         },
@@ -1516,6 +1561,11 @@
           }
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "isPassable",
           "type": "bool",
           "value": true
@@ -1582,6 +1632,11 @@
         },
         {
           "name": "isBombable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         },
@@ -1657,6 +1712,11 @@
         },
         {
           "name": "isBombable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         },
@@ -1903,6 +1963,11 @@
           "value": "##Tunnel"
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "isPassable",
           "type": "bool",
           "value": true
@@ -1937,6 +2002,11 @@
           "name": "Trigger",
           "type": "string",
           "value": "##TAKE Gem 10"
+        },
+        {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "isPassable",
@@ -2031,6 +2101,11 @@
           "value": true
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "name",
           "type": "string",
           "value": "Block"
@@ -2067,6 +2142,11 @@
         },
         {
           "name": "isBombable",
+          "type": "bool",
+          "value": true
+        },
+        {
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         },
@@ -2271,6 +2351,11 @@
           "value": true
         },
         {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
+        },
+        {
           "name": "name",
           "type": "string",
           "value": "IDoor"
@@ -2292,7 +2377,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2312,7 +2397,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2332,7 +2417,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2352,7 +2437,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2372,7 +2457,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2392,7 +2477,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2412,7 +2497,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2432,7 +2517,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2452,7 +2537,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2472,7 +2557,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2492,7 +2577,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2512,7 +2597,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2532,7 +2617,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2552,7 +2637,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2572,7 +2657,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2592,7 +2677,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2612,7 +2697,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2632,7 +2717,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2652,7 +2737,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2672,7 +2757,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2692,7 +2777,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2712,7 +2797,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2732,7 +2817,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2752,7 +2837,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2772,7 +2857,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2792,7 +2877,7 @@
           }
         },
         {
-          "name": "isImpervious",
+          "name": "isImperviousToSpears",
           "type": "bool",
           "value": true
         }
@@ -2864,6 +2949,11 @@
           "name": "Trigger",
           "type": "string",
           "value": "@@StaticNoise\n##TAKE Gem 1"
+        },
+        {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "name",
@@ -3271,6 +3361,11 @@
           "name": "description",
           "type": "string",
           "value": "Amulet of Yendor"
+        },
+        {
+          "name": "isImperviousToSpears",
+          "type": "bool",
+          "value": true
         },
         {
           "name": "isPassable",

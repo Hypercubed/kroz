@@ -26,7 +26,7 @@ import {
   isBombable,
   FoundMessage,
   Glitch,
-  isImpervious
+  isImperviousToSpears
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -290,20 +290,6 @@ export const ROCKABLES = [
   Type.Stop
 ];
 
-// Types that appear as a floor when a teleport is triggered
-// TODO: Same as `.has(isInvisible)`?
-export const VISUAL_TELEPORTABLES = [
-  Type.Floor,
-  Type.Stop,
-  ...ITRAPS,
-  Type.ShowGems,
-  Type.BlockSpell,
-  Type.WallVanish,
-  ...CWALLS,
-  ...CSPELLS,
-  ...TBLOCKS
-];
-
 // Types that can be replaced when a TBlock is triggered
 export const TRIGGERABLES = [
   Type.Floor,
@@ -350,47 +336,6 @@ export const ROCK_CLIFFABLES = [Type.Stairs, Type.Pit];
 
 export const TUNNELABLES = [Type.Floor, Type.Stop, ...ITRAPS, ...CWALLS];
 
-export const SPEAR_BLOCKS = [
-  Type.Block,
-  Type.Stairs,
-  Type.Door,
-  Type.Wall,
-  Type.Lava,
-  Type.Tunnel,
-  Type.IDoor,
-  Type.Generator,
-  Type.MBlock,
-  Type.Tablet,
-  Type.ZBlock,
-  Type.Statue,
-  ...OWALLS,
-  Type.GBlock,
-  Type.Rock,
-  Type.EWall,
-  Type.Amulet
-];
-
-export const SPEAR_IGNORE = [
-  Type.Floor,
-  Type.River,
-  Type.Pit,
-  Type.Quake,
-  Type.IBlock,
-  Type.IWall,
-  Type.Stop,
-  Type.Trap2,
-  Type.Trap3,
-  Type.Trap4,
-  Type.Trap5,
-  Type.ShowGems,
-  Type.BlockSpell,
-  Type.WallVanish,
-  ...CWALLS,
-  ...CSPELLS,
-  ...TBLOCKS,
-  Type.Rope
-];
-
 const MOB_WALKABLE = [
   Type.Floor,
   Type.TBlock,
@@ -399,25 +344,7 @@ const MOB_WALKABLE = [
   Type.TBlind,
   Type.TGold,
   Type.TWhip,
-  Type.TTree,
-  Type.Whip,
-  Type.Chest,
-  Type.SlowTime,
-  Type.Gem,
-  Type.Invisible,
-  Type.Teleport,
-  Type.Key,
-  Type.SpeedTime,
-  Type.Trap,
-  Type.Power,
-  Type.Freeze,
-  Type.Nugget,
-  Type.K,
-  Type.R,
-  Type.O,
-  Type.Z,
-  Type.ShootRight,
-  Type.ShootLeft
+  Type.TTree
 ];
 
 const MOB_EATS = [
@@ -433,12 +360,61 @@ const MOB_EATS = [
   Type.Power,
   Type.Freeze,
   Type.Nugget,
-  Type.K,
-  Type.R,
-  Type.O,
-  Type.Z,
+  ...KROZ,
   Type.ShootRight,
   Type.ShootLeft
+];
+
+export const LAVA_FLOW = [
+  Type.Floor,
+  ...MOBS,
+  Type.Block,
+  ...COLLECTABLES,
+  ...SPELLS,
+  Type.Trap,
+  Type.Power,
+  Type.Forest,
+  Type.Tree,
+  Type.Bomb,
+  Type.Nugget,
+  Type.Quake,
+  Type.Stop,
+  Type.Trap2,
+  Type.Zap,
+  Type.Create,
+  Type.Trap3,
+  Type.MBlock,
+  Type.Trap4,
+  Type.ShowGems,
+  Type.Tablet,
+  Type.ZBlock,
+  Type.BlockSpell,
+  Type.Chance,
+  Type.WallVanish,
+  ...KROZ,
+  Type.CWall3,
+  Type.OSpell3,
+  Type.GBlock,
+  Type.Trap5,
+  ...TBLOCKS,
+  Type.DropRope2,
+  Type.DropRope3,
+  Type.DropRope4,
+  Type.DropRope5,
+  Type.Amulet,
+  Type.ShootRight,
+  Type.ShootLeft
+];
+
+export const TREE_GROW = [
+  Type.Floor,
+  Type.Trap,
+  Type.Nugget,
+  Type.Quake,
+  Type.Stop,
+  Type.Trap2,
+  Type.Trap3,
+  Type.Trap4
 ];
 
 export function getTileDefinition(tileId: number) {
@@ -499,7 +475,7 @@ const SIMPLE_TAGS = {
   isPassable,
   followsPlayer,
   isBombable,
-  isImpervious
+  isImperviousToSpears
 };
 
 const SIMPLE_COMPONENTS = {
@@ -536,7 +512,7 @@ function addComponentsToEntity(
     }
   }
 
-  if (MOB_WALKABLE.includes(type as Type)) {
+  if (MOB_WALKABLE.includes(type as Type) || MOB_EATS.includes(type as Type)) {
     entity.add(new Walkable([Type.Fast, Type.Medium, Type.Slow]));
   }
 

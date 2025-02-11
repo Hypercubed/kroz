@@ -319,6 +319,7 @@ export function moveTo(x: number, y: number) {
   screen.drawEntityAt(p.x, p.y);
 
   const b = world.level.map.getType(x, y) as Type;
+  // TODO: Property of Passable?
   p.replacement = [Type.CWall1, Type.CWall2, Type.CWall3, Type.Rope].includes(b)
     ? b
     : Type.Floor;

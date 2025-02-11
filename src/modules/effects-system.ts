@@ -4,7 +4,7 @@ import * as sound from './sound';
 
 import { XMax, YMax } from '../data/constants';
 import { RNG } from 'rot-js';
-import { Type } from './tiles';
+import { LAVA_FLOW, TREE_GROW, Type } from './tiles';
 import { isInvisible } from '../classes/components';
 import { Timer } from './effects';
 
@@ -89,13 +89,7 @@ export async function update() {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
       const block = world.level.map.getType(x, y);
-      if (
-        [
-          0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 15, 16, 18, 19, 20, 21, 26, 27, 28,
-          32, 33, 34, 35, 37, 38, 39, 41, 42, 43, 44, 45, 47, 48, 49, 50, 51,
-          57, 60, 64, 67, 68, 69, 70, 71, 72, 73, 74, 77, 78, 79, 80, 81, 82, 83
-        ].includes(block as number)
-      ) {
+      if (LAVA_FLOW.includes(block as number)) {
         let done = false;
         if (world.level.map.getType(x + 1, y) === Type.Lava) done = true;
         if (world.level.map.getType(x - 1, y) === Type.Lava) done = true;
@@ -115,7 +109,7 @@ export async function update() {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
       const block = world.level.map.getType(x, y);
-      if ([0, 16, 27, 28, 32, 33, 37, 39].includes(block as number)) {
+      if (TREE_GROW.includes(block as number)) {
         let done = false;
         if (
           world.level.map.getType(x + 1, y) === Type.Tree ||

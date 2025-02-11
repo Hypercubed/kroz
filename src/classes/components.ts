@@ -38,7 +38,7 @@ export const isPushable = Symbol('isPushable');
  */
 export const isPassable = Symbol('isPassable');
 
-export const isImpervious = Symbol('isImpervious');
+export const isImperviousToSpears = Symbol('isImperviousToSpears');
 
 /**
  * ## isBombable
