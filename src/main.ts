@@ -1,8 +1,8 @@
 import * as engine from './modules/engine';
 
-function go() {
+async function go() {
   engine.init();
-  engine.start();
+  await engine.start();
 }
 
 try {

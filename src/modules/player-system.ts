@@ -20,7 +20,7 @@ import {
   Position,
   isPushable,
   Trigger,
-  ChangeLevel,
+  // ChangeLevel,
   isPassable,
   FoundMessage,
   isInvisible
@@ -238,25 +238,25 @@ export async function tryMove(dx: number, dy: number) {
     if (!world.game.done && world.stats.gems < 0) dead();
   }
 
-  if (e.has(ChangeLevel)) {
-    const c = e.get(ChangeLevel)!;
-    if (c.deltaLevel > 0) {
-      if (world.stats.levelIndex === levels.getLevelsCount() - 1) {
-        await screen.endRoutine();
-        return;
-      }
-      world.addScore(e.type as Type);
-      sound.footStep();
-      await levels.nextLevel(c.deltaLevel);
-    } else if (c.deltaLevel < 0) {
-      sound.footStep();
-      await levels.prevLevel(-c.deltaLevel);
-    } else if (c.exactLevel !== null) {
-      sound.footStep();
-      world.stats.levelIndex = c.exactLevel - 1;
-      await levels.nextLevel(1);
-    }
-  }
+  // if (e.has(ChangeLevel)) {
+  //   const c = e.get(ChangeLevel)!;
+  //   if (c.deltaLevel > 0) {
+  //     if (world.stats.levelIndex === levels.getLevelsCount() - 1) {
+  //       await screen.endRoutine();
+  //       return;
+  //     }
+  //     world.addScore(e.type as Type);
+  //     sound.footStep();
+  //     await levels.nextLevel(c.deltaLevel);
+  //   } else if (c.deltaLevel < 0) {
+  //     sound.footStep();
+  //     await levels.prevLevel(-c.deltaLevel);
+  //   } else if (c.exactLevel !== null) {
+  //     sound.footStep();
+  //     world.stats.levelIndex = c.exactLevel - 1;
+  //     await levels.nextLevel(1);
+  //   }
+  // }
 
   switch (e.type) {
     case Type.Door: // Opens door (if has key) -> isDoor Component?

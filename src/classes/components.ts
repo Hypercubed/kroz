@@ -54,8 +54,8 @@ export const isBombable = Symbol('isBombable');
  * A renderable is a component that can be rendered to the screen.  It contains values for the character, color, and background color. */
 export class Renderable {
   ch: string;
-  fg: number | null;
-  bg: number | null;
+  fg: number | string | null;
+  bg: number | string | null;
   blink: boolean = false;
 
   constructor(data: Partial<Renderable>) {
@@ -227,15 +227,15 @@ export class Trigger {
 /**
  * ##  ChangeLevel
  */
-export class ChangeLevel {
-  exactLevel: number | null = null;
-  deltaLevel: number = 0;
+// export class ChangeLevel {
+//   exactLevel: number | null = null;
+//   deltaLevel: number = 0;
 
-  constructor(data: Partial<ChangeLevel>) {
-    this.exactLevel = data.exactLevel ?? null;
-    this.deltaLevel = data.deltaLevel ?? 0;
-  }
-}
+//   constructor(data: Partial<ChangeLevel>) {
+//     this.exactLevel = data.exactLevel ?? null;
+//     this.deltaLevel = data.deltaLevel ?? 0;
+//   }
+// }
 
 /**
  * ##  Speed

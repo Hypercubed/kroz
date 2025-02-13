@@ -26,28 +26,17 @@ import { Color } from './colors';
 let stats: Stats;
 let gui: dat.GUI;
 
+let lastRaf = 0;
+let runningGame = 0;
+
 export function init() {
   const container = display.getContainer()!;
   const app = document.getElementById('app')!;
   app.appendChild(container);
   controls.start();
-}
 
-export async function start() {
-  display.clear(Color.Black);
   world.resetState();
-
-  const game = await screen.introScreen();
-  world.game.title = game.title || TITLE;
-
-  await screen.renderTitle();
-  await screen.instructionsScreen();
-
-  level.addLevels(game.LEVELS);
-  tiles.setTileset(await game.readTileset());
-  colors.setColors(await game.readColor());
-
-  await level.loadLevel();
+  display.clear(Color.Black);
 
   if (SHOW_STATS && !stats) {
     stats = new Stats();
@@ -83,11 +72,46 @@ export async function start() {
     p.add(debug.player, 'y', 0, YMax, 1).listen();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  events.gameStart.add((game: any) => {
+    window.cancelAnimationFrame(lastRaf);
+    runGame(game);
+  });
+}
+
+export async function start() {
+  display.clear(Color.Black);
+
+  const game = await screen.introScreen();
+  world.game.title = game.title || TITLE;
+
+  await screen.renderTitle();
+  await screen.instructionsScreen();
+
+  events.gameStart.dispatch(game);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function runGame(game: any) {
+  world.resetState();
+  display.clear(Color.Black);
+
+  level.addLevels(game.LEVELS);
+  tiles.setTileset(await game.readTileset());
+  colors.setColors(await game.readColor());
+
+  await level.loadLevel();
+
   screen.fullRender();
+
+  world.game.started = true;
   await run();
 }
 
 async function run() {
+  runningGame++;
+
+  const _runningGame = runningGame;
   let tick = 0;
   let dt = 0;
   let previousTime = 0;
@@ -99,9 +123,12 @@ async function run() {
   });
 
   const raf = async (currentTime: number) => {
+    if (runningGame !== _runningGame) return;
+
     const speed = 8 * world.game.clockScale;
 
     if (world.game.done) {
+      // Remote this?
       start();
       return;
     }
@@ -126,5 +153,5 @@ async function run() {
     stats?.end();
     requestAnimationFrame(raf);
   };
-  requestAnimationFrame(raf);
+  lastRaf = requestAnimationFrame(raf);
 }

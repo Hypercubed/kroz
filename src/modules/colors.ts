@@ -1,3 +1,6 @@
+import { BLINK } from '../data/constants';
+import * as world from './world';
+
 // PASCAL color codes
 export enum Color {
   Black = 0,
@@ -51,9 +54,11 @@ export function getColor(c: string | Color, alpha: number = 1): string {
     if (c > 15) {
       // Add blink
       c %= 16;
-      const v = 500;
-      const f = Date.now() % v < v / 2;
-      if (!f) alpha = 0;
+      if (BLINK && !world.game.paused && world.game.started) {
+        const v = 500;
+        const f = Date.now() % v < v / 2;
+        if (!f) alpha = 0;
+      }
     }
     c = ColorCodes[c];
   }

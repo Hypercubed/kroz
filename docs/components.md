@@ -65,8 +65,6 @@ A component that allows an entity to animate while walking.  It contains a list 
 
 A component that allows an entity to trigger an event when it is interacted with.
 
-##  ChangeLevel
-
 ##  Speed
 
 A component that allows an entity to move at different speeds.  It contains a base pace and a hasted pace.

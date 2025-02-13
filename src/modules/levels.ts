@@ -15,11 +15,17 @@ import {
   isPlayer,
   Renderable
 } from '../classes/components.ts';
-import { ensureObject, getASCIICode } from '../utils/utils.ts';
+import {
+  ensureObject,
+  getASCIICode,
+  shuffle,
+  wrapString
+} from '../utils/utils.ts';
 import { XMax, YMax } from '../data/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Type } from './tiles.ts';
 import { Timer } from './effects.ts';
+import { Color } from './colors.ts';
 
 export interface Level {
   id: string;
@@ -198,20 +204,48 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
     const tileId = 97; // Solid Wall
     const type = Type.Wall;
 
-    const xx = x / 24;
-    const yy = y / 36;
-
     const str = text!.text!;
-    for (let i = 0; i < str.length; i++) {
-      const e = tiles.createEntityFromTileId(
-        tileId,
-        xx + i,
-        yy,
-        ensureObject(properties),
-        type
-      );
-      e.get(Renderable)!.ch = str[i];
-      output[yy * tilemap.width + xx + i] = e;
+    const wrap = text!.wrap;
+
+    const px = x / 24;
+    const py = y / 36;
+    const w = width / 24;
+
+    let lines = [str];
+    if (wrap) {
+      lines = wrapString(str, w).split('\n');
+    }
+
+    const { halign, color } = obj.text!;
+
+    const props = ensureObject(properties || {});
+    const fg = props.fgColor ?? color ?? Color.HighIntensityWhite;
+    const bg = props.bgColor ?? Color.Brown;
+
+    for (let y = 0; y < lines.length; y++) {
+      let line = lines[y];
+      if (halign === 'right') {
+        line = line.padStart(w, ' ');
+      }
+      for (let x = 0; x < line.length; x++) {
+        const xx = px + x;
+        const yy = py + y;
+
+        const e = tiles.createEntityFromTileId(
+          tileId,
+          xx,
+          yy,
+          ensureObject(properties),
+          type
+        );
+        e.get(Renderable)!.ch = line[x];
+        e.get(Renderable)!.fg = fg;
+        e.get(Renderable)!.bg = bg;
+
+        console.log(e.get(Renderable));
+
+        output[yy * tilemap.width + xx] = e;
+      }
     }
   }
 
@@ -283,23 +317,4 @@ async function loadLevelData(level: Level) {
 function getTileIdFromGID(gid: number): number {
   if (!gid || gid < 0) return -1;
   return (+gid % 256) - 1;
-}
-
-function shuffle<T>(array: T[]) {
-  let currentIndex = array.length;
-
-  // While there remain elements to shuffle...
-  while (currentIndex != 0) {
-    // Pick a remaining element...
-    const randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex]
-    ];
-  }
-
-  return array;
 }

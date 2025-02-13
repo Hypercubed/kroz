@@ -6,6 +6,8 @@ import * as tiles from './tiles';
 import * as display from './display';
 import * as mobs from './mobs-system';
 import * as colors from './colors';
+import * as levels from './levels.ts';
+import * as events from './events';
 
 import {
   createEntityOfType,
@@ -43,6 +45,7 @@ import { RNG } from 'rot-js';
 import { delay } from '../utils/utils';
 import { Color, ColorCodes } from './colors';
 import { Entity } from '../classes/entity';
+import { games } from './games.ts';
 
 export const enum Timer { // TODO: Eliminate this, use type
   SlowTime = 4,
@@ -929,7 +932,17 @@ const EffectMap: Record<string, EffectFn> = {
   MagicEWalls: () => {
     world.level.magicEWalls = true;
   },
-  BridgeCaster: ({ x, y, args }) => bridgeCaster(x, y, +args[0], +args[1])
+  BridgeCaster: ({ x, y, args }) => bridgeCaster(x, y, +args[0], +args[1]),
+  NEXTLEVEL: async () => {
+    await levels.nextLevel();
+  },
+  CHANGELEVEL: async ({ args }) => {
+    world.stats.levelIndex = +args[0] - 1;
+    await levels.nextLevel(1);
+  },
+  CHANGEGAME: async () => {
+    events.gameStart.dispatch(games.forgotton);
+  }
 };
 
 // TODO:

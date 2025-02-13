@@ -1,0 +1,267 @@
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzt1rEJADAIBVFXEVzHIvsvkxUiSPDjFa8LkiMWcTNzAAAaxYN8PBcDeqpy6Cz69foV97\/zzorvX+k\/y\/t\/zqJfr3\/7\/qv2b\/7\/AQDmuvHJwGI=",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 4,
+      "name": "Object Layer 1",
+      "objects": [
+        {
+          "height": 72,
+          "id": 9,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Lucida Console",
+            "kerning": false,
+            "pixelsize": 40,
+            "text": "12 levels from Kingdom of Kroz II",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 480,
+          "x": 1056,
+          "y": 252
+        },
+        {
+          "height": 72,
+          "id": 10,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Lucida Console",
+            "kerning": false,
+            "pixelsize": 40,
+            "text": "10 levels from Caverns of Kroz II",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 480,
+          "x": 1056,
+          "y": 360
+        },
+        {
+          "height": 72,
+          "id": 11,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Lucida Console",
+            "kerning": false,
+            "pixelsize": 40,
+            "text": "57 leves from Lost Adventures of Kroz",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 480,
+          "x": 1056,
+          "y": 504
+        },
+        {
+          "height": 108,
+          "id": 12,
+          "name": "",
+          "properties": [
+            {
+              "name": "bgColor",
+              "propertytype": "Color",
+              "type": "string",
+              "value": "Black"
+            },
+            {
+              "name": "fgColor",
+              "propertytype": "Color",
+              "type": "string",
+              "value": "Yellow"
+            }
+          ],
+          "rotation": 0,
+          "text": {
+            "color": "#000000",
+            "fontfamily": "Lucida Console",
+            "halign": "right",
+            "kerning": false,
+            "pixelsize": 40,
+            "text": "8 levels from The Underground Adventures of Cruz",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 480,
+          "x": 48,
+          "y": 252
+        },
+        {
+          "height": 36,
+          "id": 13,
+          "name": "",
+          "properties": [
+            {
+              "name": "bgColor",
+              "propertytype": "Color",
+              "type": "string",
+              "value": "Black"
+            }
+          ],
+          "rotation": 0,
+          "text": {
+            "color": "#aaff00",
+            "fontfamily": "Lucida Console",
+            "halign": "right",
+            "kerning": false,
+            "pixelsize": 40,
+            "text": "Tutorial",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 192,
+          "x": 696,
+          "y": 144
+        },
+        {
+          "height": 36,
+          "id": 14,
+          "name": "",
+          "properties": [
+            {
+              "name": "bgColor",
+              "propertytype": "Color",
+              "type": "string",
+              "value": "Black"
+            }
+          ],
+          "rotation": 0,
+          "text": {
+            "color": "#aaff00",
+            "fontfamily": "Lucida Console",
+            "halign": "right",
+            "kerning": false,
+            "pixelsize": 40,
+            "text": "Instructions",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 288,
+          "x": 648,
+          "y": 648
+        },
+        {
+          "gid": 77,
+          "height": 36,
+          "id": 15,
+          "name": "",
+          "properties": [
+            {
+              "name": "FoundMessage",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "##CHANGELEVEL 1"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 768,
+          "y": 252
+        },
+        {
+          "gid": 77,
+          "height": 36,
+          "id": 16,
+          "name": "",
+          "properties": [
+            {
+              "name": "FoundMessage",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "##CHANGELEVEL 2"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 768,
+          "y": 612
+        },
+        {
+          "gid": 77,
+          "height": 36,
+          "id": 17,
+          "name": "",
+          "properties": [
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "##CHANGEGAME"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 696,
+          "y": 432
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 5,
+  "nextobjectid": 18,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "id",
+      "type": "string",
+      "value": "Debug"
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
+}

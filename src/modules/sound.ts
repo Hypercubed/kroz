@@ -5,10 +5,11 @@ import { delay } from '../utils/utils';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { ZZFX } from 'zzfx';
+import { VOLUME } from '../data/constants';
 
 const SILENT = false;
 
-ZZFX.volume = 0.005;
+ZZFX.volume = VOLUME;
 
 export function play(frequency: number, duration: number, volume: number = 1) {
   if (SILENT) return delay(duration);

@@ -33,13 +33,13 @@ const _timers = {
 
 const _player = {
   get x(): number | undefined {
-    return world.level.player.get(Position)?.x;
+    return world.level.player?.get(Position)?.x ?? 0;
   },
   set x(v: number) {
     world.level.player.get(Position)!.x = v;
   },
   get y(): number | undefined {
-    return world.level.player.get(Position)?.y;
+    return world.level.player?.get(Position)?.y ?? 0;
   },
   set y(v: number) {
     world.level.player.get(Position)!.y = v;

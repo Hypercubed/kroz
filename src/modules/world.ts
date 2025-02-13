@@ -74,6 +74,7 @@ function getDefaultGameState() {
     difficulty: Difficulty.Novice,
     clockScale: CLOCK_SCALE,
     paused: false,
+    started: false,
     done: false,
     foundSet: new Set<Type>() as Set<Type> | true,
     bot: false,

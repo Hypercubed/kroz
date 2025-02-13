@@ -57,3 +57,33 @@ export function ensureObject(array: unknown): Record<string, any> {
   }
   return array as unknown as Record<string, unknown>;
 }
+
+export function pad(s: string, n: number, r: number, char: string) {
+  return s.padStart(n, char).padEnd(r, char);
+}
+
+export function shuffle<T>(array: T[]) {
+  let currentIndex = array.length;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+    // Pick a remaining element...
+    const randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex]
+    ];
+  }
+
+  return array;
+}
+
+export function wrapString(s: string, w: number) {
+  return s.replace(
+    new RegExp(`(?![^\\n]{1,${w}}$)([^\\n]{1,${w}})\\s`, 'g'),
+    '$1\n'
+  );
+}

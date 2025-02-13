@@ -1498,14 +1498,6 @@
       "id": 76,
       "properties": [
         {
-          "name": "ChangeLevel",
-          "propertytype": "ChangeLevel",
-          "type": "class",
-          "value": {
-            "deltaLevel": 1
-          }
-        },
-        {
           "name": "FoundMessage",
           "type": "string",
           "value": "Stairs take you to the next lower level."

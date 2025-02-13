@@ -14,6 +14,7 @@ import * as gameCruz from '../data/cruz/index.ts';
 import {
   DEBUG,
   ENABLE_BOTS,
+  FLOOR_CHAR,
   HEIGHT,
   WIDTH,
   XBot,
@@ -23,7 +24,7 @@ import {
 } from '../data/constants';
 import { default as RNG } from 'rot-js/lib/rng';
 import { Color, ColorCodes } from './colors';
-import { delay } from '../utils/utils';
+import { delay, pad } from '../utils/utils';
 import dedent from 'ts-dedent';
 import { Type } from './tiles';
 import { Entity } from '../classes/entity';
@@ -73,36 +74,47 @@ export function renderStats() {
   display.drawText(
     x,
     1,
-    pad((world.stats.score * 10).toString(), width + 1, size),
+    pad(
+      (world.stats.score * 10).toString(),
+      width + 1,
+      size,
+      tiles.common.FLOOR_CHAR
+    ),
     Color.Red,
     Color.Grey
   );
   display.drawText(
     x,
     4,
-    pad(world.stats.levelIndex.toString(), width, size),
+    pad(world.stats.levelIndex.toString(), width, size, FLOOR_CHAR),
     Color.Red,
     Color.Grey
   );
   display.drawText(
     x,
     7,
-    pad(world.stats.gems.toString(), width + 1, size),
+    pad(world.stats.gems.toString(), width + 1, size, FLOOR_CHAR),
     gc,
     Color.Grey
   );
-  display.drawText(x, 10, pad(whipStr, width, size), Color.Red, Color.Grey);
+  display.drawText(
+    x,
+    10,
+    pad(whipStr, width, size, FLOOR_CHAR),
+    Color.Red,
+    Color.Grey
+  );
   display.drawText(
     x,
     13,
-    pad(world.stats.teleports.toString(), width, size),
+    pad(world.stats.teleports.toString(), width, size, FLOOR_CHAR),
     Color.Red,
     Color.Grey
   );
   display.drawText(
     x,
     16,
-    pad(world.stats.keys.toString(), width, size),
+    pad(world.stats.keys.toString(), width, size, FLOOR_CHAR),
     Color.Red,
     Color.Grey
   );
@@ -334,12 +346,6 @@ export async function openSourceScreen() {
   controls.clearKeys();
 }
 
-function pad(s: string, n: number, r: number) {
-  return s
-    .padStart(n, tiles.common.FLOOR_CHAR)
-    .padEnd(r, tiles.common.FLOOR_CHAR);
-}
-
 export function renderPlayfield() {
   for (let x = 0; x < world.level.map.width; x++) {
     for (let y = 0; y < world.level.map.height; y++) {
@@ -412,8 +418,8 @@ export function drawEntityAt(x: number, y: number, entity?: Entity | null) {
 
   const t = entity.get(Renderable)!;
   let ch = t.ch;
-  let fg = t.fg;
-  if (!world.game.paused && fg !== null && t.blink) fg |= 16; // add blink
+  const fg = t.fg;
+  // if (!world.game.paused && fg !== null && t.blink) fg |= 16; // add blink
 
   if (entity.has(Glitch)) {
     ch = entity.get(Glitch)!.getFrame();
