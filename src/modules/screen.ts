@@ -5,12 +5,6 @@ import * as sound from './sound';
 import * as tiles from './tiles';
 import * as colors from './colors';
 
-import * as gameForgotton from '../data/forgotton/index.ts';
-import * as gameKingdom from '../data/kingdom/index.ts';
-import * as gameLost from '../data/lost/index.ts';
-import * as gameCaverns from '../data/caverns/index.ts';
-import * as gameCruz from '../data/cruz/index.ts';
-
 import {
   DEBUG,
   ENABLE_BOTS,
@@ -144,68 +138,32 @@ export async function introScreen() {
     Color.HighIntensityWhite
   );
 
-  const k = gameKingdom.LEVELS.filter(Boolean).length;
-  const c = gameCaverns.LEVELS.filter(Boolean).length;
-  const l = gameLost.LEVELS.filter(Boolean).length;
-  const z = gameCruz.LEVELS.filter(Boolean).length;
+  display.writeCenter(HEIGHT - 1, 'Press any key to continue', Color.White);
 
-  display.drawText(
-    4,
-    17,
-    dedent`
+  await controls.repeatUntilKeyPressed(async () => {
+    display.drawText(
+      5,
+      5,
+      dedent`
+      ███     ███     ██████████         ███████████        █████████████  (R)
+      ███░░  ███░░░   ███░░░░░███░      ███░░░░░░░███░        ░░░░░░████░░░
+      ███░░ ███░░░    ███░░   ███░░     ███░░     ███░░            ███░░░░
+      ███░░███░░░     ███░░   ███░░    ███░░░      ███░           ███░░░
+      ███░███░░░      ██████████░░░    ███░░       ███░░         ███░░░
+      ██████░░░       ███░░███░░░░     ███░░       ███░░        ███░░░
+      ███░███░        ███░░ ███░        ███░      ███░░░       ███░░░
+      ███░░███░       ███░░  ███░       ███░░     ███░░      ████░░░
+      ███░░ ███░      ███░░   ███░       ███████████░░░     █████████████
+      ███░░  ███░       ░░░     ░░░        ░░░░░░░░░░░        ░░░░░░░░░░░░░
+      ███░░   ███░
+      ███░░    ███████████████████████████████████████████████████████████
+      ░░░      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+    `,
+      RNG.getUniformInt(1, 15)
+    );
 
-    1) ${k} levels from Kingdom of Kroz II (C) Scott Miller - 1987
-    2) ${c} levels from Caverns of Kroz II (C) Scott Miller - 1989
-    3) ${l} levels from Lost Adventures of Kroz (C) Scott Miller - 1990
-    4) ${z} levels from The Underground Empire of Cruz (C) C. Allen - 2011
-
-  `,
-    Color.White,
-    Color.Black
-  );
-
-  display.writeCenter(HEIGHT - 1, 'Choose a game to start', Color.White);
-
-  let game = '-1';
-  while (game < '0' || game > '4') {
-    game = await controls.repeatUntilKeyPressed(async () => {
-      display.drawText(
-        5,
-        3,
-        dedent`
-        ███     ███     ██████████         ███████████        █████████████  (R)
-        ███░░  ███░░░   ███░░░░░███░      ███░░░░░░░███░        ░░░░░░████░░░
-        ███░░ ███░░░    ███░░   ███░░     ███░░     ███░░            ███░░░░
-        ███░░███░░░     ███░░   ███░░    ███░░░      ███░           ███░░░
-        ███░███░░░      ██████████░░░    ███░░       ███░░         ███░░░
-        ██████░░░       ███░░███░░░░     ███░░       ███░░        ███░░░
-        ███░███░        ███░░ ███░        ███░      ███░░░       ███░░░
-        ███░░███░       ███░░  ███░       ███░░     ███░░      ████░░░
-        ███░░ ███░      ███░░   ███░       ███████████░░░     █████████████
-        ███░░  ███░       ░░░     ░░░        ░░░░░░░░░░░        ░░░░░░░░░░░░░
-        ███░░   ███░
-        ███░░    ███████████████████████████████████████████████████████████
-        ░░░      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-      `,
-        RNG.getUniformInt(1, 15)
-      );
-
-      await delay(500);
-    });
-  }
-
-  switch (game) {
-    case '1':
-      return gameKingdom;
-    case '2':
-      return gameCaverns;
-    case '3':
-      return gameLost;
-    case '4':
-      return gameCruz;
-    default:
-      return gameForgotton;
-  }
+    await delay(500);
+  });
 }
 
 export async function instructionsScreen() {

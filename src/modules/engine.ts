@@ -22,6 +22,7 @@ import {
   YMax
 } from '../data/constants';
 import { Color } from './colors';
+import { games } from './games';
 
 let stats: Stats;
 let gui: dat.GUI;
@@ -80,21 +81,22 @@ export function init() {
 }
 
 export async function start() {
+  runningGame = 0;
   display.clear(Color.Black);
 
-  const game = await screen.introScreen();
-  world.game.title = game.title || TITLE;
-
-  await screen.renderTitle();
-  await screen.instructionsScreen();
-
-  events.gameStart.dispatch(game);
+  await screen.introScreen();
+  world.game.title = TITLE;
+  events.gameStart.dispatch(games.loading);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function runGame(game: any) {
   world.resetState();
   display.clear(Color.Black);
+
+  if (runningGame++ > 0) {
+    await screen.renderTitle();
+  }
 
   level.addLevels(game.LEVELS);
   tiles.setTileset(await game.readTileset());
@@ -109,8 +111,6 @@ export async function runGame(game: any) {
 }
 
 async function run() {
-  runningGame++;
-
   const _runningGame = runningGame;
   let tick = 0;
   let dt = 0;
@@ -143,6 +143,8 @@ async function run() {
       tick++;
 
       await player.update();
+      if (runningGame !== _runningGame) return;
+
       await mob.update(tick);
       await effects.update();
       screen.renderPlayfield();

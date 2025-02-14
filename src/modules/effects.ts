@@ -8,6 +8,7 @@ import * as mobs from './mobs-system';
 import * as colors from './colors';
 import * as levels from './levels.ts';
 import * as events from './events';
+import { games } from './games.ts';
 
 import {
   createEntityOfType,
@@ -45,7 +46,6 @@ import { RNG } from 'rot-js';
 import { delay } from '../utils/utils';
 import { Color, ColorCodes } from './colors';
 import { Entity } from '../classes/entity';
-import { games } from './games.ts';
 
 export const enum Timer { // TODO: Eliminate this, use type
   SlowTime = 4,
@@ -937,11 +937,22 @@ const EffectMap: Record<string, EffectFn> = {
     await levels.nextLevel();
   },
   CHANGELEVEL: async ({ args }) => {
-    world.stats.levelIndex = +args[0] - 1;
-    await levels.nextLevel(1);
+    world.stats.levelIndex = +args[0];
+    await levels.nextLevel(0);
   },
-  CHANGEGAME: async () => {
-    events.gameStart.dispatch(games.forgotton);
+  CHANGEGAME: async ({ args }) => {
+    const game = games[args[0] as keyof typeof games];
+    if (game) {
+      events.gameStart.dispatch(game);
+    } else {
+      console.warn('Unknown game:', args[0]);
+    }
+  },
+  openSourceScreen: async () => {
+    await screen.openSourceScreen();
+  },
+  REFRESH: async () => {
+    screen.fullRender();
   }
 };
 

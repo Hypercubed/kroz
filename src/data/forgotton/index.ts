@@ -3,7 +3,7 @@
 export const title = 'The Forgotton Adventures of Kroz';
 
 export const LEVELS = [
-  null, // async () => (await import('../debug/test2.map.json')).default, // Must be level 0
+  null, // async () => (await import('./start.map.json')).default, // Must be level 0
 
   // 1
   async () => (await import('./lost-1.map.json')).default, // Your Hut
