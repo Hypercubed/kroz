@@ -1,0 +1,13 @@
+const v=-1,c=23,h=!1,e=[{compression:"zlib",data:"eJzNmMlOG0EQhvtVnFhwAAmwnRWFg3FAQuQQlhiL4INxDEZhi21sxYryKnmD5JLtngeKskqJkPKXXKVpSj09PY5H4vDpH7nG0/13dVf3TM4YkwvgXeB938B3sAR+gB2wCCpgBsyCbbAONkAdTINLMAW2wCrYBWugDDbBCpgHc2DP0/5b6zoPCgkq98UR4vm6kg/UBVDi61LM/5ugDVqgC3ocqyiNy0VaXPNN93sAGuCY0XlL41971/cRp+ACHDIUm1Hq809r45bFfYvfAf43lXbAEehzXjpj+Jd2kvIvHHJbJxybVerzT3XhtsU9i18B/ueVHoAz9m3Py7T5T1r/9Nw2tzWwxoBi00p9/qke3rG4a/EzwP+e0p7lveXoN2ktQUPrSJ7bo3aOLf/bSn3+FxW+WuvyX1VK/aD132d1+S8maBr/xHP2/pJj60p9/tPg8r+k9NyM1r/M+XHrX4h/akvmv9Qaim0o9fn/At6DD+Aj+AQ+g7/gD/ia4L+mdN+M5gD1q8m5Gcd/0vqXa/Le5jE/59iO0izz/1ppy8TvgWn80/5X5Oui1Z7EmyaqM9SW1AGK1ZX6/D+yrh877rfjoefNpHkb6l97T7M+rish9V/G2Zf/SVBLgev/CzGa5L+UoHKfb/3TWUfOFwStATn/XSqNm/9p/dvz3+ed1uX/1r+QcRSG7F/q35TSLPzTeZdqHtWHZTPa/6qO9lz9nqR/yr3sNwOObSnNwj/xADwFr8BN63fKucyBYYb573LO5az5jGOrSrPyTzxUmuN+nJnoPSCr/f/AXD1rDzm2qzTOv4tlT8zl/4lSgvZieic9ZeR8Lv0OOf9TPSnwdcF6tmt8jridPsfWlMb5t5+xz/k64WvXmE8CX17ttqSeFhz/lzFumOi82TLR948bSn3+aczrVjuy19JeVFY5ceV/Tqn0rWOimtxNOYbSTlL+G5yvC3P1/e+N0izXv+tdW7+b6znkqstp5okd75lo3or/slKff6pbVCfo+wV9z6R3BtrTKtzPaoL/FaXEC84J5UfeTV35d9XnrJl0/n3fGkLRdfofGXFAUg==",encoding:"base64",height:23,id:1,name:"",opacity:1,type:"tilelayer",visible:!1,width:64,x:0,y:0},{draworder:"topdown",id:2,name:"Object Layer 1",objects:[{gid:77,height:36,id:1,name:"",properties:[{name:"ChangeLevel",propertytype:"ChangeLevel",type:"class",value:{deltaLevel:0,exactLevel:25}},{name:"Tile",propertytype:"Renderable",type:"class",value:{bg:"White",blink:!0,ch:"≡"}}],rotation:0,type:"",visible:!0,width:24,x:840,y:396},{gid:34,height:36,id:3,name:"",properties:[{name:"Trigger",type:"string",value:`This is a debug level
+It is used by the developer for testing
+Test
+1
+2
+3
+Good!`}],rotation:0,type:"",visible:!0,width:24,x:384,y:720},{gid:34,height:36,id:4,name:"",properties:[{name:"Trigger",type:"string",value:`This is a debug level
+It is used by the developer for testing
+Test
+1
+2
+3
+Good!`}],rotation:0,type:"",visible:!0,width:24,x:432,y:720}],opacity:1,type:"objectgroup",visible:!0,x:0,y:0}],t=3,i=8,n="orthogonal",r=[{name:"id",type:"string",value:"Debug"}],o="right-down",s="1.11.2",a=36,l=[{firstgid:1,source:"../kroz.tileset.json"}],d=24,p="map",g="1.10",y=64,b={compressionlevel:-1,height:23,infinite:!1,layers:e,nextlayerid:t,nextobjectid:i,orientation:n,properties:r,renderorder:o,tiledversion:s,tileheight:a,tilesets:l,tilewidth:d,type:p,version:g,width:y};export{v as compressionlevel,b as default,c as height,h as infinite,e as layers,t as nextlayerid,i as nextobjectid,n as orientation,r as properties,o as renderorder,s as tiledversion,a as tileheight,l as tilesets,d as tilewidth,p as type,g as version,y as width};
