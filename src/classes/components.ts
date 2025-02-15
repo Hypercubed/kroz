@@ -30,9 +30,6 @@ export const isInvisible = Symbol('isInvisible');
  */
 export const isSecreted = Symbol('isSecreted');
 
-/**  ## isPushable */
-export const isPushable = Symbol('isPushable');
-
 /**  ## isPassable
  * Tile is able to be walked on by the player
  */
@@ -225,19 +222,6 @@ export class Trigger {
 }
 
 /**
- * ##  ChangeLevel
- */
-// export class ChangeLevel {
-//   exactLevel: number | null = null;
-//   deltaLevel: number = 0;
-
-//   constructor(data: Partial<ChangeLevel>) {
-//     this.exactLevel = data.exactLevel ?? null;
-//     this.deltaLevel = data.deltaLevel ?? 0;
-//   }
-// }
-
-/**
  * ##  Speed
  *
  * A component that allows an entity to move at different speeds.  It contains a base pace and a hasted pace.
@@ -276,3 +260,31 @@ export class Breakable {
 export class FoundMessage {
   constructor(public message: string) {}
 }
+
+export class Pushable {
+  mass: number;
+
+  constructor(data: Partial<Pushable>) {
+    this.mass = data.mass ?? 1;
+  }
+}
+
+export class Energy {
+  constructor(public current: number) {}
+}
+
+// export class Pushing {
+//   x: number;
+//   y: number;
+//   tx: number;
+//   ty: number;
+//   inertia: number = 1;
+
+//   constructor(data: Partial<Pushing>) {
+//     this.x = data.x ?? 0;
+//     this.y = data.y ?? 0;
+//     this.tx = data.tx ?? 0;
+//     this.ty = data.ty ?? 0;
+//     this.inertia = data.inertia ?? 1;
+//   }
+// }

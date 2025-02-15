@@ -143,6 +143,23 @@
         },
         {
             "color": "#ffa0a0a4",
+            "drawFill": false,
+            "id": 10,
+            "members": [
+                {
+                    "name": "mass",
+                    "type": "int",
+                    "value": 1
+                }
+            ],
+            "name": "Pushable",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 2,
             "members": [

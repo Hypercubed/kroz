@@ -23,6 +23,7 @@ import {
 } from './tiles';
 import {
   Breakable,
+  Energy,
   isBombable,
   isImperviousToSpears,
   isInvisible,
@@ -30,6 +31,7 @@ import {
   isPlayer,
   isSecreted,
   Position,
+  Pushable,
   Renderable
 } from '../classes/components';
 import {
@@ -738,9 +740,8 @@ export async function whip(e: Entity) {
   }
 }
 
-export async function pushRock(
+export async function tryPushRock(
   pusher: Entity,
-  pushable: Entity,
   x: number,
   y: number,
   dx: number,
@@ -748,8 +749,7 @@ export async function pushRock(
 ) {
   let nogo = false;
 
-  const p = pusher.get(Position);
-  if (!p) return;
+  const p = pusher.get(Position)!;
 
   const tx = p.x + dx * 2;
   const ty = p.y + dy * 2;
@@ -760,42 +760,76 @@ export async function pushRock(
     if (!t) nogo = true;
     const tb = t!.type;
 
-    async function moveRock(kill = false) {
+    if (
+      ROCK_MOVEABLES.includes(tb as number) ||
+      ROCK_CRUSHABLES.includes(tb as number) ||
+      MOBS.includes(tb as number) ||
+      tb === Type.EWall ||
+      ROCK_CLIFFABLES.includes(tb as number)
+    ) {
       nogo = false;
-      await sound.pushRock();
-      if (kill) world.killAt(tx, ty);
-      world.level.map.set(tx, ty, pushable);
-      moveTo(pusher, x, y);
-      screen.renderPlayfield();
-    }
-
-    // https://github.com/tangentforks/kroz/blob/5d080fb4f2440f704e57a5bc5e73ba080c1a1d8d/source/LOSTKROZ/MASTER2/LOST5.MOV#L1366
-    if (ROCK_MOVEABLES.includes(tb as number)) {
-      await moveRock();
-    } else if (ROCK_CRUSHABLES.includes(tb as number)) {
-      await moveRock();
-      await sound.grab();
-    } else if (MOBS.includes(tb as number)) {
-      await moveRock(true);
-      world.addScore(tb as Type);
-      await sound.rockCrushMob();
-    } else if (tb === Type.EWall) {
-      await moveRock();
-      world.setTypeAt(tx, ty, Type.Floor);
-      sound.rockVaporized();
-      await screen.flashMessage('The Boulder is vaporized!'); // TODO: show once?, change for pushed type
-    } else if (ROCK_CLIFFABLES.includes(tb as number)) {
-      nogo = false;
-      await sound.pushRock();
-      moveTo(pusher, x, y);
-      screen.drawEntityAt(tx, ty, pushable);
-      await sound.rockDropped();
-      screen.renderPlayfield();
+      const pushable = world.level.map.get(x, y)?.get(Pushable);
+      if (!pushable) return;
+      await moveRock(pusher, x, y, tx, ty);
+      const e = world.level.player.get(Energy)!;
+      e.current -= pushable.mass;
     }
   }
 
   if (nogo) {
     await sound.blocked();
+  }
+}
+
+// export async function pushRock(pusher: Entity) {
+//   const pushing = pusher.get(Pushing)!;
+//   if (pushing.inertia > 0) {
+//     // await sound.pushRock();
+//     pushing.inertia--;
+//     return;
+//   }
+
+//   // await moveRock(pusher, pushing.x, pushing.y, pushing.tx, pushing.ty);
+//   pusher.remove(Pushing);
+// }
+
+async function moveRock(
+  pusher: Entity,
+  x: number,
+  y: number,
+  tx: number,
+  ty: number
+) {
+  const pushable = world.level.map.get(x, y)!;
+  const t = world.level.map.get(tx, ty);
+  const tb = t!.type;
+
+  if (MOBS.includes(tb as number)) {
+    world.killAt(tx, ty);
+  }
+
+  const mass = pushable.get(Pushable)!.mass;
+  if (mass > 1) {
+    await sound.moveRock();
+  }
+  world.level.map.set(tx, ty, pushable);
+  moveTo(pusher, x, y);
+  screen.renderPlayfield();
+
+  if (ROCK_CRUSHABLES.includes(tb as number)) {
+    await sound.grab();
+  } else if (MOBS.includes(tb as number)) {
+    world.addScore(tb as Type);
+    await sound.rockCrushMob();
+  } else if (tb === Type.EWall) {
+    world.setTypeAt(tx, ty, Type.Floor);
+    sound.rockVaporized();
+    await screen.flashMessage('The Boulder is vaporized!'); // TODO: show once?, change for pushed type
+  } else if (ROCK_CLIFFABLES.includes(tb as number)) {
+    moveTo(pusher, x, y);
+    screen.drawEntityAt(tx, ty, pushable);
+    await sound.rockDropped();
+    screen.renderPlayfield();
   }
 }
 

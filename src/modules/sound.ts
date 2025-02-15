@@ -67,7 +67,16 @@ export async function openDoor() {
 }
 
 // Moving a rock sound
-export async function pushRock() {
+// const movingSound = ZZFX.buildSamples(...[40,0,60,,.1,.5,,0,1,,,,,3,,,,,.1]);
+// export async function pushRock() {
+//   ZZFX.playSamples(movingSound);
+//   // for (let i = 150; i > 35; i--) {
+//   //   play(i, 16, 50);
+//   // }
+//   // await delay(16);
+// }
+
+export async function moveRock() {
   for (let i = 150; i > 35; i--) {
     await play(i, 16, 50);
   }

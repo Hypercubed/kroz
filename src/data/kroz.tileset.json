@@ -527,6 +527,15 @@
                  "value":"You pushed a big Boulder!"
                 }, 
                 {
+                 "name":"Pushable",
+                 "propertytype":"Pushable",
+                 "type":"class",
+                 "value":
+                    {
+                     "mass":10
+                    }
+                }, 
+                {
                  "name":"Tile",
                  "propertytype":"Renderable",
                  "type":"class",
@@ -538,11 +547,6 @@
                 }, 
                 {
                  "name":"isImperviousToSpears",
-                 "type":"bool",
-                 "value":true
-                }, 
-                {
-                 "name":"isPushable",
                  "type":"bool",
                  "value":true
                 }, 

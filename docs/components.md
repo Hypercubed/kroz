@@ -18,8 +18,6 @@ Entity will follow the player, must be used with isMob
 
 Entity is hidden from the player, will appear as a Chance (?)
 
-## isPushable
-
 ## isPassable
 Tile is able to be walked on by the player
 

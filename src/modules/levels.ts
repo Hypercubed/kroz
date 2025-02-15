@@ -242,8 +242,6 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
         e.get(Renderable)!.fg = fg;
         e.get(Renderable)!.bg = bg;
 
-        console.log(e.get(Renderable));
-
         output[yy * tilemap.width + xx] = e;
       }
     }

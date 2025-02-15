@@ -18,19 +18,25 @@ import {
   Attacks,
   Collectible,
   Position,
-  isPushable,
   Trigger,
   // ChangeLevel,
   isPassable,
   FoundMessage,
-  isInvisible
+  isInvisible,
+  Pushable,
+  Energy
 } from '../classes/components.ts';
 import type { Entity } from '../classes/entity.ts';
 import { Difficulty } from './world.ts';
 
 export async function update() {
-  await readControls();
-  controls.clearActions(); // Clear was pressed actions after player acts
+  const e = world.level.player.get(Energy)!;
+  e.current = Math.min(0, e.current + 1);
+
+  if (e.current >= 0) {
+    await readControls();
+    controls.clearActions(); // Clear was pressed actions after player acts
+  }
 }
 
 async function readControls() {
@@ -213,8 +219,8 @@ export async function tryMove(dx: number, dy: number) {
     }
   }
 
-  if (e.has(isPushable)) {
-    await effects.pushRock(world.level.player, e, x, y, dx, dy);
+  if (e.has(Pushable)) {
+    await effects.tryPushRock(world.level.player, x, y, dx, dy);
     return;
   }
 

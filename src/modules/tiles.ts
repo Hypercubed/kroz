@@ -17,8 +17,6 @@ import {
   AnimatedWalking,
   isSecreted,
   Position,
-  isPushable,
-  // ChangeLevel,
   Trigger,
   isPassable,
   Speed,
@@ -26,7 +24,9 @@ import {
   isBombable,
   FoundMessage,
   Glitch,
-  isImperviousToSpears
+  isImperviousToSpears,
+  Pushable,
+  Energy
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -453,6 +453,10 @@ export function createEntityFromTileId(
     entity.add(new Position({ x, y }));
   }
 
+  if (entity.has(isPlayer)) {
+    entity.add(new Energy(0));
+  }
+
   return entity;
 }
 
@@ -471,7 +475,6 @@ const SIMPLE_TAGS = {
   isMob,
   isGenerator,
   isSecreted,
-  isPushable,
   isPassable,
   followsPlayer,
   isBombable,
@@ -483,7 +486,7 @@ const SIMPLE_COMPONENTS = {
   Trigger,
   AnimatedWalking,
   Attacks,
-  // ChangeLevel,
+  Pushable,
   Speed,
   Breakable,
   FoundMessage,

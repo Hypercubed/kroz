@@ -12,8 +12,8 @@ import {
   isInvisible,
   isMob,
   isPassable,
-  isPushable,
   Position,
+  Pushable,
   Renderable
 } from '../classes/components';
 import AStar, { AStarNode } from '../utils/astar';
@@ -185,8 +185,8 @@ async function getPath(
     const { x, y } = s;
     const e = world.level.map.get(x, y);
     if (!e) return 1;
-    if (e.has(isPushable)) return 40; // Weight by number of whips?
-    if (e.has(Breakable)) return 20; // Weight by number of whips?
+    if (e.has(Pushable)) return 40; // Weight by number of whips and mass?
+    if (e.has(Breakable)) return 20; // Weight by number of whips and hardness?
     if (e.has(isMob)) return 30; // Weight by number of gems?
     if (e.type === Type.Door) return 40; // Weight by number of gems?
     if (AVOID.includes(e.type as Type)) return 50;
@@ -333,7 +333,7 @@ async function tryExplore() {
 }
 
 async function tryPush() {
-  const rocks = neighbors.filter((n) => n[0]?.has(isPushable));
+  const rocks = neighbors.filter((n) => n[0]?.has(Pushable));
   if (rocks.length < 1) return false;
 
   const goals: Array<[number, number]> = rocks.map((n) => [n[1], n[2]]);
