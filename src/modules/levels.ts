@@ -99,33 +99,24 @@ export async function prevLevel(dl: number = 1) {
 async function readLevel(i: number) {
   world.stats.levelIndex = i;
 
-  const data = await LEVELS[world.stats.levelIndex]!();
-  const level =
-    typeof data === 'string'
-      ? readRandomLevel(data)
-      : readLevelJSONLevel(data as tiled.Map);
+  const levelData = await LEVELS[world.stats.levelIndex]!();
+
+  let level: Level;
+  if (typeof levelData === 'string') {
+    level = readRandomLevel(levelData);
+  } else {
+    level = readLevelJSONLevel(levelData);
+  }
+
   await loadLevelData(level);
+
   screen.renderPlayfield();
   screen.renderBorder();
-
-  return level;
 }
 
 function readRandomLevel(levelData: string): Level {
   const data: Entity[] = [];
-  let tileKeys = '';
-  const lines = levelData.split('\n');
-
-  for (let y = 0; y < lines.length; y++) {
-    const keys = lines[y];
-    const counts = lines[++y];
-
-    for (let i = 0; i < keys.length; i += 3) {
-      const key = keys.substring(i, i + 3).trim();
-      const count = key === 'P' ? 1 : +counts.substring(i, i + 3);
-      tileKeys += key.repeat(count);
-    }
-  }
+  let tileKeys = processDF(levelData);
 
   const width = XMax + 1;
   const height = YMax + 1;
@@ -153,28 +144,44 @@ function readRandomLevel(levelData: string): Level {
 
 // Reads the level data from a Tiled JSON file into a Level object
 function readLevelJSONLevel(tilemap: tiled.Map): Level {
+  const output: Entity[] = [];
   const { layers, properties: _properties } = tilemap;
   const properties = ensureObject(_properties);
 
-  const data: Entity[] = [];
   for (const layer of layers) {
     // Collapse layers
     // TODO: Combine layers?
     if (tiled.isEncodedTileLayer(layer)) {
-      readUnencodedTileLayer(tiled.decodeTileLayer(layer), data);
+      readUnencodedTileLayer(tiled.decodeTileLayer(layer));
     } else if (tiled.isUnencodedTileLayer(layer)) {
-      readUnencodedTileLayer(layer, data);
+      readUnencodedTileLayer(layer);
     } else if (tiled.isObjectGroup(layer)) {
-      readObjectGroup(layer, data);
+      readObjectGroup(layer);
     } else {
       throw new Error('Unsupported layer encoding');
     }
   }
 
-  function readObjectGroup(layer: tiled.ObjectGroup, output: Entity[]) {
+  if (properties && 'DF' in properties) {
+    addRandomData(properties.DF);
+  }
+
+  const startTrigger =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    tilemap.StartTrigger ?? properties?.StartTrigger ?? undefined;
+
+  return {
+    id: (properties?.id || '') as string,
+    data: output,
+    startTrigger,
+    properties
+  };
+
+  function readObjectGroup(layer: tiled.ObjectGroup) {
     for (const obj of layer.objects) {
       if (obj.text) {
-        readTextObject(obj, output);
+        readTextObject(obj);
         continue;
       }
 
@@ -197,9 +204,8 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
     return output;
   }
 
-  function readTextObject(obj: tiled.MapObject, output: Entity[]) {
+  function readTextObject(obj: tiled.MapObject) {
     const { x, y, height, width, properties, text } = obj;
-    console.log(obj);
     if (!x || !y || !height || !width) return;
     const tileId = 97; // Solid Wall
     const type = Type.Wall;
@@ -247,10 +253,7 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
     }
   }
 
-  function readUnencodedTileLayer(
-    layer: tiled.UnencodedTileLayer,
-    output: Entity[]
-  ) {
+  function readUnencodedTileLayer(layer: tiled.UnencodedTileLayer) {
     const { data } = layer;
     if (!data) return output;
 
@@ -265,17 +268,24 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
     return output;
   }
 
-  const startTrigger =
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    tilemap.StartTrigger ?? properties?.StartTrigger ?? undefined;
+  function addRandomData(randomLevelData: string) {
+    const tileKeys = processDF(randomLevelData);
+    const tileArray = shuffle(tileKeys.split(''));
+    const width = XMax + 1;
 
-  return {
-    id: (properties?.id || '') as string,
-    data,
-    startTrigger,
-    properties
-  };
+    let i = 0;
+    while (i < tileArray.length) {
+      const p = RNG.getUniformInt(0, output.length - 1);
+      const e = output[p];
+      if (!e || e.type === Type.Floor) {
+        const tileId = getASCIICode(tileArray[i]);
+        const x = p % width;
+        const y = Math.floor(p / width);
+        output[p] = tiles.createEntityFromTileId(tileId, x, y);
+        i++;
+      }
+    }
+  }
 }
 
 // Reads the level data into the world
@@ -310,6 +320,24 @@ async function loadLevelData(level: Level) {
   await effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
   world.level.borderFG = RNG.getUniformInt(8, 15);
   world.level.borderBG = RNG.getUniformInt(1, 8);
+}
+
+function processDF(levelData: string): string {
+  let tileKeys = '';
+  const lines = levelData.split('\n');
+
+  for (let y = 0; y < lines.length; y++) {
+    const keys = lines[y];
+    const counts = lines[++y];
+
+    for (let i = 0; i < keys.length; i += 3) {
+      const key = keys.substring(i, i + 3).trim();
+      const count = key === 'P' ? 1 : +counts.substring(i, i + 3);
+      tileKeys += key.repeat(count);
+    }
+  }
+
+  return tileKeys;
 }
 
 function getTileIdFromGID(gid: number): number {
