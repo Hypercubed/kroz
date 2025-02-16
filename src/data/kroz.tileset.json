@@ -2324,7 +2324,7 @@
                 {
                  "name":"Trigger",
                  "type":"string",
-                 "value":"##Create"
+                 "value":"##CreateTrap"
                 }, 
                 {
                  "name":"description",

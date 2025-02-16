@@ -3,6 +3,7 @@ export const SHOW_STATS = DEBUG;
 export const SHOW_DEBUG_CONTROLS = DEBUG;
 export const ENABLE_DEBUG_LEVEL = DEBUG;
 export const ENABLE_BOTS = DEBUG;
+export const ENABLE_DEBUG_INTERFACE = DEBUG;
 
 export const TITLE = 'The Forgotton Adventures of Kroz';
 
@@ -24,6 +25,6 @@ export const TIME_SCALE = 1;
 export const CLOCK_SCALE = 8; // Lower is faster player movement (should be > 1, 8 is good)
 
 export const VOLUME = 0.005;
-export const BLINK = false;
+export const BLINK = true;
 
 export const FLOOR_CHAR = ' ';

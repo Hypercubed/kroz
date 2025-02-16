@@ -199,7 +199,6 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
 
   function readTextObject(obj: tiled.MapObject, output: Entity[]) {
     const { x, y, height, width, properties, text } = obj;
-    console.log(obj);
     if (!x || !y || !height || !width) return;
     const tileId = 97; // Solid Wall
     const type = Type.Wall;

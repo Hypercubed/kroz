@@ -2,6 +2,7 @@ import * as screen from './screen.ts';
 import * as levels from './levels.ts';
 import * as sound from './sound.ts';
 import * as tiles from './tiles.ts';
+import * as player from './player-system.ts';
 
 import {
   CLOCK_SCALE,
@@ -182,6 +183,9 @@ export function setTypeAt(x: number, y: number, type: Type | string) {
 export async function kill(e: Entity) {
   if (typeof e.type === 'number' && e.type < 4) {
     await sound.kill(e.type);
+  }
+  if (e.type === Type.Player) {
+    player.dead();
   }
   e.get(Position)?.die();
 }

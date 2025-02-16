@@ -6,6 +6,7 @@ import * as tiles from './tiles';
 import * as colors from './colors';
 
 import {
+  BLINK,
   DEBUG,
   ENABLE_BOTS,
   FLOOR_CHAR,
@@ -376,14 +377,19 @@ export function drawEntityAt(x: number, y: number, entity?: Entity | null) {
 
   const t = entity.get(Renderable)!;
   let ch = t.ch;
-  const fg = t.fg;
-  // if (!world.game.paused && fg !== null && t.blink) fg |= 16; // add blink
+  let fg = t.fg;
+
+  if (t.blink && BLINK && !world.game.paused && world.game.started) {
+    const v = 500;
+    const f = Date.now() % v < v / 2;
+    fg = colors.getColor(fg as string, f ? 1 : 0);
+  }
 
   if (entity.has(Glitch)) {
     ch = entity.get(Glitch)!.getFrame();
   }
 
-  display.draw(x + XBot, y + YBot, ch, fg!, t.bg!);
+  display.draw(x + XBot, y + YBot, ch, fg, t.bg!);
 }
 
 export function drawAt(

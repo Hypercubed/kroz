@@ -191,6 +191,17 @@
                          "value":"  "
                         }, 
                         {
+                         "name":"Tile",
+                         "propertytype":"Renderable",
+                         "type":"class",
+                         "value":
+                            {
+                             "bg":"White",
+                             "blink":true,
+                             "ch":"\u2261"
+                            }
+                        }, 
+                        {
                          "name":"Trigger",
                          "type":"string",
                          "value":"##CHANGELEVEL 2"

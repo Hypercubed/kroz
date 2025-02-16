@@ -26,7 +26,8 @@ import {
   Glitch,
   isImperviousToSpears,
   Pushable,
-  Energy
+  Energy,
+  RenderableData
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -554,12 +555,14 @@ function addComponentsToEntity(
   if ('Tile' in properties) {
     const tile = properties[
       'Tile' as keyof typeof properties
-    ] as Partial<Renderable>;
-    const fg = Color[tile.fg as unknown as keyof typeof Color] ?? null; // TODO: alow explict color strings
-    const bg = Color[tile.bg as unknown as keyof typeof Color] ?? null;
-    const ch = tile.ch ?? common.FLOOR_CHAR;
-    const blink = tile.blink ?? false;
-    entity.add(new Renderable({ fg, bg, ch, blink }));
+    ] as Partial<RenderableData>;
+    let fg: string | Color = tile.fg as string;
+    let bg: string | Color = tile.bg as string;
+    if (typeof fg === 'string')
+      fg = Color[fg as keyof typeof Color] ?? (fg === 'None' ? null : fg);
+    if (typeof bg === 'string')
+      bg = Color[bg as keyof typeof Color] ?? (bg === 'None' ? null : bg);
+    entity.add(new Renderable({ ...tile, fg, bg }));
   }
 
   for (const key in SIMPLE_COMPONENTS) {

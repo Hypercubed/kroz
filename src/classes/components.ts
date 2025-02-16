@@ -2,6 +2,7 @@ import { RNG } from 'rot-js';
 
 import { Type } from '../modules/tiles';
 import * as tiles from '../modules/tiles';
+import { Color, getColor } from '../modules/colors';
 
 /** # Tags */
 
@@ -46,19 +47,48 @@ export const isBombable = Symbol('isBombable');
 
 /** # Components */
 
+export interface RenderableData {
+  ch?: string | null;
+  fg?: Color | string | null;
+  bg?: Color | string | null;
+  blink?: boolean;
+}
+
 /**  ## Renderable
  *
  * A renderable is a component that can be rendered to the screen.  It contains values for the character, color, and background color. */
 export class Renderable {
-  ch: string;
-  fg: number | string | null;
-  bg: number | string | null;
+  private _ch!: string | null;
+  private _fg!: string | null;
+  private _bg!: string | null;
+
   blink: boolean = false;
 
-  constructor(data: Partial<Renderable>) {
-    this.ch = data.ch ?? tiles.common.FLOOR_CHAR;
-    this.fg = data.fg ?? tiles.common.FLOOR_FG;
-    this.bg = data.bg ?? tiles.common.FLOOR_BG;
+  get ch() {
+    return this._ch ?? tiles.common.FLOOR_CHAR;
+  }
+  set ch(value: string | null) {
+    this._ch = value;
+  }
+
+  get fg(): string {
+    return this._fg ?? getColor(tiles.common.FLOOR_FG);
+  }
+  set fg(value: Color | string | null) {
+    this._fg = value === null ? null : getColor(value);
+  }
+
+  get bg(): string {
+    return this._bg ?? getColor(tiles.common.FLOOR_FG);
+  }
+  set bg(value: Color | string | null) {
+    this._bg = value === null ? null : getColor(value);
+  }
+
+  constructor(data: Partial<RenderableData>) {
+    this.ch = data.ch ?? null;
+    this.fg = data.fg ?? null;
+    this.bg = data.bg ?? null;
     this.blink = data.blink ?? false;
   }
 }

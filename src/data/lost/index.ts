@@ -104,3 +104,11 @@ export async function readTileset() {
 export async function readColor() {
   return (await import('../kroz.colors.json')).default;
 }
+
+// BUG: Missing effects from random levels
+// https://github.com/tangentforks/kroz/blob/master/source/LOSTKROZ/MASTER2/LOST.PAS#L154
+// if Level=10 then TreeRate:=40;
+// if Level=31 then TreeRate:=15;
+// if Level=45 then begin LavaFlow:=true;LavaRate:=30;end;
+// if Level=56 then FoundSet:=FoundSet+[44];
+// if Level=62 then HideMBlock:=true;

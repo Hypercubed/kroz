@@ -612,13 +612,16 @@ async function pitFall() {
   world.game.done = true;
 }
 
-function give(type: string, n: number) {
+function give(type: Type, n: number) {
   switch (type) {
-    case 'Gem':
+    case Type.Gem:
       world.stats.gems += n;
       break;
-    case 'Whip':
+    case Type.Whip:
       world.stats.whipPower += n;
+      break;
+    case Type.Key:
+      world.stats.keys += n;
       break;
   }
 }
@@ -902,16 +905,43 @@ const EffectMap: Record<string, EffectFn> = {
   /** ## `GIVE A N`
    * Gives the player N of the specified item.
    */
-  GIVE: ({ args }) => give(args[0]!, +args[1]),
+  GIVE: ({ args }) => give(tiles.getType(args[0])!, +args[1]),
   /** ## `TAKE A N`
    * Takes N of the specified item from the player.
    */
-  TAKE: ({ args }) => give(args[0]!, -args[1]),
+  TAKE: ({ args }) => give(tiles.getType(args[0])!, -args[1]),
+  CHAR: ({ args }) =>
+    updateTilesByType(tiles.getType(args[0])!, { ch: args[1] }),
+  FG: ({ args }) => updateTilesByType(tiles.getType(args[0])!, { fg: args[1] }),
+  BG: ({ args }) => updateTilesByType(tiles.getType(args[0])!, { bg: args[1] }),
+
+  /** ## `##GEMS`
+   * Gives the player 50 gems.
+   */
+  GEMS: () => give(Type.Gem, 50),
+
+  /**
+   * ## `##KEYS`
+   * Gives the player 5 keys.
+   */
+  KEYS: () => give(Type.Key, 5),
+
+  /**
+   * ## `##ZAP`
+   * Replaces the tiles directly north, south, east, and west of the player with empties.
+   */
+  ZAP: ({ x, y }) => {
+    become(Type.Floor, x + 1, y);
+    become(Type.Floor, x - 1, y);
+    become(Type.Floor, x, y + 1);
+    become(Type.Floor, x, y - 1);
+  },
+
   Bomb: ({ x, y }) => bomb(x, y),
   Quake: quakeTrap,
-  Trap: ({ who }) => teleport(who!),
-  Zap: zapTrap,
-  Create: createTrap,
+  TeleportTrap: ({ who }) => teleport(who!), // Rename
+  ZapTrap: zapTrap,
+  CreateTrap: createTrap,
   ShowGems: showGemsSpell,
   BlockSpell: ({ what, args }) =>
     blockSpell(tiles.getType(args[0]) || Type.ZBlock, what.type),
@@ -982,12 +1012,9 @@ const EffectMap: Record<string, EffectFn> = {
       console.warn('Unknown game:', args[0]);
     }
   },
-  openSourceScreen: async () => {
-    await screen.openSourceScreen();
-  },
-  REFRESH: async () => {
-    screen.fullRender();
-  }
+  openSourceScreen: async () => await screen.openSourceScreen(),
+  REFRESH: async () => screen.fullRender(),
+  DIE: async ({ who }) => await world.kill(who)
 };
 
 // TODO:
