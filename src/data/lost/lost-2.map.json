@@ -63,7 +63,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##HIDE Gem\n##HIDE Stairs"
+      "value": "##HIDE Gem\n##HIDE Stairs\nPress any key to begin this level."
     }
   ],
   "renderorder": "right-down",

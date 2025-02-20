@@ -57,7 +57,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##LavaRate 30"
+      "value": "##LavaRate 30\nPress any key to begin this level."
     }
   ],
   "renderorder": "right-down",

@@ -7,6 +7,7 @@ import * as controls from './controls.ts';
 import * as screen from './screen.ts';
 import * as effects from './effects.ts';
 import * as events from './events.ts';
+import * as scripts from './scripts.ts';
 
 import { mod } from 'rot-js/lib/util';
 import {
@@ -21,11 +22,11 @@ import {
   shuffle,
   wrapString
 } from '../utils/utils.ts';
-import { XMax, YMax } from '../data/constants.ts';
+import { XMax, YMax } from '../constants/constants.ts';
 import { Entity } from '../classes/entity.ts';
-import { Type } from './tiles.ts';
 import { Timer } from './effects.ts';
 import { Color } from './colors.ts';
+import { Type } from '../constants/types.ts';
 
 export interface Level {
   id: string;
@@ -54,7 +55,7 @@ export async function loadLevel() {
   screen.fullRender();
 
   if (world.level.startTrigger) {
-    await effects.processEffect(world.level.startTrigger);
+    await scripts.processEffect(world.level.startTrigger);
   } else {
     await screen.flashMessage('Press any key to begin this level.');
   }
@@ -116,7 +117,8 @@ function readRandomLevel(levelData: string): Level {
   let tileKeys = '';
   const lines = levelData.split('\n');
 
-  for (let y = 0; y < lines.length; y++) {
+  let y = 0;
+  for (; y < lines.length && lines[y] !== '---'; y++) {
     const keys = lines[y];
     const counts = lines[++y];
 
@@ -124,6 +126,13 @@ function readRandomLevel(levelData: string): Level {
       const key = keys.substring(i, i + 3).trim();
       const count = key === 'P' ? 1 : +counts.substring(i, i + 3);
       tileKeys += key.repeat(count);
+    }
+  }
+
+  let startTrigger = '';
+  if (lines[y++] === '---') {
+    for (; y < lines.length; y++) {
+      startTrigger += lines[y] + '\n';
     }
   }
 
@@ -146,7 +155,7 @@ function readRandomLevel(levelData: string): Level {
   return {
     id: '',
     data,
-    startTrigger: undefined,
+    startTrigger: startTrigger || undefined,
     properties: {}
   };
 }

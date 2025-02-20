@@ -1,10 +1,10 @@
 import * as world from './world';
 import * as levels from './levels';
-import * as effects from './effects';
+import * as scripts from './scripts';
 
 import { Position } from '../classes/components';
 import { Timer } from './effects';
-import { ENABLE_DEBUG_INTERFACE } from '../data/constants';
+import { ENABLE_DEBUG_INTERFACE } from '../constants/constants';
 
 const _timers = {
   get SlowTime() {
@@ -148,10 +148,12 @@ if (ENABLE_DEBUG_INTERFACE) {
     }
 
     try {
-      const result = await effects.processEffect(command);
+      world.game.paused = true;
+      const result = await scripts.processEffect(command);
       if (result !== undefined) {
         logDiv.innerHTML += `<p>> ${command}</p><p>${result}</p>`;
       }
+      world.game.paused = false;
     } catch (err: unknown) {
       logDiv.innerHTML += `<p>Error: ${err}</p>`;
     }

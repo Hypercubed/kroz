@@ -56,7 +56,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##HIDE MBlock"
+      "value": "##HIDE MBlock\nPress any key to begin this level."
     }
   ],
   "renderorder": "right-down",

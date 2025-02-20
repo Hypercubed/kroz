@@ -1,12 +1,12 @@
-import * as world from './world';
-import * as screen from './screen';
-import * as sound from './sound';
+import * as world from '../modules/world';
+import * as screen from '../modules/screen';
+import * as sound from '../modules/sound';
 
-import { XMax, YMax } from '../data/constants';
+import { XMax, YMax } from '../constants/constants';
 import { RNG } from 'rot-js';
-import { LAVA_FLOW, TREE_GROW, Type } from './tiles';
 import { isInvisible } from '../classes/components';
-import { Timer } from './effects';
+import { Timer } from '../modules/effects';
+import { LAVA_FLOW, TREE_GROW, Type } from '../constants/types';
 
 export async function update() {
   // Effect timers

@@ -1,10 +1,9 @@
 import * as world from './world';
-import * as player from './player-system';
+import * as player from '../systems/player-system';
 import * as effects from './effects';
 import * as events from './events';
 import * as display from './display';
 
-import { COLLECTABLES, KROZ, MOBS, OSPELLS, Type } from './tiles';
 import type { Entity } from '../classes/entity';
 import {
   Breakable,
@@ -17,8 +16,9 @@ import {
   Renderable
 } from '../classes/components';
 import AStar, { AStarNode } from '../utils/astar';
-import { XBot, YBot } from '../data/constants';
+import { XBot, YBot } from '../constants/constants';
 import { delay } from '../utils/utils';
+import { COLLECTABLES, KROZ, MOBS, OSPELLS, Type } from '../constants/types';
 
 const COLLECT = [
   ...COLLECTABLES,

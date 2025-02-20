@@ -1,26 +1,13 @@
 import * as world from './world';
 import * as sound from './sound';
 import * as screen from './screen';
-import * as player from './player-system';
+import * as player from '../systems/player-system';
 import * as tiles from './tiles';
 import * as display from './display';
-import * as mobs from './mobs-system';
+import * as mobs from '../systems/mobs-system';
 import * as colors from './colors';
-import * as levels from './levels.ts';
-import * as events from './events';
-import { games } from './games.ts';
+import * as script from './scripts';
 
-import {
-  createEntityOfType,
-  MOBS,
-  ROCK_CLIFFABLES,
-  ROCK_CRUSHABLES,
-  ROCK_MOVEABLES,
-  ROCKABLES,
-  TRIGGERABLES,
-  TUNNELABLES,
-  Type
-} from './tiles';
 import {
   Breakable,
   Energy,
@@ -32,10 +19,10 @@ import {
   isSecreted,
   Position,
   Pushable,
-  Renderable
+  Renderable,
+  RenderableData
 } from '../classes/components';
 import {
-  DEBUG,
   TIME_SCALE,
   XBot,
   XMax,
@@ -43,11 +30,21 @@ import {
   YBot,
   YMax,
   YTop
-} from '../data/constants';
+} from '../constants/constants';
 import { RNG } from 'rot-js';
 import { delay } from '../utils/utils';
 import { Color, ColorCodes } from './colors';
 import { Entity } from '../classes/entity';
+import {
+  MOBS,
+  ROCK_CLIFFABLES,
+  ROCK_CRUSHABLES,
+  ROCK_MOVEABLES,
+  ROCKABLES,
+  TRIGGERABLES,
+  TUNNELABLES,
+  Type
+} from '../constants/types';
 
 export const enum Timer { // TODO: Eliminate this, use type
   SlowTime = 4,
@@ -64,7 +61,7 @@ const SPELL_DURATION = {
   [Timer.FreezeTime]: 55 * TIME_SCALE
 };
 
-async function hideType(type: Type | string) {
+export async function hideType(type: Type | string) {
   await world.level.map.forEach((x, y, e) => {
     if (e?.type === type) {
       e.add(isInvisible);
@@ -75,7 +72,7 @@ async function hideType(type: Type | string) {
 
 export async function updateTilesByType(
   type: Type,
-  update: Partial<Renderable>
+  update: Partial<RenderableData>
 ) {
   await world.level.map.forEach((_x, _y, e) => {
     if (e?.type === type) {
@@ -89,7 +86,7 @@ export async function updateTilesByType(
   });
 }
 
-async function shoot(x: number, y: number, dx: number) {
+export async function shoot(x: number, y: number, dx: number) {
   x += dx;
   while (x >= 0 && x <= XMax) {
     const e = world.level.map.get(x, y)!;
@@ -128,7 +125,7 @@ async function shoot(x: number, y: number, dx: number) {
   screen.renderPlayfield();
 }
 
-async function bomb(x: number, y: number) {
+export async function bomb(x: number, y: number) {
   sound.bombFuse();
 
   let d = 0;
@@ -174,7 +171,7 @@ async function bomb(x: number, y: number) {
   screen.renderPlayfield();
 }
 
-async function quakeTrap() {
+export async function quakeTrap() {
   await sound.quakeTrigger();
 
   await delay(50);
@@ -196,7 +193,7 @@ async function quakeTrap() {
   await sound.quakeDone();
 }
 
-async function zapTrap() {
+export async function zapTrap() {
   let t = 0;
   let k = 0;
   while (t < 500 && k < 40) {
@@ -218,7 +215,7 @@ async function zapTrap() {
   screen.renderStats();
 }
 
-async function createTrap() {
+export async function createTrap() {
   const SNum = world.level.entities.reduce((acc, e) => {
     if (e.type === Type.Slow) return acc + 1;
     return acc;
@@ -228,7 +225,7 @@ async function createTrap() {
   }
 }
 
-async function showGemsSpell() {
+export async function showGemsSpell() {
   for (let i = 0; i < world.game.difficulty * 2 + 5; i++) {
     let done = false;
     do {
@@ -246,7 +243,7 @@ async function showGemsSpell() {
   }
 }
 
-async function blockSpell(block: Type | string, spell: Type | string) {
+export async function blockSpell(block: Type | string, spell: Type | string) {
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
       if (world.level.map.getType(x, y) === block) {
@@ -271,7 +268,7 @@ async function blockSpell(block: Type | string, spell: Type | string) {
   }
 }
 
-async function krozBonus(block: Type) {
+export async function krozBonus(block: Type) {
   if (block === Type.K && world.level.bonus === 0) world.level.bonus = 1;
   if (block === Type.R && world.level.bonus === 1) world.level.bonus = 2;
   if (block === Type.O && world.level.bonus === 2) world.level.bonus = 3;
@@ -282,7 +279,7 @@ async function krozBonus(block: Type) {
   }
 }
 
-async function triggerOSpell(block: Type) {
+export async function triggerOSpell(block: Type) {
   let s = Type.OWall1;
   if (block === Type.OSpell2) s = Type.OWall2;
   if (block === Type.OSpell3) s = Type.OWall3;
@@ -309,7 +306,7 @@ async function triggerOSpell(block: Type) {
   }
 }
 
-async function triggerCSpell(block: Type) {
+export async function triggerCSpell(block: Type) {
   const s = block - Type.CSpell1 + Type.CWall1;
 
   for (let x = 0; x <= XMax; x++) {
@@ -334,7 +331,7 @@ async function triggerCSpell(block: Type) {
   }
 }
 
-async function wallVanish() {
+export async function wallVanish() {
   for (let i = 0; i < 75; i++) {
     let done = false;
     do {
@@ -422,19 +419,19 @@ export async function flashEntity(e: Entity) {
   screen.renderPlayfield();
 }
 
-function change(a: Type | string, b: Type | string) {
+export function change(a: Type | string, b: Type | string) {
   const map = world.level.map;
   for (let x = 0; x < map.width; x++) {
     for (let y = 0; y < map.height; y++) {
       if (map.getType(x, y) === a) {
-        map.set(x, y, createEntityOfType(b, x, y));
+        map.set(x, y, tiles.createEntityOfType(b, x, y));
         screen.drawEntityAt(x, y);
       }
     }
   }
 }
 
-async function tTrigger(x: number, y: number, block: Type | string) {
+export async function tTrigger(x: number, y: number, block: Type | string) {
   switch (block) {
     case Type.TBlock:
       block = Type.Block;
@@ -490,13 +487,13 @@ async function tTrigger(x: number, y: number, block: Type | string) {
   }
 }
 
-async function disguiseFast() {
+export async function disguiseFast() {
   await updateTilesByType(Type.Fast, { ch: '☺' });
   screen.renderPlayfield();
 }
 
 // TODO: Use global rate
-async function magicSwap(a: Type | string, b: Type | string) {
+export async function magicSwap(a: Type | string, b: Type | string) {
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
       if (world.level.map.getType(x, y) === a) {
@@ -508,7 +505,7 @@ async function magicSwap(a: Type | string, b: Type | string) {
   }
 }
 
-async function showIWalls() {
+export async function showIWalls() {
   await world.level.map.forEach(async (x, y, e) => {
     if (e.type === Type.IWall) {
       sound.play(x * y, 1, 10);
@@ -519,7 +516,7 @@ async function showIWalls() {
   });
 }
 
-function hideLevel() {
+export function hideLevel() {
   for (let x = 0; x < world.level.map.width; x++) {
     for (let y = 0; y < world.level.map.height; y++) {
       const e = world.level.map.get(x, y)!;
@@ -530,18 +527,18 @@ function hideLevel() {
   }
 }
 
-function slowTimeSpell() {
+export function slowTimeSpell() {
   world.level.T[Timer.SpeedTime] = 0;
   world.level.T[Timer.FreezeTime] = 0;
   world.level.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime];
 }
 
-function speedTimeSpell() {
+export function speedTimeSpell() {
   world.level.T[Timer.SlowTime] = 0;
   world.level.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime];
 }
 
-function invisibleSpell(e: Entity) {
+export function invisibleSpell(e: Entity) {
   // TODO: Move timer to component
   world.level.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
   e.add(isInvisible);
@@ -550,11 +547,11 @@ function invisibleSpell(e: Entity) {
   screen.drawEntityAt(p.x, p.y);
 }
 
-function freezeSpell() {
+export function freezeSpell() {
   world.level.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
 }
 
-async function pitFall() {
+export async function pitFall() {
   if (world.game.difficulty > 9) return;
 
   for (let x = 0; x < world.level.map.width; x++) {
@@ -612,7 +609,7 @@ async function pitFall() {
   world.game.done = true;
 }
 
-function give(type: Type, n: number) {
+export function give(type: Type, n: number) {
   switch (type) {
     case Type.Gem:
       world.stats.gems += n;
@@ -626,12 +623,12 @@ function give(type: Type, n: number) {
   }
 }
 
-function become(type: Type | string, x: number, y: number) {
+export function become(type: Type | string, x: number, y: number) {
   world.setTypeAt(x, y, type);
   screen.drawEntityAt(x, y);
 }
 
-async function tunnel(e: Entity, x: number, y: number) {
+export async function tunnel(e: Entity, x: number, y: number) {
   await delay(350);
   await sound.footStep();
   await delay(500);
@@ -719,7 +716,7 @@ export async function whip(e: Entity) {
         screen.drawEntityAt(x, y);
         const hitSound = b.hitSound || 'WhipHit';
         world.addScore(thing as Type);
-        if (hitSound) await sound.triggerSound(hitSound);
+        if (hitSound) await script.triggerSound(hitSound);
 
         switch (thing) {
           case Type.Statue:
@@ -836,7 +833,12 @@ async function moveRock(
   }
 }
 
-async function bridgeCaster(x: number, y: number, dx: number, dy: number) {
+export async function bridgeCaster(
+  x: number,
+  y: number,
+  dx: number,
+  dy: number
+) {
   let xx = x;
   let yy = y;
   while (true) {
@@ -851,194 +853,5 @@ async function bridgeCaster(x: number, y: number, dx: number, dy: number) {
     } else {
       break;
     }
-  }
-}
-
-interface EffectsParams {
-  who: Entity;
-  what: Entity;
-  x: number;
-  y: number;
-  args: string[];
-}
-
-type EffectFn = (o: EffectsParams) => Promise<void> | void;
-
-export async function processEffect(
-  message: string | undefined,
-  options: Partial<EffectsParams> = {}
-) {
-  if (!message) return;
-
-  if (typeof message === 'string') {
-    const lines = message.split('\n');
-    for (let line of lines) {
-      line = line.trim();
-      if (!line) continue;
-
-      if (line.startsWith('##')) {
-        await triggerEffect(line.slice(2), options);
-      } else if (line.startsWith('@@')) {
-        await sound.triggerSound(line.slice(2));
-      } else {
-        await screen.flashMessage(line);
-      }
-    }
-  }
-}
-
-/** # Effects */
-const EffectMap: Record<string, EffectFn> = {
-  /** ## `##BECOME A`
-   * Changes the triggered item to the specified type.
-   */
-  BECOME: ({ x, y, args }) => become(tiles.getType(args[0])!, x, y),
-  /** ## `##CHANGE A B`
-   * Changes every specified item with type A to type B.
-   */
-  CHANGE: ({ args }) =>
-    change(tiles.getType(args[0])!, tiles.getType(args[1])!),
-  /** ## `##HIDE A`
-   * Hides all tiles of the specified type.
-   */
-  HIDE: ({ args }) => hideType(tiles.getType(args[0])!),
-  /** ## `GIVE A N`
-   * Gives the player N of the specified item.
-   */
-  GIVE: ({ args }) => give(tiles.getType(args[0])!, +args[1]),
-  /** ## `TAKE A N`
-   * Takes N of the specified item from the player.
-   */
-  TAKE: ({ args }) => give(tiles.getType(args[0])!, -args[1]),
-  CHAR: ({ args }) =>
-    updateTilesByType(tiles.getType(args[0])!, { ch: args[1] }),
-  FG: ({ args }) => updateTilesByType(tiles.getType(args[0])!, { fg: args[1] }),
-  BG: ({ args }) => updateTilesByType(tiles.getType(args[0])!, { bg: args[1] }),
-
-  /** ## `##GEMS`
-   * Gives the player 50 gems.
-   */
-  GEMS: () => give(Type.Gem, 50),
-
-  /**
-   * ## `##KEYS`
-   * Gives the player 5 keys.
-   */
-  KEYS: () => give(Type.Key, 5),
-
-  /**
-   * ## `##ZAP`
-   * Replaces the tiles directly north, south, east, and west of the player with empties.
-   */
-  ZAP: ({ x, y }) => {
-    become(Type.Floor, x + 1, y);
-    become(Type.Floor, x - 1, y);
-    become(Type.Floor, x, y + 1);
-    become(Type.Floor, x, y - 1);
-  },
-
-  Bomb: ({ x, y }) => bomb(x, y),
-  Quake: quakeTrap,
-  TeleportTrap: ({ who }) => teleport(who!), // Rename
-  ZapTrap: zapTrap,
-  CreateTrap: createTrap,
-  ShowGems: showGemsSpell,
-  BlockSpell: ({ what, args }) =>
-    blockSpell(tiles.getType(args[0]) || Type.ZBlock, what.type),
-  WallVanish: wallVanish,
-  KROZ: ({ what }) => krozBonus(what.type as Type),
-  OSpell: ({ what }) => triggerOSpell(what.type as Type),
-  CSpell: ({ what }) => triggerCSpell(what.type as Type),
-  TTrigger: ({ x, y, what, args }) =>
-    tTrigger(x, y, tiles.getType(args[0]) || what.type),
-  /**
-   * ## `##Shoot N`
-   * Shoots a spear in the specified direction.
-   */
-  Shoot: ({ x, y, args }) => shoot(x, y, +args[0]),
-  SlowTime: slowTimeSpell,
-  SpeedTime: speedTimeSpell,
-  Invisible: ({ who }) => invisibleSpell(who),
-  Freeze: freezeSpell,
-  /** ## `##HideLevel`
-   * Hides all tiles except the player.
-   */
-  HideLevel: hideLevel,
-  ShowIWalls: showIWalls,
-  MagicSwap: ({ args }) =>
-    magicSwap(tiles.getType(args[0])!, tiles.getType(args[1])!),
-  DisguiseFast: disguiseFast,
-  FlashEntity: ({ who }) => flashEntity(who),
-  PitFall: pitFall,
-  Tunnel: ({ who, x, y }) => tunnel(who, x, y),
-  /** `##EvapoRate N`
-   * Sets the evaporation rate for the level.
-   */
-  EvapoRate: ({ args }) => {
-    world.level.evapoRate = +args[0];
-  },
-  /** ## `##LavaRate N`
-   * Sets the lava rate for the level.
-   */
-  LavaRate: ({ args }) => {
-    world.level.lavaFlow = true;
-    world.level.lavaRate = +args[0];
-  },
-  /** ## `##TreeRate N`
-   * Sets the tree rate for the level.
-   */
-  TreeRate: ({ args }) => {
-    world.level.treeRate = +args[0];
-  },
-  /** ## `##MagicEWalls`
-   * Enables magic walls for the level
-   */
-  MagicEWalls: () => {
-    world.level.magicEWalls = true;
-  },
-  BridgeCaster: ({ x, y, args }) => bridgeCaster(x, y, +args[0], +args[1]),
-  NEXTLEVEL: async () => {
-    await levels.nextLevel();
-  },
-  CHANGELEVEL: async ({ args }) => {
-    world.stats.levelIndex = +args[0];
-    await levels.nextLevel(0);
-  },
-  CHANGEGAME: async ({ args }) => {
-    const game = games[args[0] as keyof typeof games];
-    if (game) {
-      events.gameStart.dispatch(game);
-    } else {
-      console.warn('Unknown game:', args[0]);
-    }
-  },
-  openSourceScreen: async () => await screen.openSourceScreen(),
-  REFRESH: async () => screen.fullRender(),
-  DIE: async ({ who }) => await world.kill(who)
-};
-
-// TODO:
-// #DIE
-// #ENDGAME
-// #CHAR
-
-export async function triggerEffect(
-  trigger: string,
-  options: Partial<EffectsParams> = {}
-) {
-  options.args = trigger.split(' ');
-  trigger = options.args.shift()! as keyof typeof EffectMap;
-  const fn = EffectMap[trigger];
-  if (fn) {
-    options.who ??= world.level.player;
-    options.x ??= options.who.get(Position)?.x ?? 0;
-    options.y ??= options.who.get(Position)?.y ?? 0;
-    await fn(options as EffectsParams);
-    return;
-  }
-  if (DEBUG) {
-    throw new Error('Unknown effect: ' + trigger);
-  } else {
-    console.warn('Unknown effect:', trigger);
   }
 }

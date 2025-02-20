@@ -1,8 +1,11 @@
 import { RNG } from 'rot-js';
 
-import { Type } from '../modules/tiles';
 import * as tiles from '../modules/tiles';
+import * as scripts from '../modules/scripts';
+
 import { Color, getColor } from '../modules/colors';
+import { Type } from '../constants/types';
+import { DEBUG } from '../constants/constants';
 
 /** # Tags */
 
@@ -64,7 +67,7 @@ export class Renderable {
 
   blink: boolean = false;
 
-  get ch() {
+  get ch(): string {
     return this._ch ?? tiles.common.FLOOR_CHAR;
   }
   set ch(value: string | null) {
@@ -117,12 +120,12 @@ export class Position {
   }
 
   die() {
-    this.x = -1;
-    this.y = -1;
+    this.x = -2;
+    this.y = -2;
   }
 
   isDead() {
-    return this.x === -1 || this.y === -1;
+    return this.x < 0 || this.y < 0;
   }
 }
 
@@ -242,14 +245,20 @@ export class Glitch {
   }
 }
 
+abstract class IMessage {
+  constructor(public message: string) {
+    if (DEBUG) {
+      scripts.validateScript(message);
+    }
+  }
+}
+
 /**
  * ##  Trigger
  *
  * A component that allows an entity to trigger an event when it is interacted with.
  */
-export class Trigger {
-  constructor(public message: string) {}
-}
+export class Trigger extends IMessage {}
 
 /**
  * ##  Speed
@@ -287,9 +296,7 @@ export class Breakable {
  *
  * A component that displays a message when the entity is first found.
  */
-export class FoundMessage {
-  constructor(public message: string) {}
-}
+export class FoundMessage extends IMessage {}
 
 export class Pushable {
   mass: number;
@@ -302,19 +309,3 @@ export class Pushable {
 export class Energy {
   constructor(public current: number) {}
 }
-
-// export class Pushing {
-//   x: number;
-//   y: number;
-//   tx: number;
-//   ty: number;
-//   inertia: number = 1;
-
-//   constructor(data: Partial<Pushing>) {
-//     this.x = data.x ?? 0;
-//     this.y = data.y ?? 0;
-//     this.tx = data.tx ?? 0;
-//     this.ty = data.ty ?? 0;
-//     this.inertia = data.inertia ?? 1;
-//   }
-// }

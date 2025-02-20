@@ -1,8 +1,8 @@
 import { default as RNG } from 'rot-js/lib/rng';
 
-import { XMax, YMax } from '../data/constants';
-import { Type } from '../modules/tiles';
+import { XMax, YMax } from '../constants/constants';
 import { Entity } from './entity';
+import { Type } from '../constants/types';
 
 export class PlayField {
   private PF: Entity[] = [];

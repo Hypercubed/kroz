@@ -1,9 +1,8 @@
-import * as world from './world';
-import * as sound from './sound';
+import * as world from '../modules/world';
+import * as sound from '../modules/sound';
 import * as player from './player-system';
 
-import { Type } from './tiles';
-import { TIME_SCALE, XMax, YMax } from '../data/constants';
+import { TIME_SCALE, XMax, YMax } from '../constants/constants';
 import type { Entity } from '../classes/entity';
 import {
   Attacks,
@@ -17,7 +16,8 @@ import {
   isInvisible,
   Speed
 } from '../classes/components';
-import { Timer } from './effects';
+import { Timer } from '../modules/effects';
+import { Type } from '../constants/types';
 
 export async function update(tick: number) {
   if (world.level.T[Timer.FreezeTime] > 0) return;
