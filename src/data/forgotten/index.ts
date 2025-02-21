@@ -1,7 +1,7 @@
-// 'The Forgotton Adventures of Kroz'
+// 'The Forgotten Adventures of Kroz'
 import type * as tiled from '@kayahr/tiled';
 
-export const title = 'The Forgotton Adventures of Kroz';
+export const title = 'The Forgotten Adventures of Kroz';
 
 function addRandom(map: tiled.Map, value: string) {
   map.properties ??= [];
@@ -14,20 +14,20 @@ function addRandom(map: tiled.Map, value: string) {
 }
 
 export const LEVELS = [
-  null, // async () => (await import('./start.map.json')).default, // Must be level 0
+  null,
 
   // 1
   async () => (await import('./lost-1.map.json')).default, // Your Hut
   async () => (await import('../lost/lost-2.map.json')).default, // The Secret Tunnel
   async () =>
     addRandom(
-      (await import('../lost/proc.map.json')).default,
+      (await import('./proc.map.json')).default,
       `  1  X  #  ‘\n 80 50 30  9`
     ),
   async () => (await import('../lost/lost-4.map.json')).default, // Monster Marketplace
   async () =>
     addRandom(
-      (await import('../lost/proc.map.json')).default,
+      (await import('./proc.map.json')).default,
       `  1  W  +  T  Y  ‘\n100 30  9  2200  5`
     ),
   async () => (await import('../caverns/caverns-2.map.json')).default,

@@ -163,6 +163,7 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
     }
   }
 
+  console.log(properties);
   if (properties && 'DF' in properties) {
     addRandomData(properties.DF);
   }
@@ -270,8 +271,8 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
   }
 
   function addRandomData(randomLevelData: string) {
-    const tileKeys = processDF(randomLevelData);
-    const tileArray = shuffle(tileKeys.split(''));
+    const df = processDF(randomLevelData);
+    const tileArray = shuffle(df.data.split(''));
     const width = XMax + 1;
 
     let i = 0;

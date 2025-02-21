@@ -1,11 +1,11 @@
 export const DEBUG = import.meta.env.DEV;
-export const SHOW_STATS = DEBUG;
-export const SHOW_DEBUG_CONTROLS = DEBUG;
+export const SHOW_STATS = false;
+export const SHOW_DEBUG_CONTROLS = false;
 export const ENABLE_DEBUG_LEVEL = DEBUG;
 export const ENABLE_BOTS = DEBUG;
 export const ENABLE_DEBUG_INTERFACE = DEBUG;
 
-export const TITLE = 'The Forgotton Adventures of Kroz';
+export const TITLE = 'The Forgotten Adventures of Kroz';
 
 // Screen Size
 export const WIDTH = 80;

@@ -200,8 +200,48 @@ const EffectMap: Record<string, EffectFn> = {
   },
   openSourceScreen: async () => await screen.openSourceScreen(),
   REFRESH: async () => screen.fullRender(),
-  DIE: async ({ who }) => await world.kill(who)
+  DIE: async ({ who }) => await world.kill(who),
+  TEST: addRandom
 };
+
+async function addRandom() {
+  console.log('addRandom');
+
+  const x0 = 7;
+  const y0 = 3;
+
+  for (let i = 0; i < 6; i++) {
+    const y = 4 * i + y0;
+
+    for (let j = 0; j < 8; j++) {
+      const x = 8 * j + x0 + 4 * (i % 2) - 4;
+
+      for (let d = -2; d <= 2; d++) {
+        replace(x + d, y);
+        replace(x, y + d);
+      }
+
+      let dx = 0;
+      let dy = 0;
+
+      if (Math.random() < 0.5) {
+        dx = 1 - 2 * Math.floor(Math.random() * 2);
+      } else {
+        dy = 1 - 2 * Math.floor(Math.random() * 2);
+      }
+
+      for (let k = 0; k < 5; k++) {
+        replace(x + k * dx, y + k * dy);
+      }
+    }
+  }
+
+  function replace(x: number, y: number) {
+    if (world.level.map.getType(x, y) === Type.Floor) {
+      effects.become(Type.Wall, x, y);
+    }
+  }
+}
 
 // TODO:
 // #ENDGAME

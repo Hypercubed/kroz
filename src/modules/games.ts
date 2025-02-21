@@ -1,5 +1,5 @@
 import * as debug from '../data/debug/index.ts';
-import * as forgotton from '../data/forgotton/index.ts';
+import * as forgotton from '../data/forgotten/index.ts';
 import * as kingdom from '../data/kingdom/index.ts';
 import * as lost from '../data/lost/index.ts';
 import * as caverns from '../data/caverns/index.ts';

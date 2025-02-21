@@ -1,9 +1,25 @@
-// 'The Forgotton Adventures of Kroz'
+// 'The Forgotten Adventures of Kroz'
+// import type * as tiled from '@kayahr/tiled';
 
-export const title = 'The Forgotton Adventures of Kroz';
+export const title = 'The Forgotten Adventures of Kroz';
+
+// function addRandom(map: tiled.Map, value: string) {
+//   map.properties ??= [];
+//   map.properties.push({
+//     name: 'DF',
+//     type: 'string',
+//     value
+//   } as tiled.AnyProperty);
+//   return map;
+// }
 
 export const LEVELS = [
-  null, // async () => (await import('../debug/pushables.map.json')).default, // Must be level 0
+  // async () =>
+  //   addRandom(
+  //     (await import('../forgotten/proc.map.json')).default,
+  //     `  1  X  #  ‘\n 80 50 15  9`
+  //   ),
+  null,
 
   // 1
   async () => (await import('./start.map.json')).default, // Must be level 0

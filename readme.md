@@ -1,4 +1,4 @@
-# The Forgotton Adventures of Kroz
+# The Forgotten Adventures of Kroz
 
 ## Introduction
 
