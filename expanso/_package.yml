@@ -1,0 +1,6 @@
+# A collection of tokens for the cross-platform text expander Espanso.
+
+imports:
+  - "./_commands.yml"
+  - "./_sounds.yml"
+  - "./_types.yml"

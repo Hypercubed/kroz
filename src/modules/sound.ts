@@ -5,7 +5,7 @@ import { delay } from '../utils/utils';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { ZZFX } from 'zzfx';
-import { VOLUME } from '../data/constants';
+import { VOLUME } from '../constants/constants';
 
 const SILENT = false;
 
@@ -237,22 +237,4 @@ export async function generateCreature() {
     play(i * 8, 1);
   }
   await delay(50);
-}
-
-const soundMap = {
-  Amulet: amulet,
-  SecretMessage: secretMessage,
-  WhipHit: whipHit,
-  WhipBreak: whipBreak,
-  WhipBreakRock: whipBreakRock,
-  BlockedWall: blockedWall,
-  Blocked: blocked,
-  StaticNoise: staticNoise
-};
-
-export async function triggerSound(t: string) {
-  if (soundMap[t as keyof typeof soundMap]) {
-    return await soundMap[t as keyof typeof soundMap]();
-  }
-  console.warn('No sound for trigger:', t);
 }

@@ -1,17 +1,18 @@
-import * as controls from './controls.ts';
-import * as display from './display.ts';
-import * as sound from './sound.ts';
-import * as screen from './screen.ts';
-import * as world from './world.ts';
-import * as levels from './levels.ts';
-import * as effects from './effects.ts';
-import * as bot from './bot.ts';
+import * as controls from '../modules/controls.ts';
+import * as display from '../modules/display.ts';
+import * as sound from '../modules/sound.ts';
+import * as screen from '../modules/screen.ts';
+import * as world from '../modules/world.ts';
+import * as levels from '../modules/levels.ts';
+import * as effects from '../modules/effects.ts';
+import * as bot from '../modules/bot.ts';
+import * as script from '../modules/scripts.ts';
+import * as colors from '../modules/colors.ts';
 
-import { Type } from './tiles.ts';
-import { DEBUG, XMax, XTop, YMax } from '../data/constants.ts';
-import { Action } from './controls.ts';
+import { BLINK, DEBUG, XMax, XTop, YMax } from '../constants/constants.ts';
+import { Action } from '../modules/controls.ts';
 
-import { Color } from './colors.ts';
+import { Color } from '../modules/colors.ts';
 import { clamp, delay } from '../utils/utils.ts';
 
 import {
@@ -27,7 +28,9 @@ import {
   Energy
 } from '../classes/components.ts';
 import type { Entity } from '../classes/entity.ts';
-import { Difficulty } from './world.ts';
+import { Difficulty } from '../modules/world.ts';
+import { Type } from '../constants/types.ts';
+import { RNG } from 'rot-js';
 
 export async function update() {
   const e = world.level.player.get(Energy)!;
@@ -234,7 +237,7 @@ export async function tryMove(dx: number, dy: number) {
     world.addScore(e.type as Type); // Make ##score
     const message = e.get(Trigger)?.message;
     if (message) {
-      await effects.processEffect(message, {
+      await script.processEffect(message, {
         who: world.level.player,
         what: e,
         x,
@@ -297,21 +300,27 @@ async function foundMessage(e: Entity) {
   if (!message) return '';
 
   world.game.foundSet.add(type);
-  return await effects.processEffect(message);
+  return await script.processEffect(message);
 }
 
 export async function dead() {
   await effects.flashEntity(world.level.player);
   const p = world.level.player.get(Position)!;
-  screen.drawOver(p.x, p.y, '*', Color.White);
-  display.drawText(
-    XTop / 2 - 7,
-    0,
-    ' YOU HAVE DIED!! ',
-    Color.Black | 16,
-    Color.Red
-  );
-  await screen.flashMessage('Press any key to continue.');
+
+  await screen.flashMessage('Press any key to continue.', () => {
+    let fg: number | string = BLINK ? RNG.getUniformInt(1, 15) : Color.White;
+    screen.drawAt(p.x, p.y, '*', fg, Color.Black);
+
+    fg = Color.Black;
+    if (BLINK) {
+      const v = 500;
+      const f = Date.now() % v < v / 2;
+      fg = colors.getColor(fg, f ? 1 : 0);
+    }
+
+    // TODO: Flash
+    display.drawText(XTop / 2 - 7, 0, 'YOU HAVE DIED!!', fg, Color.Red);
+  });
   world.game.done = true;
 }
 

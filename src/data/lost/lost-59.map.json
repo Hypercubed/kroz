@@ -26,7 +26,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##LavaRate 140\n##HIDE Create\n##HIDE MBlock\n##HIDE OSpell1\n##HIDE OSpell2\n##HIDE OSpell3\n##HIDE Trap"
+      "value": "##LavaRate 140\n##HIDE Create\n##HIDE MBlock\n##HIDE OSpell1\n##HIDE OSpell2\n##HIDE OSpell3\n##HIDE Trap\nPress any key to begin this level."
     }
   ],
   "renderorder": "right-down",

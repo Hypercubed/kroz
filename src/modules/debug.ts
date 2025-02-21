@@ -1,8 +1,10 @@
 import * as world from './world';
 import * as levels from './levels';
+import * as scripts from './scripts';
 
 import { Position } from '../classes/components';
 import { Timer } from './effects';
+import { ENABLE_DEBUG_INTERFACE } from '../constants/constants';
 
 const _timers = {
   get SlowTime() {
@@ -110,3 +112,50 @@ const api = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any)['krozDebugAPI'] = api;
+
+if (ENABLE_DEBUG_INTERFACE) {
+  const input = document.getElementById('console-input')! as HTMLInputElement;
+  const logDiv = document.getElementById('log')!;
+
+  document.addEventListener('keyup', (e) => {
+    if (e.key === '?') {
+      const consoleDiv = document.getElementById('debug-console');
+      consoleDiv!.style.display =
+        consoleDiv!.style.display === 'none' ? 'block' : 'none';
+      if (consoleDiv!.style.display === 'block') {
+        input.focus();
+        input.value = ''; // Clear input
+      }
+    }
+  });
+
+  input.addEventListener('keyup', (e: KeyboardEvent) => e.stopPropagation());
+
+  input.addEventListener('keydown', async (e: KeyboardEvent) => {
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    if (e.key === 'Enter') {
+      const command = input.value;
+      input.value = ''; // Clear input
+      await processCommand(command);
+    }
+  });
+
+  async function processCommand(command: string) {
+    command = command.trim();
+    if (!command.startsWith('##') && !command.startsWith('@@')) {
+      command = `##${command}`;
+    }
+
+    try {
+      world.game.paused = true;
+      const result = await scripts.processEffect(command);
+      if (result !== undefined) {
+        logDiv.innerHTML += `<p>> ${command}</p><p>${result}</p>`;
+      }
+      world.game.paused = false;
+    } catch (err: unknown) {
+      logDiv.innerHTML += `<p>Error: ${err}</p>`;
+    }
+  }
+}

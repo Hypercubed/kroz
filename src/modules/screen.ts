@@ -6,6 +6,7 @@ import * as tiles from './tiles';
 import * as colors from './colors';
 
 import {
+  BLINK,
   DEBUG,
   ENABLE_BOTS,
   FLOOR_CHAR,
@@ -15,12 +16,11 @@ import {
   XTop,
   YBot,
   YTop
-} from '../data/constants';
+} from '../constants/constants';
 import { default as RNG } from 'rot-js/lib/rng';
 import { Color, ColorCodes } from './colors';
 import { delay, pad } from '../utils/utils';
 import dedent from 'ts-dedent';
-import { Type } from './tiles';
 import { Entity } from '../classes/entity';
 import {
   isSecreted,
@@ -30,6 +30,7 @@ import {
   Glitch
 } from '../classes/components';
 import { Difficulty } from './world';
+import { Type } from '../constants/types';
 
 export function renderScreen() {
   const x = 70;
@@ -376,14 +377,19 @@ export function drawEntityAt(x: number, y: number, entity?: Entity | null) {
 
   const t = entity.get(Renderable)!;
   let ch = t.ch;
-  const fg = t.fg;
-  // if (!world.game.paused && fg !== null && t.blink) fg |= 16; // add blink
+  let fg = t.fg;
+
+  if (t.blink && BLINK && !world.game.paused && world.game.started) {
+    const v = 500;
+    const f = Date.now() % v < v / 2;
+    fg = colors.getColor(fg as string, f ? 1 : 0);
+  }
 
   if (entity.has(Glitch)) {
     ch = entity.get(Glitch)!.getFrame();
   }
 
-  display.draw(x + XBot, y + YBot, ch, fg!, t.bg!);
+  display.draw(x + XBot, y + YBot, ch, fg, t.bg!);
 }
 
 export function drawAt(
@@ -406,7 +412,10 @@ export function drawOver(
   display.drawOver(x + XBot, y + YBot, ch, fg, bg);
 }
 
-export async function flashMessage(msg: string): Promise<string> {
+export async function flashMessage(
+  msg: string,
+  cb?: () => void
+): Promise<string> {
   if (world.game.bot) return '';
   if (!msg) return '';
 
@@ -415,7 +424,9 @@ export async function flashMessage(msg: string): Promise<string> {
 
   world.game.paused = true;
   const key = await controls.repeatUntilKeyPressed(() => {
-    display.drawText(x, y, msg, RNG.getUniformInt(1, 15), Color.Black);
+    const fg = BLINK ? RNG.getUniformInt(1, 15) : Color.White;
+    display.drawText(x, y, msg, fg, Color.Black);
+    cb?.();
   });
   renderBorder();
   world.game.paused = false;

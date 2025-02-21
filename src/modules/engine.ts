@@ -3,13 +3,13 @@ import * as dat from 'lil-gui';
 
 import * as controls from './controls';
 import * as display from './display';
-import * as player from './player-system';
+import * as player from '../systems/player-system';
 import * as screen from './screen';
 import * as world from './world';
-import * as mob from './mobs-system';
+import * as mob from '../systems/mobs-system';
 import * as level from './levels';
-import * as effects from './effects-system';
-import * as debug from './debug-interface';
+import * as effects from '../systems/effects-system';
+import * as debug from './debug';
 import * as events from './events';
 import * as tiles from './tiles';
 import * as colors from './colors';
@@ -20,7 +20,7 @@ import {
   TITLE,
   XMax,
   YMax
-} from '../data/constants';
+} from '../constants/constants';
 import { Color } from './colors';
 import { games } from './games';
 

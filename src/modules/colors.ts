@@ -1,4 +1,4 @@
-import { BLINK } from '../data/constants';
+import { BLINK } from '../constants/constants';
 import * as world from './world';
 
 // PASCAL color codes

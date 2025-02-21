@@ -2,6 +2,7 @@ import * as screen from './screen.ts';
 import * as levels from './levels.ts';
 import * as sound from './sound.ts';
 import * as tiles from './tiles.ts';
+import * as player from '../systems/player-system.ts';
 
 import {
   CLOCK_SCALE,
@@ -9,13 +10,13 @@ import {
   TITLE,
   XMax,
   YMax
-} from '../data/constants.ts';
+} from '../constants/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { Level } from './levels.ts';
-import { Type } from './tiles.ts';
 import { PlayField } from '../classes/map.ts';
 import { RNG } from 'rot-js';
 import { Position } from '../classes/components.ts';
+import { Type } from '../constants/types.ts';
 
 export const enum Difficulty {
   Novice = 8,
@@ -182,8 +183,11 @@ export function setTypeAt(x: number, y: number, type: Type | string) {
 export async function kill(e: Entity) {
   if (typeof e.type === 'number' && e.type < 4) {
     await sound.kill(e.type);
+    e.get(Position)?.die();
   }
-  e.get(Position)?.die();
+  if (e.type === Type.Player) {
+    await player.dead();
+  }
 }
 
 export async function generateCreatures(n: number = 1) {

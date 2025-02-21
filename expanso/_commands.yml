@@ -1,0 +1,9 @@
+matches:
+  - trigger: "##"
+    replace: "##CHANGE A B"
+  - trigger: "##"
+    replace: "##GIVE A N"
+  - trigger: "##"
+    replace: "##TAKE A N"
+  - trigger: "##"
+    replace: "##BECOME A"

@@ -1,0 +1,7 @@
+matches:
+  - trigger: '@@'
+    replace: '@@Blocked'
+  - trigger: '@@'
+    replace: '@@BlockedWall'
+  - trigger: '@@'
+    replace: '@@StaticNoise'

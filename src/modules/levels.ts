@@ -7,6 +7,7 @@ import * as controls from './controls.ts';
 import * as screen from './screen.ts';
 import * as effects from './effects.ts';
 import * as events from './events.ts';
+import * as scripts from './scripts.ts';
 
 import { mod } from 'rot-js/lib/util';
 import {
@@ -21,11 +22,11 @@ import {
   shuffle,
   wrapString
 } from '../utils/utils.ts';
-import { XMax, YMax } from '../data/constants.ts';
+import { XMax, YMax } from '../constants/constants.ts';
 import { Entity } from '../classes/entity.ts';
-import { Type } from './tiles.ts';
 import { Timer } from './effects.ts';
 import { Color } from './colors.ts';
+import { Type } from '../constants/types.ts';
 
 export interface Level {
   id: string;
@@ -54,7 +55,7 @@ export async function loadLevel() {
   screen.fullRender();
 
   if (world.level.startTrigger) {
-    await effects.processEffect(world.level.startTrigger);
+    await scripts.processEffect(world.level.startTrigger);
   } else {
     await screen.flashMessage('Press any key to begin this level.');
   }
@@ -115,18 +116,18 @@ async function readLevel(i: number) {
 }
 
 function readRandomLevel(levelData: string): Level {
-  const data: Entity[] = [];
-  let tileKeys = processDF(levelData);
+  const df = processDF(levelData);
 
   const width = XMax + 1;
   const height = YMax + 1;
   const size = width * height;
-  if (tileKeys.length < size) {
-    tileKeys += ' '.repeat(size - tileKeys.length);
+  if (df.data.length < size) {
+    df.data += ' '.repeat(size - df.data.length);
   }
 
-  const tileArray = shuffle(tileKeys.split(''));
+  const tileArray = shuffle(df.data.split(''));
 
+  const data: Entity[] = Array(size).fill(null);
   for (let i = 0; i < size; i++) {
     const tileId = getASCIICode(tileArray[i]);
     const x = i % width;
@@ -137,7 +138,7 @@ function readRandomLevel(levelData: string): Level {
   return {
     id: '',
     data,
-    startTrigger: undefined,
+    startTrigger: df.startTrigger || undefined,
     properties: {}
   };
 }
@@ -322,11 +323,12 @@ async function loadLevelData(level: Level) {
   world.level.borderBG = RNG.getUniformInt(1, 8);
 }
 
-function processDF(levelData: string): string {
+function processDF(levelData: string) {
   let tileKeys = '';
   const lines = levelData.split('\n');
 
-  for (let y = 0; y < lines.length; y++) {
+  let y = 0;
+  for (; y < lines.length && lines[y] !== '---'; y++) {
     const keys = lines[y];
     const counts = lines[++y];
 
@@ -337,7 +339,17 @@ function processDF(levelData: string): string {
     }
   }
 
-  return tileKeys;
+  let startTrigger = '';
+  if (lines[y++] === '---') {
+    for (; y < lines.length; y++) {
+      startTrigger += lines[y] + '\n';
+    }
+  }
+
+  return {
+    data: tileKeys,
+    startTrigger: startTrigger || undefined
+  };
 }
 
 function getTileIdFromGID(gid: number): number {

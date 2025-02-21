@@ -1,139 +1,144 @@
-{ "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJzt0bEJACAQBMFvRbABwUbsvxkjcwNF4SeY+Di2REQB+FC96PW3tvn\/9G7\/5L\/++mfsP\/RP3X\/RX3\/98\/YHAN6YtZrAXA==",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 4,
+      "name": "Object Layer 1",
+      "objects": [
         {
-         "compression":"zlib",
-         "data":"eJzt0bEJACAQBMFvRbABwUbsvxkjcwNF4SeY+Di2REQB+FC96PW3tvn\/9G7\/5L\/++mfsP\/RP3X\/RX3\/98\/YHAN6YtZrAXA==",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }, 
+          "gid": 49,
+          "height": 36,
+          "id": 8,
+          "name": "",
+          "properties": [
+            {
+              "name": "Pushable",
+              "propertytype": "Pushable",
+              "type": "class",
+              "value": {
+                "mass": 0
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 744,
+          "y": 216
+        },
         {
-         "draworder":"topdown",
-         "id":4,
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "gid":49,
-                 "height":36,
-                 "id":8,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"Pushable",
-                         "propertytype":"Pushable",
-                         "type":"class",
-                         "value":
-                            {
-                             "mass":0
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":744,
-                 "y":216
-                }, 
-                {
-                 "gid":49,
-                 "height":36,
-                 "id":9,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"Pushable",
-                         "propertytype":"Pushable",
-                         "type":"class",
-                         "value":
-                            {
-                             "mass":30
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":744,
-                 "y":504
-                }, 
-                {
-                 "gid":49,
-                 "height":36,
-                 "id":10,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"Pushable",
-                         "propertytype":"Pushable",
-                         "type":"class",
-                         "value":
-                            {
-                             "mass":1
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":744,
-                 "y":288
-                }, 
-                {
-                 "gid":49,
-                 "height":36,
-                 "id":11,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"Pushable",
-                         "propertytype":"Pushable",
-                         "type":"class",
-                         "value":
-                            {
-                             "mass":20
-                            }
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":24,
-                 "x":744,
-                 "y":432
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":5,
- "nextobjectid":12,
- "orientation":"orthogonal",
- "properties":[
+          "gid": 49,
+          "height": 36,
+          "id": 9,
+          "name": "",
+          "properties": [
+            {
+              "name": "Pushable",
+              "propertytype": "Pushable",
+              "type": "class",
+              "value": {
+                "mass": 30
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 744,
+          "y": 504
+        },
         {
-         "name":"id",
-         "type":"string",
-         "value":"Debug"
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.2",
- "tileheight":36,
- "tilesets":[
+          "gid": 49,
+          "height": 36,
+          "id": 10,
+          "name": "",
+          "properties": [
+            {
+              "name": "Pushable",
+              "propertytype": "Pushable",
+              "type": "class",
+              "value": {
+                "mass": 1
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 744,
+          "y": 288
+        },
         {
-         "firstgid":1,
-         "source":"..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+          "gid": 49,
+          "height": 36,
+          "id": 11,
+          "name": "",
+          "properties": [
+            {
+              "name": "Pushable",
+              "propertytype": "Pushable",
+              "type": "class",
+              "value": {
+                "mass": 20
+              }
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 744,
+          "y": 432
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 5,
+  "nextobjectid": 12,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "id",
+      "type": "string",
+      "value": "Debug"
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }
