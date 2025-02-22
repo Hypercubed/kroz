@@ -11,6 +11,7 @@ import {
   ENABLE_BOTS,
   FLOOR_CHAR,
   HEIGHT,
+  REDUCED,
   WIDTH,
   XBot,
   XTop,
@@ -160,7 +161,7 @@ export async function introScreen() {
       ███░░    ███████████████████████████████████████████████████████████
       ░░░      ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
     `,
-      RNG.getUniformInt(1, 15)
+      REDUCED ? Color.Red : RNG.getUniformInt(1, 15)
     );
 
     await delay(500);

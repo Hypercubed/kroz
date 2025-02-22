@@ -5,6 +5,7 @@ import * as world from './world';
 import * as tiles from './tiles';
 import * as levels from './levels';
 import * as events from './events';
+import * as maps from './maps';
 
 import { games } from './games';
 
@@ -39,7 +40,7 @@ export async function processEffect(
       await triggerEffect(line.slice(2), options);
     } else if (line.startsWith('@@')) {
       await triggerSound(line.slice(2));
-    } else {
+    } else if (!line.startsWith(`''`)) {
       await screen.flashMessage(line);
     }
   }
@@ -122,6 +123,9 @@ const EffectMap: Record<string, EffectFn> = {
     effects.become(Type.Floor, x, y - 1);
   },
 
+  RNDGEN: ({ args }) =>
+    effects.generate(tiles.getType(args[0]) || Type.Floor, +(args[1] ?? 1)),
+
   Bomb: ({ x, y }) => effects.bomb(x, y),
   Quake: effects.quakeTrap,
   TeleportTrap: ({ who }) => effects.teleport(who!), // Rename
@@ -201,7 +205,13 @@ const EffectMap: Record<string, EffectFn> = {
   openSourceScreen: async () => await screen.openSourceScreen(),
   REFRESH: async () => screen.fullRender(),
   DIE: async ({ who }) => await world.kill(who),
-  TEST: addRandom
+  TEST: addRandom,
+  ellerMaze: async ({ args }) =>
+    maps.ellerMaze(tiles.getType(args[0]) || Type.Wall),
+  cellular: async ({ args }) =>
+    maps.cellular(tiles.getType(args[0]) || Type.Wall),
+  rogue: async ({ args }) => maps.rogue(tiles.getType(args[0]) || Type.Wall),
+  bsp: async ({ args }) => maps.bsp(tiles.getType(args[0]) || Type.Wall)
 };
 
 async function addRandom() {

@@ -10,12 +10,7 @@ import * as events from './events.ts';
 import * as scripts from './scripts.ts';
 
 import { mod } from 'rot-js/lib/util';
-import {
-  isGenerator,
-  isMob,
-  isPlayer,
-  Renderable
-} from '../classes/components.ts';
+import { Renderable } from '../classes/components.ts';
 import {
   ensureObject,
   getASCIICode,
@@ -24,7 +19,6 @@ import {
 } from '../utils/utils.ts';
 import { XMax, YMax } from '../constants/constants.ts';
 import { Entity } from '../classes/entity.ts';
-import { Timer } from './effects.ts';
 import { Color } from './colors.ts';
 import { Type } from '../constants/types.ts';
 
@@ -163,7 +157,6 @@ function readLevelJSONLevel(tilemap: tiled.Map): Level {
     }
   }
 
-  console.log(properties);
   if (properties && 'DF' in properties) {
     addRandomData(properties.DF);
   }
@@ -295,28 +288,8 @@ async function loadLevelData(level: Level) {
   const { data, startTrigger } = level;
 
   world.level.startTrigger = startTrigger;
-
-  const map = world.level.map;
-
-  let i = 0;
-
-  map.fill(() => data[i++]);
-
-  map.forEach((_x, _y, entity) => {
-    if (!entity) return;
-    if (entity.type === Type.Statue) {
-      world.level.T[Timer.StatueGemDrain] = 32000;
-    }
-    if (entity.has(isPlayer)) {
-      world.level.player = entity;
-    }
-    if (entity.has(isMob)) {
-      world.level.entities.push(entity);
-    }
-    if (entity.has(isGenerator)) {
-      world.level.genNum++;
-    }
-  });
+  world.level.map.fill((_x, _y, i) => data[i]);
+  await world.reindexMap();
 
   // Randomize gem and border colors
   await effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });

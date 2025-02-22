@@ -66,10 +66,10 @@ export class PlayField {
     }
   }
 
-  fill(callback: (x: number, y: number) => Entity) {
+  fill(callback: (x: number, y: number, i: number) => Entity) {
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        this.set(x, y, callback(x, y));
+        this.set(x, y, callback(x, y, this.getIndex(x, y)));
       }
     }
   }

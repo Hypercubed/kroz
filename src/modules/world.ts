@@ -15,8 +15,14 @@ import { Entity } from '../classes/entity.ts';
 import { Level } from './levels.ts';
 import { PlayField } from '../classes/map.ts';
 import { RNG } from 'rot-js';
-import { Position } from '../classes/components.ts';
+import {
+  isGenerator,
+  isMob,
+  isPlayer,
+  Position
+} from '../classes/components.ts';
 import { Type } from '../constants/types.ts';
+import { Timer } from './effects.ts';
 
 export const enum Difficulty {
   Novice = 8,
@@ -225,4 +231,27 @@ export async function pause() {
   game.paused = true;
   screen.fullRender();
   await screen.flashMessage('Press any key to resume');
+}
+
+// TODO: Call this when entities are changed
+export async function reindexMap() {
+  level.genNum = 0;
+  level.entities = [];
+  level.T[Timer.StatueGemDrain] = 0;
+
+  await level.map.forEach(async (_x, _y, entity) => {
+    if (!entity) return;
+    if (entity.type === Type.Statue) {
+      level.T[Timer.StatueGemDrain] = 32000;
+    }
+    if (entity.has(isPlayer)) {
+      level.player = entity;
+    }
+    if (entity.has(isMob)) {
+      level.entities.push(entity);
+    }
+    if (entity.has(isGenerator)) {
+      level.genNum++;
+    }
+  });
 }

@@ -855,3 +855,12 @@ export async function bridgeCaster(
     }
   }
 }
+
+export async function generate(type: Type, n: number = 1) {
+  for (let i = 0; i < n; i++) {
+    const [x, y] = world.level.map.findRandomEmptySpace();
+    world.level.map.set(x, y, tiles.createEntityOfType(type, x, y));
+  }
+  await world.reindexMap();
+  screen.renderPlayfield();
+}

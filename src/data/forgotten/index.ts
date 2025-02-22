@@ -1,17 +1,5 @@
 // 'The Forgotten Adventures of Kroz'
-import type * as tiled from '@kayahr/tiled';
-
 export const title = 'The Forgotten Adventures of Kroz';
-
-function addRandom(map: tiled.Map, value: string) {
-  map.properties ??= [];
-  map.properties.push({
-    name: 'DF',
-    type: 'string',
-    value
-  } as tiled.AnyProperty);
-  return map;
-}
 
 export const LEVELS = [
   null,
@@ -19,17 +7,9 @@ export const LEVELS = [
   // 1
   async () => (await import('./lost-1.map.json')).default, // Your Hut
   async () => (await import('../lost/lost-2.map.json')).default, // The Secret Tunnel
-  async () =>
-    addRandom(
-      (await import('./proc.map.json')).default,
-      `  1  X  #  ‘\n 80 50 30  9`
-    ),
+  async () => (await import('./lost-3.map.json')).default,
   async () => (await import('../lost/lost-4.map.json')).default, // Monster Marketplace
-  async () =>
-    addRandom(
-      (await import('./proc.map.json')).default,
-      `  1  W  +  T  Y  ‘\n100 30  9  2200  5`
-    ),
+  async () => (await import('./lost-5.map.json')).default,
   async () => (await import('../caverns/caverns-2.map.json')).default,
   async () => (await import('../caverns/caverns-4.map.json')).default,
   async () => (await import('../kingdom/kingdom-1.map.json')).default,
@@ -39,6 +19,7 @@ export const LEVELS = [
 
   // 10
   async () => (await import('../lost/lost-11.map.json')).default,
+  async () => (await import('./lost-12.map.json')).default,
   async () => (await import('../kingdom/kingdom-12.map.json')).default,
   async () => (await import('../lost/lost-18.map.json')).default,
   async () => (await import('../lost/lost-20.map.json')).default,
