@@ -10,7 +10,7 @@ The goal is mimic the original Kroz games, while proving a framework for new fea
 
 ## How to Play
 
-The game is played in the browser. You can play the game by visiting the following URL: https://hypercubed.github.io/kroz/ or https://hypercubed.itch.io/the-forgotton-adventures-of-kroz.
+The game is played in the browser. You can play the game by visiting the following URL: https://hypercubed.github.io/kroz/ or https://hypercubed.itch.io/the-forgotten-adventures-of-kroz.
 
 ## Screenshots
 

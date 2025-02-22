@@ -33,6 +33,7 @@ let runningGame = 0;
 export function init() {
   const container = display.getContainer()!;
   const app = document.getElementById('app')!;
+
   app.appendChild(container);
   controls.start();
 
@@ -51,6 +52,7 @@ export function init() {
       title: 'Debug'
     });
 
+    // TODO: Move this to debug module
     const t = gui.addFolder('Timers');
     t.add(debug.timers, 'SlowTime', 0, 400, 1).listen();
     t.add(debug.timers, 'Invisible', 0, 400, 1).listen();
@@ -65,7 +67,7 @@ export function init() {
     o.add(debug.stats, 'whipPower', 2, 7, 1).listen();
 
     const l = gui.addFolder('Level');
-    l.add(debug.levels, 'level', 0, level.getLevelsCount() + 1, 1).listen();
+    l.add(debug.levels, 'level', 0, 100, 1).listen();
 
     const p = gui.addFolder('Player');
     p.add(debug.player, 'bot').listen();
@@ -85,28 +87,29 @@ export async function start() {
   display.clear(Color.Black);
 
   await screen.introScreen();
-  world.game.title = TITLE;
+  world.gameState.title = TITLE;
   events.gameStart.dispatch(games.loading);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function runGame(game: any) {
   world.resetState();
+  world.gameState.currentGame = game;
+
   display.clear(Color.Black);
 
   if (runningGame++ > 0) {
     await screen.renderTitle();
   }
 
-  level.addLevels(game.LEVELS);
   tiles.setTileset(await game.readTileset());
   colors.setColors(await game.readColor());
 
-  await level.loadLevel();
+  await level.loadLevel(0);
 
   screen.fullRender();
 
-  world.game.started = true;
+  world.gameState.started = true;
   await run();
 }
 
@@ -125,9 +128,9 @@ async function run() {
   const raf = async (currentTime: number) => {
     if (runningGame !== _runningGame) return;
 
-    const speed = 8 * world.game.clockScale;
+    const speed = 8 * world.gameState.clockScale;
 
-    if (world.game.done) {
+    if (world.gameState.done) {
       // Remote this?
       start();
       return;

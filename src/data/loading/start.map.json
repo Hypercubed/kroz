@@ -19,6 +19,57 @@
     },
     {
       "draworder": "topdown",
+      "id": 5,
+      "name": "Object Layer 2",
+      "objects": [
+        {
+          "gid": 77,
+          "height": 36,
+          "id": 36,
+          "name": "",
+          "properties": [
+            {
+              "name": "FoundMessage",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "White",
+                "blink": false,
+                "ch": "\u2261"
+              }
+            },
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "##CHANGEGAME procgen"
+            },
+            {
+              "name": "isInvisible",
+              "type": "bool",
+              "value": true
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 864,
+          "y": 648
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": false,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
       "id": 4,
       "name": "Object Layer 1",
       "objects": [
@@ -148,7 +199,7 @@
             {
               "name": "Trigger",
               "type": "string",
-              "value": "##CHANGEGAME forgotton"
+              "value": "##CHANGEGAME forgotten"
             }
           ],
           "rotation": 0,
@@ -257,20 +308,14 @@
               "value": " "
             },
             {
-              "name": "Tile",
-              "propertytype": "Renderable",
-              "type": "class",
-              "value": {
-                "bg": "Black",
-                "blink": false,
-                "ch": "",
-                "fg": "Black"
-              }
-            },
-            {
               "name": "Trigger",
               "type": "string",
               "value": "##CHANGEGAME debug"
+            },
+            {
+              "name": "isInvisible",
+              "type": "bool",
+              "value": true
             }
           ],
           "rotation": 0,
@@ -319,6 +364,11 @@
                 "ch": "\u2588",
                 "fg": "Brown"
               }
+            },
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "##CSpell\n##SHOW Stairs"
             }
           ],
           "rotation": 0,
@@ -336,8 +386,8 @@
       "y": 0
     }
   ],
-  "nextlayerid": 5,
-  "nextobjectid": 35,
+  "nextlayerid": 6,
+  "nextobjectid": 37,
   "orientation": "orthogonal",
   "properties": [
     {

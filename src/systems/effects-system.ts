@@ -10,20 +10,20 @@ import { LAVA_FLOW, TREE_GROW, Type } from '../constants/types';
 
 export async function update() {
   // Effect timers
-  for (let i = 0; i < world.level.T.length; i++) {
-    world.level.T[i] = Math.max(0, world.level.T[i] - 1);
+  for (let i = 0; i < world.levelState.T.length; i++) {
+    world.levelState.T[i] = Math.max(0, world.levelState.T[i] - 1);
   }
 
   // Invisible
-  if (world.level.T[Timer.Invisible] > 0) {
-    world.level.player.add(isInvisible);
+  if (world.levelState.T[Timer.Invisible] > 0) {
+    world.levelState.player.add(isInvisible);
   } else {
-    world.level.player.remove(isInvisible);
+    world.levelState.player.remove(isInvisible);
   }
 
   // Statue Gem Drain
   if (
-    world.level.T[Timer.StatueGemDrain] > 0 &&
+    world.levelState.T[Timer.StatueGemDrain] > 0 &&
     RNG.getUniformInt(0, 18) === 0
   ) {
     world.stats.gems--;
@@ -32,13 +32,13 @@ export async function update() {
   }
 
   // Creature generation
-  const sNum = world.level.entities.reduce((acc, e) => {
+  const sNum = world.levelState.entities.reduce((acc, e) => {
     if (e.type === Type.Slow) return acc + 1;
     return acc;
   }, 0);
 
   if (
-    world.level.genNum > 0 &&
+    world.levelState.genNum > 0 &&
     sNum < 995 &&
     RNG.getUniformInt(0, 17) === 0 // 1 in 17 chance of generating a creature
   ) {
@@ -46,11 +46,11 @@ export async function update() {
   }
 
   // Magic EWalls
-  if (world.level.magicEWalls && RNG.getUniformInt(0, 7) === 0) {
+  if (world.levelState.magicEWalls && RNG.getUniformInt(0, 7) === 0) {
     for (let i = 0; i < 100; i++) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      const block = world.level.map.getType(x, y);
+      const block = world.levelState.map.getType(x, y);
       if (block === Type.CWall1) {
         world.setTypeAt(x, y, Type.EWall);
         screen.drawEntityAt(x, y);
@@ -60,7 +60,7 @@ export async function update() {
     for (let i = 0; i < 100; i++) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      const block = world.level.map.getType(x, y);
+      const block = world.levelState.map.getType(x, y);
       if (block === Type.EWall) {
         world.setTypeAt(x, y, Type.CWall1);
         screen.drawEntityAt(x, y);
@@ -70,11 +70,11 @@ export async function update() {
   }
 
   // Evaporate
-  if (world.level.evapoRate > 0 && RNG.getUniformInt(0, 9) === 0) {
-    for (let i = 0; i < world.level.evapoRate; i++) {
+  if (world.levelState.evapoRate > 0 && RNG.getUniformInt(0, 9) === 0) {
+    for (let i = 0; i < world.levelState.evapoRate; i++) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      const block = world.level.map.getType(x, y);
+      const block = world.levelState.map.getType(x, y);
       if (block === Type.River) {
         world.setTypeAt(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
@@ -84,17 +84,17 @@ export async function update() {
   }
 
   // Lava Flow
-  if (world.level.lavaFlow && RNG.getUniformInt(0, 9) === 0) {
-    for (let i = 0; i < world.level.lavaRate; i++) {
+  if (world.levelState.lavaFlow && RNG.getUniformInt(0, 9) === 0) {
+    for (let i = 0; i < world.levelState.lavaRate; i++) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      const block = world.level.map.getType(x, y);
+      const block = world.levelState.map.getType(x, y);
       if (LAVA_FLOW.includes(block as number)) {
         let done = false;
-        if (world.level.map.getType(x + 1, y) === Type.Lava) done = true;
-        if (world.level.map.getType(x - 1, y) === Type.Lava) done = true;
-        if (world.level.map.getType(x, y + 1) === Type.Lava) done = true;
-        if (world.level.map.getType(x, y - 1) === Type.Lava) done = true;
+        if (world.levelState.map.getType(x + 1, y) === Type.Lava) done = true;
+        if (world.levelState.map.getType(x - 1, y) === Type.Lava) done = true;
+        if (world.levelState.map.getType(x, y + 1) === Type.Lava) done = true;
+        if (world.levelState.map.getType(x, y - 1) === Type.Lava) done = true;
         if (done) {
           world.setTypeAt(x, y, Type.Lava);
           screen.drawEntityAt(x, y);
@@ -104,31 +104,31 @@ export async function update() {
   }
 
   // Tree Rate
-  if (world.level.treeRate > 0 && RNG.getUniformInt(0, 9) === 0) {
-    for (let i = 0; i < world.level.treeRate; i++) {
+  if (world.levelState.treeRate > 0 && RNG.getUniformInt(0, 9) === 0) {
+    for (let i = 0; i < world.levelState.treeRate; i++) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      const block = world.level.map.getType(x, y);
+      const block = world.levelState.map.getType(x, y);
       if (TREE_GROW.includes(block as number)) {
         let done = false;
         if (
-          world.level.map.getType(x + 1, y) === Type.Tree ||
-          world.level.map.getType(x + 1, y) === Type.Forest
+          world.levelState.map.getType(x + 1, y) === Type.Tree ||
+          world.levelState.map.getType(x + 1, y) === Type.Forest
         )
           done = true;
         if (
-          world.level.map.getType(x - 1, y) === Type.Tree ||
-          world.level.map.getType(x - 1, y) === Type.Forest
+          world.levelState.map.getType(x - 1, y) === Type.Tree ||
+          world.levelState.map.getType(x - 1, y) === Type.Forest
         )
           done = true;
         if (
-          world.level.map.getType(x, y + 1) === Type.Tree ||
-          world.level.map.getType(x, y + 1) === Type.Forest
+          world.levelState.map.getType(x, y + 1) === Type.Tree ||
+          world.levelState.map.getType(x, y + 1) === Type.Forest
         )
           done = true;
         if (
-          world.level.map.getType(x, y - 1) === Type.Tree ||
-          world.level.map.getType(x, y - 1) === Type.Forest
+          world.levelState.map.getType(x, y - 1) === Type.Tree ||
+          world.levelState.map.getType(x, y - 1) === Type.Forest
         )
           done = true;
         if (done) {

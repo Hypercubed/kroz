@@ -79,7 +79,7 @@ function getNeighbors(x: number, y: number) {
   for (let dx = -R; dx <= R; dx++) {
     for (let dy = -R; dy <= R; dy++) {
       const [xx, yy] = [x + dx, y + dy];
-      const e = world.level.map.get(xx, yy);
+      const e = world.levelState.map.get(xx, yy);
       if (!e) continue;
       n.push([e, xx, yy]);
     }
@@ -100,7 +100,7 @@ function chebyshevDistance(x1: number, y1: number, x2: number, y2: number) {
 }
 
 // async function pickMove(moves: Weights): Promise<boolean> {
-//   const p = world.level.player.get(Position)!;
+//   const p = world.levelState.player.get(Position)!;
 //   if (!p) return false;
 
 //   const id = RNG.getWeightedValue(moves);
@@ -113,11 +113,11 @@ function chebyshevDistance(x1: number, y1: number, x2: number, y2: number) {
 // }
 
 function getTargets(predicate: (e: Entity, x: number, y: number) => boolean) {
-  const map = world.level.map;
+  const map = world.levelState.map;
   const arr = [] as Array<Moves>;
   for (let x = 0; x < map.width; x++) {
     for (let y = 0; y < map.height; y++) {
-      const e = world.level.map.get(x, y);
+      const e = world.levelState.map.get(x, y);
       if (!e) continue;
       if (predicate(e, x, y)) {
         arr.push([e, x, y]);
@@ -142,7 +142,7 @@ const DEBUG_PATH = false;
 async function getPath(
   goals: Array<[number, number]>
 ): Promise<Array<[number, number]>> {
-  const p = world.level.player.get(Position)!;
+  const p = world.levelState.player.get(Position)!;
   const astar = new AStar<STATE>({
     hurestic,
     cost,
@@ -183,7 +183,7 @@ async function getPath(
 
   function cost(s: STATE): number {
     const { x, y } = s;
-    const e = world.level.map.get(x, y);
+    const e = world.levelState.map.get(x, y);
     if (!e) return 1;
     if (e.has(Pushable)) return 40; // Weight by number of whips and mass?
     if (e.has(Breakable)) return 20; // Weight by number of whips and hardness?
@@ -195,14 +195,15 @@ async function getPath(
 
   function passable(x: number, y: number, s: STATE): boolean {
     if (x < 0 || y < 0) return false;
-    if (x >= world.level.map.width || y >= world.level.map.height) return false;
+    if (x >= world.levelState.map.width || y >= world.levelState.map.height)
+      return false;
 
     if (goals.some((g) => g[0] === x && g[1] === y)) return true;
     if (x === p.x && y === p.y) return true;
 
     const { keys, gems, whips } = s;
 
-    const e = world.level.map.get(x, y);
+    const e = world.levelState.map.get(x, y);
     if (!e) return true;
     if (e.has(isMob)) return gems > 0 || whips > 0;
     if (e.has(Breakable)) return whips > 0;
@@ -214,7 +215,7 @@ async function getPath(
 
   function state(x: number, y: number, s: STATE): STATE {
     const n = { ...s, x, y };
-    const e = world.level.map.get(x, y);
+    const e = world.levelState.map.get(x, y);
     if (!e) return n;
 
     // if (e.has(isMob)) n.gems--;
@@ -351,12 +352,12 @@ async function tryTeleport() {
 
   console.log((lastAction = 'teleport'));
   world.stats.teleports--;
-  await effects.teleport(world.level.player);
+  await effects.teleport(world.levelState.player);
   return true;
 }
 
 async function trySearch() {
-  const p = world.level.player.get(Position)!;
+  const p = world.levelState.player.get(Position)!;
   if (!p) return;
 
   const emptySpace = neighbors.filter((m) => isWalkable(m[0]));
@@ -375,7 +376,7 @@ async function tryDefend() {
   if (world.stats.whips < 1) return false;
   if (world.stats.gems > 2 * world.stats.whips) return false;
 
-  const p = world.level.player.get(Position)!;
+  const p = world.levelState.player.get(Position)!;
   if (!p) return;
 
   const mobs = neighbors.filter(
@@ -389,13 +390,13 @@ async function tryDefend() {
 
   console.log((lastAction = 'defend'));
   world.stats.whips--;
-  await effects.whip(world.level.player);
+  await effects.whip(world.levelState.player);
   return true;
 }
 
 // Random Bot
 export async function botPlay() {
-  const p = world.level.player.get(Position)!;
+  const p = world.levelState.player.get(Position)!;
   if (!p) return;
 
   neighbors = getNeighbors(p.x, p.y);
@@ -417,13 +418,13 @@ export async function botPlay() {
 }
 
 async function tryMove(x: number, y: number) {
-  const p = world.level.player.get(Position)!;
+  const p = world.levelState.player.get(Position)!;
   if (!p) return false;
   const id = `${x}.${y}`;
   const visited = VISITED.get(id);
   VISITED.set(id, visited ? visited + 1 : 1);
 
-  const b = world.level.map.get(x, y);
+  const b = world.levelState.map.get(x, y);
   if (b) {
     if (b?.has(isMob) && b.type !== Type.MBlock) {
       if (world.stats.gems > 2 * world.stats.whips) {
@@ -436,7 +437,7 @@ async function tryMove(x: number, y: number) {
     ) {
       if (!(b.type === Type.Trap && lastAction === 'traps')) {
         world.stats.whips--;
-        await effects.whip(world.level.player);
+        await effects.whip(world.levelState.player);
         return true;
       }
     }
@@ -448,6 +449,6 @@ async function tryMove(x: number, y: number) {
 
 async function whip() {
   world.stats.whips--;
-  await effects.whip(world.level.player);
+  await effects.whip(world.levelState.player);
   return true;
 }

@@ -86,6 +86,10 @@ const EffectMap: Record<string, EffectFn> = {
    * Hides all tiles of the specified type.
    */
   HIDE: ({ args }) => effects.hideType(tiles.getType(args[0])!),
+  /** ## `##SHOW A`
+   * Shows all tiles of the specified type.
+   */
+  SHOW: ({ args }) => effects.showType(tiles.getType(args[0])!),
   /** ## `GIVE A N`
    * Gives the player N of the specified item.
    */
@@ -164,26 +168,26 @@ const EffectMap: Record<string, EffectFn> = {
    * Sets the evaporation rate for the level.
    */
   EvapoRate: ({ args }) => {
-    world.level.evapoRate = +args[0];
+    world.levelState.evapoRate = +args[0];
   },
   /** ## `##LavaRate N`
    * Sets the lava rate for the level.
    */
   LavaRate: ({ args }) => {
-    world.level.lavaFlow = true;
-    world.level.lavaRate = +args[0];
+    world.levelState.lavaFlow = true;
+    world.levelState.lavaRate = +args[0];
   },
   /** ## `##TreeRate N`
    * Sets the tree rate for the level.
    */
   TreeRate: ({ args }) => {
-    world.level.treeRate = +args[0];
+    world.levelState.treeRate = +args[0];
   },
   /** ## `##MagicEWalls`
    * Enables magic walls for the level
    */
   MagicEWalls: () => {
-    world.level.magicEWalls = true;
+    world.levelState.magicEWalls = true;
   },
   BridgeCaster: ({ x, y, args }) =>
     effects.bridgeCaster(x, y, +args[0], +args[1]),
@@ -191,8 +195,7 @@ const EffectMap: Record<string, EffectFn> = {
     await levels.nextLevel();
   },
   CHANGELEVEL: async ({ args }) => {
-    world.stats.levelIndex = +args[0];
-    await levels.nextLevel(0);
+    await levels.loadLevel(+args[0] - 1); // Levels are 1-indexed
   },
   CHANGEGAME: async ({ args }) => {
     const game = games[args[0] as keyof typeof games];
@@ -211,7 +214,8 @@ const EffectMap: Record<string, EffectFn> = {
   cellular: async ({ args }) =>
     maps.cellular(tiles.getType(args[0]) || Type.Wall),
   rogue: async ({ args }) => maps.rogue(tiles.getType(args[0]) || Type.Wall),
-  bsp: async ({ args }) => maps.bsp(tiles.getType(args[0]) || Type.Wall)
+  bsp: async ({ args }) => maps.bsp(tiles.getType(args[0]) || Type.Wall),
+  brogue: async ({ args }) => maps.brogue(tiles.getType(args[0]) || Type.Wall)
 };
 
 async function addRandom() {
@@ -247,7 +251,7 @@ async function addRandom() {
   }
 
   function replace(x: number, y: number) {
-    if (world.level.map.getType(x, y) === Type.Floor) {
+    if (world.levelState.map.getType(x, y) === Type.Floor) {
       effects.become(Type.Wall, x, y);
     }
   }
@@ -265,7 +269,7 @@ async function triggerEffect(
   trigger = options.args.shift()! as keyof typeof EffectMap;
   const fn = EffectMap[trigger];
   if (fn) {
-    options.who ??= world.level.player;
+    options.who ??= world.levelState.player;
     options.x ??= options.who?.get(Position)?.x ?? 0;
     options.y ??= options.who?.get(Position)?.y ?? 0;
     await fn(options as EffectsParams);

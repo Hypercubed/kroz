@@ -62,9 +62,18 @@ const SPELL_DURATION = {
 };
 
 export async function hideType(type: Type | string) {
-  await world.level.map.forEach((x, y, e) => {
+  await world.levelState.map.forEach((x, y, e) => {
     if (e?.type === type) {
       e.add(isInvisible);
+      screen.drawEntityAt(x, y);
+    }
+  });
+}
+
+export async function showType(type: Type | string) {
+  await world.levelState.map.forEach((x, y, e) => {
+    if (e?.type === type) {
+      e.remove(isInvisible);
       screen.drawEntityAt(x, y);
     }
   });
@@ -74,7 +83,7 @@ export async function updateTilesByType(
   type: Type,
   update: Partial<RenderableData>
 ) {
-  await world.level.map.forEach((_x, _y, e) => {
+  await world.levelState.map.forEach((_x, _y, e) => {
     if (e?.type === type) {
       if (e.has(Renderable)) {
         const t = e.get(Renderable)!;
@@ -89,7 +98,7 @@ export async function updateTilesByType(
 export async function shoot(x: number, y: number, dx: number) {
   x += dx;
   while (x >= 0 && x <= XMax) {
-    const e = world.level.map.get(x, y)!;
+    const e = world.levelState.map.get(x, y)!;
     if (
       typeof e.type !== 'number' ||
       e?.has(isImperviousToSpears) // TODO: OnSpear ??
@@ -140,7 +149,7 @@ export async function bomb(x: number, y: number) {
     for (let x = x1; x <= x2; x++) {
       for (let y = y1; y <= y2; y++) {
         screen.drawOver(x, y, '█', colors.getColor(Color.LightRed, 0.5));
-        const e = world.level.map.get(x, y);
+        const e = world.levelState.map.get(x, y);
         if (e?.has(isBombable)) {
           if (e.has(isMob)) {
             world.addScore(e!.type as Type);
@@ -161,7 +170,7 @@ export async function bomb(x: number, y: number) {
 
   for (let x = x1; x <= x2; x++) {
     for (let y = y1; y <= y2; y++) {
-      const e = world.level.map.get(x, y);
+      const e = world.levelState.map.get(x, y);
       if (e?.has(isBombable)) {
         // TODO: OnBomb: ##DIE ?
         world.setTypeAt(x, y, Type.Floor);
@@ -179,7 +188,7 @@ export async function quakeTrap() {
     do {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      const block = world.level.map.getType(x, y);
+      const block = world.levelState.map.getType(x, y);
       if (ROCKABLES.includes(block as number)) {
         world.setTypeAt(x, y, Type.Rock);
         screen.drawEntityAt(x, y);
@@ -198,8 +207,8 @@ export async function zapTrap() {
   let k = 0;
   while (t < 500 && k < 40) {
     t++;
-    const n = RNG.getUniformInt(0, world.level.entities.length);
-    const e = world.level.entities[n];
+    const n = RNG.getUniformInt(0, world.levelState.entities.length);
+    const e = world.levelState.entities[n];
     if (!e) continue;
     const p = e.get(Position)!;
     if (p.x === -1 || p.y === -1) continue; // dead
@@ -216,7 +225,7 @@ export async function zapTrap() {
 }
 
 export async function createTrap() {
-  const SNum = world.level.entities.reduce((acc, e) => {
+  const SNum = world.levelState.entities.reduce((acc, e) => {
     if (e.type === Type.Slow) return acc + 1;
     return acc;
   }, 0);
@@ -226,12 +235,12 @@ export async function createTrap() {
 }
 
 export async function showGemsSpell() {
-  for (let i = 0; i < world.game.difficulty * 2 + 5; i++) {
+  for (let i = 0; i < world.gameState.difficulty * 2 + 5; i++) {
     let done = false;
     do {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      const block = world.level.map.getType(x, y);
+      const block = world.levelState.map.getType(x, y);
       if (block === Type.Floor) {
         done = true;
         world.setTypeAt(x, y, Type.Gem);
@@ -246,7 +255,7 @@ export async function showGemsSpell() {
 export async function blockSpell(block: Type | string, spell: Type | string) {
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
-      if (world.level.map.getType(x, y) === block) {
+      if (world.levelState.map.getType(x, y) === block) {
         sound.blockSpell();
         for (let i = 20; i > 0; i--) {
           screen.drawAt(
@@ -260,7 +269,7 @@ export async function blockSpell(block: Type | string, spell: Type | string) {
         await delay(1);
         world.setTypeAt(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
-      } else if (world.level.map.getType(x, y) === spell) {
+      } else if (world.levelState.map.getType(x, y) === spell) {
         world.setTypeAt(x, y, Type.Floor);
         screen.drawEntityAt(x, y);
       }
@@ -269,10 +278,13 @@ export async function blockSpell(block: Type | string, spell: Type | string) {
 }
 
 export async function krozBonus(block: Type) {
-  if (block === Type.K && world.level.bonus === 0) world.level.bonus = 1;
-  if (block === Type.R && world.level.bonus === 1) world.level.bonus = 2;
-  if (block === Type.O && world.level.bonus === 2) world.level.bonus = 3;
-  if (block === Type.Z && world.level.bonus === 3) {
+  if (block === Type.K && world.levelState.bonus === 0)
+    world.levelState.bonus = 1;
+  if (block === Type.R && world.levelState.bonus === 1)
+    world.levelState.bonus = 2;
+  if (block === Type.O && world.levelState.bonus === 2)
+    world.levelState.bonus = 3;
+  if (block === Type.Z && world.levelState.bonus === 3) {
     await sound.bonusSound();
     await screen.flashMessage('Super Kroz Bonus -- 10,000 points!');
     world.addScore(block);
@@ -286,7 +298,7 @@ export async function triggerOSpell(block: Type) {
 
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
-      const block = world.level.map.getType(x, y);
+      const block = world.levelState.map.getType(x, y);
       if (block === s) {
         for (let i = 60; i > 0; i--) {
           screen.drawAt(
@@ -311,7 +323,7 @@ export async function triggerCSpell(block: Type) {
 
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
-      const block = world.level.map.getType(x, y);
+      const block = world.levelState.map.getType(x, y);
       if (block === s) {
         for (let i = 60; i > 0; i--) {
           screen.drawAt(
@@ -337,7 +349,7 @@ export async function wallVanish() {
     do {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      const b = world.level.map.getType(x, y);
+      const b = world.levelState.map.getType(x, y);
       if (b === Type.Block) {
         // TODO: sound
         world.setTypeAt(x, y, Type.IBlock); // Replace with adding isInvisible component?
@@ -367,7 +379,7 @@ export async function teleport(e: Entity) {
   for (let i = 0; i < 700; i++) {
     const x = RNG.getUniformInt(0, XMax);
     const y = RNG.getUniformInt(0, YMax);
-    const block = world.level.map.get(x, y)!;
+    const block = world.levelState.map.get(x, y)!;
     if (
       block.type === Type.Floor ||
       block?.has(isInvisible) ||
@@ -386,7 +398,7 @@ export async function teleport(e: Entity) {
     if (Date.now() - startTime > 1500) break;
   }
 
-  const space = world.level.map.findRandomEmptySpace();
+  const space = world.levelState.map.findRandomEmptySpace();
   return moveTo(e, ...space);
 }
 
@@ -420,7 +432,7 @@ export async function flashEntity(e: Entity) {
 }
 
 export function change(a: Type | string, b: Type | string) {
-  const map = world.level.map;
+  const map = world.levelState.map;
   for (let x = 0; x < map.width; x++) {
     for (let y = 0; y < map.height; y++) {
       if (map.getType(x, y) === a) {
@@ -468,13 +480,13 @@ export async function tTrigger(x: number, y: number, block: Type | string) {
       for (let dy = -1; dy <= 1; dy++) {
         if (dx === 0 && dy === 0) continue;
 
-        const b = world.level.map.getType(x + dx, y + dy);
+        const b = world.levelState.map.getType(x + dx, y + dy);
         if (TRIGGERABLES.includes(b as Type)) {
           if (place) {
             world.setTypeAt(x + dx, y + dy, block);
           } else {
             world.setTypeAt(x + dx, y + dy, block);
-            const e = world.level.map.get(x + dx, y + dy);
+            const e = world.levelState.map.get(x + dx, y + dy);
             if (!e) continue;
             const r = e?.get(Renderable);
             if (!r) continue;
@@ -496,7 +508,7 @@ export async function disguiseFast() {
 export async function magicSwap(a: Type | string, b: Type | string) {
   for (let x = 0; x <= XMax; x++) {
     for (let y = 0; y <= YMax; y++) {
-      if (world.level.map.getType(x, y) === a) {
+      if (world.levelState.map.getType(x, y) === a) {
         await sound.play(x * y, 50, 10);
         world.setTypeAt(x, y, b);
         screen.drawEntityAt(x, y);
@@ -506,7 +518,7 @@ export async function magicSwap(a: Type | string, b: Type | string) {
 }
 
 export async function showIWalls() {
-  await world.level.map.forEach(async (x, y, e) => {
+  await world.levelState.map.forEach(async (x, y, e) => {
     if (e.type === Type.IWall) {
       sound.play(x * y, 1, 10);
       if (y === 0) await delay(1);
@@ -517,9 +529,9 @@ export async function showIWalls() {
 }
 
 export function hideLevel() {
-  for (let x = 0; x < world.level.map.width; x++) {
-    for (let y = 0; y < world.level.map.height; y++) {
-      const e = world.level.map.get(x, y)!;
+  for (let x = 0; x < world.levelState.map.width; x++) {
+    for (let y = 0; y < world.levelState.map.height; y++) {
+      const e = world.levelState.map.get(x, y)!;
       if (e && !e.has(isPlayer)) {
         e.add(isInvisible);
       }
@@ -528,19 +540,19 @@ export function hideLevel() {
 }
 
 export function slowTimeSpell() {
-  world.level.T[Timer.SpeedTime] = 0;
-  world.level.T[Timer.FreezeTime] = 0;
-  world.level.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime];
+  world.levelState.T[Timer.SpeedTime] = 0;
+  world.levelState.T[Timer.FreezeTime] = 0;
+  world.levelState.T[Timer.SlowTime] = SPELL_DURATION[Timer.SlowTime];
 }
 
 export function speedTimeSpell() {
-  world.level.T[Timer.SlowTime] = 0;
-  world.level.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime];
+  world.levelState.T[Timer.SlowTime] = 0;
+  world.levelState.T[Timer.SpeedTime] = SPELL_DURATION[Timer.SpeedTime];
 }
 
 export function invisibleSpell(e: Entity) {
   // TODO: Move timer to component
-  world.level.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
+  world.levelState.T[Timer.Invisible] = SPELL_DURATION[Timer.Invisible];
   e.add(isInvisible);
 
   const p = e.get(Position)!;
@@ -548,14 +560,14 @@ export function invisibleSpell(e: Entity) {
 }
 
 export function freezeSpell() {
-  world.level.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
+  world.levelState.T[Timer.FreezeTime] = SPELL_DURATION[Timer.FreezeTime];
 }
 
 export async function pitFall() {
-  if (world.game.difficulty > 9) return;
+  if (world.gameState.difficulty > 9) return;
 
-  for (let x = 0; x < world.level.map.width; x++) {
-    for (let y = 0; y < world.level.map.height; y++) {
+  for (let x = 0; x < world.levelState.map.width; x++) {
+    for (let y = 0; y < world.levelState.map.height; y++) {
       const c = x >= 31 && x <= 35 ? Color.Black : Color.Brown;
       screen.drawAt(x, y, tiles.common.FLOOR_CHAR, c, c);
     }
@@ -606,7 +618,7 @@ export async function pitFall() {
   display.drawText(XTop / 2 - 3, 0, '* SPLAT!! *', Color.Black, Color.Red);
   await screen.flashMessage('Press any key to continue.');
   world.stats.gems = -1; // dead
-  world.game.done = true;
+  world.gameState.done = true;
 }
 
 export function give(type: Type, n: number) {
@@ -641,7 +653,7 @@ export async function tunnel(e: Entity, x: number, y: number) {
   for (let i = 0; i < 10000; i++) {
     const a = RNG.getUniformInt(0, XMax);
     const b = RNG.getUniformInt(0, YMax);
-    const t = world.level.map.getType(a, b) ?? Type.Floor;
+    const t = world.levelState.map.getType(a, b) ?? Type.Floor;
     if (t === Type.Tunnel && (a !== tx || b !== ty)) {
       tx = a;
       ty = b;
@@ -660,7 +672,7 @@ export async function tunnel(e: Entity, x: number, y: number) {
     const a = RNG.getUniformInt(-1, 1);
     const b = RNG.getUniformInt(-1, 1);
     if (tx + a < 0 || tx + a > XMax || ty + b < 0 || ty + b > YMax) continue;
-    const e = world.level.map.getType(tx + a, ty + b) ?? Type.Floor;
+    const e = world.levelState.map.getType(tx + a, ty + b) ?? Type.Floor;
     if (TUNNELABLES.includes(e as Type)) {
       ex = tx + a;
       ey = ty + b;
@@ -694,7 +706,7 @@ export async function whip(e: Entity) {
   async function hit(x: number, y: number, ch: string) {
     if (x < 0 || x > XMax || y < 0 || y > YMax) return;
 
-    const entity = world.level.map.get(x, y);
+    const entity = world.levelState.map.get(x, y);
     const thing = entity?.type || Type.Floor;
 
     screen.drawOver(x, y, ch, ColorCodes[RNG.getUniformInt(1, 15) as Color]);
@@ -720,13 +732,13 @@ export async function whip(e: Entity) {
 
         switch (thing) {
           case Type.Statue:
-            world.level.T[Timer.StatueGemDrain] = -1;
+            world.levelState.T[Timer.StatueGemDrain] = -1;
             await screen.flashMessage(
               `You've destroyed the Statue!  Your Gems are now safe.`
             );
             break;
           case Type.Generator:
-            world.level.genNum--;
+            world.levelState.genNum--;
             break;
         }
       } else {
@@ -756,7 +768,7 @@ export async function tryPushRock(
   if (tx < 0 || tx > XMax || ty < 0 || ty > YMax) nogo = true;
 
   if (!nogo) {
-    const t = world.level.map.get(tx, ty);
+    const t = world.levelState.map.get(tx, ty);
     if (!t) nogo = true;
     const tb = t!.type;
 
@@ -768,10 +780,10 @@ export async function tryPushRock(
       ROCK_CLIFFABLES.includes(tb as number)
     ) {
       nogo = false;
-      const pushable = world.level.map.get(x, y)?.get(Pushable);
+      const pushable = world.levelState.map.get(x, y)?.get(Pushable);
       if (!pushable) return;
       await moveRock(pusher, x, y, tx, ty);
-      const e = world.level.player.get(Energy)!;
+      const e = world.levelState.player.get(Energy)!;
       e.current -= pushable.mass;
     }
   }
@@ -800,8 +812,8 @@ async function moveRock(
   tx: number,
   ty: number
 ) {
-  const pushable = world.level.map.get(x, y)!;
-  const t = world.level.map.get(tx, ty);
+  const pushable = world.levelState.map.get(x, y)!;
+  const t = world.levelState.map.get(tx, ty);
   const tb = t!.type;
 
   if (MOBS.includes(tb as number)) {
@@ -812,7 +824,7 @@ async function moveRock(
   if (mass > 1) {
     await sound.moveRock();
   }
-  world.level.map.set(tx, ty, pushable);
+  world.levelState.map.set(tx, ty, pushable);
   moveTo(pusher, x, y);
   screen.renderPlayfield();
 
@@ -845,7 +857,7 @@ export async function bridgeCaster(
     xx += dx;
     yy += dy;
     if (xx < 0 || xx > XMax || yy < 0 || yy > YMax) break;
-    const t = world.level.map.getType(xx, yy);
+    const t = world.levelState.map.getType(xx, yy);
     if (t === Type.Pit || t === Type.River || t === Type.Lava) {
       // TODO: Animation and sound
       world.setTypeAt(xx, yy, Type.Floor);
@@ -858,8 +870,8 @@ export async function bridgeCaster(
 
 export async function generate(type: Type, n: number = 1) {
   for (let i = 0; i < n; i++) {
-    const [x, y] = world.level.map.findRandomEmptySpace();
-    world.level.map.set(x, y, tiles.createEntityOfType(type, x, y));
+    const [x, y] = world.levelState.map.findRandomEmptySpace();
+    world.levelState.map.set(x, y, tiles.createEntityOfType(type, x, y));
   }
   await world.reindexMap();
   screen.renderPlayfield();

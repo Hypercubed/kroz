@@ -20,14 +20,16 @@ import { Timer } from '../modules/effects';
 import { Type } from '../constants/types';
 
 export async function update(tick: number) {
-  if (world.level.T[Timer.FreezeTime] > 0) return;
+  if (world.levelState.T[Timer.FreezeTime] > 0) return;
 
-  for (const e of world.level.entities) {
+  for (const e of world.levelState.entities) {
     const speed = e.get(Speed);
     if (!speed) continue;
     let pace =
-      world.level.T[Timer.SpeedTime] > 0 ? speed.hastedPace : speed.basePace;
-    if (world.level.T[Timer.SlowTime] > 0) pace = 2 * pace;
+      world.levelState.T[Timer.SpeedTime] > 0
+        ? speed.hastedPace
+        : speed.basePace;
+    if (world.levelState.T[Timer.SlowTime] > 0) pace = 2 * pace;
     const p = pace * TIME_SCALE;
     if (tick % p === p - 1) await act(e);
   }
@@ -37,7 +39,9 @@ async function act(e: Entity) {
   const ep = e.get(Position)!;
   if (ep.isDead()) return;
 
-  if (world.level.map.getType(ep.x, ep.y) !== (e.type as unknown as Type)) {
+  if (
+    world.levelState.map.getType(ep.x, ep.y) !== (e.type as unknown as Type)
+  ) {
     world.kill(e);
     return;
   } // dead
@@ -46,7 +50,7 @@ async function act(e: Entity) {
     let dx = 0;
     let dy = 0;
 
-    const pp = world.level.player.get(Position)!;
+    const pp = world.levelState.player.get(Position)!;
 
     if (pp.x < ep.x) dx = -1;
     if (pp.x > ep.x) dx = 1;
@@ -65,7 +69,7 @@ async function tryMove(e: Entity, dx: number, dy: number) {
 
   if (x < 0 || x > XMax || y < 0 || y > YMax) return;
 
-  const block = world.level.map.get(x, y);
+  const block = world.levelState.map.get(x, y);
   if (!block) return;
 
   if (e.get(Eats)?.has(block.type)) {
@@ -119,6 +123,6 @@ export function moveTo(e: Entity, x: number, y: number) {
   }
 
   world.setTypeAt(p.x, p.y, Type.Floor);
-  world.level.map.set(x, y, e);
+  world.levelState.map.set(x, y, e);
   p.moveTo(x, y);
 }

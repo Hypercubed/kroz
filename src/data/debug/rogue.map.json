@@ -106,7 +106,7 @@
     {
       "name": "StartTrigger",
       "type": "string",
-      "value": "##rogue Wall\n##RNDGEN Player\n##RNDGEN Stairs 1\n##RNDGEN Slow 25\n##RNDGEN Whip 30\n##RNDGEN Gem 9\n##RNDGEN Teleport 2\n##RNDGEN GBlock 30\n##RNDGEN TBlock 5\n##CHANGE Stop Floor\nPress any key to begin this level."
+      "value": ""
     },
     {
       "name": "id",

@@ -1,17 +1,18 @@
 export const DEBUG = import.meta.env.DEV;
 export const SHOW_STATS = false;
 export const SHOW_DEBUG_CONTROLS = DEBUG;
-export const ENABLE_DEBUG_LEVEL = DEBUG;
 export const ENABLE_BOTS = DEBUG;
 export const ENABLE_DEBUG_INTERFACE = DEBUG;
 
 // Checking for Reduced Motion Preference
-// @ts-expect-error - TS doesn't know about matchMedia
 export const REDUCED =
+  // @ts-expect-error - TS doesn't know about matchMedia
   window.matchMedia(`(prefers-reduced-motion: reduce)`) === true ||
   window.matchMedia(`(prefers-reduced-motion: reduce)`).matches === true;
 
 export const TITLE = 'The Forgotten Adventures of Kroz';
+
+export const SHOW_OPENSOURCE_SCREEN = false;
 
 // Screen Size
 export const WIDTH = 80;

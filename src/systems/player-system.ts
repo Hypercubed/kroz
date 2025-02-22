@@ -33,7 +33,7 @@ import { Type } from '../constants/types.ts';
 import { RNG } from 'rot-js';
 
 export async function update() {
-  const e = world.level.player.get(Energy)!;
+  const e = world.levelState.player.get(Energy)!;
   e.current = Math.min(0, e.current + 1);
 
   if (e.current >= 0) {
@@ -44,14 +44,14 @@ export async function update() {
 
 async function readControls() {
   if (DEBUG && controls.wasActionDeactivated(Action.SlowerClock)) {
-    world.game.clockScale = Math.min(20, world.game.clockScale + 1);
-    console.log('Clock Scale:', world.game.clockScale);
+    world.gameState.clockScale = Math.min(20, world.gameState.clockScale + 1);
+    console.log('Clock Scale:', world.gameState.clockScale);
     return;
   }
 
   if (DEBUG && controls.wasActionDeactivated(Action.FasterClock)) {
-    world.game.clockScale = Math.max(1, world.game.clockScale - 1);
-    console.log('Clock Scale:', world.game.clockScale);
+    world.gameState.clockScale = Math.max(1, world.gameState.clockScale - 1);
+    console.log('Clock Scale:', world.gameState.clockScale);
     return;
   }
 
@@ -68,17 +68,17 @@ async function readControls() {
     return await levels.prevLevel();
 
   if (
-    world.game.difficulty === Difficulty.Cheat &&
+    world.gameState.difficulty === Difficulty.Cheat &&
     controls.wasActionDeactivated(Action.NextLevelCheat)
   ) {
-    const p = world.level.player.get(Position)!;
+    const p = world.levelState.player.get(Position)!;
     world.setTypeAt(p.x + 1, p.y, Type.Stairs);
     await sound.cheat();
     return;
   }
 
   if (
-    world.game.difficulty === Difficulty.Cheat &&
+    world.gameState.difficulty === Difficulty.Cheat &&
     controls.wasActionDeactivated(Action.FreeItems)
   ) {
     world.stats.gems = 150;
@@ -91,12 +91,12 @@ async function readControls() {
 
   // Player Actions
   if (controls.wasActionDeactivated(Action.ResetFound)) {
-    world.game.foundSet = new Set();
+    world.gameState.foundSet = new Set();
     await screen.flashMessage('Newly found object descriptions are reset.');
     return;
   }
   if (controls.wasActionDeactivated(Action.HideFound)) {
-    world.game.foundSet = true;
+    world.gameState.foundSet = true;
     await screen.flashMessage(
       'References to new objects will not be displayed.'
     );
@@ -109,7 +109,7 @@ async function readControls() {
       sound.noneSound();
     } else {
       world.stats.whips--;
-      await effects.whip(world.level.player);
+      await effects.whip(world.levelState.player);
     }
   }
 
@@ -118,7 +118,7 @@ async function readControls() {
       await sound.noneSound();
     } else {
       world.stats.teleports--;
-      await effects.teleport(world.level.player);
+      await effects.teleport(world.levelState.player);
     }
   }
 
@@ -155,14 +155,14 @@ async function readControls() {
     await tryMove(dx, dy);
   }
 
-  if (world.game.bot && !world.game.paused && !world.game.done) {
+  if (world.gameState.bot && !world.gameState.paused && !world.gameState.done) {
     await bot.botPlay();
     return;
   }
 }
 
 export async function tryMove(dx: number, dy: number) {
-  const p = world.level.player.get(Position)!;
+  const p = world.levelState.player.get(Position)!;
   const x = p.x + dx;
   const y = p.y + dy;
 
@@ -170,12 +170,13 @@ export async function tryMove(dx: number, dy: number) {
     await sound.staticNoise();
     world.addScore(Type.Border);
 
-    if (world.game.foundSet === true || world.game.foundSet.has(-1)) return;
-    world.game.foundSet.add(-1);
+    if (world.gameState.foundSet === true || world.gameState.foundSet.has(-1))
+      return;
+    world.gameState.foundSet.add(-1);
     return await screen.flashMessage('An Electrified Wall blocks your way.');
   }
 
-  const e = world.level.map.get(x, y);
+  const e = world.levelState.map.get(x, y);
   if (!e) return;
 
   if (e.has(isPassable)) {
@@ -223,12 +224,12 @@ export async function tryMove(dx: number, dy: number) {
   }
 
   if (e.has(Pushable)) {
-    await effects.tryPushRock(world.level.player, x, y, dx, dy);
+    await effects.tryPushRock(world.levelState.player, x, y, dx, dy);
     return;
   }
 
   if (e.has(Trigger)) {
-    if (world.game.bot && e.has(isInvisible)) {
+    if (world.gameState.bot && e.has(isInvisible)) {
       e.remove(isInvisible);
       screen.drawEntityAt(x, y);
     }
@@ -238,34 +239,14 @@ export async function tryMove(dx: number, dy: number) {
     const message = e.get(Trigger)?.message;
     if (message) {
       await script.processEffect(message, {
-        who: world.level.player,
+        who: world.levelState.player,
         what: e,
         x,
         y
       });
     }
-    if (!world.game.done && world.stats.gems < 0) dead();
+    if (!world.gameState.done && world.stats.gems < 0) dead();
   }
-
-  // if (e.has(ChangeLevel)) {
-  //   const c = e.get(ChangeLevel)!;
-  //   if (c.deltaLevel > 0) {
-  //     if (world.stats.levelIndex === levels.getLevelsCount() - 1) {
-  //       await screen.endRoutine();
-  //       return;
-  //     }
-  //     world.addScore(e.type as Type);
-  //     sound.footStep();
-  //     await levels.nextLevel(c.deltaLevel);
-  //   } else if (c.deltaLevel < 0) {
-  //     sound.footStep();
-  //     await levels.prevLevel(-c.deltaLevel);
-  //   } else if (c.exactLevel !== null) {
-  //     sound.footStep();
-  //     world.stats.levelIndex = c.exactLevel - 1;
-  //     await levels.nextLevel(1);
-  //   }
-  // }
 
   switch (e.type) {
     case Type.Door: // Opens door (if has key) -> isDoor Component?
@@ -294,18 +275,19 @@ export async function tryMove(dx: number, dy: number) {
 
 async function foundMessage(e: Entity) {
   const type = e.type as Type;
-  if (world.game.foundSet === true || world.game.foundSet.has(type)) return '';
+  if (world.gameState.foundSet === true || world.gameState.foundSet.has(type))
+    return '';
 
   const message = e.get(FoundMessage)?.message;
   if (!message) return '';
 
-  world.game.foundSet.add(type);
+  world.gameState.foundSet.add(type);
   return await script.processEffect(message);
 }
 
 export async function dead() {
-  await effects.flashEntity(world.level.player);
-  const p = world.level.player.get(Position)!;
+  await effects.flashEntity(world.levelState.player);
+  const p = world.levelState.player.get(Position)!;
 
   await screen.flashMessage('Press any key to continue.', () => {
     let fg: number | string = BLINK ? RNG.getUniformInt(1, 15) : Color.White;
@@ -321,25 +303,25 @@ export async function dead() {
     // TODO: Flash
     display.drawText(XTop / 2 - 7, 0, 'YOU HAVE DIED!!', fg, Color.Red);
   });
-  world.game.done = true;
+  world.gameState.done = true;
 }
 
 export function moveTo(x: number, y: number) {
   sound.footStep();
 
-  const e = world.level.player;
+  const e = world.levelState.player;
   const p = e.get(Position)!;
 
   world.setTypeAt(p.x, p.y, p.replacement);
   screen.drawEntityAt(p.x, p.y);
 
-  const b = world.level.map.getType(x, y) as Type;
+  const b = world.levelState.map.getType(x, y) as Type;
   // TODO: Property of Passable?
   p.replacement = [Type.CWall1, Type.CWall2, Type.CWall3, Type.Rope].includes(b)
     ? b
     : Type.Floor;
 
-  world.level.map.set(x, y, e);
+  world.levelState.map.set(x, y, e);
   p.x = x;
   p.y = y;
   screen.drawEntityAt(p.x, p.y);

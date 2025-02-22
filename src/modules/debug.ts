@@ -8,49 +8,49 @@ import { ENABLE_DEBUG_INTERFACE } from '../constants/constants';
 
 const _timers = {
   get SlowTime() {
-    return world.level.T[Timer.SlowTime];
+    return world.levelState.T[Timer.SlowTime];
   },
   set SlowTime(v: number) {
-    world.level.T[Timer.SlowTime] = v;
+    world.levelState.T[Timer.SlowTime] = v;
   },
   get Invisible() {
-    return world.level.T[Timer.Invisible];
+    return world.levelState.T[Timer.Invisible];
   },
   set Invisible(v: number) {
-    world.level.T[Timer.Invisible] = v;
+    world.levelState.T[Timer.Invisible] = v;
   },
   get SpeedTime() {
-    return world.level.T[Timer.SpeedTime];
+    return world.levelState.T[Timer.SpeedTime];
   },
   set SpeedTime(v: number) {
-    world.level.T[Timer.SpeedTime] = v;
+    world.levelState.T[Timer.SpeedTime] = v;
   },
   get FreezeTime() {
-    return world.level.T[Timer.FreezeTime];
+    return world.levelState.T[Timer.FreezeTime];
   },
   set FreezeTime(v: number) {
-    world.level.T[Timer.FreezeTime] = v;
+    world.levelState.T[Timer.FreezeTime] = v;
   }
 };
 
 const _player = {
   get x(): number | undefined {
-    return world.level.player?.get(Position)?.x ?? 0;
+    return world.levelState.player?.get(Position)?.x ?? 0;
   },
   set x(v: number) {
-    world.level.player.get(Position)!.x = v;
+    world.levelState.player.get(Position)!.x = v;
   },
   get y(): number | undefined {
-    return world.level.player?.get(Position)?.y ?? 0;
+    return world.levelState.player?.get(Position)?.y ?? 0;
   },
   set y(v: number) {
-    world.level.player.get(Position)!.y = v;
+    world.levelState.player.get(Position)!.y = v;
   },
   get bot(): boolean {
-    return world.game.bot;
+    return world.gameState.bot;
   },
   set bot(v: boolean) {
-    world.game.bot = v;
+    world.gameState.bot = v;
   }
 };
 
@@ -148,12 +148,12 @@ if (ENABLE_DEBUG_INTERFACE) {
     }
 
     try {
-      world.game.paused = true;
+      world.gameState.paused = true;
       const result = await scripts.processEffect(command);
       if (result !== undefined) {
         logDiv.innerHTML += `<p>> ${command}</p><p>${result}</p>`;
       }
-      world.game.paused = false;
+      world.gameState.paused = false;
     } catch (err: unknown) {
       logDiv.innerHTML += `<p>Error: ${err}</p>`;
     }

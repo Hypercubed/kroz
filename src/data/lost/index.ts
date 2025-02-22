@@ -3,8 +3,6 @@
 export const title = 'Lost Adventures of Kroz';
 
 export const LEVELS = [
-  null, // Must be level 0
-
   // 1
   async () => (await import('./lost-1.map.json')).default, // Your Hut
   async () => (await import('./lost-2.map.json')).default, // The Secret Tunnel
@@ -96,11 +94,3 @@ export const LEVELS = [
   async () => (await import('./lost-74.map.json')).default, // Heat Wave!
   async () => (await import('./lost-75.map.json')).default
 ];
-
-export async function readTileset() {
-  return (await import('../kroz.tileset.json')).default;
-}
-
-export async function readColor() {
-  return (await import('../kroz.colors.json')).default;
-}

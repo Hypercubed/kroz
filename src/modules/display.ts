@@ -30,6 +30,11 @@ export function init() {
     } // first!
     this._dirty[`${x},${y}`] = true;
   };
+
+  // const container = rotDisplay.getContainer();
+  // container?.addEventListener('click', e => {
+  //   console.log(rotDisplay.eventToPosition(e));
+  // });
 }
 
 export function debug(x: number, y: number, n: number) {

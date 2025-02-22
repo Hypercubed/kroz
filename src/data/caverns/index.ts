@@ -1,65 +1,55 @@
 export const title = 'The Caverns of Kroz';
 
 export const LEVELS = [
-  null, // Must be level 0
-
   // 1
-  null,
+  async () => (await import('./caverns-1.txt?raw')).default,
   async () => (await import('./caverns-2.map.json')).default,
-  null,
+  async () => (await import('./caverns-3.txt?raw')).default,
   async () => (await import('./caverns-4.map.json')).default,
-  null,
-  null,
+  async () => (await import('./caverns-5.txt?raw')).default,
+  async () => (await import('./caverns-6.txt?raw')).default,
   async () => (await import('./caverns-7.map.json')).default,
-  null,
+  async () => (await import('./caverns-8.txt?raw')).default,
   async () => (await import('./caverns-9.map.json')).default,
 
   // 10
-  null,
+  async () => (await import('./caverns-10.txt?raw')).default,
   async () => (await import('./caverns-11.map.json')).default,
   async () => (await import('./caverns-12.map.json')).default,
-  null,
+  async () => (await import('./caverns-13.txt?raw')).default,
   async () => (await import('./caverns-14.map.json')).default,
-  null,
+  async () => (await import('./caverns-15.txt?raw')).default,
   async () => (await import('./caverns-16.map.json')).default,
-  null,
+  async () => (await import('./caverns-17.txt?raw')).default,
   async () => (await import('./caverns-18.map.json')).default,
-  null,
+  async () => (await import('./caverns-19.txt?raw')).default,
 
   // 20
   null, //TBD
   null, //TBD
-  null,
+  async () => (await import('./caverns-22.txt?raw')).default,
   null, //TBD
-  null,
+  async () => (await import('./caverns-24.txt?raw')).default,
   null, //TBD
-  null,
+  async () => (await import('./caverns-26.txt?raw')).default,
   null, //TBD
-  null,
+  async () => (await import('./caverns-28.txt?raw')).default,
   null, //TBD
 
   // 30
-  null,
+  async () => (await import('./caverns-30.txt?raw')).default,
   null, //TBD
-  null,
+  async () => (await import('./caverns-32.txt?raw')).default,
   null, //TBD
-  null,
+  async () => (await import('./caverns-34.txt?raw')).default,
   null, //TBD
-  null,
+  async () => (await import('./caverns-36.txt?raw')).default,
   null, //TBD
-  null,
+  async () => (await import('./caverns-38.txt?raw')).default,
   null, //TBD
 
   async () => (await import('./caverns-40.map.json')).default
 ];
-
-export async function readTileset() {
-  return (await import('../kroz.tileset.json')).default;
-}
-
-export async function readColor() {
-  return (await import('../kroz.colors.json')).default;
-}
 
 // Possible levels to add:
 // - caverns-9

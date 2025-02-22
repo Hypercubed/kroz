@@ -47,6 +47,7 @@
     "lil-gui": "^0.20.0",
     "mini-signals": "^2.0.0",
     "nipplejs": "^0.10.2",
+    "procedural-layouts": "^0.0.3",
     "random-dungeon-generator": "^1.0.32",
     "rot-js": "^2.2.1",
     "stats.js": "^0.17.0",

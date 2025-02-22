@@ -54,7 +54,7 @@ export function getColor(c: string | Color, alpha: number = 1): string {
     if (c > 15) {
       // Add blink
       c %= 16;
-      if (BLINK && !world.game.paused && world.game.started) {
+      if (BLINK && !world.gameState.paused && world.gameState.started) {
         const v = 500;
         const f = Date.now() % v < v / 2;
         if (!f) alpha = 0;

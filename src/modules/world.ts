@@ -4,15 +4,9 @@ import * as sound from './sound.ts';
 import * as tiles from './tiles.ts';
 import * as player from '../systems/player-system.ts';
 
-import {
-  CLOCK_SCALE,
-  ENABLE_DEBUG_LEVEL,
-  TITLE,
-  XMax,
-  YMax
-} from '../constants/constants.ts';
+import { CLOCK_SCALE, TITLE, XMax, YMax } from '../constants/constants.ts';
 import { Entity } from '../classes/entity.ts';
-import { Level } from './levels.ts';
+import { type Level } from './levels.ts';
 import { PlayField } from '../classes/map.ts';
 import { RNG } from 'rot-js';
 import {
@@ -23,6 +17,7 @@ import {
 } from '../classes/components.ts';
 import { Type } from '../constants/types.ts';
 import { Timer } from './effects.ts';
+import { type Game } from './games.ts';
 
 export const enum Difficulty {
   Novice = 8,
@@ -34,7 +29,7 @@ export const enum Difficulty {
 
 function getDefaultStats() {
   return {
-    levelIndex: ENABLE_DEBUG_LEVEL ? 0 : 1,
+    levelIndex: 1,
     score: 0,
     gems: 20,
     whips: 0,
@@ -46,6 +41,7 @@ function getDefaultStats() {
 
 function getDefaultLevelState() {
   return {
+    currentLevel: null as null | Level,
     bonus: 0, // Bonus count for K R O Z
     genNum: 0, // Number for creature generators
     magicEWalls: false, // Magic Ewalls
@@ -53,7 +49,6 @@ function getDefaultLevelState() {
     treeRate: 0, // Tree rate (TODO)
     lavaRate: 0, // Lava rate (TODO)
     lavaFlow: false, // Lava flow (TODO)
-    level: null as null | Level,
     player: new Entity(Type.Player),
     entities: [] as Entity[], // TODO: create sets by class
     map: new PlayField(),
@@ -78,6 +73,7 @@ function getDefaultLevelState() {
 
 function getDefaultGameState() {
   return {
+    currentGame: null as null | Game,
     difficulty: Difficulty.Novice,
     clockScale: CLOCK_SCALE,
     paused: false,
@@ -93,22 +89,22 @@ function getDefaultGameState() {
 export const stats = getDefaultStats();
 
 // These are reset when starting a new level
-export const level = getDefaultLevelState();
+export const levelState = getDefaultLevelState();
 
 // These are reset when starting a new game
-export const game = getDefaultGameState();
+export const gameState = getDefaultGameState();
 
 const levelStartState = getDefaultStats();
 const saveState = getDefaultStats();
 
 export function resetState() {
   Object.assign(stats, getDefaultStats());
-  Object.assign(level, getDefaultLevelState());
-  Object.assign(game, getDefaultGameState());
+  Object.assign(levelState, getDefaultLevelState());
+  Object.assign(gameState, getDefaultGameState());
 }
 
 export function resetLevel() {
-  Object.assign(level, getDefaultLevelState());
+  Object.assign(levelState, getDefaultLevelState());
 }
 
 export function storeLevelStartState() {
@@ -161,7 +157,7 @@ export async function restore() {
     }
 
     Object.assign(stats, save);
-    await levels.loadLevel();
+    await levels.loadLevel(stats.levelIndex);
   }
 }
 
@@ -171,7 +167,7 @@ export function addScore(block: Type) {
 }
 
 export async function killAt(x: number, y: number) {
-  const entity = level.map.get(x, y);
+  const entity = levelState.map.get(x, y);
 
   setTypeAt(x, y, Type.Floor);
   screen.drawEntityAt(x, y);
@@ -183,7 +179,7 @@ export async function killAt(x: number, y: number) {
 
 // Only works for base types, those defined in the tileset
 export function setTypeAt(x: number, y: number, type: Type | string) {
-  level.map.set(x, y, tiles.createEntityOfType(type, x, y));
+  levelState.map.set(x, y, tiles.createEntityOfType(type, x, y));
 }
 
 export async function kill(e: Entity) {
@@ -196,16 +192,17 @@ export async function kill(e: Entity) {
   }
 }
 
+// Move to effects??
 export async function generateCreatures(n: number = 1) {
   for (let i = 0; i < n; i++) {
     let done = false;
     do {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      if (level.map.getType(x, y) === Type.Floor) {
+      if (levelState.map.getType(x, y) === Type.Floor) {
         const entity = tiles.createEntityOfType(Type.Slow, x, y);
-        level.entities.push(entity);
-        level.map.set(x, y, entity);
+        levelState.entities.push(entity);
+        levelState.map.set(x, y, entity);
         await sound.generateCreature();
         done = true;
       }
@@ -223,35 +220,35 @@ export async function quit() {
   }
 
   if (answer.toLowerCase() === 'y') {
-    game.done = true;
+    gameState.done = true;
   }
 }
 
 export async function pause() {
-  game.paused = true;
+  gameState.paused = true;
   screen.fullRender();
   await screen.flashMessage('Press any key to resume');
 }
 
 // TODO: Call this when entities are changed
 export async function reindexMap() {
-  level.genNum = 0;
-  level.entities = [];
-  level.T[Timer.StatueGemDrain] = 0;
+  levelState.genNum = 0;
+  levelState.entities = [];
+  levelState.T[Timer.StatueGemDrain] = 0;
 
-  await level.map.forEach(async (_x, _y, entity) => {
+  await levelState.map.forEach(async (_x, _y, entity) => {
     if (!entity) return;
     if (entity.type === Type.Statue) {
-      level.T[Timer.StatueGemDrain] = 32000;
+      levelState.T[Timer.StatueGemDrain] = 32000;
     }
     if (entity.has(isPlayer)) {
-      level.player = entity;
+      levelState.player = entity;
     }
     if (entity.has(isMob)) {
-      level.entities.push(entity);
+      levelState.entities.push(entity);
     }
     if (entity.has(isGenerator)) {
-      level.genNum++;
+      levelState.genNum++;
     }
   });
 }

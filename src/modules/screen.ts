@@ -63,7 +63,9 @@ export function renderStats() {
   const size = 7;
 
   const gc =
-    !world.game.paused && world.stats.gems < 10 ? Color.Red | 16 : Color.Red;
+    !world.gameState.paused && world.stats.gems < 10
+      ? Color.Red | 16
+      : Color.Red;
 
   const x = 69;
 
@@ -82,7 +84,7 @@ export function renderStats() {
   display.drawText(
     x,
     4,
-    pad(world.stats.levelIndex.toString(), width, size, FLOOR_CHAR),
+    pad((world.stats.levelIndex + 1).toString(), width, size, FLOOR_CHAR),
     Color.Red,
     Color.Grey
   );
@@ -118,8 +120,8 @@ export function renderStats() {
 
 export function renderBorder() {
   const char = tiles.common.BORDER_CHAR;
-  const fg = world.level.borderFG;
-  const bg = world.level.borderBG;
+  const fg = world.levelState.borderFG;
+  const bg = world.levelState.borderBG;
 
   for (let x = XBot - 1; x <= XTop + 1; x++) {
     display.draw(x, 0, char, fg!, bg!);
@@ -171,7 +173,7 @@ export async function introScreen() {
 export async function instructionsScreen() {
   display.clear(Color.Black);
 
-  display.writeCenter(0, world.game.title, Color.Yellow, Color.Black);
+  display.writeCenter(0, world.gameState.title, Color.Yellow, Color.Black);
   display.writeCenter(1, 'INSTRUCTIONS', Color.HighIntensityWhite, Color.Black);
   display.writeCenter(2, '------------', Color.HighIntensityWhite, Color.Black);
 
@@ -230,11 +232,11 @@ export async function instructionsScreen() {
 }
 
 export async function openSourceScreen() {
-  if (world.game.bot) return;
+  if (world.gameState.bot) return;
 
   display.clear(Color.Black);
 
-  display.writeCenter(1, world.game.title, Color.Yellow);
+  display.writeCenter(1, world.gameState.title, Color.Yellow);
 
   display.drawText(
     2,
@@ -307,10 +309,10 @@ export async function openSourceScreen() {
 }
 
 export function renderPlayfield() {
-  for (let x = 0; x < world.level.map.width; x++) {
-    for (let y = 0; y < world.level.map.height; y++) {
+  for (let x = 0; x < world.levelState.map.width; x++) {
+    for (let y = 0; y < world.levelState.map.height; y++) {
       // Skip entities, will be rendered later
-      const e = world.level.map.get(x, y);
+      const e = world.levelState.map.get(x, y);
 
       if (
         !e ||
@@ -327,20 +329,20 @@ export function renderPlayfield() {
     }
   }
 
-  for (let i = 0; i < world.level.entities.length; i++) {
-    const e = world.level.entities[i];
+  for (let i = 0; i < world.levelState.entities.length; i++) {
+    const e = world.levelState.entities[i];
     const p = e.get(Position)!;
     if (p.x === -1 || p.y === -1) continue; // dead
     drawEntityAt(p.x, p.y, e);
   }
 
-  const p = world.level.player.get(Position)!;
-  if (p) drawEntityAt(p.x, p.y, world.level.player);
+  const p = world.levelState.player.get(Position)!;
+  if (p) drawEntityAt(p.x, p.y, world.levelState.player);
 }
 
 export function clearPlayfield() {
-  for (let x = 0; x < world.level.map.width; x++) {
-    for (let y = 0; y < world.level.map.height; y++) {
+  for (let x = 0; x < world.levelState.map.width; x++) {
+    for (let y = 0; y < world.levelState.map.height; y++) {
       drawFloorAt(x, y);
     }
   }
@@ -359,7 +361,7 @@ function drawFloorAt(x: number, y: number) {
 export function drawEntityAt(x: number, y: number, entity?: Entity | null) {
   drawFloorAt(x, y);
 
-  entity ??= world.level.map.get(x, y);
+  entity ??= world.levelState.map.get(x, y);
   if (!entity) return;
   if (entity.has(isInvisible)) return;
 
@@ -380,7 +382,7 @@ export function drawEntityAt(x: number, y: number, entity?: Entity | null) {
   let ch = t.ch;
   let fg = t.fg;
 
-  if (t.blink && BLINK && !world.game.paused && world.game.started) {
+  if (t.blink && BLINK && !world.gameState.paused && world.gameState.started) {
     const v = 500;
     const f = Date.now() % v < v / 2;
     fg = colors.getColor(fg as string, f ? 1 : 0);
@@ -417,20 +419,20 @@ export async function flashMessage(
   msg: string,
   cb?: () => void
 ): Promise<string> {
-  if (world.game.bot) return '';
+  if (world.gameState.bot) return '';
   if (!msg) return '';
 
   const x = (XTop - msg.length) / 2;
   const y = YTop + 1;
 
-  world.game.paused = true;
+  world.gameState.paused = true;
   const key = await controls.repeatUntilKeyPressed(() => {
     const fg = BLINK ? RNG.getUniformInt(1, 15) : Color.White;
     display.drawText(x, y, msg, fg, Color.Black);
     cb?.();
   });
   renderBorder();
-  world.game.paused = false;
+  world.gameState.paused = false;
   return key;
 }
 
@@ -500,7 +502,7 @@ export async function renderTitle() {
 }
 
 async function writeTitle() {
-  const title = world.game.title;
+  const title = world.gameState.title;
   const x = WIDTH / 2 - title.length / 2;
   display.drawText(
     x,
@@ -570,7 +572,7 @@ async function getDifficulty() {
       world.stats.keys = 0;
       world.stats.whips = 0;
       world.stats.whipPower = 2;
-      world.game.difficulty = Difficulty.Novice;
+      world.gameState.difficulty = Difficulty.Novice;
       break;
     case 'E':
       world.stats.gems = 15;
@@ -578,7 +580,7 @@ async function getDifficulty() {
       world.stats.keys = 0;
       world.stats.whips = 0;
       world.stats.whipPower = 2;
-      world.game.difficulty = Difficulty.Experienced;
+      world.gameState.difficulty = Difficulty.Experienced;
       break;
     case 'A':
       world.stats.gems = 10;
@@ -586,8 +588,8 @@ async function getDifficulty() {
       world.stats.keys = 0;
       world.stats.whips = 0;
       world.stats.whipPower = 2;
-      world.game.difficulty = Difficulty.Advanced;
-      world.game.foundSet = true;
+      world.gameState.difficulty = Difficulty.Advanced;
+      world.gameState.foundSet = true;
       break;
     case '!':
       world.stats.gems = 250;
@@ -595,8 +597,8 @@ async function getDifficulty() {
       world.stats.teleports = 50;
       world.stats.keys = 1;
       world.stats.whipPower = 3;
-      world.game.difficulty = Difficulty.Cheat;
-      world.game.foundSet = true;
+      world.gameState.difficulty = Difficulty.Cheat;
+      world.gameState.foundSet = true;
       break;
     case 'T':
       world.stats.gems = Infinity;
@@ -604,7 +606,7 @@ async function getDifficulty() {
       world.stats.keys = 1;
       world.stats.whips = Infinity;
       world.stats.whipPower = 4;
-      world.game.difficulty = Difficulty.Tourist;
+      world.gameState.difficulty = Difficulty.Tourist;
       break;
     case 'B':
       world.stats.gems = 500; // Infinity;
@@ -612,9 +614,9 @@ async function getDifficulty() {
       world.stats.keys = 0; // Infinity;
       world.stats.whips = 1000; // Infinity;
       world.stats.whipPower = 3;
-      world.game.difficulty = Difficulty.Cheat;
-      world.game.foundSet = true;
-      world.game.bot = ENABLE_BOTS;
+      world.gameState.difficulty = Difficulty.Cheat;
+      world.gameState.foundSet = true;
+      world.gameState.bot = ENABLE_BOTS;
       break;
   }
 
@@ -710,5 +712,5 @@ export async function endRoutine() {
   );
 
   await flashMessage('Press any key, Adventurer.');
-  world.game.done = true;
+  world.gameState.done = true;
 }

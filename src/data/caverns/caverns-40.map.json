@@ -21,13 +21,20 @@
   "nextlayerid": 2,
   "nextobjectid": 1,
   "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "You have found the Temple of Kroz!"
+    }
+  ],
   "renderorder": "right-down",
   "tiledversion": "1.11.2",
   "tileheight": 36,
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/..\/..\/..\/tiled\/Display.tsx"
+      "source": "..\/kroz.tileset.json"
     }
   ],
   "tilewidth": 24,

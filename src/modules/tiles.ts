@@ -28,7 +28,8 @@ import {
   isImperviousToSpears,
   Pushable,
   Energy,
-  RenderableData
+  RenderableData,
+  isInvisible
 } from '../classes/components';
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
@@ -199,7 +200,8 @@ const SIMPLE_TAGS = {
   isPassable,
   followsPlayer,
   isBombable,
-  isImperviousToSpears
+  isImperviousToSpears,
+  isInvisible
 };
 
 const SIMPLE_COMPONENTS = {
@@ -261,12 +263,12 @@ function addComponentsToEntity(
       entity.add(
         new Collectible({
           whips: RNG.getUniformInt(2, 5),
-          gems: RNG.getUniformInt(5, world.game.difficulty + 2)
+          gems: RNG.getUniformInt(5, world.gameState.difficulty + 2)
         })
       );
       break;
     case Type.Chance: {
-      const gems = RNG.getUniformInt(0, world.game.difficulty) + 13;
+      const gems = RNG.getUniformInt(0, world.gameState.difficulty) + 13;
       entity.add(new Collectible({ gems }));
       break;
     }
