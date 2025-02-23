@@ -399,6 +399,7 @@ export async function teleport(e: Entity) {
   }
 
   const space = world.levelState.map.findRandomEmptySpace();
+  if (!space) return;
   return moveTo(e, ...space);
 }
 
@@ -816,14 +817,15 @@ async function moveRock(
   const t = world.levelState.map.get(tx, ty);
   const tb = t!.type;
 
-  if (MOBS.includes(tb as number)) {
-    world.killAt(tx, ty);
-  }
-
   const mass = pushable.get(Pushable)!.mass;
   if (mass > 1) {
     await sound.moveRock();
   }
+
+  if (MOBS.includes(tb as number)) {
+    world.killAt(tx, ty);
+  }
+
   world.levelState.map.set(tx, ty, pushable);
   moveTo(pusher, x, y);
   screen.renderPlayfield();
@@ -841,8 +843,9 @@ async function moveRock(
     moveTo(pusher, x, y);
     screen.drawEntityAt(tx, ty, pushable);
     await sound.rockDropped();
-    screen.renderPlayfield();
+    world.levelState.map.set(tx, ty, t!);
   }
+  screen.renderPlayfield();
 }
 
 export async function bridgeCaster(
@@ -870,8 +873,9 @@ export async function bridgeCaster(
 
 export async function generate(type: Type, n: number = 1) {
   for (let i = 0; i < n; i++) {
-    const [x, y] = world.levelState.map.findRandomEmptySpace();
-    world.levelState.map.set(x, y, tiles.createEntityOfType(type, x, y));
+    const p = world.levelState.map.findRandomEmptySpace();
+    if (!p) break;
+    world.levelState.map.set(...p, tiles.createEntityOfType(type, ...p));
   }
   await world.reindexMap();
   screen.renderPlayfield();

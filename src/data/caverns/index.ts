@@ -2,53 +2,53 @@ export const title = 'The Caverns of Kroz';
 
 export const LEVELS = [
   // 1
-  async () => (await import('./caverns-1.txt?raw')).default,
-  async () => (await import('./caverns-2.map.json')).default,
-  async () => (await import('./caverns-3.txt?raw')).default,
-  async () => (await import('./caverns-4.map.json')).default,
-  async () => (await import('./caverns-5.txt?raw')).default,
-  async () => (await import('./caverns-6.txt?raw')).default,
+  async () => (await import('./caverns-1.map.txt?raw')).default,
+  async () => (await import('./caverns-2.map.txt?raw')).default,
+  async () => (await import('./caverns-3.map.txt?raw')).default,
+  async () => (await import('./caverns-4.map.txt?raw')).default,
+  async () => (await import('./caverns-5.map.txt?raw')).default,
+  async () => (await import('./caverns-6.map.txt?raw')).default,
   async () => (await import('./caverns-7.map.json')).default,
-  async () => (await import('./caverns-8.txt?raw')).default,
-  async () => (await import('./caverns-9.map.json')).default,
+  async () => (await import('./caverns-8.map.txt?raw')).default,
+  async () => (await import('./caverns-9.map.txt?raw')).default,
 
   // 10
-  async () => (await import('./caverns-10.txt?raw')).default,
-  async () => (await import('./caverns-11.map.json')).default,
-  async () => (await import('./caverns-12.map.json')).default,
-  async () => (await import('./caverns-13.txt?raw')).default,
-  async () => (await import('./caverns-14.map.json')).default,
-  async () => (await import('./caverns-15.txt?raw')).default,
-  async () => (await import('./caverns-16.map.json')).default,
-  async () => (await import('./caverns-17.txt?raw')).default,
-  async () => (await import('./caverns-18.map.json')).default,
-  async () => (await import('./caverns-19.txt?raw')).default,
+  async () => (await import('./caverns-10.map.txt?raw')).default,
+  async () => (await import('./caverns-11.map.txt?raw')).default,
+  async () => (await import('./caverns-12.map.txt?raw')).default,
+  async () => (await import('./caverns-13.map.txt?raw')).default,
+  async () => (await import('./caverns-14.map.txt?raw')).default,
+  async () => (await import('./caverns-15.map.txt?raw')).default,
+  async () => (await import('./caverns-16.map.txt?raw')).default,
+  async () => (await import('./caverns-17.map.txt?raw')).default,
+  async () => (await import('./caverns-18.map.txt?raw')).default,
+  async () => (await import('./caverns-19.map.txt?raw')).default,
 
   // 20
   null, //TBD
   null, //TBD
-  async () => (await import('./caverns-22.txt?raw')).default,
+  async () => (await import('./caverns-22.map.txt?raw')).default,
   null, //TBD
-  async () => (await import('./caverns-24.txt?raw')).default,
+  async () => (await import('./caverns-24.map.txt?raw')).default,
   null, //TBD
-  async () => (await import('./caverns-26.txt?raw')).default,
+  async () => (await import('./caverns-26.map.txt?raw')).default,
   null, //TBD
-  async () => (await import('./caverns-28.txt?raw')).default,
+  async () => (await import('./caverns-28.map.txt?raw')).default,
   null, //TBD
 
   // 30
-  async () => (await import('./caverns-30.txt?raw')).default,
+  async () => (await import('./caverns-30.map.txt?raw')).default,
   null, //TBD
-  async () => (await import('./caverns-32.txt?raw')).default,
+  async () => (await import('./caverns-32.map.txt?raw')).default,
   null, //TBD
-  async () => (await import('./caverns-34.txt?raw')).default,
+  async () => (await import('./caverns-34.map.txt?raw')).default,
   null, //TBD
-  async () => (await import('./caverns-36.txt?raw')).default,
+  async () => (await import('./caverns-36.map.txt?raw')).default,
   null, //TBD
-  async () => (await import('./caverns-38.txt?raw')).default,
+  async () => (await import('./caverns-38.map.txt?raw')).default,
   null, //TBD
 
-  async () => (await import('./caverns-40.map.json')).default
+  async () => (await import('./caverns-40.map.txt?raw')).default
 ];
 
 // Possible levels to add:

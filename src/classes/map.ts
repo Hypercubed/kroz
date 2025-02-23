@@ -43,15 +43,18 @@ export class PlayField {
     return type ?? Type.Floor;
   }
 
-  findRandomEmptySpace(): [number, number] {
-    while (true) {
+  findRandomEmptySpace(): [number, number] | null {
+    let n = 0;
+    while (n < XMax * YMax * 10) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
       const block = this.getType(x, y);
       if (block === Type.Floor) {
         return [x, y];
       }
+      n++;
     }
+    return null;
   }
 
   async forEach(

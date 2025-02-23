@@ -1,0 +1,24 @@
+[PF]
+3           3           3+ X +P   1 1 1 1 1 1 1 1 1 1 1 1 1 1 1K
+       3           3       X   ## # # # # # # # # # # # # # # ##
+  3           3          + X   # # # # # # #C# # # #W# # # #+# #
+         3           3     XFFF#################D###############
+    3           3        + X    3  3  3  3  3XX#++++++++++++++++
+           3           3   X                 XX#111111111111111C
+      3           3      + X                 XX#111111111111111L
+ 3           3             X                 XX#############D###
+        3           3    + X          3      XXXXXXXXXXXXXXXXXXX
+   3           3           X                                    
+          3           3  + X                                    
+     3           3         X                       RRRRR        
+3           3           3+ X                      RRRRRRRRR     
+       3           3       X         3             RRRRRRTT.    
+  3           3          + X                        RRRRRRRRR   
+         3           3     X                           RRRRR    
+    3           3        + X                                    
+           3           3   X                         3          
+      3           3      + X  3                                 
+ 3           3             X                                    
+        3           3    + X                  XXXXXXXXXXXXXXXXXX
+   3           3           X                  XIIIIIIIIIIIIIIIII
+          3           3  + X +  3   3   3     XI+ + + +WW+ + + +

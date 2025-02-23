@@ -147,7 +147,11 @@ export function getTileDefinition(tileId: number) {
   }
 }
 
-export function createEntityOfType(type: Type | string, x: number, y: number) {
+export function createEntityOfType(
+  type: Type | string,
+  x?: number,
+  y?: number
+) {
   const tileId = TypeToTileID[type as Type] ?? 0;
   return createEntityFromTileId(tileId, x, y);
 }
@@ -155,8 +159,8 @@ export function createEntityOfType(type: Type | string, x: number, y: number) {
 // Creates an entity from a tile ID
 export function createEntityFromTileId(
   tileId: number,
-  x: number,
-  y: number,
+  x?: number,
+  y?: number,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   properties?: Record<string, any>,
   type?: Type | string

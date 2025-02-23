@@ -1,21 +1,14 @@
 // 'Testing Procgen Maps'
 
-import { PropertyType } from '@kayahr/tiled';
-import { addProperty, readLevelJSONLevel } from '../../utils/tiled';
+import { readKrozLevel } from '../../utils/kroz';
 
 export const title = 'Testing Procgen Maps';
 
-const emptyMap = async () => (await import('./empty.map.json')).default;
+// const emptyMap = async () => (await import('./empty.map.json')).default;
 // const procMap = async () => (await import('./proc.map.json')).default;
 
 export async function readLevel(i: number) {
-  let map = await emptyMap(); // TODO: Elimitate this line, generate empty map in memory
-  map = addProperty(map, {
-    name: 'StartTrigger',
-    type: PropertyType.STRING,
-    value: startTrigger(i)
-  });
-  return readLevelJSONLevel(map);
+  return readKrozLevel(startTrigger(i));
 }
 
 export function findNextLevel(i: number) {
@@ -31,6 +24,7 @@ function startTrigger(i: number) {
   });
 
   return `
+    [ST]
     ##brogue
     ${st}
     Press any key to begin this level.

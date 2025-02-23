@@ -219,8 +219,6 @@ const EffectMap: Record<string, EffectFn> = {
 };
 
 async function addRandom() {
-  console.log('addRandom');
-
   const x0 = 7;
   const y0 = 3;
 

@@ -10,7 +10,7 @@ import * as loading from '../data/loading/index.ts';
 import * as procgen from '../data/proc-gen/index.ts';
 
 import type { Level } from './levels.ts';
-import { readRandomLevel } from '../utils/kroz.ts';
+import { readKrozLevel } from '../utils/kroz.ts';
 import { readLevelJSONLevel } from '../utils/tiled.ts';
 
 const k = kingdom.LEVELS.filter(Boolean).length;
@@ -87,7 +87,7 @@ async function readLevel(LEVELS: LevelsArray, i: number): Promise<Level> {
   const levelData = await LEVELS[i]!();
 
   if (typeof levelData === 'string') {
-    return readRandomLevel(levelData);
+    return readKrozLevel(levelData);
   } else {
     return readLevelJSONLevel(levelData);
   }
