@@ -1,0 +1,6 @@
+const n=`[DF]
+  P
+  1
+  1  2  3  X  W  L  C  S  +  I  T  K  D  #  F  .  R  Q  /  \\  B  V  =
+300200100     5  1  5    30     5              5              1 10  3
+`;export{n as default};
