@@ -25,7 +25,7 @@ export function readKrozLevel(level: string): Level {
     .map((line) => line.trimEnd());
 
   while (lineIndex < lines.length) {
-    const line = lines[lineIndex++];
+    const line = lines[lineIndex++].trim();
     switch (line) {
       case PF:
         readLevelMap();
