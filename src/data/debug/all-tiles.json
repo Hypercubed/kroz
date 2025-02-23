@@ -1,34 +1,37 @@
-{ "compressionlevel":-1,
- "height":24,
- "infinite":false,
- "layers":[
-        {
-         "compression":"gzip",
-         "data":"H4sIAAAAAAAACu3ORxiPBQDA4T8Z8YSIlJG9Q9lRtoSs7FDK3hKS7JkismWlpYwyiqwyU0bZs6zslV0hvAeXTg6f5\/EdvsN7+x1+mWKxWKZIJHJXcXmAeMQnAQl5kEQkvtM9RBKSkoyHQ\/AeVHJS8AgpScWjpOYxHicNaUlHep4gAxlD8H8vZCYLWclGdnKQk1zkJg9Pkpd85OepELwH9TQFKEghClOEohTjGYpTgmd5jpKUonQI\/oMqQ1nKUZ4KPE9FXqASlanCi1SlGtWpEYL\/oGryErWoTR3qUo\/6NOBlGtKIxrzCqzQJwX9Qr\/E6TWlGc1rQkla0pg1taUd7OtCRTiH4D+oNOvMmXehKN96iO2\/Tg3foSS9604e+IfgPqh\/9GcBABjGYIbzLUN7jfYYxnA8YwcgQ\/Af1IaMYzRjGMo7xTGAiHzGJyUxhKtP4OAT\/QU3nEz7lMz7nC2bwJV8xk1nMZg5f8w1zQ\/Af1Dzms4Bv+Y6FLOJ7FrOEpSxjOT\/wIytC8B\/USlaxmjWs5SfW8TO\/sJ4NbGQTv\/Ibm0PwH9QWtrKN7exgJ7vYzR72so\/f+YP9HOBgCP6DOsRh\/uQIRznGcU5wklOc5gxnOcdfnA\/Bf1AXuMglLnOFq\/zNP\/zLNa5zg\/+4yS1ice7\/fyQSiUT+7zYSDo4mABgAAA==",
-         "encoding":"base64",
-         "height":24,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":2,
- "nextobjectid":1,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.11.2",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+{
+  "compressionlevel": -1,
+  "height": 24,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "gzip",
+      "data": "H4sIAAAAAAAACu3ORxiPBQDA4T8Z8YSIlJG9Q9lRtoSs7FDK3hKS7JkismWlpYwyiqwyU0bZs6zslV0hvAeXTg6f5\/EdvsN7+x1+mWKxWKZIJHJXcXmAeMQnAQl5kEQkvtM9RBKSkoyHQ\/AeVHJS8AgpScWjpOYxHicNaUlHep4gAxlD8H8vZCYLWclGdnKQk1zkJg9Pkpd85OepELwH9TQFKEghClOEohTjGYpTgmd5jpKUonQI\/oMqQ1nKUZ4KPE9FXqASlanCi1SlGtWpEYL\/oGryErWoTR3qUo\/6NOBlGtKIxrzCqzQJwX9Qr\/E6TWlGc1rQkla0pg1taUd7OtCRTiH4D+oNOvMmXehKN96iO2\/Tg3foSS9604e+IfgPqh\/9GcBABjGYIbzLUN7jfYYxnA8YwcgQ\/Af1IaMYzRjGMo7xTGAiHzGJyUxhKtP4OAT\/QU3nEz7lMz7nC2bwJV8xk1nMZg5f8w1zQ\/Af1Dzms4Bv+Y6FLOJ7FrOEpSxjOT\/wIytC8B\/USlaxmjWs5SfW8TO\/sJ4NbGQTv\/Ibm0PwH9QWtrKN7exgJ7vYzR72so\/f+YP9HOBgCP6DOsRh\/uQIRznGcU5wklOc5gxnOcdfnA\/Bf1AXuMglLnOFq\/zNP\/zLNa5zg\/+4yS1ice7\/fyQSiUT+7zYSDo4mABgAAA==",
+      "encoding": "base64",
+      "height": 24,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

@@ -1,45 +1,49 @@
-{ "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
-        {
-         "compression":"gzip",
-         "data":"H4sIAAAAAAAACu3VsQ3AIAxEUa+ClI4+e6TJ\/qOwAEJwwkbIv3hdDuWLgmJmBQAw9ExSNrt23v114pvVzc6dd7\/SoZyt7m7o\/5L3R9z\/m7w\/4v5\/scNz592f+f0DsK4OnP43+hGp94YDOKMBuM783gAXAAA=",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":2,
- "nextobjectid":1,
- "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"StartTrigger",
-         "type":"string",
-         "value":"##LavaRate 100\n##TreeRate 100\n##EvapoRate 100\n##MagicEWalls"
-        }, 
-        {
-         "name":"id",
-         "type":"string",
-         "value":"Debug"
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.2",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "gzip",
+      "data": "H4sIAAAAAAAACu3VsQ3AIAxEUa+ClI4+e6TJ\/qOwAEJwwkbIv3hdDuWLgmJmBQAw9ExSNrt23v114pvVzc6dd7\/SoZyt7m7o\/5L3R9z\/m7w\/4v5\/scNz592f+f0DsK4OnP43+hGp94YDOKMBuM783gAXAAA=",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##LavaRate 100\n##TreeRate 100\n##EvapoRate 100\n##MagicEWalls"
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "value": "Debug"
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

@@ -1,75 +1,78 @@
-{ "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "gzip",
+      "data": "H4sIAAAAAAAAClNkYGBQHMV0wypIeKDdMlD+9xnh\/o8c9f+o\/weBW0b9P+r\/gfA\/Mj1UsAoVMbXNw2cPNf0PqrcjKcAwswLRzHYlgq1NAvalkf9HcvxTMxxHevk36v9R\/4\/6f+DdMur\/Uf8PhP9H+vjHYG6fjOKRhQFkehxwABcAAA==",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 3,
+      "name": "Object Layer 2",
+      "objects": [
         {
-         "compression":"gzip",
-         "data":"H4sIAAAAAAAAClNkYGBQHMV0wypIeKDdMlD+9xnh\/o8c9f+o\/weBW0b9P+r\/gfA\/Mj1UsAoVMbXNw2cPNf0PqrcjKcAwswLRzHYlgq1NAvalkf9HcvxTMxxHevk36v9R\/4\/6f+DdMur\/Uf8PhP9H+vjHYG6fjOKRhQFkehxwABcAAA==",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Object Layer 1",
-         "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":3,
-         "name":"Object Layer 2",
-         "objects":[
-                {
-                 "height":36,
-                 "id":3,
-                 "name":"",
-                 "rotation":0,
-                 "text":
-                    {
-                     "fontfamily":"Courier",
-                     "kerning":false,
-                     "pixelsize":35,
-                     "text":"Hello World",
-                     "wrap":true
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":240,
-                 "x":984,
-                 "y":180
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":4,
- "nextobjectid":4,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.11.2",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+          "height": 36,
+          "id": 3,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "fontfamily": "Courier",
+            "kerning": false,
+            "pixelsize": 35,
+            "text": "Hello World",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 240,
+          "x": 984,
+          "y": 180
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 4,
+  "nextobjectid": 4,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

@@ -1,76 +1,80 @@
-{ "compressionlevel":-1,
- "height":23,
- "infinite":false,
- "layers":[
+{
+  "compressionlevel": -1,
+  "height": 23,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "gzip",
+      "data": "H4sIAAAAAAAACu3PoQ3AIBBG4VuFRboDohpXVYthB2YpI\/aXuIYAgaRPfMmZu9xzZuYAAMBQfoMfgFVyNUe55ZLUcKNIkGeDnlZnx+7xYXXbbPTT\/+d+AAAwxwsq54djABcAAA==",
+      "encoding": "base64",
+      "height": 23,
+      "id": 1,
+      "name": "",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 64,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 2,
+      "name": "Object Layer 1",
+      "objects": [
         {
-         "compression":"gzip",
-         "data":"H4sIAAAAAAAACu3PoQ3AIBBG4VuFRboDohpXVYthB2YpI\/aXuIYAgaRPfMmZu9xzZuYAAMBQfoMfgFVyNUe55ZLUcKNIkGeDnlZnx+7xYXXbbPTT\/+d+AAAwxwsq54djABcAAA==",
-         "encoding":"base64",
-         "height":23,
-         "id":1,
-         "name":"",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":64,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Object Layer 1",
-         "objects":[
-                {
-                 "height":36,
-                 "id":1,
-                 "name":"",
-                 "rotation":0,
-                 "text":
-                    {
-                     "color":"#ffffff",
-                     "fontfamily":"Lucida Console",
-                     "kerning":false,
-                     "pixelsize":40,
-                     "text":"HELLO WORLD",
-                     "wrap":true
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":264,
-                 "x":720,
-                 "y":108
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":3,
- "nextobjectid":4,
- "orientation":"orthogonal",
- "properties":[
-        {
-         "name":"StartTrigger",
-         "type":"string",
-         "value":"##LavaRate 100\n##TreeRate 100\n##EvapoRate 100\n##MagicEWalls"
-        }, 
-        {
-         "name":"id",
-         "type":"string",
-         "value":"Debug"
-        }],
- "renderorder":"right-down",
- "tiledversion":"1.11.2",
- "tileheight":36,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"..\/kroz.tileset.json"
-        }],
- "tilewidth":24,
- "type":"map",
- "version":"1.10",
- "width":64
+          "height": 36,
+          "id": 1,
+          "name": "",
+          "rotation": 0,
+          "text": {
+            "color": "#ffffff",
+            "fontfamily": "Lucida Console",
+            "kerning": false,
+            "pixelsize": 40,
+            "text": "HELLO WORLD",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 264,
+          "x": 720,
+          "y": 108
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 4,
+  "orientation": "orthogonal",
+  "properties": [
+    {
+      "name": "StartTrigger",
+      "type": "string",
+      "value": "##LavaRate 100\n##TreeRate 100\n##EvapoRate 100\n##MagicEWalls"
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "value": "Debug"
+    }
+  ],
+  "renderorder": "right-down",
+  "tiledversion": "1.11.2",
+  "tileheight": 36,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "..\/kroz.tileset.json"
+    }
+  ],
+  "tilewidth": 24,
+  "type": "map",
+  "version": "1.10",
+  "width": 64
 }

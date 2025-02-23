@@ -92,7 +92,7 @@ const _levels = {
     return world.stats.levelIndex;
   },
   set level(v: number) {
-    levels.setLevel(v);
+    levels.loadLevel(v);
   }
 };
 
