@@ -161,6 +161,26 @@ export async function restore() {
   }
 }
 
+export async function restartLevel() {
+  let answer = '';
+
+  while (
+    answer.toLowerCase() !== 'y' &&
+    answer.toLowerCase() !== 'n' &&
+    answer.toLowerCase() !== 'w' &&
+    answer.toLowerCase() !== 't'
+  ) {
+    answer = await screen.flashMessage(
+      'Are you sure you want to RESTORE? (Y/N)'
+    );
+  }
+
+  if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'w') {
+    Object.assign(stats, levelStartState);
+    await levels.loadLevel(stats.levelIndex);
+  }
+}
+
 export function addScore(block: Type) {
   stats.score += tiles.getScoreDelta(block);
   screen.renderStats();

@@ -36,7 +36,8 @@ export enum Action { // cannot be const enum
   Save,
   Restore,
   SlowerClock,
-  FasterClock
+  FasterClock,
+  RestartLevel
 }
 
 export const keyState: Partial<Record<string, number>> = {};
@@ -76,6 +77,8 @@ const KEY_BINDING: Record<string, Action | null> = {
   W: Action.Whip,
   t: Action.Teleport,
   T: Action.Teleport,
+  l: Action.RestartLevel,
+  L: Action.RestartLevel,
   ')': Action.FreeItems,
   '+': Action.ResetFound,
   '-': Action.HideFound,

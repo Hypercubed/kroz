@@ -60,6 +60,8 @@ async function readControls() {
   if (controls.wasActionDeactivated(Action.Quit)) return world.quit();
   if (controls.wasActionDeactivated(Action.Save)) return world.save();
   if (controls.wasActionDeactivated(Action.Restore)) return world.restore();
+  if (controls.wasActionDeactivated(Action.RestartLevel))
+    return world.restartLevel();
 
   // Debug Actions
   if (controls.wasActionDeactivated(Action.NextLevel))
