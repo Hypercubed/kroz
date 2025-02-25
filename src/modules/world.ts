@@ -65,9 +65,7 @@ function getDefaultLevelState() {
       0,
       0
     ], // Timers
-    startTrigger: undefined as undefined | string,
-    borderFG: tiles.common.BORDER_FG,
-    borderBG: tiles.common.BORDER_BG
+    startTrigger: undefined as undefined | string
   };
 }
 
@@ -245,9 +243,12 @@ export async function quit() {
 }
 
 export async function pause() {
+  const b = gameState.bot;
+  gameState.bot = false;
   gameState.paused = true;
   screen.fullRender();
   await screen.flashMessage('Press any key to resume');
+  gameState.bot = b;
 }
 
 // TODO: Call this when entities are changed

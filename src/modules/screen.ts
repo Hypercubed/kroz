@@ -120,8 +120,8 @@ export function renderStats() {
 
 export function renderBorder() {
   const char = tiles.common.BORDER_CHAR;
-  const fg = world.levelState.borderFG;
-  const bg = world.levelState.borderBG;
+  const fg = tiles.common.BORDER_FG;
+  const bg = tiles.common.BORDER_BG;
 
   for (let x = XBot - 1; x <= XTop + 1; x++) {
     display.draw(x, 0, char, fg!, bg!);
@@ -609,12 +609,18 @@ async function getDifficulty() {
       world.gameState.difficulty = Difficulty.Tourist;
       break;
     case 'B':
-      world.stats.gems = 500; // Infinity;
-      world.stats.teleports = 50; // Infinity;
-      world.stats.keys = 0; // Infinity;
-      world.stats.whips = 1000; // Infinity;
-      world.stats.whipPower = 3;
-      world.gameState.difficulty = Difficulty.Cheat;
+      world.stats.gems = 20;
+      world.stats.teleports = 0;
+      world.stats.keys = 0;
+      world.stats.whips = 0;
+      world.stats.whipPower = 2;
+
+      // world.stats.gems = 500; // Infinity;
+      // world.stats.teleports = 50; // Infinity;
+      // world.stats.keys = 0; // Infinity;
+      // world.stats.whips = 1000; // Infinity;
+      // world.stats.whipPower = 3;
+      // world.gameState.difficulty = Difficulty.Cheat;
       world.gameState.foundSet = true;
       world.gameState.bot = ENABLE_BOTS;
       break;

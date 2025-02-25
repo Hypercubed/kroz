@@ -1,6 +1,6 @@
 export const DEBUG = import.meta.env.DEV;
 export const SHOW_STATS = false;
-export const SHOW_DEBUG_CONTROLS = DEBUG;
+export const SHOW_DEBUG_CONTROLS = false;
 export const ENABLE_BOTS = DEBUG;
 export const ENABLE_DEBUG_INTERFACE = DEBUG;
 
@@ -29,7 +29,7 @@ export const YMax = 22;
 
 // Overall time scale... impacts creatre move speed and spell duration
 export const TIME_SCALE = 1;
-export const CLOCK_SCALE = 8; // Lower is faster player movement (should be > 1, 8 is good)
+export const CLOCK_SCALE = 64; // Lower is faster player movement (should be >= 1, 8 is good)
 
 export const VOLUME = 0.005;
 export const BLINK = !REDUCED;

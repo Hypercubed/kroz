@@ -6,6 +6,7 @@ import * as screen from './screen.ts';
 import * as effects from './effects.ts';
 import * as events from './events.ts';
 import * as scripts from './scripts.ts';
+import * as tiles from './tiles.ts';
 
 import { SHOW_OPENSOURCE_SCREEN } from '../constants/constants.ts';
 import { Entity } from '../classes/entity.ts';
@@ -74,6 +75,6 @@ async function loadLevelData(level: Level) {
 
   // Randomize gem and border colors
   await effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
-  world.levelState.borderFG = RNG.getUniformInt(8, 15);
-  world.levelState.borderBG = RNG.getUniformInt(1, 8);
+  tiles.common.BORDER_FG = RNG.getUniformInt(8, 15);
+  tiles.common.BORDER_BG = RNG.getUniformInt(1, 8);
 }

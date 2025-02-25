@@ -104,6 +104,14 @@ const EffectMap: Record<string, EffectFn> = {
     effects.updateTilesByType(tiles.getType(args[0])!, { fg: args[1] }),
   BG: ({ args }) =>
     effects.updateTilesByType(tiles.getType(args[0])!, { bg: args[1] }),
+  setTile: async ({ args }) => {
+    await effects.updateTilesByType(tiles.getType(args[0])!, {
+      ch: args[1],
+      fg: +args[2],
+      bg: +args[3]
+    });
+    screen.renderPlayfield();
+  },
 
   /** ## `##GEMS`
    * Gives the player 50 gems.
@@ -215,7 +223,14 @@ const EffectMap: Record<string, EffectFn> = {
     maps.cellular(tiles.getType(args[0]) || Type.Wall),
   rogue: async ({ args }) => maps.rogue(tiles.getType(args[0]) || Type.Wall),
   bsp: async ({ args }) => maps.bsp(tiles.getType(args[0]) || Type.Wall),
-  brogue: async ({ args }) => maps.brogue(tiles.getType(args[0]) || Type.Wall)
+  brogue: async ({ args }) => maps.brogue(tiles.getType(args[0]) || Type.Wall),
+  setBorder: async ({ args }) => {
+    console.log('Setting border:', args);
+    tiles.common.BORDER_CHAR = args[0];
+    tiles.common.BORDER_FG = +args[1];
+    tiles.common.BORDER_BG = +args[2];
+    screen.renderBorder();
+  }
 };
 
 async function addRandom() {

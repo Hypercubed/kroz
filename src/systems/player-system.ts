@@ -44,13 +44,19 @@ export async function update() {
 
 async function readControls() {
   if (DEBUG && controls.wasActionDeactivated(Action.SlowerClock)) {
-    world.gameState.clockScale = Math.min(20, world.gameState.clockScale + 1);
+    world.gameState.clockScale = Math.min(
+      64 * 8,
+      world.gameState.clockScale * 2
+    );
     console.log('Clock Scale:', world.gameState.clockScale);
     return;
   }
 
   if (DEBUG && controls.wasActionDeactivated(Action.FasterClock)) {
-    world.gameState.clockScale = Math.max(1, world.gameState.clockScale - 1);
+    world.gameState.clockScale = Math.max(
+      1,
+      Math.floor(world.gameState.clockScale / 2)
+    );
     console.log('Clock Scale:', world.gameState.clockScale);
     return;
   }

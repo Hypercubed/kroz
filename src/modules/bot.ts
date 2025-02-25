@@ -37,18 +37,12 @@ const COLLECT = [
   Type.Bomb,
   Type.Power,
   Type.Amulet,
-  Type.BlockSpell,
-  Type.ShowGems
+  Type.BlockSpell
 ];
 
-const AVOID = [
-  ...MOBS,
-  Type.Trap,
-  Type.Lava,
-  Type.Invisible,
-  Type.SpeedTime
-  // Type.Create,
-];
+const AVOID = [...MOBS, Type.Trap, Type.Lava, Type.Invisible, Type.SpeedTime];
+
+const ATTACK = [Type.Generator, Type.Statue];
 
 type Moves = [Entity, number, number];
 
@@ -89,9 +83,12 @@ function getNeighbors(x: number, y: number) {
 
 function isWalkable(e: Entity) {
   if (!e) return true;
+  if (COLLECT.includes(e.type as Type)) return true;
   if (e?.type === Type.Pit) return false;
   if (e?.type === Type.Tunnel) return false;
   if (e?.type === Type.Stairs) return false;
+  if (e?.type === Type.ShowGems) return false;
+  if (e?.type === Type.Invisible) return false;
   return e?.has(isPassable);
 }
 
@@ -286,20 +283,18 @@ async function tryCollect() {
   return await tryMove(+x, +y);
 }
 
-// async function tryDoor() {
-//   if (world.stats.keys < 1) return false;
+async function tryAttack() {
+  if (world.stats.whips < 1) return false;
+  const attackables = getTargets((e) => ATTACK.includes(e.type as Type));
+  if (attackables.length < 1) return false;
 
-//   const doors = getTargets((e) => e.type === Type.Door);
-//   if (doors.length < 1) return false;
-
-//   const goals: Array<[number, number]> = doors.map((n) => [n[1], n[2]]);
-//   const step = getStepToward(goals);
-//   if (!step) return false;
-//   const [x, y] = step;
-
-//   console.log((lastAction = 'door'));
-//   return await tryMove(+x, +y);
-// }
+  const goals: Array<[number, number]> = attackables.map((n) => [n[1], n[2]]);
+  const step = await getStepToward(goals);
+  if (!step) return false;
+  const [x, y] = step;
+  console.log((lastAction = 'attack'));
+  return await tryMove(+x, +y);
+}
 
 async function tryTunnel() {
   const tunnels = getTargets((e) => e.type === Type.Tunnel);
@@ -402,7 +397,7 @@ export async function botPlay() {
   neighbors = getNeighbors(p.x, p.y);
 
   if (await tryDefend()) return;
-  // TODO: Destroy statues and generators
+  if (await tryAttack()) return;
   if (await tryCollect()) return; // TODO: Only collect if it is worth it, Don't open doors unless needed
   // TODO: Only open doors if there are no other options
   // if (await tryDoor()) return;
@@ -427,7 +422,7 @@ async function tryMove(x: number, y: number) {
   const b = world.levelState.map.get(x, y);
   if (b) {
     if (b?.has(isMob) && b.type !== Type.MBlock) {
-      if (world.stats.gems > 2 * world.stats.whips) {
+      if (world.stats.gems > 2 * world.stats.whips && world.stats.whips > 0) {
         await whip();
       }
     } else if (

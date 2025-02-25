@@ -128,7 +128,7 @@ async function run() {
   const raf = async (currentTime: number) => {
     if (runningGame !== _runningGame) return;
 
-    const speed = 8 * world.gameState.clockScale;
+    const speed = Math.max(world.gameState.clockScale, 1);
 
     if (world.gameState.done) {
       // Remote this?
