@@ -31,7 +31,7 @@ export interface Game {
   readColor: () => Promise<unknown>;
   findNextLevel: (i: number) => number | typeof END;
   findPrevLevel: (i: number) => number;
-  readLevel: (i: number) => Promise<Level>;
+  readLevel: (i: number) => Promise<Level> | Level;
 }
 
 export const games = {

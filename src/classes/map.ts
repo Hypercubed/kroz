@@ -1,65 +1,79 @@
-import { default as RNG } from 'rot-js/lib/rng';
+type FillCallback<T> = (x: number, y: number, i: number) => T;
+type ForEachCallback<T> = (x: number, y: number, e: T) => void;
+type ForEachAsyncCallback<T> = (x: number, y: number, e: T) => Promise<void>;
+type MapCallback<T, R> = (e: T | null, x: number, y: number, i: number) => R;
 
-import { XMax, YMax } from '../constants/constants';
-import { Entity } from './entity';
-import { Type } from '../constants/types';
+export class Matrix<T> {
+  static fromArrays<T>(arrays: T[][]): Matrix<T> {
+    const height = arrays.length;
+    const width = arrays[0].length;
+    const matrix = new Matrix<T>(width, height);
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        matrix.set(x, y, arrays[y][x]);
+      }
+    }
+    return matrix;
+  }
 
-export class PlayField {
-  private PF: Entity[] = [];
+  private data: T[] = [];
 
   constructor(
-    public width = XMax + 1,
-    public height = YMax + 1
+    public width: number,
+    public height: number
   ) {}
 
   protected getIndex(x: number, y: number): number {
     return y * this.width + x;
   }
 
-  get(x: number, y: number): Entity | null {
-    if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
-      return null;
-    }
+  get(x: number, y: number): T | null {
+    if (x < 0 || x >= this.width || y < 0 || y >= this.height) return null;
     const index = this.getIndex(x, y);
-    return this.PF[index];
+    return this.data[index];
   }
 
-  set(x: number, y: number, entity: Entity): void {
-    if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
-      return;
-    }
+  set(x: number, y: number, item: T): void {
+    if (x < 0 || x >= this.width || y < 0 || y >= this.height) return;
     const index = this.getIndex(x, y);
-    this.PF[index] = entity;
+    this.data[index] = item;
   }
 
-  getType(x: number, y: number): Type | string {
-    if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
-      return Type.Border;
-    }
-    const type = this.get(x, y)?.type;
-    if (typeof type === 'string') {
-      return type;
-    }
-    return type ?? Type.Floor;
-  }
+  fill(value: T | FillCallback<T>): void {
+    let cb: FillCallback<T> | null = null;
+    if (typeof value === 'function') cb = value as FillCallback<T>;
 
-  findRandomEmptySpace(): [number, number] | null {
-    let n = 0;
-    while (n < XMax * YMax * 10) {
-      const x = RNG.getUniformInt(0, XMax);
-      const y = RNG.getUniformInt(0, YMax);
-      const block = this.getType(x, y);
-      if (block === Type.Floor) {
-        return [x, y];
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const i = this.getIndex(x, y);
+        this.set(x, y, (cb ? cb(x, y, i) : value) as T);
       }
-      n++;
     }
-    return null;
   }
 
-  async forEach(
-    callback: (x: number, y: number, e: Entity) => Promise<void> | void
-  ) {
+  map<R>(cb: MapCallback<T, R>) {
+    const matrix = new Matrix<R>(this.width, this.height);
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const i = this.getIndex(x, y);
+        const e = this.get(x, y);
+        matrix.set(x, y, cb(e, x, y, i));
+      }
+    }
+    return matrix;
+  }
+
+  forEach(callback: ForEachCallback<T>) {
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        const e = this.get(x, y);
+        if (!e) continue;
+        callback(x, y, e);
+      }
+    }
+  }
+
+  async forEachAsync(callback: ForEachAsyncCallback<T>) {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const e = this.get(x, y);
@@ -69,11 +83,19 @@ export class PlayField {
     }
   }
 
-  fill(callback: (x: number, y: number, i: number) => Entity) {
+  toMapString() {
+    let map = ``;
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        this.set(x, y, callback(x, y, this.getIndex(x, y)));
+        const e = this.get(x, y);
+        map += e?.toString() || ' ';
       }
+      map += '\n';
     }
+    return map;
+  }
+
+  toArray() {
+    return [...this.data];
   }
 }

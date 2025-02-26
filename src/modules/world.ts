@@ -7,7 +7,7 @@ import * as player from '../systems/player-system.ts';
 import { CLOCK_SCALE, TITLE, XMax, YMax } from '../constants/constants.ts';
 import { Entity } from '../classes/entity.ts';
 import { type Level } from './levels.ts';
-import { PlayField } from '../classes/map.ts';
+import { PlayField } from '../classes/play-field.ts';
 import { RNG } from 'rot-js';
 import {
   isGenerator,
@@ -251,13 +251,13 @@ export async function pause() {
   gameState.bot = b;
 }
 
-// TODO: Call this when entities are changed
-export async function reindexMap() {
+// TODO: Call this automatically when entities are changed
+export function reindexMap() {
   levelState.genNum = 0;
   levelState.entities = [];
   levelState.T[Timer.StatueGemDrain] = 0;
 
-  await levelState.map.forEach(async (_x, _y, entity) => {
+  levelState.map.forEach((_x, _y, entity) => {
     if (!entity) return;
     if (entity.type === Type.Statue) {
       levelState.T[Timer.StatueGemDrain] = 32000;

@@ -1,6 +1,6 @@
 export const DEBUG = import.meta.env.DEV;
 export const SHOW_STATS = false;
-export const SHOW_DEBUG_CONTROLS = false;
+export const SHOW_DEBUG_CONTROLS = true;
 export const ENABLE_BOTS = DEBUG;
 export const ENABLE_DEBUG_INTERFACE = DEBUG;
 

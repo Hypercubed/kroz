@@ -3,26 +3,28 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { Rogue } from 'procedural-layouts';
-
-import dedent from 'ts-dedent';
-
-import { readKrozLevel } from '../../utils/kroz';
-import { XMax, YMax } from '../../constants/constants';
 import { RNG } from 'rot-js';
 import { clamp } from 'rot-js/lib/util';
-import { clampLinear, LinearParams } from '../../utils/math';
+import dedent from 'ts-dedent';
+
+import * as tiles from '../../modules/tiles';
+
+import { XMax, YMax } from '../../constants/constants';
+import { clampLinear, type LinearParams } from '../../utils/math';
+import { Matrix } from '../../classes/map';
+import type { Level } from '../../modules/levels';
+import type { Entity } from '../../classes/entity';
+import { Type } from '../../constants/types';
 
 export const title = 'Testing Procgen Maps';
 
-export async function readLevel(i: number) {
-  return readKrozLevel(
-    dedent`
-    [PF]
-    ${randomMap(i)}
-    [ST]
-    ${startTrigger(i)}
-    `
-  );
+export function readLevel(i: number): Level {
+  return {
+    id: '' + i,
+    data: randomMap(i).toArray(),
+    startTrigger: startTrigger(i),
+    properties: {}
+  };
 }
 
 export function findNextLevel(i: number) {
@@ -36,10 +38,29 @@ export function findPrevLevel(i: number) {
 const CHANCE_TO_ADD_KEY = 0.3; // At 1 this is 100% chance to add a key in the next room
 const CHANCE_TO_ADD_LOCK = 0.3;
 
-function addKeys(_depth: number, map: RogueMap, maxKeys: number) {
-  const roomPool = [map.enter.room_id];
+const KeyDoorPairs = [
+  [Type.Key, Type.Door],
+  [Type.OSpell1, Type.OWall1],
+  [Type.OSpell2, Type.OWall2],
+  [Type.OSpell3, Type.OWall3]
+];
 
-  queueRooms(map.enter.room_id);
+const KeyDoorWeights = {
+  0: 6, // [Type.Key, Type.Door]
+  1: 2, // [Type.OSpell1, Type.OWall1]
+  2: 1, // [Type.OSpell2, Type.OWall2]
+  3: 1 // [Type.OSpell3, Type.OWall3]
+};
+
+function addKeys(
+  mapData: Matrix<Entity>,
+  _depth: number,
+  btl: RogueMap,
+  maxKeys: number
+) {
+  const roomPool = [btl.enter.room_id];
+
+  queueRooms(btl.enter.room_id);
 
   const lockDoors: number[] = [];
   const keyRooms: number[] = [];
@@ -49,11 +70,10 @@ function addKeys(_depth: number, map: RogueMap, maxKeys: number) {
     if (!roomId) break;
 
     if (Math.random() < CHANCE_TO_ADD_LOCK) {
-      const room = map.rooms[roomId];
+      const room = btl.rooms[roomId];
 
       const door = RNG.getItem(room.doors);
       if (!door) continue;
-      // console.log(door, lockDoors);
       if (lockDoors.includes(door)) continue;
 
       let i = roomPool.length;
@@ -77,27 +97,33 @@ function addKeys(_depth: number, map: RogueMap, maxKeys: number) {
 
   // TODO: Replace some key/door pairs with OSpell/OWall pairs
 
-  keyRooms.forEach((i) => {
-    const room = map.rooms[i];
+  for (let i = 0; i < keyRooms.length; i++) {
+    const doorId = lockDoors[i];
+    const door = btl.doors[doorId];
+
+    const roomId = keyRooms[i];
+    const room = btl.rooms[roomId];
     while (true) {
       const x = room.left + RNG.getUniformInt(0, room.width - 1);
       const y = room.top + RNG.getUniformInt(0, room.height - 1);
-      if (map.world[y][x] === 1) {
-        map.world[y][x] = 7;
+      if (mapData.get(x, y)!.type === Type.Floor) {
+        setDoorKey(x, y, door.x, door.y);
         break;
       }
     }
-  });
-
-  lockDoors.forEach((i) => {
-    const door = map.doors[i];
-    map.world[door.y][door.x] = 4;
-  });
+  }
 
   return;
 
+  function setDoorKey(kx: number, ky: number, dx: number, dy: number) {
+    const i = +RNG.getWeightedValue(KeyDoorWeights)!;
+    const [keyType, doorType] = KeyDoorPairs[i];
+    mapData.set(kx, ky, tiles.createEntityOfType(keyType));
+    mapData.set(dx, dy, tiles.createEntityOfType(doorType));
+  }
+
   function queueRooms(roomId: number) {
-    const room = map.rooms[roomId];
+    const room = btl.rooms[roomId];
     room.neighbors.forEach((n) => {
       if (roomPool.includes(n)) return;
       roomPool.push(n);
@@ -106,7 +132,7 @@ function addKeys(_depth: number, map: RogueMap, maxKeys: number) {
   }
 }
 
-function addFeatures(mapData: string[][], depth: number) {
+function addFeatures(mapData: Matrix<Entity>, depth: number) {
   const level = levels[depth % levels.length];
   const levelGens = level.generators;
 
@@ -127,7 +153,7 @@ function addFeatures(mapData: string[][], depth: number) {
     while (m--) {
       const x = RNG.getUniformInt(0, XMax);
       const y = RNG.getUniformInt(0, YMax);
-      if (mapData[y][x] === ' ') {
+      if (mapData.get(x, y)!.type === Type.Floor) {
         return [x, y];
       }
     }
@@ -166,32 +192,41 @@ function randomMap(depth: number) {
     }
   }
 
-  const maxKeys = Math.floor(
-    clampLinear({ b0: 1, m: 1, min: 0, max: btl.room_count }, depth)
+  const mapData = Matrix.fromArrays(btl.world).map<Entity>((s, x, y) =>
+    tiles.createEntityOfType(rogueMapTypeToType(s), x, y)
   );
-  addKeys(depth, btl, maxKeys);
 
-  const { world } = btl;
-
-  const mapData: string[][] = [];
-  for (let y = 0; y < world.length; y++) {
-    mapData.push([]);
-    for (let x = 0; x < world[y].length; x++) {
-      mapData[y].push(rogueMapTypeToTile(world[y][x]));
-    }
-  }
-
+  addKeys(
+    mapData,
+    depth,
+    btl,
+    ~~clampLinear({ b0: 1, m: 1, min: 0, max: btl.room_count }, depth)
+  );
   addFeatures(mapData, depth);
+  return mapData;
 
-  let map = ``;
-  for (let y = 0; y < world.length; y++) {
-    for (let x = 0; x < world[y].length; x++) {
-      map += mapData[y][x];
+  function rogueMapTypeToType(c: number | null): Type {
+    switch (c) {
+      case 0: // Void
+        return Type.River;
+      case 1:
+        return Type.Floor;
+      case 2: // Wall
+        return Type.Wall;
+      case 3: // Door
+        return Type.Stop;
+      case 4: // SPECIAL DOOR
+        return Type.Door;
+      case 5: // Enter
+        return Type.Player;
+      case 6: // Exit
+        return Type.Stairs;
+      case 7: // Key
+        return Type.Key;
+      default:
+        return Type.Floor;
     }
-    map += '\n';
   }
-
-  return map;
 }
 
 function startTrigger(depth: number) {
@@ -201,37 +236,40 @@ function startTrigger(depth: number) {
   const st = levelGens.join('\n');
   return dedent`
     ${st}
-    ##setBorder # 0 0
+    ##CHANGE Stop Floor
     Press any key to begin this level.
   `;
 }
 
 interface Generator {
-  gen: (map: string[][], x: number, y: number, depth: number) => void;
+  gen: (map: Matrix<Entity>, x: number, y: number, depth: number) => void;
   n: (depth: number) => number;
 }
 
-function createGenerator(char: string, p: Partial<LinearParams>): Generator {
-  const linOpts = { b0: 1, m: 1, max: 100, min: 0, ...p };
+function createGenerator(type: Type, p: Partial<LinearParams>): Generator {
+  const linOpts: LinearParams = { b0: 1, m: 1, max: 100, min: 0, ...p };
   return {
-    gen: (map: string[][], x: number, y: number) => (map[y][x] = char),
+    gen: (map, x, y) => map.set(x, y, tiles.createEntityOfType(type, x, y)),
     n(depth: number) {
-      // TODO: Difficulty scale
+      // TODO: Difficulty scale?
+      // Randomness?
       const x = depth / levels.length;
       return clampLinear(linOpts, x < 1 ? 0 : x);
     }
-  };
+  } satisfies Generator;
 }
 
-function hordeGenerator(
-  char: string,
-  p: Partial<LinearParams> = {}
-): Generator {
+/**
+ * Genreates a horde of mobs
+ *
+ *
+ */
+function hordeGenerator(type: Type, p: Partial<LinearParams> = {}): Generator {
   const linOpts = { b0: 10, m: 1, max: 100, min: 0, ...p };
 
   return {
-    gen: (map: string[][], x: number, y: number) => {
-      map[y][x] = char;
+    gen: (map, x, y) => {
+      map.set(x, y, tiles.createEntityOfType(type, x, y));
 
       let n = RNG.getUniformInt(1, 8);
       genAt(x, y);
@@ -240,8 +278,11 @@ function hordeGenerator(
         for (let dx = -1; dx <= 1; dx++) {
           for (let dy = -1; dy <= 1; dy++) {
             if (dx === 0 && dy === 0) continue;
-            if (map[y + dy][x + dx] === ' ' && Math.random() < 0.5) {
-              map[y + dy][x + dx] = char;
+            if (
+              map.get(x + dx, y + dy)!.type === Type.Floor &&
+              Math.random() < 0.5
+            ) {
+              map.set(x + dx, y + dy, tiles.createEntityOfType(type, x, y));
               if (n-- < 1) return;
             }
           }
@@ -252,26 +293,29 @@ function hordeGenerator(
       const x = depth / levels.length;
       return clampLinear(linOpts, x < 1 ? 0 : x);
     }
-  };
+  } satisfies Generator;
 }
 
-function growthGenerator(
-  char: string,
-  p: Partial<LinearParams> = {}
-): Generator {
+/**
+ * Grows a feature
+ */
+function growthGenerator(type: Type, p: Partial<LinearParams> = {}): Generator {
   const linOpts = { b0: 10, m: 1, max: 900, min: 0, ...p };
   return {
-    gen: (map: string[][], x: number, y: number) => {
+    gen: (map, x, y) => {
       let n = RNG.getUniformInt(1, 5);
       genAt(x, y);
 
       function genAt(x: number, y: number) {
-        map[y][x] = char;
+        map.set(x, y, tiles.createEntityOfType(type, x, y));
 
         for (let dx = -1; dx <= 1; dx++) {
           for (let dy = -1; dy <= 1; dy++) {
             if (dx === 0 && dy === 0) continue;
-            if (map[y + dy][x + dx] === ' ' && Math.random() < 0.5) {
+            if (
+              map.get(x + dx, y + dy)!.type === Type.Floor &&
+              Math.random() < 0.5
+            ) {
               genAt(x + dx, y + dy);
               if (n-- < 1) return;
             }
@@ -283,27 +327,32 @@ function growthGenerator(
       const x = depth / levels.length;
       return clampLinear(linOpts, x < 1 ? 0 : x);
     }
-  };
+  } satisfies Generator;
 }
 
+/**
+ * Places a vane of collectibles
+ */
 function collectibleGenerator(
-  char: string,
+  type: Type,
   p: Partial<LinearParams> = {}
 ): Generator {
   const linOpts = { b0: 1, m: 1, max: 100, min: 1, ...p };
   return {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    gen: (map: string[][], x: number, y: number, _depth: number) => {
+    gen: (map, x, y) => {
       let n = RNG.getUniformInt(1, 5);
       genAt(x, y);
 
       function genAt(x: number, y: number) {
-        map[y][x] = char;
+        map.set(x, y, tiles.createEntityOfType(type, x, y));
 
         for (let dx = -1; dx <= 1; dx++) {
           for (let dy = -1; dy <= 1; dy++) {
             if (dx === 0 && dy === 0) continue;
-            if (map[y + dy][x + dx] === ' ' && Math.random() < 0.3) {
+            if (
+              map.get(x + dx, y + dy)!.type === Type.Floor &&
+              Math.random() < 0.3
+            ) {
               genAt(x + dx, y + dy);
               if (n-- < 1) return;
             }
@@ -315,17 +364,20 @@ function collectibleGenerator(
       const x = depth / levels.length;
       return clampLinear(linOpts, x < 1 ? 0 : x);
     }
-  };
+  } satisfies Generator;
 }
 
-function chestGenerator(
-  char: string,
+/**
+ * Places a small cluster of features
+ */
+function clusterGenerator(
+  type: Type,
   p: Partial<LinearParams> = {}
 ): Generator {
   const linOpts = { b0: 1, m: 1, max: 5, min: 0, ...p };
   return {
-    gen: (map: string[][], x: number, y: number) => {
-      map[y][x] = char;
+    gen: (map, x, y) => {
+      map.set(x, y, tiles.createEntityOfType(type, x, y));
 
       let n = RNG.getUniformInt(0, 3);
       genAt(x, y);
@@ -334,8 +386,11 @@ function chestGenerator(
         for (let dx = -1; dx <= 1; dx++) {
           for (let dy = -1; dy <= 1; dy++) {
             if (dx === 0 && dy === 0) continue;
-            if (map[y + dy][x + dx] === ' ' && Math.random() < 0.3) {
-              map[y + dy][x + dx] = char;
+            if (
+              map.get(x + dx, y + dy)!.type === Type.Floor &&
+              Math.random() < 0.3
+            ) {
+              map.set(x + dx, y + dy, tiles.createEntityOfType(type, x, y));
               // genAt(x + dx, y + dy);
               if (n-- < 1) return;
             }
@@ -347,21 +402,35 @@ function chestGenerator(
       const x = depth / levels.length;
       return clampLinear(linOpts, x < 1 ? 0 : x);
     }
-  };
+  } satisfies Generator;
 }
 
-const showGemsGenerator = (char: string, p: Partial<LinearParams> = {}) =>
-  createGenerator(char, { b0: 1, m: 1, max: 20, ...p });
-const bombGenerator = (char: string, p: Partial<LinearParams> = {}) =>
-  createGenerator(char, { b0: 1, m: 1, max: 20, ...p });
-const spellGenerator = (char: string, p: Partial<LinearParams> = {}) =>
-  createGenerator(char, { b0: 1, m: 1, max: 20, ...p });
+const spellGenerator = (type: Type, p: Partial<LinearParams> = {}) =>
+  createGenerator(type, { b0: 1, m: 1, max: 20, ...p });
 
 const baseHordeGenerators = [
-  hordeGenerator('1', { b0: -1 }),
-  hordeGenerator('2', { b0: -2 }),
-  hordeGenerator('3', { b0: -3 })
+  hordeGenerator(Type.Slow, { b0: -1 }),
+  hordeGenerator(Type.Medium, { b0: -2 }),
+  hordeGenerator(Type.Fast, { b0: -3 })
 ];
+
+const teleportGenerator = clusterGenerator(Type.Teleport, {
+  b0: 5,
+  m: -1,
+  min: 1
+});
+const whipGenerator = collectibleGenerator(Type.Whip, { b0: 5, m: -1, min: 1 });
+const nuggetGenerator = collectibleGenerator(Type.Nugget);
+const gemGenerator = collectibleGenerator(Type.Gem, { b0: 5, m: -1, min: 1 });
+const showGemsGenerator = createGenerator(Type.ShowGems, {
+  b0: 10,
+  m: -1,
+  min: 5
+});
+const trapGenerator = growthGenerator(Type.Trap, { b0: 10, m: 0.1, max: 20 });
+const chestGenerator = clusterGenerator(Type.Chest, { b0: 5, m: -1, min: 1 });
+const bombGenerator = createGenerator(Type.Bomb, { b0: 10, m: 0 });
+const tunnelGenerator = createGenerator(Type.Tunnel, { b0: 10, m: -1, min: 2 });
 
 interface LevelDef {
   generators: Generator[];
@@ -379,8 +448,8 @@ const levels = [
      */
     generators: [
       // Whips and nuggets
-      collectibleGenerator('W', { b0: 2, m: -1 }),
-      collectibleGenerator('*'),
+      whipGenerator,
+      nuggetGenerator,
       ...baseHordeGenerators
     ],
     startTrigger: []
@@ -394,9 +463,9 @@ const levels = [
      */
     generators: [
       // Blocks and gems
-      growthGenerator('X', { b0: 2 }),
-      collectibleGenerator('+', { b0: 2 }),
-      showGemsGenerator('&', { b0: 10 }),
+      growthGenerator(Type.Block, { b0: 2 }),
+      gemGenerator,
+      showGemsGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -409,9 +478,9 @@ const levels = [
      */
     generators: [
       // Breakable walls, mobs, and teleport spells
-      hordeGenerator('1'),
-      growthGenerator('X', { b0: 2 }),
-      collectibleGenerator('T'),
+      hordeGenerator(Type.Slow),
+      growthGenerator(Type.Block, { b0: 2 }),
+      teleportGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -424,11 +493,11 @@ const levels = [
      * Introduces the player to traps
      */
     generators: [
-      growthGenerator('.', { b0: 2 }),
-      hordeGenerator('1'),
-      collectibleGenerator('W'),
-      collectibleGenerator('+'),
-      showGemsGenerator('&'),
+      trapGenerator,
+      hordeGenerator(Type.Slow),
+      whipGenerator,
+      gemGenerator,
+      showGemsGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -442,10 +511,10 @@ const levels = [
      */
     generators: [
       // GBlocks, mobs, whips and gems
-      growthGenerator('Y', { b0: 2 }),
-      hordeGenerator('1'),
-      collectibleGenerator('W'),
-      collectibleGenerator('+'),
+      growthGenerator(Type.GBlock, { b0: 2 }),
+      hordeGenerator(Type.Slow),
+      whipGenerator,
+      gemGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -458,13 +527,13 @@ const levels = [
      */
     generators: [
       // Bombs and gems, chests
-      bombGenerator('B', { b0: 10 }),
-      growthGenerator('X', { b0: 4 }),
-      collectibleGenerator('W'),
-      chestGenerator('C'),
-      collectibleGenerator('+'),
-      showGemsGenerator('.'),
-      collectibleGenerator('*'),
+      bombGenerator,
+      growthGenerator(Type.Block, { b0: 4 }),
+      whipGenerator,
+      chestGenerator,
+      gemGenerator,
+      trapGenerator,
+      nuggetGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -477,12 +546,12 @@ const levels = [
      */
     generators: [
       // Forest trees, mobs, and whips
-      growthGenerator('/', { b0: 2 }),
-      growthGenerator('\\', { b0: 2 }),
-      hordeGenerator('1'),
-      collectibleGenerator('W', { b0: 2 }),
-      collectibleGenerator('*'),
-      chestGenerator('C'),
+      growthGenerator(Type.Forest, { b0: 2 }),
+      growthGenerator(Type.Tree, { b0: 2 }),
+      hordeGenerator(Type.Slow),
+      collectibleGenerator(Type.Whip, { b0: 2 }),
+      nuggetGenerator,
+      chestGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -495,13 +564,13 @@ const levels = [
      */
     generators: [
       // Tunnels
-      bombGenerator('U', { b0: 5 }),
-      hordeGenerator('2', { b0: 2 }),
-      hordeGenerator('3', { b0: 2 }),
-      chestGenerator('C'),
-      collectibleGenerator('W'),
-      bombGenerator('B'),
-      collectibleGenerator('T'),
+      tunnelGenerator,
+      hordeGenerator(Type.Medium, { b0: 2 }),
+      hordeGenerator(Type.Fast, { b0: 2 }),
+      chestGenerator,
+      whipGenerator,
+      bombGenerator,
+      teleportGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -514,12 +583,12 @@ const levels = [
      */
     generators: [
       // Generators and spells
-      spellGenerator('G', { b0: 2 }),
-      hordeGenerator('1'),
-      collectibleGenerator('+'),
-      collectibleGenerator('*'),
-      collectibleGenerator('W'),
-      spellGenerator('S'),
+      spellGenerator(Type.Generator, { b0: 2 }),
+      hordeGenerator(Type.Slow),
+      gemGenerator,
+      nuggetGenerator,
+      whipGenerator,
+      spellGenerator(Type.SlowTime),
       ...baseHordeGenerators
     ]
   },
@@ -532,12 +601,12 @@ const levels = [
      */
     generators: [
       // Traps
-      growthGenerator('.', { b0: 2 }),
-      collectibleGenerator('I', { b0: 2 }),
-      collectibleGenerator('T'),
-      collectibleGenerator('+'),
-      collectibleGenerator('*'),
-      spellGenerator('G'),
+      growthGenerator(Type.Trap, { b0: 2 }),
+      collectibleGenerator(Type.Invisible, { b0: 2 }),
+      teleportGenerator,
+      gemGenerator,
+      nuggetGenerator,
+      spellGenerator(Type.Generator),
       ...baseHordeGenerators
     ]
   },
@@ -550,10 +619,10 @@ const levels = [
      */
     generators: [
       // Mobs, Whips and Spells
-      hordeGenerator('2'),
-      chestGenerator('C', { b0: 2 }),
-      collectibleGenerator('W'),
-      spellGenerator('S', { b0: 2 }),
+      hordeGenerator(Type.Medium),
+      chestGenerator,
+      whipGenerator,
+      spellGenerator(Type.SlowTime, { b0: 2 }),
       ...baseHordeGenerators
     ]
   },
@@ -566,14 +635,14 @@ const levels = [
      */
     generators: [
       // Blocks and spells
-      growthGenerator('X'),
-      spellGenerator('F', { b0: 2 }),
-      spellGenerator('S', { b0: 2 }),
-      hordeGenerator('1'),
-      collectibleGenerator('+'),
-      collectibleGenerator('W'),
-      collectibleGenerator('*'),
-      collectibleGenerator('T'),
+      growthGenerator(Type.Block),
+      spellGenerator(Type.SpeedTime, { b0: 2 }),
+      spellGenerator(Type.SlowTime, { b0: 2 }),
+      hordeGenerator(Type.Slow),
+      gemGenerator,
+      whipGenerator,
+      nuggetGenerator,
+      teleportGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -586,9 +655,9 @@ const levels = [
      */
     generators: [
       // MBlocks
-      growthGenerator('M', { b0: 5 }),
-      hordeGenerator('1'),
-      collectibleGenerator('T'),
+      growthGenerator(Type.MBlock, { b0: 5 }),
+      hordeGenerator(Type.Slow),
+      teleportGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -601,9 +670,9 @@ const levels = [
      */
     generators: [
       // TBlocks
-      growthGenerator('‘'),
-      hordeGenerator('1'),
-      spellGenerator('G'),
+      growthGenerator(Type.TBlock),
+      hordeGenerator(Type.Slow),
+      spellGenerator(Type.Generator),
       ...baseHordeGenerators
     ]
   },
@@ -615,9 +684,9 @@ const levels = [
      */
     generators: [
       // Traps
-      growthGenerator('.', { b0: 2 }),
-      growthGenerator('I'),
-      growthGenerator('X'),
+      growthGenerator(Type.Trap, { b0: 2 }),
+      growthGenerator(Type.Invisible),
+      growthGenerator(Type.Block),
       ...baseHordeGenerators
     ]
   },
@@ -630,10 +699,10 @@ const levels = [
      */
     generators: [
       // Gems and stairs and traps
-      growthGenerator('L', { b0: 2 }),
-      collectibleGenerator('*'),
-      growthGenerator('.', { b0: 2 }),
-      collectibleGenerator('I', { b0: 3 }),
+      growthGenerator(Type.Trap, { b0: 2 }),
+      collectibleGenerator(Type.Invisible, { b0: 30 }),
+      collectibleGenerator(Type.Stairs, { b0: 20 }),
+      nuggetGenerator,
       ...baseHordeGenerators
     ]
   },
@@ -649,9 +718,9 @@ const levels = [
      */
     generators: [
       // Gblocks, whips and gems
-      growthGenerator('Y', { b0: 2 }),
-      collectibleGenerator('+'),
-      collectibleGenerator('W'),
+      growthGenerator(Type.GBlock, { b0: 2 }),
+      gemGenerator,
+      whipGenerator,
       ...baseHordeGenerators
     ]
   }
@@ -665,22 +734,3 @@ const levels = [
   // TODO: Invisible MBlocks
   // TODO: Blocks and bombs
 ] satisfies LevelDef[];
-
-function rogueMapTypeToTile(c: number) {
-  switch (c) {
-    case 0: // Void
-      return '-'; // Stop
-    case 4: // SPECIAL DOOR
-      return 'D';
-    case 2: // Wall
-      return '#';
-    case 5: // Enter
-      return 'P';
-    case 6: // Exit
-      return 'L';
-    case 7: // Key
-      return 'K';
-    default:
-      return ' ';
-  }
-}

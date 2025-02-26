@@ -223,14 +223,7 @@ const EffectMap: Record<string, EffectFn> = {
     maps.cellular(tiles.getType(args[0]) || Type.Wall),
   rogue: async ({ args }) => maps.rogue(tiles.getType(args[0]) || Type.Wall),
   bsp: async ({ args }) => maps.bsp(tiles.getType(args[0]) || Type.Wall),
-  brogue: async ({ args }) => maps.brogue(tiles.getType(args[0]) || Type.Wall),
-  setBorder: async ({ args }) => {
-    console.log('Setting border:', args);
-    tiles.common.BORDER_CHAR = args[0];
-    tiles.common.BORDER_FG = +args[1];
-    tiles.common.BORDER_BG = +args[2];
-    screen.renderBorder();
-  }
+  brogue: async ({ args }) => maps.brogue(tiles.getType(args[0]) || Type.Wall)
 };
 
 async function addRandom() {
