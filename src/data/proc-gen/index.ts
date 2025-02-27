@@ -3,8 +3,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { Rogue } from 'procedural-layouts';
-import { RNG } from 'rot-js';
-import { clamp } from 'rot-js/lib/util';
+import { RNG, Path, Noise, Color, Map } from 'rot-js';
+// import { clamp } from 'rot-js/lib/util';
 import dedent from 'ts-dedent';
 
 import * as tiles from '../../modules/tiles';
@@ -15,6 +15,8 @@ import { Matrix } from '../../classes/map';
 import type { Level } from '../../modules/levels';
 import type { Entity } from '../../classes/entity';
 import { Type } from '../../constants/types';
+import { Renderable } from '../../classes/components';
+import { ColorCodes } from '../../modules/colors';
 
 export const title = 'Testing Procgen Maps';
 
@@ -74,12 +76,15 @@ const KeyDoorWeights = {
   3: 1 // [Type.OSpell3, Type.OWall3]
 };
 
-function addKeys(
-  mapData: Matrix<Entity>,
-  _depth: number,
-  btl: RogueMap,
-  maxKeys: number
-) {
+function getLevelDef(depth: number): LevelDef {
+  return { ...common, ...levels[depth % levels.length] };
+}
+
+function addKeys(mapData: Matrix<Entity>, depth: number, btl: RogueMap) {
+  const maxKeys = ~~clampLinear(
+    { b0: 1, m: 1, min: 0, max: btl.room_count },
+    depth
+  );
   const roomPool = [btl.enter.room_id];
 
   queueRooms(btl.enter.room_id);
@@ -155,7 +160,7 @@ function addKeys(
 }
 
 function addFeatures(mapData: Matrix<Entity>, depth: number) {
-  const level = { ...common, ...levels[depth % levels.length] };
+  const level = getLevelDef(depth);
   const levelGens = [...level.generators, ...common.generators];
 
   for (let i = 0; i < levelGens.length; i++) {
@@ -183,11 +188,74 @@ function addFeatures(mapData: Matrix<Entity>, depth: number) {
   }
 }
 
+function addLakes(mapData: Matrix<Entity>, depth: number, btl: RogueMap) {
+  const level = getLevelDef(depth);
+
+  const testMap = mapData.clone();
+
+  const passableCallback = (x: number, y: number) => {
+    const t = testMap.get(x, y)?.type || Type.Floor;
+    return (
+      t === Type.Floor ||
+      t === Type.Door ||
+      t === Type.Stop ||
+      t === Type.Stairs ||
+      t === Type.Player
+    );
+  };
+  const astar = new Path.AStar(btl.exit.x, btl.exit.y, passableCallback);
+
+  let M = 10; // Max tries
+  while (M-- > 0) {
+    if (tryLake()) {
+      break;
+    }
+  }
+
+  function tryLake() {
+    const map = new Map.Cellular(XMax + 1, YMax + 1);
+
+    let M = 10;
+    while (M-- > 0) {
+      map.randomize(0.5);
+      mapData.forEach((x, y, e) => {
+        if (e.type === level.lakeType) {
+          map.set(x, y, 1);
+        }
+      });
+
+      for (let i = 0; i < 4; i++) {
+        map.create();
+      }
+
+      testMap.copyFrom(mapData);
+
+      map.connect((x: number, y: number, contents: number) => {
+        if (contents === 0) return;
+        const e = tiles.createEntityOfType(level.lakeType);
+        testMap.set(x, y, e);
+      }, 0);
+
+      if (checkPath()) {
+        mapData.copyFrom(testMap);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function checkPath() {
+    let pathExists = false;
+    astar.compute(btl.enter.x, btl.enter.y, () => (pathExists = true));
+    return pathExists;
+  }
+}
+
 function randomMap(depth: number) {
   const level = { ...common, ...levels[depth % levels.length] };
   let btl: RogueMap | null = null;
 
-  let ideal = clamp(depth * 5, 10, XMax / 3);
+  let ideal = 35;
   let max_width = XMax / 2;
   let max_height = YMax / 2;
 
@@ -210,8 +278,8 @@ function randomMap(depth: number) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_e) {
       ideal = 35;
-      max_width = 7;
-      max_height = 7;
+      max_width--;
+      max_height--;
     }
   }
 
@@ -219,25 +287,36 @@ function randomMap(depth: number) {
     tiles.createEntityOfType(rogueMapTypeToType(s), x, y)
   );
 
-  addKeys(
-    mapData,
-    depth,
-    btl,
-    ~~clampLinear({ b0: 1, m: 1, min: 0, max: btl.room_count }, depth)
-  );
+  addKeys(mapData, depth, btl);
+  addLakes(mapData, depth, btl);
   addFeatures(mapData, depth);
+
+  const noise = new Noise.Simplex();
+  const mixColor = Color.fromString(ColorCodes[0]);
+
+  // Add some noise to the map
+  mapData.forEach((x, y, e) => {
+    if (e.type === level.lakeType) {
+      const o = 0.1 * noise.get(x / 5, y / 5) + 0.2;
+      const fg = Color.fromString(e.get(Renderable)!.fg || 'black');
+      const bg = Color.fromString(e.get(Renderable)!.bg || 'white');
+      e.get(Renderable)!.bg = Color.toRGB(Color.interpolate(bg, mixColor, o));
+      e.get(Renderable)!.fg = Color.toRGB(Color.interpolate(fg, mixColor, o));
+    }
+  });
+
   return mapData;
 
   function rogueMapTypeToType(c: number | null): Type {
     switch (c) {
       case 0: // Void
-        return level.void;
+        return level.voidType;
       case 1:
         return Type.Floor;
       case 2: // Wall
-        return Type.Wall;
+        return level.wallType;
       case 3: // Door
-        return Type.Stop;
+        return Type.Floor;
       case 4: // SPECIAL DOOR
         return Type.Door;
       case 5: // Enter
@@ -460,7 +539,9 @@ const tunnelGenerator = createGenerator(Type.Tunnel, { b0: 10, m: -1, min: 2 });
 interface LevelDef {
   generators: Generator[];
   startTrigger?: string[];
-  void: Type;
+  lakeType: Type;
+  voidType: Type;
+  wallType: Type;
 }
 
 const common: LevelDef = {
@@ -469,7 +550,9 @@ const common: LevelDef = {
     hordeGenerator(Type.Medium, { m: 1.2, b0: 71, min: 0 }, { minDepth: 10 }),
     hordeGenerator(Type.Fast, { m: 3.2, b0: -40, min: 0 }, { minDepth: 10 })
   ],
-  void: Type.Stop,
+  voidType: Type.Stop,
+  lakeType: Type.Pit,
+  wallType: Type.Wall,
   startTrigger: []
 };
 
@@ -488,7 +571,7 @@ const levels = [
       nuggetGenerator
     ],
     startTrigger: [],
-    void: Type.Stop
+    voidType: Type.Wall
   },
   {
     /**
@@ -504,7 +587,7 @@ const levels = [
       showGemsGenerator
     ],
     startTrigger: [],
-    void: Type.Block
+    voidType: Type.Block
   },
   {
     /**
@@ -519,7 +602,7 @@ const levels = [
       teleportGenerator
     ],
     startTrigger: [],
-    void: Type.Block
+    voidType: Type.Block
   },
   {
     /**
@@ -531,7 +614,7 @@ const levels = [
      */
     generators: [trapGenerator, whipGenerator, gemGenerator, showGemsGenerator],
     startTrigger: [],
-    void: Type.Stop
+    voidType: Type.Wall
   },
   {
     /**
@@ -548,7 +631,7 @@ const levels = [
       gemGenerator
     ],
     startTrigger: [],
-    void: Type.GBlock
+    voidType: Type.GBlock
   },
   {
     /**
@@ -568,7 +651,7 @@ const levels = [
       nuggetGenerator
     ],
     startTrigger: [],
-    void: Type.Block
+    voidType: Type.Block
   },
   {
     /**
@@ -586,7 +669,7 @@ const levels = [
       chestGenerator
     ],
     startTrigger: [],
-    void: Type.Forest
+    voidType: Type.Forest
   },
   {
     /**
@@ -604,7 +687,7 @@ const levels = [
       teleportGenerator
     ],
     startTrigger: [],
-    void: Type.Stop
+    voidType: Type.Wall
   },
   {
     /**
@@ -622,7 +705,7 @@ const levels = [
       spellGenerator(Type.SlowTime)
     ],
     startTrigger: [],
-    void: Type.Stop
+    voidType: Type.Wall
   },
   {
     /**
@@ -641,7 +724,7 @@ const levels = [
       spellGenerator(Type.Generator)
     ],
     startTrigger: [],
-    void: Type.Stop
+    voidType: Type.Trap
   },
   {
     /**
@@ -657,7 +740,7 @@ const levels = [
       spellGenerator(Type.SlowTime, { b0: 20 })
     ],
     startTrigger: [],
-    void: Type.GBlock
+    voidType: Type.Wall
   },
   {
     /**
@@ -677,7 +760,7 @@ const levels = [
       teleportGenerator
     ],
     startTrigger: [],
-    void: Type.Block
+    voidType: Type.Block
   },
   {
     /**
@@ -692,7 +775,7 @@ const levels = [
       teleportGenerator
     ],
     startTrigger: [],
-    void: Type.Block
+    voidType: Type.MBlock
   },
   {
     /**
@@ -707,7 +790,7 @@ const levels = [
       spellGenerator(Type.Generator)
     ],
     startTrigger: [],
-    void: Type.Stop
+    voidType: Type.Block
   },
   {
     /**
@@ -722,7 +805,7 @@ const levels = [
       growthGenerator(Type.Block)
     ],
     startTrigger: [],
-    void: Type.Block
+    voidType: Type.Trap
   },
   // TODO: Intro CWalls
   {
@@ -739,7 +822,7 @@ const levels = [
       nuggetGenerator
     ],
     startTrigger: [],
-    void: Type.Stop
+    voidType: Type.Trap
   },
   // TODO: Forest and growth
   // TODO: Lava and Flow
@@ -758,7 +841,7 @@ const levels = [
       whipGenerator
     ],
     startTrigger: [],
-    void: Type.GBlock
+    voidType: Type.GBlock
   }
   // TODO: Doors and Tunnels, mobs and nuggets, statues
   // TODO: Gems and Mobs
@@ -769,4 +852,4 @@ const levels = [
   // TODO: Blocks and GBlocks
   // TODO: Invisible MBlocks
   // TODO: Blocks and bombs
-] satisfies LevelDef[];
+] satisfies Partial<LevelDef>[];

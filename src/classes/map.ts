@@ -117,4 +117,14 @@ export class Matrix<T> {
   toArray() {
     return [...this.data];
   }
+
+  clone() {
+    const matrix = new Matrix<T>(this.width, this.height);
+    matrix.data = this.toArray();
+    return matrix;
+  }
+
+  copyFrom(matrix: Matrix<T>) {
+    this.data = matrix.toArray();
+  }
 }
