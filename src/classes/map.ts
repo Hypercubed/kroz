@@ -2,6 +2,13 @@ type FillCallback<T> = (x: number, y: number, i: number) => T;
 type ForEachCallback<T> = (x: number, y: number, e: T) => void;
 type ForEachAsyncCallback<T> = (x: number, y: number, e: T) => Promise<void>;
 type MapCallback<T, R> = (e: T | null, x: number, y: number, i: number) => R;
+type ReduceCallback<T, R> = (
+  acc: R,
+  e: T | null,
+  x: number,
+  y: number,
+  i: number
+) => R;
 
 export class Matrix<T> {
   static fromArrays<T>(arrays: T[][]): Matrix<T> {
@@ -71,6 +78,18 @@ export class Matrix<T> {
         callback(x, y, e);
       }
     }
+  }
+
+  reduce<R>(callback: ReduceCallback<T, R>, initialValue: R): R {
+    let acc = initialValue;
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        const e = this.get(x, y);
+        if (!e) continue;
+        acc = callback(acc, e, x, y, this.getIndex(x, y));
+      }
+    }
+    return acc;
   }
 
   async forEachAsync(callback: ForEachAsyncCallback<T>) {

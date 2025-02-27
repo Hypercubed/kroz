@@ -13,6 +13,14 @@ import { Entity } from '../classes/entity.ts';
 import { Type } from '../constants/types.ts';
 import { END } from './games.ts';
 
+let stats: Array<Record<string, number>> = [];
+
+const CollectStats: Type[] = [];
+
+events.gameStart.add(() => {
+  stats = [];
+});
+
 export interface Level {
   id: string;
   data: Entity[];
@@ -33,6 +41,22 @@ export async function loadLevel(i: number = world.stats.levelIndex ?? 1) {
   } else {
     await screen.flashMessage('Press any key to begin this level.');
   }
+
+  if (CollectStats.length > 0) {
+    const t = CollectStats.reduce(
+      (s, type) => {
+        const c = world.levelState.map.reduce(
+          (acc, e) => (e?.type === type ? acc + 1 : acc),
+          0
+        );
+        return { ...s, [Type[type]]: c };
+      },
+      { level: i }
+    );
+    stats.push(t);
+    console.table(stats);
+  }
+
   events.levelStart.dispatch();
   controls.flushAll();
 }
@@ -71,7 +95,7 @@ async function loadLevelData(level: Level) {
 
   world.levelState.startTrigger = startTrigger;
   world.levelState.map.fill((_x, _y, i) => data[i]);
-  await world.reindexMap();
+  world.reindexMap();
 
   // Randomize gem and border colors
   await effects.updateTilesByType(Type.Gem, { fg: RNG.getUniformInt(1, 15) });
