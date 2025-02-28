@@ -88,7 +88,10 @@ export async function start() {
 
   await screen.introScreen();
   world.gameState.title = TITLE;
-  events.gameStart.dispatch(games.loading);
+  events.gameStart.dispatch(
+    games.loading
+    // games.procgen
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

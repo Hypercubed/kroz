@@ -1,4 +1,5 @@
 export enum Type {
+  Void = -2,
   Border = -1,
   Floor = 0,
   Slow = 1,

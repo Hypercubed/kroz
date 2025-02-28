@@ -23,11 +23,27 @@ export function getTileIdFromGID(gid: number): number {
 
 // Reads the level data from a Tiled JSON file into a Level object
 export function readLevelJSONLevel(tilemap: tiled.Map): Level {
-  const output: Entity[] = [];
-  const { layers, properties: _properties } = tilemap;
+  const { properties: _properties } = tilemap;
+  const output: Entity[] = readTileMapLayers(tilemap);
   const properties = ensureObject(_properties);
 
-  for (const layer of layers) {
+  const startTrigger =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    tilemap.StartTrigger ?? properties?.StartTrigger ?? undefined;
+
+  return {
+    id: (properties?.id || '') as string,
+    data: output,
+    startTrigger,
+    properties
+  };
+}
+
+export function readTileMapLayers(tilemap: tiled.Map): Entity[] {
+  const output: Entity[] = [];
+
+  for (const layer of tilemap.layers) {
     // Collapse layers
     // TODO: Combine layers?
     if (tiled.isEncodedTileLayer(layer)) {
@@ -41,17 +57,7 @@ export function readLevelJSONLevel(tilemap: tiled.Map): Level {
     }
   }
 
-  const startTrigger =
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    tilemap.StartTrigger ?? properties?.StartTrigger ?? undefined;
-
-  return {
-    id: (properties?.id || '') as string,
-    data: output,
-    startTrigger,
-    properties
-  };
+  return output;
 
   function readObjectGroup(layer: tiled.ObjectGroup) {
     for (const obj of layer.objects) {
@@ -142,23 +148,4 @@ export function readLevelJSONLevel(tilemap: tiled.Map): Level {
     }
     return output;
   }
-
-  // function addRandomData(randomLevelData: string) {
-  //   const df = processDF(randomLevelData);
-  //   const tileArray = shuffle(df.data.split(''));
-  //   const width = XMax + 1;
-
-  //   let i = 0;
-  //   while (i < tileArray.length) {
-  //     const p = RNG.getUniformInt(0, output.length - 1);
-  //     const e = output[p];
-  //     if (!e || e.type === Type.Floor) {
-  //       const tileId = getASCIICode(tileArray[i]);
-  //       const x = p % width;
-  //       const y = Math.floor(p / width);
-  //       output[p] = tiles.createEntityFromTileId(tileId, x, y);
-  //       i++;
-  //     }
-  //   }
-  // }
 }
