@@ -41,6 +41,10 @@ export function debug(x: number, y: number, n: number) {
   rotDisplay.DEBUG(x, y, n);
 }
 
+export function eventToPosition(e: MouseEvent) {
+  return rotDisplay.eventToPosition(e);
+}
+
 export function writeCenter(
   y: number,
   s: string,

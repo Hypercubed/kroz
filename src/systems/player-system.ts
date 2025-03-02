@@ -156,6 +156,17 @@ async function readControls() {
     dy--;
   }
 
+  if (controls.isActionActive(Action.MouseDown)) {
+    const ev = controls.getMousePosition();
+    if (ev) {
+      const [x, y] = display.eventToPosition(controls.getMousePosition()!);
+      const p = world.levelState.player.get(Position)!;
+      dx = x - 1 - p.x;
+      dy = y - 1 - p.y;
+      console.log('Mouse:', dx, dy);
+    }
+  }
+
   dx = clamp(dx, -1, 1);
   dy = clamp(dy, -1, 1);
 

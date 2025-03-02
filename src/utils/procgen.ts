@@ -50,6 +50,7 @@ export interface CALayer {
   retry?: number;
   allowedPlacement?: Type[];
   maxPlacement?: number;
+  connect?: number;
 }
 
 export interface GeneratorLayer {
@@ -254,6 +255,7 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
     for (let i = 0; i < interations; i++) {
       map.create();
     }
+    if (layerData.connect) map.connect(() => {}, layerData.connect);
     return map;
   }
 

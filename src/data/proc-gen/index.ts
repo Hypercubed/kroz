@@ -198,7 +198,7 @@ const creatureGeneratorGenerator = createGenerator(Type.Generator, {
 });
 
 const teleportGenerator = clusterGenerator(Type.Teleport, {
-  b0: 3.5,
+  b0: 7,
   m: 0.025,
   min: 1,
   max: 10
@@ -278,11 +278,28 @@ const ruinsMap = {
   }
 } satisfies BrogueLayer;
 
+const randomPlayer = {
+  type: LayerType.Generator,
+  count: 1,
+  generator: (map, x, y) =>
+    map.set(x, y, tiles.createEntityOfType(Type.Player, x, y))
+} satisfies GeneratorLayer;
+
+const randomStairs = {
+  type: LayerType.Generator,
+  count: 1,
+  generator: (map, x, y) =>
+    map.set(x, y, tiles.createEntityOfType(Type.Stairs, x, y))
+} satisfies GeneratorLayer;
+
 const Levels = [
   /**
    * Level 1
    *
-   * Whips and nuggets
+   * Base map: Paths (Brogue)
+   * Features: Lake (CA)
+   * Collectables: Whips and nuggets
+   *
    * Introduces the player to whips and nuggets
    *
    */
@@ -314,21 +331,21 @@ const Levels = [
     /**
      * Level 2
      *
-     * Blocks and gems
+     * Base map: Block and Walls Cave (CA)
+     * Features: Pit (CA)
+     * Collectibles gems
+     *
      * Introduces the player to blocks, gems and show gem triggers
      */
     layers: [
       {
-        type: LayerType.Brogue,
-        special: true,
-        max_height: 3,
-        max_width: 10,
-        tileTypes: {
-          [RogueMapType.Wall]: ruinTiles,
-          [RogueMapType.Void]: ruinTiles
-        }
+        type: LayerType.CA,
+        tileType: ruinTiles,
+        checkPath: true
       },
       pitFeature,
+      randomPlayer,
+      randomStairs,
       growthGenerator(Type.Block),
       gemGenerator,
       showGemsGenerator,
@@ -339,7 +356,10 @@ const Levels = [
     /**
      * Level 3
      *
-     * Breakable walls, mobs and teleport spells
+     * Base map: Ruins (Brogue)
+     * Features: Pit (CA)
+     * Collectibles: Teleport spells
+     *
      * Introduces the player to slow mobs and teleport spells
      */
     layers: [
@@ -360,7 +380,8 @@ const Levels = [
     /**
      * Level 4
      *
-     * Traps
+     * Base map: Maze (BSP)
+     * Features: Traps (CA & Growth)
      *
      * Introduces the player to traps and OSpell/OWalls
      */
@@ -372,7 +393,15 @@ const Levels = [
           [Type.OWall2]: 10
         }
       },
-      trapGenerator, // TODO: Need mroe clusters of traps
+      {
+        type: LayerType.CA,
+        tileType: Type.Trap,
+        checkPath: false,
+        width: 30,
+        height: 10,
+        maxPlacement: 3
+      },
+      trapGenerator,
       whipGenerator,
       gemGenerator,
       showGemsGenerator,
@@ -383,7 +412,9 @@ const Levels = [
     /**
      * Level 5
      *
-     * GBlocks
+     * Base map: GBlock Maze (Brogue)
+     * Features: Pit (CA)
+     * Collectibles: Whips and gems
      *
      * Introduces the player to GBlocks
      */
@@ -407,11 +438,14 @@ const Levels = [
     /**
      * Level 6
      *
-     * Bombs
+     * Base map: Ruins (Brogue)
+     * Features: Pit (CA)
+     *
      * Introduces the player to bombs
      */
     layers: [
       ruinsMap,
+      pitFeature,
       growthGenerator(Type.Block),
       bombGenerator,
       whipGenerator,
@@ -426,8 +460,11 @@ const Levels = [
     /**
      * Level 7
      *
-     * Forest
-     * Introduces the player to forest and trees
+     * Base map: Forest Maze (Brogue)
+     * Features: Lake (CA)
+     * Collectibles: Whips and nuggets
+     *
+     * Introduces the player to forest and trees??
      */
     layers: [
       {
@@ -450,7 +487,10 @@ const Levels = [
     /**
      * Level 8
      *
-     * Tunnels
+     * Base: Rooms
+     * Features: Tunnels (BSP)
+     * Collectibles: Chests, whips and teleports
+     *
      * Introduces the player to tunnels
      */
     layers: [
@@ -463,6 +503,7 @@ const Levels = [
         }
       },
       tunnelGenerator,
+      pitFeature,
       chestGenerator,
       whipGenerator,
       teleportGenerator,
@@ -473,13 +514,17 @@ const Levels = [
     /**
      * Level 9
      *
-     * Generators and spells
+     * Base: Rooms
+     * Features: Pit (CA)
+     * Collectibles: Gems, nuggets, whips and SlowTime spells
+     *
      * Introduces the player to generators and SlowTime spells
      */
     layers: [
       {
         type: LayerType.BSP
       },
+      pitFeature,
       creatureGeneratorGenerator,
       gemGenerator,
       nuggetGenerator,
@@ -492,15 +537,15 @@ const Levels = [
     /**
      * Level 10
      *
-     * Traps
+     * Base: Rooms
+     * Features:
+     * Collectibles: Invisible gems, nuggets and whips
+     *
      * Introduces the player to Invisible traps
      */
     layers: [
       {
-        type: LayerType.BSP,
-        tileTypes: {
-          [RogueMapType.Void]: Type.Block
-        }
+        type: LayerType.BSP
       },
       growthGenerator(Type.Trap),
       collectibleGenerator(Type.Invisible, { b0: 20 }),
@@ -508,7 +553,8 @@ const Levels = [
       gemGenerator,
       nuggetGenerator,
       creatureGeneratorGenerator,
-      ...mobGenerators
+      ...mobGenerators,
+      whipGenerator
     ]
   },
   // TODO: Lava and Flow here
@@ -516,15 +562,15 @@ const Levels = [
     /**
      * Level 11
      *
-     * Mobs
-     * Introduces the player to more medium mobs
+     * Base: Rooms
+     * Features:
+     * Collectibles: Chests, whips and SlowTime spells
+     *
+     * Introduces the player to medium mobs
      */
     layers: [
       {
-        type: LayerType.BSP,
-        tileTypes: {
-          [RogueMapType.Void]: Type.Block
-        }
+        type: LayerType.BSP
       },
       chestGenerator,
       whipGenerator,
@@ -536,15 +582,15 @@ const Levels = [
     /**
      * Level 12
      *
-     * Gems and spells
+     * Base: Rooms
+     * Features:
+     * Collectibles: Gems, whips and nuggets
+     *
      * Introduces the player to gems and SpeedTime spells
      */
     layers: [
       {
-        type: LayerType.BSP,
-        tileTypes: {
-          [RogueMapType.Void]: Type.Block
-        }
+        type: LayerType.BSP
       },
       growthGenerator(Type.Block),
       spellGenerator(Type.SpeedTime, { b0: 2 }),
@@ -560,7 +606,10 @@ const Levels = [
     /**
      * Level 13
      *
-     * MBlocks
+     * Base: MBlock Maze (Brogue)
+     * Features:
+     * Collectibles: Gems, whips and nuggets
+     *
      * Introduces the player to MBlocks
      */
     layers: [
@@ -583,34 +632,37 @@ const Levels = [
     /**
      * Level 14
      *
-     * Traps
+     * Base: Rooms
+     * Features:
+     * Collectibles: Invisible traps, gems, whips and nuggets
+     *
      * Introduces the player to TBlocks
      */
     layers: [
       {
-        type: LayerType.BSP,
-        tileTypes: {
-          [RogueMapType.Void]: Type.Block
-        }
+        type: LayerType.BSP
       },
+      pitFeature,
       growthGenerator(Type.TBlock),
-      creatureGeneratorGenerator,
-      ...mobGenerators
+      ...mobGenerators,
+      teleportGenerator,
+      whipGenerator,
+      gemGenerator
     ]
   },
   {
     /**
      * Level 15
      *
-     * Traps
+     * Base: Rooms
+     * Features: Pit (CA)
+     *
      */
     layers: [
       {
-        type: LayerType.BSP,
-        tileTypes: {
-          [RogueMapType.Void]: Type.Block
-        }
+        type: LayerType.BSP
       },
+      pitFeature,
       growthGenerator(Type.Trap),
       growthGenerator(Type.Invisible),
       growthGenerator(Type.Block),
@@ -622,18 +674,20 @@ const Levels = [
     /**
      * Level 16
      *
-     * Doors
+     * Base: Rooms
+     * Features: Pit (CA)
+     * Collectibles: Gems, whips and nuggets
      */
     layers: [
       {
-        type: LayerType.BSP,
-        tileTypes: {
-          [RogueMapType.Void]: Type.Block
-        }
+        type: LayerType.BSP
       },
+      pitFeature,
       growthGenerator(Type.Trap),
       collectibleGenerator(Type.Invisible, { b0: 30 }),
       collectibleGenerator(Type.Stairs, { b0: 20 }),
+      whipGenerator,
+      gemGenerator,
       nuggetGenerator,
       ...mobGenerators
     ]
@@ -646,6 +700,10 @@ const Levels = [
     /**
      * Level 17
      *
+     * Base: GBlock Maze (Brogue)
+     * Features: Pit (CA)
+     * Collectibles: Gems and whips
+     *
      * Gblocks, whips and gems
      */
     layers: [
@@ -656,6 +714,7 @@ const Levels = [
           [RogueMapType.Wall]: Type.GBlock
         }
       },
+      pitFeature,
       growthGenerator(Type.GBlock),
       gemGenerator,
       whipGenerator,

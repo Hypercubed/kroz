@@ -10,6 +10,8 @@ import { delay } from '../utils/utils';
 const keyPressed = new MiniSignal<[string]>();
 const keyDown = new MiniSignal<[string]>();
 const keyUp = new MiniSignal<[string]>();
+const mouseDown = new MiniSignal<[MouseEvent]>();
+const mouseUp = new MiniSignal<[MouseEvent]>();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let gamepad: any = null;
@@ -37,7 +39,8 @@ export enum Action { // cannot be const enum
   Restore,
   SlowerClock,
   FasterClock,
-  RestartLevel
+  RestartLevel,
+  MouseDown
 }
 
 export const keyState: Partial<Record<string, number>> = {};
@@ -117,6 +120,10 @@ const GAMEPAD_BINDING: Record<string, string | null> = {
   button13: 'ArrowDown',
   button14: 'ArrowLeft',
   button15: 'ArrowRight'
+};
+
+const MOUSE_BINDING: Record<number, Action | null> = {
+  0: Action.MouseDown
 };
 
 // const TOUCH_BINDING = {
@@ -253,6 +260,20 @@ function keyupListener(event: KeyboardEvent) {
   keyUp.dispatch(event.key);
 }
 
+function mouseDownListener(event: MouseEvent) {
+  if (MOUSE_BINDING[(event as MouseEvent).button]) event.preventDefault();
+  mouseDown.dispatch(event);
+}
+
+function mouseUpListener(event: MouseEvent) {
+  if (MOUSE_BINDING[event.button]) event.preventDefault();
+  mouseUp.dispatch(event);
+}
+
+function mouseMoveListener(event: MouseEvent) {
+  lastMouseEvent = event;
+}
+
 keyDown.add((key) => {
   keyState[key] = 0b011;
   const action = KEY_BINDING[key];
@@ -272,17 +293,40 @@ keyUp.add((key) => {
   actionState[action]! |= 0b100;
 });
 
+let lastMouseEvent: MouseEvent | null = null;
+
+mouseDown.add((ev: MouseEvent) => {
+  const action = MOUSE_BINDING[ev.button];
+  if (!action) return;
+  lastMouseEvent = ev;
+  actionState[action] = 0b011;
+});
+
+mouseUp.add((ev: MouseEvent) => {
+  const action = MOUSE_BINDING[ev.button];
+  if (!action) return;
+  lastMouseEvent = ev;
+  actionState[action]! &= ~0b001;
+  actionState[action]! |= 0b100;
+});
+
 export function start() {
   enableGamepadControls();
   enableTouchControls();
   window.addEventListener('keydown', keydownListener);
   window.addEventListener('keyup', keyupListener);
+  document.body.addEventListener('mousedown', mouseDownListener);
+  document.body.addEventListener('mouseup', mouseUpListener);
+  document.body.addEventListener('mousemove', mouseMoveListener);
 }
 
 export function stop() {
   disableGamepadControls();
   window.removeEventListener('keydown', keydownListener);
   window.removeEventListener('keyup', keydownListener);
+  document.body.removeEventListener('mousedown', mouseDownListener);
+  document.body.removeEventListener('mouseup', mouseUpListener);
+  document.body.removeEventListener('mousemove', mouseMoveListener);
 }
 
 export function clearKeys() {
@@ -333,6 +377,10 @@ export function wasActionActive(action: Action) {
 // true if action key was inactivated this frame
 export function wasActionDeactivated(action: Action) {
   return !!(actionState[action]! & 0b100);
+}
+
+export function getMousePosition() {
+  return lastMouseEvent;
 }
 
 export async function waitForKeypress() {
