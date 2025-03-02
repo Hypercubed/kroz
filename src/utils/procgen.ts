@@ -16,7 +16,8 @@ export enum LayerType {
   Prefab,
   CA,
   Generator,
-  Brogue
+  Brogue,
+  BSP
 }
 
 type WeightedType = { [key in Type]?: number };
@@ -70,7 +71,7 @@ export const enum RogueMapType {
 
 export interface BrogueLayer {
   type: LayerType.Brogue;
-  keys?: OptionValue<number>;
+  keys?: OptionValue<number | undefined>;
   special?: OptionValue<boolean>;
   width?: number;
   height?: number;
@@ -83,12 +84,26 @@ export interface BrogueLayer {
   doorTypes?: Type | WeightedType;
 }
 
+export interface BSPLayer {
+  type: LayerType.BSP;
+  keys?: OptionValue<number | undefined>;
+  width?: number;
+  height?: number;
+  max_width?: OptionValue<number>;
+  max_height?: OptionValue<number>;
+  min_width?: OptionValue<number>;
+  min_height?: OptionValue<number>;
+  doorTypes?: Type | WeightedType;
+  tileTypes?: { [key in RogueMapType]?: Type | WeightedType };
+}
+
 export type Layer =
   | FillLayer
   | PrefabLayer
   | CALayer
   | GeneratorLayer
-  | BrogueLayer;
+  | BrogueLayer
+  | BSPLayer;
 
 export interface LevelDefinition {
   layers: Layer[];
@@ -121,6 +136,9 @@ export async function generateMap(level: LevelDefinition, depth: number) {
         break;
       case LayerType.Brogue:
         addBrogueLayer(layer, mapData, meta);
+        break;
+      case LayerType.BSP:
+        addBSPLayer(layer, mapData, meta);
         break;
     }
   }
@@ -323,8 +341,8 @@ const DoorKeyPairs = {
 const DefaultDoorWeights = {
   [Type.Door]: 70,
   [Type.OWall1]: 15,
-  [Type.OWall2]: 10,
-  [Type.OWall3]: 5
+  [Type.OWall2]: 10
+  // [Type.OWall3]: 5
 };
 
 const DefaultTileTypes = {
@@ -362,9 +380,9 @@ function addBrogueLayer(
     return tiles.createEntityOfType(type, x, y);
   });
 
-  addKeys();
-
   Object.assign(meta, btl);
+
+  addKeys(layerData, mapData, Object.assign(meta, btl));
 
   function buildMap(): RogueMap {
     let btl: RogueMap | null = null;
@@ -396,76 +414,227 @@ function addBrogueLayer(
 
     return btl!;
   }
+}
 
-  function addKeys() {
-    let keys =
-      getValue(layerData.keys, meta) ?? RNG.getUniformInt(0, btl.room_count);
+function addKeys(
+  layerData: BrogueLayer | BSPLayer,
+  mapData: Matrix<Entity>,
+  meta: Meta & RogueMap
+) {
+  let keys =
+    getValue(layerData.keys, meta) ?? RNG.getUniformInt(0, meta.room_count);
 
-    keys = Math.min(keys, btl.room_count);
+  keys = Math.min(keys, meta.room_count);
 
-    const doorWeights = layerData.doorTypes ?? DefaultDoorWeights;
+  const doorWeights = layerData.doorTypes ?? DefaultDoorWeights;
 
-    // List of rooms ordered by proximity to the entrance
-    const roomList: number[] = [];
-    queueRooms(btl!.enter.room_id);
+  // List of rooms ordered by proximity to the entrance
+  const roomList: number[] = [];
+  queueRooms(meta.enter!.room_id);
 
-    const lockDoors: number[] = [];
+  const lockDoors: number[] = [];
 
-    let retries = 100; // Shouldn't need thos
+  let retries = 100; // Shouldn't need thos
 
-    while (retries-- > 0 && keys > 0) {
-      const roomToLock = RNG.getItem(roomList); // Pick a random room to add a locked door
-      if (roomToLock === null) break;
+  while (retries-- > 0 && keys > 0) {
+    const roomToLock = RNG.getItem(roomList); // Pick a random room to add a locked door
+    if (roomToLock === null) break;
 
-      const index = roomList.indexOf(roomToLock);
-      if (index === -1) continue;
+    const index = roomList.indexOf(roomToLock);
+    if (index === -1) continue;
 
-      const previousRooms = roomList.slice(0, index); // List of rooms before the current room
-      const roomToAddKey = RNG.getItem(previousRooms); // Pick a random room to add a key
-      if (roomToAddKey == null) continue;
+    const previousRooms = roomList.slice(0, index); // List of rooms before the current room
+    const roomToAddKey = RNG.getItem(previousRooms); // Pick a random room to add a key
+    if (roomToAddKey == null) continue;
 
-      const doorToLock = RNG.getItem(btl!.rooms[roomToLock].doors);
-      if (doorToLock === null) continue;
-      if (lockDoors.includes(doorToLock)) continue; // Already has a lock
+    const doorToLock = RNG.getItem(meta.rooms[roomToLock].doors);
+    if (doorToLock === null) continue;
+    if (lockDoors.includes(doorToLock)) continue; // Already has a lock
 
-      setDoorAndKey(doorToLock, roomToAddKey);
-      keys--;
+    setDoorAndKey(doorToLock, roomToAddKey);
+    keys--;
+  }
+
+  function setDoorAndKey(doorId: number, roomId: number) {
+    const door = meta.doors[doorId];
+    const room = meta.rooms[roomId];
+
+    while (true) {
+      const x = room.left + RNG.getUniformInt(0, room.width - 1);
+      const y = room.top + RNG.getUniformInt(0, room.height - 1);
+      if (mapData.get(x, y)!.type === Type.Floor) {
+        setDoorKey(x, y, door.x, door.y);
+        break;
+      }
+    }
+  }
+
+  return;
+
+  function setDoorKey(kx: number, ky: number, dx: number, dy: number) {
+    const doorType = getType(doorWeights);
+    if (!doorType) return;
+    const keyType = DoorKeyPairs[doorType as keyof typeof DoorKeyPairs]!;
+    if (!keyType) return;
+
+    mapData.set(kx, ky, tiles.createEntityOfType(keyType));
+    mapData.set(dx, dy, tiles.createEntityOfType(doorType));
+  }
+
+  function queueRooms(roomId: number) {
+    roomList.push(roomId);
+    const room = meta.rooms[roomId];
+    room.neighbors.forEach((n) => {
+      if (roomList.includes(n)) return;
+      queueRooms(n);
+    });
+  }
+}
+
+// ************ BSP Layer ************
+
+function addBSPLayer(
+  layerData: BSPLayer,
+  mapData: Matrix<Entity>,
+  meta: Meta & RogueMap
+) {
+  const min_height = getValue(layerData.min_height, meta) ?? 6;
+  const min_width = getValue(layerData.min_width, meta) ?? 12;
+  const max_height = getValue(layerData.max_height, meta) ?? 20;
+  const max_width = getValue(layerData.max_width, meta) ?? 40;
+
+  const tileTypes = { ...DefaultTileTypes, ...(layerData.tileTypes || {}) } as {
+    [key in RogueMapType]: Type;
+  };
+
+  console.log('BSP Layer');
+  const bspMap = new Matrix<RogueMapType>(mapData.width, mapData.height);
+  bspMap.fill(RogueMapType.Floor);
+
+  const rooms: RogueRoom[] = [];
+  const doors: RogueDoor[] = [];
+
+  sliceMap(0, 0, mapData.width - 1, mapData.height - 1);
+
+  meta.room_count = rooms.length;
+  meta.rooms = rooms;
+  meta.doors = doors;
+
+  const enter = rooms[0];
+  const exit = rooms[rooms.length - 1];
+
+  meta.enter = {
+    room_id: enter.id,
+    x: RNG.getUniformInt(enter.left, enter.left + enter.width - 1),
+    y: RNG.getUniformInt(enter.top, enter.top + enter.height - 1)
+  };
+  meta.exit = {
+    room_id: exit.id,
+    x: RNG.getUniformInt(exit.left, exit.left + exit.width - 1),
+    y: RNG.getUniformInt(exit.top, exit.top + exit.height - 1)
+  };
+
+  bspMap.set(meta.enter.x, meta.enter.y, RogueMapType.Enter);
+  bspMap.set(meta.exit.x, meta.exit.y, RogueMapType.Exit);
+
+  mapData.fill((x, y) => {
+    const t = bspMap.get(x, y);
+    const type = getType(tileTypes[t!]);
+    return tiles.createEntityOfType(type, x, y);
+  });
+
+  addKeys(layerData, mapData, meta as Meta & RogueMap);
+
+  // rooms.forEach((room) => {
+  //   const b = tiles.createEntityOfType(Type.Trap);
+  //   mapData.fillRegion(b, room.left, room.top, room.left + room.width - 1, room.top + room.height - 1);
+  // });
+
+  function sliceMap(x0: number, y0: number, x1: number, y1: number) {
+    const directions = [];
+    if (x1 - x0 > min_width * 2 && (x1 - x0 > max_width || Math.random() < 0.5))
+      directions.push('x');
+    if (
+      y1 - y0 > min_height * 2 &&
+      (y1 - y0 > max_height || Math.random() < 0.5)
+    )
+      directions.push('y');
+    if (directions.length === 0) {
+      rooms.push({
+        id: rooms.length,
+        doors: [],
+        neighbors: [],
+        left: x0,
+        top: y0,
+        width: x1 - x0 + 1,
+        height: y1 - y0 + 1
+      });
+      return;
     }
 
-    function setDoorAndKey(doorId: number, roomId: number) {
-      const door = btl.doors[doorId];
-      const room = btl.rooms[roomId];
+    let door: RogueDoor;
+    let roomA: RogueRoom;
+    let roomB: RogueRoom;
 
-      while (true) {
-        const x = room.left + RNG.getUniformInt(0, room.width - 1);
-        const y = room.top + RNG.getUniformInt(0, room.height - 1);
-        if (mapData.get(x, y)!.type === Type.Floor) {
-          setDoorKey(x, y, door.x, door.y);
-          break;
-        }
+    if (RNG.getItem(directions) === 'x') {
+      const x = RNG.getUniformInt(x0 + min_width, x1 - min_width);
+      bspMap.fillRegion(RogueMapType.Wall, x, y0, x, y1);
+
+      sliceMap(x0, y0, x - 1, y1);
+      sliceMap(x + 1, y0, x1, y1);
+
+      const dy = RNG.getUniformInt(y0, y1);
+      door = { id: doors.length, x, y: dy };
+
+      roomA = findContainer(x - 2, dy)!;
+      roomB = findContainer(x + 2, dy)!;
+
+      if (!roomA || !roomB) {
+        console.log('Room A or Room B is null');
+        console.log('x', x0, x1, y0, y1, x, dy);
+        console.log(rooms);
+      }
+    } else {
+      const y = RNG.getUniformInt(y0 + min_height, y1 - min_height);
+      bspMap.fillRegion(RogueMapType.Wall, x0, y, x1, y);
+
+      sliceMap(x0, y0, x1, y - 1);
+      sliceMap(x0, y + 1, x1, y1);
+
+      const dx = RNG.getUniformInt(x0, x1);
+      door = { id: doors.length, x: dx, y };
+
+      roomA = findContainer(dx, y - 2)!;
+      roomB = findContainer(dx, y + 2)!;
+
+      if (!roomA || !roomB) {
+        console.log('Room A or Room B is null');
+        console.log('y', x0, x1, y0, y1, dx, y);
+        console.log(rooms);
       }
     }
 
-    return;
+    doors.push(door);
+    roomA.doors.push(door.id);
+    roomB.doors.push(door.id);
+    roomA.neighbors.push(roomB.id);
+    roomB.neighbors.push(roomA.id);
 
-    function setDoorKey(kx: number, ky: number, dx: number, dy: number) {
-      const doorType = getType(doorWeights);
-      if (!doorType) return;
-      const keyType = DoorKeyPairs[doorType as keyof typeof DoorKeyPairs]!;
-      if (!keyType) return;
+    bspMap.set(door.x, door.y, RogueMapType.Door); // Later replaced with a door or floor
+  }
 
-      mapData.set(kx, ky, tiles.createEntityOfType(keyType));
-      mapData.set(dx, dy, tiles.createEntityOfType(doorType));
+  function findContainer(x: number, y: number) {
+    for (const room of rooms) {
+      if (
+        x >= room.left &&
+        x <= room.left + room.width &&
+        y >= room.top &&
+        y <= room.top + room.height
+      ) {
+        return room;
+      }
     }
-
-    function queueRooms(roomId: number) {
-      roomList.push(roomId);
-      const room = btl.rooms[roomId];
-      room.neighbors.forEach((n) => {
-        if (roomList.includes(n)) return;
-        queueRooms(n);
-      });
-    }
+    return null;
   }
 }
 

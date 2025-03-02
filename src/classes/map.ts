@@ -64,6 +64,23 @@ export class Matrix<T> {
     }
   }
 
+  fillRegion(
+    value: T | FillCallback<T>,
+    x0: number,
+    y0: number,
+    x1: number,
+    y1: number
+  ): void {
+    let cb: FillCallback<T> | null = null;
+    if (typeof value === 'function') cb = value as FillCallback<T>;
+
+    for (let y = y0; y < y1 + 1; y++) {
+      for (let x = x0; x < x1 + 1; x++) {
+        this.set(x, y, (cb ? cb(x, y, this) : value) as T);
+      }
+    }
+  }
+
   place<R>(
     subMap: Matrix<R>,
     x0: number,

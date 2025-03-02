@@ -75,7 +75,8 @@ function hordeGenerator(
       function genAt(x: number, y: number) {
         const [dx, dy] = RNG.getItem(DIRS[4])!;
         const [xx, yy] = [x + dx, y + dy];
-        if (map.get(xx, yy)!.type === Type.Floor && Math.random() < 0.5) {
+        const e = map.get(xx, yy);
+        if (!e || (e.type === Type.Floor && Math.random() < 0.5)) {
           map.set(xx, yy, tiles.createEntityOfType(type, xx, yy));
           if (n-- < 1) return;
         }
@@ -174,10 +175,8 @@ function clusterGenerator(
         for (let dx = -1; dx <= 1; dx++) {
           for (let dy = -1; dy <= 1; dy++) {
             if (dx === 0 && dy === 0) continue;
-            if (
-              map.get(x + dx, y + dy)!.type === Type.Floor &&
-              Math.random() < 0.3
-            ) {
+            const e = map.get(x + dx, y + dy);
+            if (!e || (e!.type === Type.Floor && Math.random() < 0.3)) {
               map.set(x + dx, y + dy, tiles.createEntityOfType(type, x, y));
               if (n-- < 1) return;
             }
@@ -280,6 +279,13 @@ const ruinsMap = {
 } satisfies BrogueLayer;
 
 const Levels = [
+  /**
+   * Level 1
+   *
+   * Whips and nuggets
+   * Introduces the player to whips and nuggets
+   *
+   */
   {
     layers: [
       {
@@ -298,13 +304,25 @@ const Levels = [
       whipGenerator,
       nuggetGenerator,
       ...mobGenerators
-    ]
+    ],
+    properties: {
+      startTrigger: `##FlashEntity\nPress any key to begin this level.`
+    }
   },
+
   {
+    /**
+     * Level 2
+     *
+     * Blocks and gems
+     * Introduces the player to blocks, gems and show gem triggers
+     */
     layers: [
       {
         type: LayerType.Brogue,
         special: true,
+        max_height: 3,
+        max_width: 10,
         tileTypes: {
           [RogueMapType.Wall]: ruinTiles,
           [RogueMapType.Void]: ruinTiles
@@ -317,55 +335,21 @@ const Levels = [
       ...mobGenerators
     ]
   },
-
-  /**
-   * Level 1
-   *
-   * Whips and nuggets
-   * Introduces the player to whips and nuggets
-   *
-   */
-  {
-    layers: [
-      {
-        type: LayerType.Brogue,
-        tileTypes: {
-          [RogueMapType.Void]: Type.Wall
-        }
-      },
-      whipGenerator,
-      nuggetGenerator,
-      ...mobGenerators
-    ],
-    properties: {
-      startTrigger: `##FlashEntity\nPress any key to begin this level.`
-    }
-  },
-  {
-    /**
-     * Level 2
-     *
-     * Blocks and gems
-     * Introduces the player to blocks, gems and show gem triggers
-     */
-    layers: [
-      ruinsMap,
-      pitFeature,
-      growthGenerator(Type.Block),
-      gemGenerator,
-      showGemsGenerator,
-      ...mobGenerators
-    ]
-  },
   {
     /**
      * Level 3
      *
      * Breakable walls, mobs and teleport spells
-     * Introduces the player to breakable walls, slow mobs and teleport spells
+     * Introduces the player to slow mobs and teleport spells
      */
     layers: [
-      ruinsMap,
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Wall]: ruinTiles,
+          [RogueMapType.Void]: ruinTiles
+        }
+      },
       pitFeature,
       growthGenerator(Type.Block),
       teleportGenerator,
@@ -378,13 +362,14 @@ const Levels = [
      *
      * Traps
      *
-     * Introduces the player to traps
+     * Introduces the player to traps and OSpell/OWalls
      */
     layers: [
       {
-        type: LayerType.Brogue,
-        tileTypes: {
-          [RogueMapType.Void]: Type.Wall
+        type: LayerType.BSP,
+        doorTypes: {
+          [Type.OWall1]: 15,
+          [Type.OWall2]: 10
         }
       },
       trapGenerator, // TODO: Need mroe clusters of traps
@@ -405,6 +390,7 @@ const Levels = [
     layers: [
       {
         type: LayerType.Brogue,
+        keys: 0,
         tileTypes: {
           [RogueMapType.Void]: Type.GBlock,
           [RogueMapType.Wall]: Type.GBlock
@@ -469,15 +455,16 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.Brogue,
+        type: LayerType.BSP,
+        keys: 0, // TODO: Make sure every room has a tunnel
         tileTypes: {
-          [RogueMapType.Void]: Type.Wall
+          [RogueMapType.Door]: Type.Tunnel
+          // [RogueMapType.Floor]: Type.Stop  // TODO: add stops to rooms, allow generators
         }
       },
       tunnelGenerator,
       chestGenerator,
       whipGenerator,
-      bombGenerator,
       teleportGenerator,
       ...mobGenerators
     ]
@@ -491,10 +478,7 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.Brogue,
-        tileTypes: {
-          [RogueMapType.Void]: Type.Block
-        }
+        type: LayerType.BSP
       },
       creatureGeneratorGenerator,
       gemGenerator,
@@ -513,7 +497,7 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.Brogue,
+        type: LayerType.BSP,
         tileTypes: {
           [RogueMapType.Void]: Type.Block
         }
@@ -527,6 +511,7 @@ const Levels = [
       ...mobGenerators
     ]
   },
+  // TODO: Lava and Flow here
   {
     /**
      * Level 11
@@ -536,7 +521,7 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.Brogue,
+        type: LayerType.BSP,
         tileTypes: {
           [RogueMapType.Void]: Type.Block
         }
@@ -556,7 +541,7 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.Brogue,
+        type: LayerType.BSP,
         tileTypes: {
           [RogueMapType.Void]: Type.Block
         }
@@ -603,7 +588,7 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.Brogue,
+        type: LayerType.BSP,
         tileTypes: {
           [RogueMapType.Void]: Type.Block
         }
@@ -621,7 +606,7 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.Brogue,
+        type: LayerType.BSP,
         tileTypes: {
           [RogueMapType.Void]: Type.Block
         }
@@ -641,7 +626,7 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.Brogue,
+        type: LayerType.BSP,
         tileTypes: {
           [RogueMapType.Void]: Type.Block
         }
