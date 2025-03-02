@@ -1,6 +1,6 @@
 // 'Testing Procgen Maps'
 
-import { RNG } from 'rot-js';
+import { DIRS, RNG } from 'rot-js';
 
 import * as tiles from '../../modules/tiles';
 
@@ -10,12 +10,11 @@ import { Type } from '../../constants/types';
 import {
   BrogueLayer,
   CALayer,
-  DIRS4,
-  DIRS8,
   generateMap,
   GeneratorLayer,
   LayerType,
-  LevelDefinition
+  LevelDefinition,
+  RogueMapType
 } from '../../utils/procgen';
 
 export const title = 'Testing Procgen Maps';
@@ -46,8 +45,9 @@ function createGenerator(type: Type, p: Partial<LinearParams>): GeneratorLayer {
   const linOpts: LinearParams = { b0: 1, m: 1, max: 100, min: 0, ...p };
   return {
     type: LayerType.Generator,
-    gen: (map, x, y) => map.set(x, y, tiles.createEntityOfType(type, x, y)),
-    n: (depth: number) => clampLinear(linOpts, depth)
+    generator: (map, x, y) =>
+      map.set(x, y, tiles.createEntityOfType(type, x, y)),
+    count: ({ depth }) => clampLinear(linOpts, depth)
   } satisfies GeneratorLayer;
 }
 
@@ -66,14 +66,14 @@ function hordeGenerator(
 
   return {
     type: LayerType.Generator,
-    gen: (map, x, y) => {
+    generator: (map, x, y) => {
       map.set(x, y, tiles.createEntityOfType(type, x, y));
 
       let n = RNG.getUniformInt(1, 8);
       genAt(x, y);
 
       function genAt(x: number, y: number) {
-        const [dx, dy] = RNG.getItem(DIRS4)!;
+        const [dx, dy] = RNG.getItem(DIRS[4])!;
         const [xx, yy] = [x + dx, y + dy];
         if (map.get(xx, yy)!.type === Type.Floor && Math.random() < 0.5) {
           map.set(xx, yy, tiles.createEntityOfType(type, xx, yy));
@@ -81,7 +81,7 @@ function hordeGenerator(
         }
       }
     },
-    n(depth: number) {
+    count({ depth }) {
       if (depth < minDepth) return 0;
       return clampLinear(linOpts, depth) / μ;
     }
@@ -100,13 +100,13 @@ function growthGenerator(
 
   return {
     type: LayerType.Generator,
-    gen: (map, x, y) => {
+    generator: (map, x, y) => {
       let n = RNG.getUniformInt(1, 5);
       genAt(x, y);
 
       function genAt(x: number, y: number) {
         map.set(x, y, tiles.createEntityOfType(type, x, y));
-        const [dx, dy] = RNG.getItem(DIRS8)!;
+        const [dx, dy] = RNG.getItem(DIRS[8])!;
         const [xx, yy] = [x + dx, y + dy];
         if (map.get(xx, yy)?.type === Type.Floor && Math.random() < 0.8) {
           genAt(xx, yy);
@@ -114,7 +114,7 @@ function growthGenerator(
         }
       }
     },
-    n(depth: number) {
+    count({ depth }) {
       return clampLinear(linOpts, depth) / μ;
     }
   } satisfies GeneratorLayer;
@@ -132,13 +132,13 @@ function collectibleGenerator(
 
   return {
     type: LayerType.Generator,
-    gen: (map, x, y) => {
+    generator: (map, x, y) => {
       let n = RNG.getUniformInt(1, 5);
       genAt(x, y);
 
       function genAt(x: number, y: number) {
         map.set(x, y, tiles.createEntityOfType(type, x, y));
-        const [dx, dy] = RNG.getItem(DIRS4)!;
+        const [dx, dy] = RNG.getItem(DIRS[4])!;
         const [xx, yy] = [x + dx, y + dy];
         if (map.get(xx, yy)?.type === Type.Floor && Math.random() < 0.5) {
           genAt(xx, yy);
@@ -146,7 +146,7 @@ function collectibleGenerator(
         }
       }
     },
-    n(depth: number) {
+    count({ depth }) {
       return clampLinear(linOpts, depth) / μ;
     }
   } satisfies GeneratorLayer;
@@ -164,7 +164,7 @@ function clusterGenerator(
 
   return {
     type: LayerType.Generator,
-    gen: (map, x, y) => {
+    generator: (map, x, y) => {
       map.set(x, y, tiles.createEntityOfType(type, x, y));
 
       let n = RNG.getUniformInt(0, 3);
@@ -185,12 +185,18 @@ function clusterGenerator(
         }
       }
     },
-    n: (depth: number) => clampLinear(linOpts, depth) / μ
+    count: ({ depth }) => clampLinear(linOpts, depth) / μ
   } satisfies GeneratorLayer;
 }
 
 const spellGenerator = (type: Type, p: Partial<LinearParams> = {}) =>
   createGenerator(type, { b0: 1, m: 1, max: 20, ...p });
+
+const creatureGeneratorGenerator = createGenerator(Type.Generator, {
+  b0: 1,
+  m: 0.1,
+  max: 20
+});
 
 const teleportGenerator = clusterGenerator(Type.Teleport, {
   b0: 3.5,
@@ -267,8 +273,10 @@ const pitFeature = {
 
 const ruinsMap = {
   type: LayerType.Brogue,
-  wallType: ruinTiles,
-  voidType: ruinTiles
+  tileTypes: {
+    [RogueMapType.Wall]: ruinTiles,
+    [RogueMapType.Void]: ruinTiles
+  }
 } satisfies BrogueLayer;
 
 const Levels = [
@@ -276,11 +284,15 @@ const Levels = [
     layers: [
       {
         type: LayerType.Brogue,
-        wallType: forestTiles,
-        voidType: forestTiles,
-        special: true,
+        special: false,
         max_height: 3,
-        max_width: 10
+        max_width: 10,
+        tileTypes: {
+          [RogueMapType.Wall]: forestTiles,
+          [RogueMapType.Void]: forestTiles
+        },
+        keys: 1,
+        doorTypes: Type.Door
       },
       lakeFeature,
       whipGenerator,
@@ -292,9 +304,11 @@ const Levels = [
     layers: [
       {
         type: LayerType.Brogue,
-        wallType: ruinTiles,
-        voidType: ruinTiles,
-        special: true
+        special: true,
+        tileTypes: {
+          [RogueMapType.Wall]: ruinTiles,
+          [RogueMapType.Void]: ruinTiles
+        }
       },
       pitFeature,
       growthGenerator(Type.Block),
@@ -313,7 +327,12 @@ const Levels = [
    */
   {
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Wall },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Wall
+        }
+      },
       whipGenerator,
       nuggetGenerator,
       ...mobGenerators
@@ -362,7 +381,12 @@ const Levels = [
      * Introduces the player to traps
      */
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Wall },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Wall
+        }
+      },
       trapGenerator, // TODO: Need mroe clusters of traps
       whipGenerator,
       gemGenerator,
@@ -379,7 +403,13 @@ const Levels = [
      * Introduces the player to GBlocks
      */
     layers: [
-      { type: LayerType.Brogue, wallType: Type.GBlock, voidType: Type.GBlock },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.GBlock,
+          [RogueMapType.Wall]: Type.GBlock
+        }
+      },
       pitFeature,
       growthGenerator(Type.GBlock),
       whipGenerator,
@@ -414,7 +444,13 @@ const Levels = [
      * Introduces the player to forest and trees
      */
     layers: [
-      { type: LayerType.Brogue, wallType: forestTiles, voidType: forestTiles },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: forestTiles,
+          [RogueMapType.Wall]: forestTiles
+        }
+      },
       lakeFeature,
       growthGenerator(Type.Forest),
       growthGenerator(Type.Tree),
@@ -432,7 +468,12 @@ const Levels = [
      * Introduces the player to tunnels
      */
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Wall },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Wall
+        }
+      },
       tunnelGenerator,
       chestGenerator,
       whipGenerator,
@@ -449,8 +490,13 @@ const Levels = [
      * Introduces the player to generators and SlowTime spells
      */
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Block },
-      spellGenerator(Type.Generator, { b0: 3 }),
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Block
+        }
+      },
+      creatureGeneratorGenerator,
       gemGenerator,
       nuggetGenerator,
       whipGenerator,
@@ -466,13 +512,18 @@ const Levels = [
      * Introduces the player to Invisible traps
      */
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Block },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Block
+        }
+      },
       growthGenerator(Type.Trap),
       collectibleGenerator(Type.Invisible, { b0: 20 }),
       teleportGenerator,
       gemGenerator,
       nuggetGenerator,
-      spellGenerator(Type.Generator),
+      creatureGeneratorGenerator,
       ...mobGenerators
     ]
   },
@@ -484,7 +535,12 @@ const Levels = [
      * Introduces the player to more medium mobs
      */
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Block },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Block
+        }
+      },
       chestGenerator,
       whipGenerator,
       spellGenerator(Type.SlowTime, { b0: 20 }),
@@ -499,7 +555,12 @@ const Levels = [
      * Introduces the player to gems and SpeedTime spells
      */
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Block },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Block
+        }
+      },
       growthGenerator(Type.Block),
       spellGenerator(Type.SpeedTime, { b0: 2 }),
       spellGenerator(Type.SlowTime, { b0: 2 }),
@@ -520,9 +581,11 @@ const Levels = [
     layers: [
       {
         type: LayerType.Brogue,
-        wallType: Type.MBlock,
-        voidType: Type.MBlock,
-        maxKeys: 0
+        tileTypes: {
+          [RogueMapType.Void]: Type.MBlock,
+          [RogueMapType.Wall]: Type.MBlock
+        },
+        keys: 0
       },
       growthGenerator(Type.MBlock),
       teleportGenerator,
@@ -539,9 +602,14 @@ const Levels = [
      * Introduces the player to TBlocks
      */
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Block },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Block
+        }
+      },
       growthGenerator(Type.TBlock),
-      spellGenerator(Type.Generator),
+      creatureGeneratorGenerator,
       ...mobGenerators
     ]
   },
@@ -552,7 +620,12 @@ const Levels = [
      * Traps
      */
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Block },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Block
+        }
+      },
       growthGenerator(Type.Trap),
       growthGenerator(Type.Invisible),
       growthGenerator(Type.Block),
@@ -567,7 +640,12 @@ const Levels = [
      * Doors
      */
     layers: [
-      { type: LayerType.Brogue, voidType: Type.Block },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.Block
+        }
+      },
       growthGenerator(Type.Trap),
       collectibleGenerator(Type.Invisible, { b0: 30 }),
       collectibleGenerator(Type.Stairs, { b0: 20 }),
@@ -586,7 +664,13 @@ const Levels = [
      * Gblocks, whips and gems
      */
     layers: [
-      { type: LayerType.Brogue, wallType: Type.GBlock, voidType: Type.GBlock },
+      {
+        type: LayerType.Brogue,
+        tileTypes: {
+          [RogueMapType.Void]: Type.GBlock,
+          [RogueMapType.Wall]: Type.GBlock
+        }
+      },
       growthGenerator(Type.GBlock),
       gemGenerator,
       whipGenerator,

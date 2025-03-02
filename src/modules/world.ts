@@ -257,7 +257,7 @@ export function reindexMap() {
   levelState.entities = [];
   levelState.T[Timer.StatueGemDrain] = 0;
 
-  levelState.map.forEach((_x, _y, entity) => {
+  levelState.map.forEach((entity) => {
     if (!entity) return;
     if (entity.type === Type.Statue) {
       levelState.T[Timer.StatueGemDrain] = 32000;

@@ -94,7 +94,7 @@ async function loadLevelData(level: Level) {
   const { data, startTrigger } = level;
 
   world.levelState.startTrigger = startTrigger;
-  world.levelState.map.fill((_x, _y, i) => data[i]);
+  world.levelState.map.fromArray(data);
   world.reindexMap();
 
   // Randomize gem and border colors

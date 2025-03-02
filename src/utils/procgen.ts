@@ -11,24 +11,6 @@ import { readTileMapLayers } from './tiled';
 import Cellular from 'rot-js/lib/map/cellular';
 import { Rogue } from 'procedural-layouts';
 
-export const DIRS4 = [
-  [-1, 0],
-  [1, 0],
-  [0, -1],
-  [0, 1]
-];
-
-export const DIRS8 = [
-  [-1, 0],
-  [1, 0],
-  [0, -1],
-  [0, 1],
-  [-1, -1],
-  [1, -1],
-  [-1, 1],
-  [1, 1]
-];
-
 export enum LayerType {
   Fill,
   Prefab,
@@ -38,6 +20,7 @@ export enum LayerType {
 }
 
 type WeightedType = { [key in Type]?: number };
+type OptionValue<T> = T | ((meta: Meta) => T);
 
 interface FillLayer {
   type: LayerType.Fill;
@@ -55,7 +38,7 @@ interface PrefabLayer {
 
 export interface CALayer {
   type: LayerType.CA;
-  tileType: Type;
+  tileType: Type | WeightedType;
   x?: number;
   y?: number;
   width?: number;
@@ -70,25 +53,34 @@ export interface CALayer {
 
 export interface GeneratorLayer {
   type: LayerType.Generator;
-  gen: (map: Matrix<Entity>, x: number, y: number, depth: number) => void;
-  n: (depth: number) => number;
+  generator: (map: Matrix<Entity>, x: number, y: number, meta: Meta) => void;
+  count: OptionValue<number>;
+}
+
+export const enum RogueMapType {
+  Void,
+  Floor,
+  Wall,
+  Door,
+  SpecialDoor,
+  Enter,
+  Exit,
+  Key
 }
 
 export interface BrogueLayer {
   type: LayerType.Brogue;
-  maxKeys?: number;
-  wallType?: Type | WeightedType;
-  voidType?: Type | WeightedType;
-  special?: boolean;
+  keys?: OptionValue<number>;
+  special?: OptionValue<boolean>;
   width?: number;
   height?: number;
-  max_width?: number;
-  max_height?: number;
-  min_width?: number;
-  min_height?: number;
-  ideal?: number;
-  doorWeights?: { [key in Type]?: number };
-  // TODO: max/min Keys
+  max_width?: OptionValue<number>;
+  max_height?: OptionValue<number>;
+  min_width?: OptionValue<number>;
+  min_height?: OptionValue<number>;
+  ideal?: OptionValue<number>;
+  tileTypes?: { [key in RogueMapType]?: Type | WeightedType };
+  doorTypes?: Type | WeightedType;
 }
 
 export type Layer =
@@ -103,11 +95,13 @@ export interface LevelDefinition {
   properties?: Record<string, unknown>;
 }
 
+type Meta = Record<string, unknown> & { depth: number };
+
 // **********************
 
 export async function generateMap(level: LevelDefinition, depth: number) {
   const mapData = new PlayField();
-  const meta: Record<string, unknown> = { depth };
+  const meta: Meta = { depth };
 
   mapData.fill(() => tiles.createEntityOfType(Type.Floor));
 
@@ -134,6 +128,8 @@ export async function generateMap(level: LevelDefinition, depth: number) {
   return { mapData, meta };
 }
 
+// ************ Fill Layer ************
+
 function addFillLayer(layerData: FillLayer, mapData: PlayField) {
   const x0 = layerData.x ?? 0;
   const y0 = layerData.y ?? 0;
@@ -142,15 +138,13 @@ function addFillLayer(layerData: FillLayer, mapData: PlayField) {
 
   for (let y = y0; y < y1; y++) {
     for (let x = x0; x < x1; x++) {
-      let t = layerData.tiles;
-      if (typeof layerData.tiles === 'object') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        t = RNG.getWeightedValue(t as any) as unknown as Type;
-      }
-      mapData.set(x, y, tiles.createEntityOfType(t as Type, x, y));
+      const t = getType(layerData.tiles);
+      mapData.set(x, y, tiles.createEntityOfType(t, x, y));
     }
   }
 }
+
+// ************ Prefab Layer ************
 
 async function addPrefabLayer(layerData: PrefabLayer, mapData: PlayField) {
   const tilemap = await layerData.readMap();
@@ -159,10 +153,12 @@ async function addPrefabLayer(layerData: PrefabLayer, mapData: PlayField) {
   const m = new Matrix<Entity>(mapData.width, mapData.height);
   m.fromArray(data);
 
-  m.forEach((x, y, e) => {
+  m.forEach((e, x, y) => {
     if (e) mapData.set(x, y, e);
   });
 }
+
+// ************ Cellular Automata Layer ************
 
 const DefaultAllowPlacement = [
   Type.Floor,
@@ -184,32 +180,40 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
   let retry = layerData.retry ?? 100;
   let max = layerData.maxPlacement ?? 1;
 
-  const passableMap = mapData.map((e) =>
+  let passableMap = mapData.map<number>((e) =>
     isTilePassable(e?.type ?? null) ? 0 : 1
   );
+
   // console.log('Passable Map');
   // console.log(passableMap.toMapString());
 
   while (max-- > 0) {
     while (retry-- > 0) {
-      const map = buildMap();
-      const p = findPostion(map);
-      if (!p) continue;
-      const [x0, y0] = p;
+      const caMap = buildMap();
+      const map = Matrix.fromArraysTransposed(caMap._map);
+      // console.log('CA Map');
+      // console.log(map.toMapString());
 
-      map._serviceCallback((x: number, y: number, contents: number) => {
-        if (contents === 0) return;
-        const [xx, yy] = [x + x0, y + y0];
-        const e = tiles.createEntityOfType(layerData.tileType, xx, yy);
-        mapData.set(xx, yy, e);
+      const p = findPostion(map);
+
+      if (!p) continue;
+
+      mapData.place(map, ...p, (e, x, y) => {
+        if (!e) return null;
+        const type = getType(layerData.tileType);
+        return tiles.createEntityOfType(type, x, y);
       });
+
+      passableMap = mapData.map<number>((e) =>
+        isTilePassable(e?.type ?? null) ? 0 : 1
+      );
       // console.log('Map Built');
 
       break;
     }
   }
 
-  function findPostion(map: Cellular) {
+  function findPostion(map: Matrix<number>): [number, number] | false {
     const dx = mapData.width - w;
     const dy = mapData.height - h;
 
@@ -235,17 +239,19 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
     return map;
   }
 
-  function checkPaths(map: Cellular, x0: number, y0: number) {
+  function checkPaths(map: Matrix<number>, x0: number, y0: number) {
     // Check allowed placement
     if (allowedPlacement && allowedPlacement.length) {
-      for (let y = 0; y < map._height; y++) {
-        for (let x = 0; x < map._width; x++) {
-          const p = map._map[x][y];
-          if (p === 0) continue;
+      for (let y = 0; y < map.height; y++) {
+        for (let x = 0; x < map.width; x++) {
+          const p = map.get(x, y);
+          if (!p) continue;
           const [xx, yy] = [x + x0, y + y0];
 
           const e = mapData.get(xx, yy);
-          if (e && !allowedPlacement.includes(e.type)) {
+          if (!e) continue;
+
+          if (!allowedPlacement.includes(e.type)) {
             return false;
           }
         }
@@ -254,11 +260,7 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
 
     if (layerData.checkPath) {
       const m = passableMap.clone();
-      map._serviceCallback((x: number, y: number, contents: number) => {
-        if (contents === 0) return;
-        const [xx, yy] = [x + x0, y + y0];
-        m.set(xx, yy, 1);
-      });
+      m.place(map, x0, y0, (e) => (!e ? null : 2 * e));
       // console.log('With Lake');
       // console.log(m.toMapString());
 
@@ -267,19 +269,12 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
       // console.log(m.toMapString());
 
       // Check if there are any 0s left
-      for (let y = 0; y < m.height; y++) {
-        for (let x = 0; x < m.width; x++) {
-          if (m.get(x, y) === 0) {
-            return false;
-          }
-        }
-      }
+      if (m.some(0)) return false;
     }
 
     return true;
   }
 
-  // TODO: Make this a method on Matrix
   function floodFill(m: Matrix<number>) {
     let startX = 0;
     let startY = 0;
@@ -295,53 +290,28 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
       }
     }
 
-    const stack = [[startX, startY]];
-    while (stack.length) {
-      const current = stack.pop()!;
-      const [x, y] = current;
-      m.set(x, y, 1);
-
-      for (let i = 0; i < DIRS8.length; i++) {
-        const [dx, dy] = DIRS8[i];
-        const [xx, yy] = [x + dx, y + dy];
-        if (m.get(xx, yy) === 0) {
-          stack.push([xx, yy]);
-        }
-      }
-    }
+    m.floodFill(startX, startY, 1);
   }
 }
+
+// ************ Random Placement Layer ************
 
 function addGeneratorLayer(
   layerData: GeneratorLayer,
   mapData: Matrix<Entity>,
-  meta: Record<string, unknown>
+  meta: Meta
 ) {
-  const depth = (meta.depth as number) ?? 0;
-  let n = ~~layerData.n(depth);
+  let n = ~~(getValue(layerData.count, meta) ?? 1);
 
   if (n < 1) return;
   while (n--) {
-    const p = getRandPosition();
+    const p = mapData.getRandom((e) => e.type === Type.Floor);
     if (!p) break;
-    layerData.gen(mapData, p[0], p[1], depth);
-  }
-
-  function getRandPosition(): [number, number] | null {
-    let m = 1000;
-    while (m--) {
-      const x = RNG.getUniformInt(0, mapData.width - 1);
-      const y = RNG.getUniformInt(0, mapData.height - 1);
-      if (mapData.get(x, y)!.type === Type.Floor) {
-        return [x, y];
-      }
-    }
-    return null;
+    layerData.generator(mapData, p[0], p[1], meta);
   }
 }
 
-const CHANCE_TO_ADD_LOCK = 0.3; // At 1 this is 100% chance to add a lock in the current room
-const CHANCE_TO_ADD_KEY = 0.3; // At 1 this is 100% chance to add a key in the next room
+// ************ Brogue-like map generation ************
 
 const DoorKeyPairs = {
   [Type.Door]: Type.Key,
@@ -352,61 +322,53 @@ const DoorKeyPairs = {
 
 const DefaultDoorWeights = {
   [Type.Door]: 70,
-  [Type.OSpell1]: 15,
-  [Type.OSpell2]: 10,
-  [Type.OSpell3]: 5
+  [Type.OWall1]: 15,
+  [Type.OWall2]: 10,
+  [Type.OWall3]: 5
+};
+
+const DefaultTileTypes = {
+  [RogueMapType.Void]: Type.Stop,
+  [RogueMapType.Floor]: Type.Floor,
+  [RogueMapType.Wall]: Type.Wall,
+  [RogueMapType.Door]: Type.Floor, // Doors are added later
+  [RogueMapType.SpecialDoor]: Type.Door,
+  [RogueMapType.Enter]: Type.Player,
+  [RogueMapType.Exit]: Type.Stairs
 };
 
 function addBrogueLayer(
   layerData: BrogueLayer,
   mapData: Matrix<Entity>,
-  meta: Record<string, unknown>
+  meta: Meta
 ) {
-  const maxKeys = layerData.maxKeys ?? 5;
   const width = layerData.width ?? mapData.width;
   const height = layerData.height ?? mapData.height;
-  let max_width = layerData.max_width ?? 25;
-  let max_height = layerData.max_height ?? 25;
-  const min_width = layerData.min_width ?? 2;
-  const min_height = layerData.min_height ?? 2;
-  let ideal = layerData.ideal ?? 70;
+  let max_width = getValue(layerData.max_width, meta) ?? 25;
+  let max_height = getValue(layerData.max_height, meta) ?? 25;
+  const min_width = getValue(layerData.min_width, meta) ?? 2;
+  const min_height = getValue(layerData.min_height, meta) ?? 2;
+  let ideal = getValue(layerData.ideal, meta) ?? 70;
+
+  const tileTypes = { ...DefaultTileTypes, ...(layerData.tileTypes || {}) } as {
+    [key in RogueMapType]: Type;
+  };
 
   const btl = buildMap();
 
   mapData.fill((x, y) => {
-    const t = btl.world[y][x];
-    return tiles.createEntityOfType(rogueMapTypeToType(t), x, y);
+    const t = btl.world[y][x] as RogueMapType;
+    const type = getType(tileTypes[t]);
+    return tiles.createEntityOfType(type, x, y);
   });
 
   addKeys();
 
   Object.assign(meta, btl);
 
-  function rogueMapTypeToType(c: number | null): Type {
-    switch (c) {
-      case 0: // Void
-        return getType(layerData.voidType ?? Type.Stop);
-      case 1:
-        return Type.Floor;
-      case 2: // Wall
-        return getType(layerData.wallType ?? Type.Wall);
-      case 3: // Door
-        return Type.Floor;
-      case 4: // SPECIAL DOOR
-        return Type.Door;
-      case 5: // Enter
-        return Type.Player;
-      case 6: // Exit
-        return Type.Stairs;
-      case 7: // Key
-        return Type.Key;
-      default:
-        return Type.Floor;
-    }
-  }
-
   function buildMap(): RogueMap {
     let btl: RogueMap | null = null;
+    const special = getValue(layerData.special, meta) ?? false;
 
     while (!btl) {
       try {
@@ -414,7 +376,7 @@ function addBrogueLayer(
           width,
           height,
           retry: 100,
-          special: layerData.special ?? false,
+          special,
           room: {
             ideal,
             min_width,
@@ -436,53 +398,44 @@ function addBrogueLayer(
   }
 
   function addKeys() {
-    const doorWeights = (layerData.doorWeights ?? DefaultDoorWeights) as {
-      [key: number]: number;
-    };
+    let keys =
+      getValue(layerData.keys, meta) ?? RNG.getUniformInt(0, btl.room_count);
 
-    const roomPool = [btl!.enter.room_id];
+    keys = Math.min(keys, btl.room_count);
 
+    const doorWeights = layerData.doorTypes ?? DefaultDoorWeights;
+
+    // List of rooms ordered by proximity to the entrance
+    const roomList: number[] = [];
     queueRooms(btl!.enter.room_id);
 
     const lockDoors: number[] = [];
-    const keyRooms: number[] = [];
 
-    while (lockDoors.length < maxKeys && roomPool.length > 0) {
-      const roomId = roomPool.pop();
-      if (!roomId) break;
+    let retries = 100; // Shouldn't need thos
 
-      if (Math.random() < CHANCE_TO_ADD_LOCK) {
-        const room = btl!.rooms[roomId];
+    while (retries-- > 0 && keys > 0) {
+      const roomToLock = RNG.getItem(roomList); // Pick a random room to add a locked door
+      if (roomToLock === null) break;
 
-        const door = RNG.getItem(room.doors);
-        if (!door) continue;
-        if (lockDoors.includes(door)) continue; // Already has a lock
+      const index = roomList.indexOf(roomToLock);
+      if (index === -1) continue;
 
-        let i = roomPool.length;
-        while (i--) {
-          const keyRoom = roomPool[i];
-          if (!keyRoom) break;
+      const previousRooms = roomList.slice(0, index); // List of rooms before the current room
+      const roomToAddKey = RNG.getItem(previousRooms); // Pick a random room to add a key
+      if (roomToAddKey == null) continue;
 
-          if (Math.random() < CHANCE_TO_ADD_KEY) {
-            lockDoors.push(door);
-            keyRooms.push(keyRoom);
-            break;
-          }
-        }
-      }
+      const doorToLock = RNG.getItem(btl!.rooms[roomToLock].doors);
+      if (doorToLock === null) continue;
+      if (lockDoors.includes(doorToLock)) continue; // Already has a lock
+
+      setDoorAndKey(doorToLock, roomToAddKey);
+      keys--;
     }
 
-    if (lockDoors.length !== keyRooms.length) {
-      console.error('Mismatched keys and locks');
-      return;
-    }
-
-    for (let i = 0; i < keyRooms.length; i++) {
-      const doorId = lockDoors[i];
+    function setDoorAndKey(doorId: number, roomId: number) {
       const door = btl.doors[doorId];
-
-      const roomId = keyRooms[i];
       const room = btl.rooms[roomId];
+
       while (true) {
         const x = room.left + RNG.getUniformInt(0, room.width - 1);
         const y = room.top + RNG.getUniformInt(0, room.height - 1);
@@ -496,9 +449,7 @@ function addBrogueLayer(
     return;
 
     function setDoorKey(kx: number, ky: number, dx: number, dy: number) {
-      const doorType = +RNG.getWeightedValue(
-        doorWeights as { [key: number]: number }
-      )!;
+      const doorType = getType(doorWeights);
       if (!doorType) return;
       const keyType = DoorKeyPairs[doorType as keyof typeof DoorKeyPairs]!;
       if (!keyType) return;
@@ -508,10 +459,10 @@ function addBrogueLayer(
     }
 
     function queueRooms(roomId: number) {
+      roomList.push(roomId);
       const room = btl.rooms[roomId];
       room.neighbors.forEach((n) => {
-        if (roomPool.includes(n)) return;
-        roomPool.push(n);
+        if (roomList.includes(n)) return;
         queueRooms(n);
       });
     }
@@ -544,4 +495,8 @@ function isTilePassable(t: Type | null) {
     t === Type.OSpell3 ||
     t === Type.OWall3
   );
+}
+
+function getValue<T>(v: OptionValue<T>, meta: Meta): T {
+  return typeof v === 'function' ? (v as (meta: Meta) => T)(meta) : v;
 }

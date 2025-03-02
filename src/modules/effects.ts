@@ -62,7 +62,7 @@ const SPELL_DURATION = {
 };
 
 export function hideType(type: Type | string) {
-  world.levelState.map.forEach((x, y, e) => {
+  world.levelState.map.forEach((e, x, y) => {
     if (e?.type === type) {
       e.add(isInvisible);
       screen.drawEntityAt(x, y);
@@ -71,7 +71,7 @@ export function hideType(type: Type | string) {
 }
 
 export function showType(type: Type | string) {
-  world.levelState.map.forEach((x, y, e) => {
+  world.levelState.map.forEach((e, x, y) => {
     if (e?.type === type) {
       e.remove(isInvisible);
       screen.drawEntityAt(x, y);
@@ -83,7 +83,7 @@ export async function updateTilesByType(
   type: Type,
   update: Partial<RenderableData>
 ) {
-  world.levelState.map.forEach((_x, _y, e) => {
+  world.levelState.map.forEach((e) => {
     if (e?.type === type) {
       if (e.has(Renderable)) {
         const t = e.get(Renderable)!;
@@ -519,7 +519,7 @@ export async function magicSwap(a: Type | string, b: Type | string) {
 }
 
 export async function showIWalls() {
-  await world.levelState.map.forEachAsync(async (x, y, e) => {
+  await world.levelState.map.forEachAsync(async (e, x, y) => {
     if (e.type === Type.IWall) {
       sound.play(x * y, 1, 10);
       if (y === 0) await delay(1);

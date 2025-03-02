@@ -158,7 +158,7 @@ async function getPath(
   return path.map((s) => [s.x, s.y]);
 
   async function debug({ s, g, h }: AStarNode<STATE>) {
-    console.log(s, g, h);
+    // console.log(s, g, h);
     gMax = Math.max(gMax, g);
     hMax = Math.max(hMax, h);
     display.drawOver(s.x + XBot, s.y + YBot, '•', c(h / hMax), c(1 - g / gMax)); // ~~(g / 10) + 1
