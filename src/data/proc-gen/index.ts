@@ -23,12 +23,15 @@ export async function readLevel(i: number): Promise<Level> {
   const level = Levels[i % Levels.length] as LevelDefinition;
   const { mapData } = await generateMap(level, i);
 
+  const startTrigger =
+    (level.properties?.startTrigger as string) || i === 0
+      ? '##FlashEntity\nPress any key to begin this level.'
+      : 'Press any key to begin this level.';
+
   return {
     id: '' + i,
     data: mapData.toArray(), // randomMap(i).toArray(),
-    startTrigger:
-      (level.properties?.startTrigger as string) ||
-      `Press any key to begin this level.`,
+    startTrigger,
     properties: {}
   };
 }
@@ -126,7 +129,8 @@ function growthGenerator(
  */
 function collectibleGenerator(
   type: Type,
-  p: Partial<LinearParams> = {}
+  p: Partial<LinearParams> = {},
+  opts: Partial<GeneratorLayer> = {}
 ): GeneratorLayer {
   const linOpts = { b0: 12, m: 0.5, max: 500, min: 1, ...p };
   const μ = 4; // Mean (TBR)
@@ -149,7 +153,8 @@ function collectibleGenerator(
     },
     count({ depth }) {
       return clampLinear(linOpts, depth) / μ;
-    }
+    },
+    ...opts
   } satisfies GeneratorLayer;
 }
 
@@ -307,24 +312,41 @@ const Levels = [
     layers: [
       {
         type: LayerType.Brogue,
-        special: false,
+        special: true,
         max_height: 3,
-        max_width: 10,
+        max_width: 20,
         tileTypes: {
           [RogueMapType.Wall]: forestTiles,
-          [RogueMapType.Void]: forestTiles
+          [RogueMapType.Void]: forestTiles,
+          [RogueMapType.SpecialDoor]: Type.Floor // TODO: Way to add a key for special doors
         },
         keys: 1,
-        doorTypes: Type.Door
+        doorTypes: Type.Door,
+        ideal: 3
       },
       lakeFeature,
-      whipGenerator,
-      nuggetGenerator,
+      collectibleGenerator(
+        Type.Whip,
+        {
+          b0: 30,
+          m: 0.056,
+          min: 20,
+          max: 200
+        },
+        { special: true }
+      ),
+      collectibleGenerator(
+        Type.Nugget,
+        {
+          b0: 6.3,
+          m: 2.3,
+          min: 1,
+          max: 500
+        },
+        { special: true }
+      ),
       ...mobGenerators
-    ],
-    properties: {
-      startTrigger: `##FlashEntity\nPress any key to begin this level.`
-    }
+    ]
   },
 
   {
@@ -514,7 +536,7 @@ const Levels = [
     /**
      * Level 9
      *
-     * Base: Rooms
+     * Base: Cave (CA)
      * Features: Pit (CA)
      * Collectibles: Gems, nuggets, whips and SlowTime spells
      *
@@ -522,9 +544,13 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.BSP
+        type: LayerType.CA,
+        tileType: ruinTiles,
+        checkPath: true
       },
       pitFeature,
+      randomPlayer,
+      randomStairs,
       creatureGeneratorGenerator,
       gemGenerator,
       nuggetGenerator,
@@ -569,9 +595,7 @@ const Levels = [
      * Introduces the player to medium mobs
      */
     layers: [
-      {
-        type: LayerType.BSP
-      },
+      ruinsMap,
       chestGenerator,
       whipGenerator,
       spellGenerator(Type.SlowTime, { b0: 20 }),
@@ -590,8 +614,13 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.BSP
+        type: LayerType.CA,
+        tileType: ruinTiles,
+        checkPath: true
       },
+      pitFeature,
+      randomPlayer,
+      randomStairs,
       growthGenerator(Type.Block),
       spellGenerator(Type.SpeedTime, { b0: 2 }),
       spellGenerator(Type.SlowTime, { b0: 2 }),
@@ -660,9 +689,13 @@ const Levels = [
      */
     layers: [
       {
-        type: LayerType.BSP
+        type: LayerType.CA,
+        tileType: ruinTiles,
+        checkPath: true
       },
       pitFeature,
+      randomPlayer,
+      randomStairs,
       growthGenerator(Type.Trap),
       growthGenerator(Type.Invisible),
       growthGenerator(Type.Block),

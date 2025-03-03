@@ -1,5 +1,7 @@
 import * as tiled from '@kayahr/tiled';
 import { RNG } from 'rot-js';
+import { Rogue } from 'procedural-layouts';
+import Cellular from 'rot-js/lib/map/cellular';
 
 import * as tiles from '../modules/tiles';
 
@@ -8,8 +10,6 @@ import { Matrix } from '../classes/map';
 import { Entity } from '../classes/entity';
 import { PlayField } from '../classes/play-field';
 import { readTileMapLayers } from './tiled';
-import Cellular from 'rot-js/lib/map/cellular';
-import { Rogue } from 'procedural-layouts';
 
 export enum LayerType {
   Fill,
@@ -57,6 +57,8 @@ export interface GeneratorLayer {
   type: LayerType.Generator;
   generator: (map: Matrix<Entity>, x: number, y: number, meta: Meta) => void;
   count: OptionValue<number>;
+  special?: OptionValue<boolean>; // TODO: More flexible room predicate
+  deadends?: OptionValue<boolean>;
 }
 
 export const enum RogueMapType {
@@ -96,6 +98,7 @@ export interface BSPLayer {
   min_height?: OptionValue<number>;
   doorTypes?: Type | WeightedType;
   tileTypes?: { [key in RogueMapType]?: Type | WeightedType };
+  special?: OptionValue<boolean>;
 }
 
 export type Layer =
@@ -321,11 +324,41 @@ function addGeneratorLayer(
   mapData: Matrix<Entity>,
   meta: Meta
 ) {
+  const meta$ = meta as Meta & RogueMap;
+
   let n = ~~(getValue(layerData.count, meta) ?? 1);
+  const special = getValue(layerData.special, meta) ?? false;
+  const deadends = getValue(layerData.deadends, meta) ?? false;
+
+  let x0 = 0;
+  let y0 = 0;
+  let x1 = mapData.width - 1;
+  let y1 = mapData.height - 1;
+
+  if (deadends || special) {
+    const rooms = [];
+    for (const roomId of Object.keys(meta$.rooms)) {
+      const room = meta$.rooms[roomId as unknown as number];
+      if (deadends && room.deadend) {
+        rooms.push(room);
+      }
+      if (special && room.special) {
+        rooms.push(room);
+      }
+    }
+
+    const room = RNG.getItem(rooms);
+    if (room) {
+      x0 = room.left;
+      y0 = room.top;
+      x1 = room.left + room.width - 1;
+      y1 = room.top + room.height - 1;
+    }
+  }
 
   if (n < 1) return;
   while (n--) {
-    const p = mapData.getRandom((e) => e.type === Type.Floor);
+    const p = mapData.getRandom((e) => e.type === Type.Floor, x0, y0, x1, y1);
     if (!p) break;
     layerData.generator(mapData, p[0], p[1], meta);
   }
@@ -368,7 +401,7 @@ function addBrogueLayer(
   let max_height = getValue(layerData.max_height, meta) ?? 25;
   const min_width = getValue(layerData.min_width, meta) ?? 2;
   const min_height = getValue(layerData.min_height, meta) ?? 2;
-  let ideal = getValue(layerData.ideal, meta) ?? 70;
+  let ideal = getValue(layerData.ideal, meta) ?? 35;
 
   const tileTypes = { ...DefaultTileTypes, ...(layerData.tileTypes || {}) } as {
     [key in RogueMapType]: Type;
@@ -421,18 +454,20 @@ function addBrogueLayer(
 function addKeys(
   layerData: BrogueLayer | BSPLayer,
   mapData: Matrix<Entity>,
-  meta: Meta & RogueMap
+  meta: Meta
 ) {
-  let keys =
-    getValue(layerData.keys, meta) ?? RNG.getUniformInt(0, meta.room_count);
+  const meta$ = meta as Meta & RogueMap;
 
-  keys = Math.min(keys, meta.room_count);
+  let keys =
+    getValue(layerData.keys, meta) ?? RNG.getUniformInt(0, meta$.room_count);
+
+  keys = Math.min(keys, meta$.room_count);
 
   const doorWeights = layerData.doorTypes ?? DefaultDoorWeights;
 
   // List of rooms ordered by proximity to the entrance
   const roomList: number[] = [];
-  queueRooms(meta.enter!.room_id);
+  queueRooms(meta$.enter!.room_id);
 
   const lockDoors: number[] = [];
 
@@ -449,7 +484,7 @@ function addKeys(
     const roomToAddKey = RNG.getItem(previousRooms); // Pick a random room to add a key
     if (roomToAddKey == null) continue;
 
-    const doorToLock = RNG.getItem(meta.rooms[roomToLock].doors);
+    const doorToLock = RNG.getItem(meta$.rooms[roomToLock].doors);
     if (doorToLock === null) continue;
     if (lockDoors.includes(doorToLock)) continue; // Already has a lock
 
@@ -458,8 +493,8 @@ function addKeys(
   }
 
   function setDoorAndKey(doorId: number, roomId: number) {
-    const door = meta.doors[doorId];
-    const room = meta.rooms[roomId];
+    const door = meta$.doors[doorId];
+    const room = meta$.rooms[roomId];
 
     while (true) {
       const x = room.left + RNG.getUniformInt(0, room.width - 1);
@@ -485,7 +520,7 @@ function addKeys(
 
   function queueRooms(roomId: number) {
     roomList.push(roomId);
-    const room = meta.rooms[roomId];
+    const room = meta$.rooms[roomId];
     room.neighbors.forEach((n) => {
       if (roomList.includes(n)) return;
       queueRooms(n);
@@ -495,49 +530,28 @@ function addKeys(
 
 // ************ BSP Layer ************
 
-function addBSPLayer(
-  layerData: BSPLayer,
-  mapData: Matrix<Entity>,
-  meta: Meta & RogueMap
-) {
-  const min_height = getValue(layerData.min_height, meta) ?? 6;
-  const min_width = getValue(layerData.min_width, meta) ?? 12;
-  const max_height = getValue(layerData.max_height, meta) ?? 20;
-  const max_width = getValue(layerData.max_width, meta) ?? 40;
+function addBSPLayer(layerData: BSPLayer, mapData: Matrix<Entity>, meta: Meta) {
+  const meta$ = meta as Meta & RogueMap;
+
+  const special = getValue(layerData.special, meta) ?? false;
+  const min_height = getValue(layerData.min_height, meta) ?? 8;
+  const min_width = getValue(layerData.min_width, meta) ?? 8;
+  const max_height = getValue(layerData.max_height, meta) ?? 15;
+  const max_width = getValue(layerData.max_width, meta) ?? 15;
 
   const tileTypes = { ...DefaultTileTypes, ...(layerData.tileTypes || {}) } as {
     [key in RogueMapType]: Type;
   };
 
-  console.log('BSP Layer');
   const bspMap = new Matrix<RogueMapType>(mapData.width, mapData.height);
   bspMap.fill(RogueMapType.Floor);
 
   const rooms: RogueRoom[] = [];
   const doors: RogueDoor[] = [];
 
+  // Build the map using BSP
   sliceMap(0, 0, mapData.width - 1, mapData.height - 1);
-
-  meta.room_count = rooms.length;
-  meta.rooms = rooms;
-  meta.doors = doors;
-
-  const enter = rooms[0];
-  const exit = rooms[rooms.length - 1];
-
-  meta.enter = {
-    room_id: enter.id,
-    x: RNG.getUniformInt(enter.left, enter.left + enter.width - 1),
-    y: RNG.getUniformInt(enter.top, enter.top + enter.height - 1)
-  };
-  meta.exit = {
-    room_id: exit.id,
-    x: RNG.getUniformInt(exit.left, exit.left + exit.width - 1),
-    y: RNG.getUniformInt(exit.top, exit.top + exit.height - 1)
-  };
-
-  bspMap.set(meta.enter.x, meta.enter.y, RogueMapType.Enter);
-  bspMap.set(meta.exit.x, meta.exit.y, RogueMapType.Exit);
+  addMeta();
 
   mapData.fill((x, y) => {
     const t = bspMap.get(x, y);
@@ -545,22 +559,67 @@ function addBSPLayer(
     return tiles.createEntityOfType(type, x, y);
   });
 
-  addKeys(layerData, mapData, meta as Meta & RogueMap);
+  addKeys(layerData, mapData, meta$);
 
-  // rooms.forEach((room) => {
-  //   const b = tiles.createEntityOfType(Type.Trap);
-  //   mapData.fillRegion(b, room.left, room.top, room.left + room.width - 1, room.top + room.height - 1);
-  // });
+  function addMeta() {
+    meta$.room_count = rooms.length;
+    meta$.rooms = rooms;
+    meta$.doors = doors;
+
+    let deadends: RogueRoom[] = [];
+    rooms.forEach((room) => {
+      if (room.neighbors.length === 0) {
+        room.deadend = true;
+        deadends.push(room);
+      }
+    });
+
+    deadends = RNG.shuffle(deadends);
+
+    // Find entrance
+    const enter = deadends.pop() || rooms[0];
+    enter.enter = true;
+    meta$.enter = {
+      room_id: enter.id,
+      x: RNG.getUniformInt(enter.left, enter.left + enter.width - 1),
+      y: RNG.getUniformInt(enter.top, enter.top + enter.height - 1)
+    };
+    bspMap.set(meta$.enter.x, meta$.enter.y, RogueMapType.Enter);
+
+    // Find exit
+    let exit = deadends.pop() || rooms[rooms.length - 1];
+    if (exit === enter) {
+      exit = rooms[rooms.length - 2];
+    }
+    exit.exit = true;
+    meta$.exit = {
+      room_id: exit.id,
+      x: RNG.getUniformInt(exit.left, exit.left + exit.width - 1),
+      y: RNG.getUniformInt(exit.top, exit.top + exit.height - 1)
+    };
+    bspMap.set(meta$.exit.x, meta$.exit.y, RogueMapType.Exit);
+
+    if (special && deadends.length > 1) {
+      const room = deadends.pop()!;
+      room.special = true;
+      meta$.special = {
+        room_id: room.id
+      };
+    }
+  }
 
   function sliceMap(x0: number, y0: number, x1: number, y1: number) {
+    // TODO: better enforcement of min_width and min_height
+
     const directions = [];
-    if (x1 - x0 > min_width * 2 && (x1 - x0 > max_width || Math.random() < 0.5))
+    if (x1 - x0 > min_width * 2 && x1 - x0 > max_width) {
       directions.push('x');
-    if (
-      y1 - y0 > min_height * 2 &&
-      (y1 - y0 > max_height || Math.random() < 0.5)
-    )
+    }
+
+    if (y1 - y0 > min_height * 2 && y1 - y0 > max_height) {
       directions.push('y');
+    }
+
     if (directions.length === 0) {
       rooms.push({
         id: rooms.length,

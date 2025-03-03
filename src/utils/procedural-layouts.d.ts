@@ -6,6 +6,10 @@ interface RogueRoom {
   top: number;
   width: number;
   height: number;
+  enter?: boolean;
+  exit?: boolean;
+  special?: boolean;
+  deadend?: boolean;
 }
 
 interface RogueDoor {
@@ -19,6 +23,7 @@ interface RogueMap {
   room_count: number;
   exit: { room_id: number; x: number; y: number };
   enter: { room_id: number; x: number; y: number };
+  special: { room_id: number };
   rooms: Record<number, RogueRoom>;
   doors: Record<number, RogueDoor>;
 }

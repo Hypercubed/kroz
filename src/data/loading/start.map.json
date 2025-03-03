@@ -19,54 +19,7 @@
     },
     {
       "draworder": "topdown",
-      "id": 5,
-      "name": "Object Layer 2",
-      "objects": [
-        {
-          "gid": 77,
-          "height": 36,
-          "id": 36,
-          "name": "",
-          "properties": [
-            {
-              "name": "FoundMessage",
-              "type": "string",
-              "value": ""
-            },
-            {
-              "name": "Tile",
-              "propertytype": "Renderable",
-              "type": "class",
-              "value": {
-                "bg": "White",
-                "blink": false,
-                "ch": "\u2261"
-              }
-            },
-            {
-              "name": "Trigger",
-              "type": "string",
-              "value": "##CHANGEGAME procgen"
-            }
-          ],
-          "rotation": 0,
-          "type": "",
-          "visible": true,
-          "width": 24,
-          "x": 840,
-          "y": 432
-        }
-      ],
-      "opacity": 1,
-      "type": "objectgroup",
-      "visible": true,
-      "x": 0,
-      "y": 0
-    },
-    {
-      "draworder": "topdown",
       "id": 4,
-      "locked": true,
       "name": "Object Layer 1",
       "objects": [
         {
@@ -94,8 +47,8 @@
           "type": "",
           "visible": true,
           "width": 192,
-          "x": 1008,
-          "y": 396
+          "x": 912,
+          "y": 144
         },
         {
           "height": 36,
@@ -171,15 +124,15 @@
             "fontfamily": "PxPlus IBM VGA 8x14",
             "kerning": false,
             "pixelsize": 48,
-            "text": "Play Selected Levels",
+            "text": "BROG",
             "valign": "center",
             "wrap": true
           },
           "type": "",
           "visible": true,
           "width": 480,
-          "x": 912,
-          "y": 144
+          "x": 1008,
+          "y": 396
         },
         {
           "gid": 77,
@@ -202,8 +155,8 @@
           "type": "",
           "visible": true,
           "width": 24,
-          "x": 864,
-          "y": 180
+          "x": 960,
+          "y": 432
         },
         {
           "gid": 77,
@@ -226,8 +179,8 @@
           "type": "",
           "visible": true,
           "width": 24,
-          "x": 960,
-          "y": 432
+          "x": 864,
+          "y": 180
         },
         {
           "gid": 77,
@@ -373,6 +326,52 @@
           "width": 24,
           "x": 792,
           "y": 576
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 5,
+      "name": "Object Layer 2",
+      "objects": [
+        {
+          "gid": 77,
+          "height": 36,
+          "id": 36,
+          "name": "",
+          "properties": [
+            {
+              "name": "FoundMessage",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "name": "Tile",
+              "propertytype": "Renderable",
+              "type": "class",
+              "value": {
+                "bg": "White",
+                "blink": false,
+                "ch": "\u2261"
+              }
+            },
+            {
+              "name": "Trigger",
+              "type": "string",
+              "value": "##CHANGEGAME procgen"
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 24,
+          "x": 960,
+          "y": 432
         }
       ],
       "opacity": 1,

@@ -163,13 +163,19 @@ export class Matrix<T> {
     }
   }
 
-  getRandom(predicate: T | FilterCallback<T>): [number, number] | null {
+  getRandom(
+    predicate: T | FilterCallback<T>,
+    x0 = 0,
+    y0 = 0,
+    x1 = this.width,
+    y1 = this.height
+  ): [number, number] | null {
     const callbackFn: FilterCallback<T> | null =
       typeof predicate === 'function' ? (predicate as FilterCallback<T>) : null;
 
     const indexes: Array<[number, number]> = [];
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
+    for (let y = y0; y < y1; y++) {
+      for (let x = x0; x < x1; x++) {
         const e = this.get(x, y);
         if (e === null) continue;
         const flag = callbackFn ? callbackFn(e) : e === predicate;

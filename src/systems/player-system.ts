@@ -163,7 +163,6 @@ async function readControls() {
       const p = world.levelState.player.get(Position)!;
       dx = x - 1 - p.x;
       dy = y - 1 - p.y;
-      console.log('Mouse:', dx, dy);
     }
   }
 
