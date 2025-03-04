@@ -444,6 +444,18 @@ export function change(a: Type | string, b: Type | string) {
   }
 }
 
+export function shuffle(a: Type | string, b: Type | string) {
+  const map = world.levelState.map;
+  for (let x = 0; x < map.width; x++) {
+    for (let y = 0; y < map.height; y++) {
+      if (map.getType(x, y) === a && Math.random() > 0.5) {
+        map.set(x, y, tiles.createEntityOfType(b, x, y));
+        screen.drawEntityAt(x, y);
+      }
+    }
+  }
+}
+
 export async function tTrigger(x: number, y: number, block: Type | string) {
   switch (block) {
     case Type.TBlock:

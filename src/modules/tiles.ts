@@ -34,7 +34,7 @@ import {
 import { Entity } from '../classes/entity';
 import { Color } from './colors';
 
-import { ensureObject, tileIdToChar } from '../utils/utils';
+import { ensureObject, getASCIICode, tileIdToChar } from '../utils/utils';
 import { MOB_EATS, MOB_WALKABLE, Type } from '../constants/types';
 import { DEBUG } from '../constants/constants';
 
@@ -193,6 +193,8 @@ export function getType(
   if (typeof type === 'undefined' || type === '') return undefined;
   if (typeof type === 'string' && !isNaN(+type)) return +type as Type;
   if (type in Type) return Type[type as keyof typeof Type];
+  if (typeof type === 'string' && type.length === 1 && getASCIICode(type))
+    return TileIDToType[getASCIICode(type)];
   return TypeNameToType[type] ?? type;
 }
 

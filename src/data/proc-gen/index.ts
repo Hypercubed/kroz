@@ -3,6 +3,9 @@
 import { DIRS, RNG } from 'rot-js';
 
 import * as tiles from '../../modules/tiles';
+import * as display from '../../modules/display';
+import * as controls from '../../modules/controls';
+import * as screen from '../../modules/screen';
 
 import { clampLinear, type LinearParams } from '../../utils/math';
 import type { Level } from '../../modules/levels';
@@ -16,6 +19,10 @@ import {
   LevelDefinition,
   RogueMapType
 } from '../../utils/procgen';
+import { HEIGHT, REDUCED } from '../../constants/constants';
+import { Color } from '../../modules/colors';
+import dedent from 'ts-dedent';
+import { delay } from '../../utils/utils';
 
 export const title = 'Testing Procgen Maps';
 
@@ -764,3 +771,38 @@ const Levels = [
   // TODO: Invisible MBlocks
   // TODO: Blocks and bombs
 ] satisfies LevelDefinition[];
+
+export async function start() {
+  await introScreen();
+  await screen.renderTitle();
+}
+
+export async function introScreen() {
+  display.clear(Color.Black);
+
+  display.writeCenter(
+    HEIGHT - 1,
+    'Choose a game to start',
+    Color.HighIntensityWhite
+  );
+
+  display.writeCenter(HEIGHT - 1, 'Press any key to continue', Color.White);
+
+  await controls.repeatUntilKeyPressed(async () => {
+    display.drawText(
+      5,
+      5,
+      dedent`
+          ██████░ ██████░  ██████░  ██████░ 
+          ██░░░██░██░░░██░██░░░░██░██░░░░░░ 
+          ██████░░██████░░██░   ██░██░  ███░
+          ██░░░██░██░░░██░██░   ██░██░   ██░
+          ██████░░██░  ██░░██████░░ ██████░░
+          ░░░░░░░ ░░░  ░░░ ░░░░░░░  ░░░░░░░ 
+    `,
+      REDUCED ? Color.Red : RNG.getUniformInt(1, 15)
+    );
+
+    await delay(500);
+  });
+}

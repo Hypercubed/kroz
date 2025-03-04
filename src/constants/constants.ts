@@ -35,3 +35,5 @@ export const VOLUME = 0.005;
 export const BLINK = false; // !REDUCED;
 
 export const FLOOR_CHAR = ' ';
+
+export const STARTING_GAME = 'loading';

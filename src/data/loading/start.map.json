@@ -5,7 +5,7 @@
   "layers": [
     {
       "compression": "zlib",
-      "data": "eJztlEEKwCAMBPMVoY\/wEz30\/+\/ovdcQNBRqs+rmMIg5yA6JKSJSkiQJ5XBAZ4vyR2dA++t+s\/XfzgGLd++\/77QHvN321mt1\/xneQPt\/7f+q\/8Dbaa3aNUFmpP+O\/T8H+KM9\/pwNZn\/L3amjs0ZQ1VnVnQU235a\/BZ0pSRIOHkiSwK8=",
+      "data": "eJztlEEKwCAMBPMVoY\/wEz30\/+\/ovadCkCiR0oRkcxhE8bDjqo2IWlEUphwLvLNZ+Xtn8PbnfaP1P94DFO\/Ze8\/0D6z+Nq1X5HOImPkPf\/T+pezS2qXcF4Vd\/4z9nx\/9s4LQv9br5Z6se2e1oLOxszkKaL6S\/4h3pqIoMHgArvLAuA==",
       "encoding": "base64",
       "height": 23,
       "id": 1,
@@ -132,7 +132,7 @@
           "visible": true,
           "width": 480,
           "x": 1008,
-          "y": 396
+          "y": 324
         },
         {
           "gid": 77,
@@ -156,7 +156,7 @@
           "visible": true,
           "width": 24,
           "x": 960,
-          "y": 432
+          "y": 504
         },
         {
           "gid": 77,
@@ -326,6 +326,34 @@
           "width": 24,
           "x": 792,
           "y": 576
+        },
+        {
+          "height": 72,
+          "id": 37,
+          "name": "",
+          "properties": [
+            {
+              "name": "bgColor",
+              "propertytype": "Color",
+              "type": "string",
+              "value": "Black"
+            }
+          ],
+          "rotation": 0,
+          "text": {
+            "color": "#aaff00",
+            "fontfamily": "PxPlus IBM VGA 8x14",
+            "kerning": false,
+            "pixelsize": 48,
+            "text": "Selected Classic Levels",
+            "valign": "center",
+            "wrap": true
+          },
+          "type": "",
+          "visible": true,
+          "width": 384,
+          "x": 1008,
+          "y": 468
         }
       ],
       "opacity": 1,
@@ -371,7 +399,7 @@
           "visible": true,
           "width": 24,
           "x": 960,
-          "y": 432
+          "y": 360
         }
       ],
       "opacity": 1,
@@ -382,7 +410,7 @@
     }
   ],
   "nextlayerid": 6,
-  "nextobjectid": 37,
+  "nextobjectid": 38,
   "orientation": "orthogonal",
   "properties": [
     {

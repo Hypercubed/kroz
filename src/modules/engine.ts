@@ -7,22 +7,20 @@ import * as player from '../systems/player-system';
 import * as screen from './screen';
 import * as world from './world';
 import * as mob from '../systems/mobs-system';
-import * as level from './levels';
 import * as effects from '../systems/effects-system';
 import * as debug from './debug';
 import * as events from './events';
-import * as tiles from './tiles';
-import * as colors from './colors';
+import * as games from './games';
 
 import {
   SHOW_DEBUG_CONTROLS,
   SHOW_STATS,
-  TITLE,
+  STARTING_GAME,
   XMax,
   YMax
 } from '../constants/constants';
 import { Color } from './colors';
-import { games } from './games';
+import { Games } from './games';
 
 let stats: Stats;
 let gui: dat.GUI;
@@ -75,48 +73,21 @@ export function init() {
     p.add(debug.player, 'y', 0, YMax, 1).listen();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  events.gameStart.add((game: any) => {
-    window.cancelAnimationFrame(lastRaf);
-    runGame(game);
-  });
+  events.gameStart.add((game: Games) => runGame(game));
 }
 
 export async function start() {
   runningGame = 0;
-  display.clear(Color.Black);
-
-  await screen.introScreen();
-  world.gameState.title = TITLE;
-  events.gameStart.dispatch(
-    games.loading
-    // games.procgen
-  );
+  events.gameStart.dispatch(STARTING_GAME);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function runGame(game: any) {
-  world.resetState();
-  world.gameState.currentGame = game;
+export async function runGame(gameKey: Games) {
+  window.cancelAnimationFrame(lastRaf);
+  runningGame++;
 
-  display.clear(Color.Black);
-
-  if (runningGame++ > 0) {
-    await screen.renderTitle();
-  }
-
-  tiles.setTileset(await game.readTileset());
-  colors.setColors(await game.readColor());
-
-  await level.loadLevel(0);
-
-  screen.fullRender();
+  await games.loadGame(gameKey);
 
   world.gameState.started = true;
-  await run();
-}
-
-async function run() {
   const _runningGame = runningGame;
   let tick = 0;
   let dt = 0;

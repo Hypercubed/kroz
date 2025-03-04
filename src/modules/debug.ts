@@ -119,17 +119,16 @@ if (ENABLE_DEBUG_INTERFACE) {
 
   document.addEventListener('keyup', (e) => {
     if (e.key === '?') {
-      const consoleDiv = document.getElementById('debug-console');
-      consoleDiv!.style.display =
-        consoleDiv!.style.display === 'none' ? 'block' : 'none';
-      if (consoleDiv!.style.display === 'block') {
-        input.focus();
-        input.value = ''; // Clear input
-      }
+      toggleConsole();
     }
   });
 
-  input.addEventListener('keyup', (e: KeyboardEvent) => e.stopPropagation());
+  input.addEventListener('keyup', (e) => {
+    e.stopPropagation();
+    if (e.key === '?') {
+      toggleConsole();
+    }
+  });
 
   input.addEventListener('keydown', async (e: KeyboardEvent) => {
     e.stopPropagation();
@@ -140,6 +139,16 @@ if (ENABLE_DEBUG_INTERFACE) {
       await processCommand(command);
     }
   });
+
+  function toggleConsole() {
+    const consoleDiv = document.getElementById('debug-console');
+    consoleDiv!.style.display =
+      consoleDiv!.style.display === 'none' ? 'block' : 'none';
+    if (consoleDiv!.style.display === 'block') {
+      input.focus();
+      input.value = ''; // Clear input
+    }
+  }
 
   async function processCommand(command: string) {
     command = command.trim();

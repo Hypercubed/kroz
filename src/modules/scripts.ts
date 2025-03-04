@@ -7,8 +7,6 @@ import * as levels from './levels';
 import * as events from './events';
 import * as maps from './maps';
 
-import { games } from './games';
-
 import type { Entity } from '../classes/entity';
 import { Position } from '../classes/components';
 import { DEBUG } from '../constants/constants';
@@ -82,6 +80,12 @@ const EffectMap: Record<string, EffectFn> = {
    */
   CHANGE: ({ args }) =>
     effects.change(tiles.getType(args[0])!, tiles.getType(args[1])!),
+  /**
+   * ## `##SHUFFLE A B`
+   * Randomly shuffles all tiles of type A to type B.
+   */
+  SHUFFLE: ({ args }) =>
+    effects.shuffle(tiles.getType(args[0])!, tiles.getType(args[1])!),
   /** ## `##HIDE A`
    * Hides all tiles of the specified type.
    */
@@ -206,12 +210,7 @@ const EffectMap: Record<string, EffectFn> = {
     await levels.loadLevel(+args[0] - 1); // Levels are 1-indexed
   },
   CHANGEGAME: async ({ args }) => {
-    const game = games[args[0] as keyof typeof games];
-    if (game) {
-      events.gameStart.dispatch(game);
-    } else {
-      console.warn('Unknown game:', args[0]);
-    }
+    events.gameStart.dispatch(args[0]);
   },
   openSourceScreen: async () => await screen.openSourceScreen(),
   REFRESH: async () => screen.fullRender(),
