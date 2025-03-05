@@ -36,4 +36,4 @@ export const BLINK = false; // !REDUCED;
 
 export const FLOOR_CHAR = ' ';
 
-export const STARTING_GAME = 'loading';
+export const STARTING_GAME = 'debug';

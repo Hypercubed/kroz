@@ -1,0 +1,14 @@
+PF = """
+XXXXX
+X   X
+X P X
+X   X
+XXXXX
+"""
+
+ST = """
+##HIDE OSpell1
+##HIDE OSpell2
+##HIDE OSpell3
+Press any key to begin this level.
+"""

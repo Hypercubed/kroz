@@ -149,3 +149,8 @@ export function readTileMapLayers(tilemap: tiled.Map): Entity[] {
     return output;
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isTiledMap(x: any): x is tiled.Map {
+  return typeof x === 'object' && x!.type === 'map';
+}

@@ -20,7 +20,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "plugins": [{ "name": "typescript-plugin-toml" }]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

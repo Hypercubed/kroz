@@ -18,8 +18,8 @@ import * as world from './world.ts';
 import * as controls from './controls.ts';
 
 import type { Level } from './levels.ts';
-import { readKrozLevel } from '../utils/kroz.ts';
-import { readLevelJSONLevel } from '../utils/tiled.ts';
+import { readKrozJSON, readKrozTxt } from '../utils/kroz.ts';
+import { isTiledMap, readLevelJSONLevel } from '../utils/tiled.ts';
 import { ExternalTileset } from '@kayahr/tiled';
 import { Color } from './colors.ts';
 
@@ -128,10 +128,12 @@ function addDefaults(game: Partial<Game> & { LEVELS?: LevelsArray }): Game {
   async function readLevel(LEVELS: LevelsArray, i: number): Promise<Level> {
     const levelData = await LEVELS[i]!();
 
-    if (typeof levelData === 'string') {
-      return readKrozLevel(levelData);
-    } else {
+    if (isTiledMap(levelData)) {
       return readLevelJSONLevel(levelData);
+    } else if (typeof levelData === 'string') {
+      return readKrozTxt(levelData);
+    } else {
+      return readKrozJSON(levelData);
     }
   }
 
