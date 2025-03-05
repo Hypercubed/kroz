@@ -24,7 +24,7 @@ import { Color } from '../../modules/colors';
 import dedent from 'ts-dedent';
 import { delay } from '../../utils/utils';
 
-export const title = 'Testing Procgen Maps';
+export const title = 'BROG';
 
 export async function readLevel(i: number): Promise<Level> {
   const level = Levels[i % Levels.length] as LevelDefinition;
