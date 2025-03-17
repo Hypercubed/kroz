@@ -2,14 +2,14 @@ import * as tiled from '@kayahr/tiled';
 import { RNG } from 'rot-js';
 import { Rogue } from 'procedural-layouts';
 import Cellular from 'rot-js/lib/map/cellular';
+import { StridedView } from 'strided-view';
 
 import * as tiles from '../modules/tiles';
 
 import { Type } from '../constants/types';
-import { Matrix } from '../classes/map';
 import { Entity } from '../classes/entity';
-import { PlayField } from '../classes/play-field';
 import { readTileMapLayers } from './tiled';
+import { XMax, YMax } from '../constants/constants';
 
 export enum LayerType {
   Fill,
@@ -55,7 +55,12 @@ export interface CALayer {
 
 export interface GeneratorLayer {
   type: LayerType.Generator;
-  generator: (map: Matrix<Entity>, x: number, y: number, meta: Meta) => void;
+  generator: (
+    map: StridedView<Entity>,
+    x: number,
+    y: number,
+    meta: Meta
+  ) => void;
   count: OptionValue<number>;
   special?: OptionValue<boolean>; // TODO: More flexible room predicate
   deadends?: OptionValue<boolean>;
@@ -119,10 +124,10 @@ type Meta = Record<string, unknown> & { depth: number };
 // **********************
 
 export async function generateMap(level: LevelDefinition, depth: number) {
-  const mapData = new PlayField();
+  const mapData = StridedView.of<Entity>([], [XMax + 1, YMax + 1]);
   const meta: Meta = { depth };
 
-  mapData.fill(() => tiles.createEntityOfType(Type.Floor));
+  mapData.update(() => tiles.createEntityOfType(Type.Floor));
 
   for (const layer of level.layers) {
     switch (layer.type) {
@@ -152,7 +157,7 @@ export async function generateMap(level: LevelDefinition, depth: number) {
 
 // ************ Fill Layer ************
 
-function addFillLayer(layerData: FillLayer, mapData: PlayField) {
+function addFillLayer(layerData: FillLayer, mapData: StridedView<Entity>) {
   const x0 = layerData.x ?? 0;
   const y0 = layerData.y ?? 0;
   const x1 = x0 + (layerData.width ?? mapData.width);
@@ -168,14 +173,16 @@ function addFillLayer(layerData: FillLayer, mapData: PlayField) {
 
 // ************ Prefab Layer ************
 
-async function addPrefabLayer(layerData: PrefabLayer, mapData: PlayField) {
+async function addPrefabLayer(
+  layerData: PrefabLayer,
+  mapData: StridedView<Entity>
+) {
   const tilemap = await layerData.readMap();
   const data = readTileMapLayers(tilemap);
 
-  const m = new Matrix<Entity>(mapData.width, mapData.height);
-  m.fromArray(data);
+  const m = StridedView.of<Entity>(data, [mapData.width, mapData.height]);
 
-  m.forEach((e, x, y) => {
+  m.forEach((e, [x, y]) => {
     if (e) mapData.set(x, y, e);
   });
 }
@@ -192,7 +199,7 @@ const DefaultAllowPlacement = [
 ];
 
 // - Generate a passable map from mapData once
-function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
+function addCALayer(layerData: CALayer, mapData: StridedView<Entity>) {
   const w = layerData.width ?? mapData.width;
   const h = layerData.height ?? mapData.height;
   const interations = layerData.interations ?? 4;
@@ -202,7 +209,7 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
   let retry = layerData.retry ?? 100;
   let max = layerData.maxPlacement ?? 1;
 
-  let passableMap = mapData.map<number>((e) =>
+  let passableMap = mapData.map<number | null>((e) =>
     isTilePassable(e?.type ?? null) ? 0 : 1
   );
 
@@ -212,7 +219,7 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
   while (max-- > 0) {
     while (retry-- > 0) {
       const caMap = buildMap();
-      const map = Matrix.fromArraysTransposed(caMap._map);
+      const map = StridedView.from(caMap._map).transpose();
       // console.log('CA Map');
       // console.log(map.toMapString());
 
@@ -220,8 +227,8 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
 
       if (!p) continue;
 
-      mapData.place(map, ...p, (e, x, y) => {
-        if (!e) return null;
+      mapData.placeWith(map, p, (e, [x, y]) => {
+        if (!e) return mapData.get(x, y)!;
         const type = getType(layerData.tileType);
         return tiles.createEntityOfType(type, x, y);
       });
@@ -235,7 +242,7 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
     }
   }
 
-  function findPostion(map: Matrix<number>): [number, number] | false {
+  function findPostion(map: StridedView<number>): [number, number] | false {
     const dx = mapData.width - w;
     const dy = mapData.height - h;
 
@@ -262,7 +269,7 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
     return map;
   }
 
-  function checkPaths(map: Matrix<number>, x0: number, y0: number) {
+  function checkPaths(map: StridedView<number>, x0: number, y0: number) {
     // Check allowed placement
     if (allowedPlacement && allowedPlacement.length) {
       for (let y = 0; y < map.height; y++) {
@@ -282,8 +289,8 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
     }
 
     if (layerData.checkPath) {
-      const m = passableMap.clone();
-      m.place(map, x0, y0, (e) => (!e ? null : 2 * e));
+      const m = passableMap.copy();
+      m.placeWith(map, [x0, y0], (e) => (!e ? null : 2 * e));
       // console.log('With Lake');
       // console.log(m.toMapString());
 
@@ -292,13 +299,13 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
       // console.log(m.toMapString());
 
       // Check if there are any 0s left
-      if (m.some(0)) return false;
+      if (m.includes(0)) return false;
     }
 
     return true;
   }
 
-  function floodFill(m: Matrix<number>) {
+  function floodFill(m: StridedView<number | null>) {
     let startX = 0;
     let startY = 0;
 
@@ -313,7 +320,7 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
       }
     }
 
-    m.floodFill(startX, startY, 1);
+    m.floodFill([startX, startY], 1);
   }
 }
 
@@ -321,12 +328,12 @@ function addCALayer(layerData: CALayer, mapData: Matrix<Entity>) {
 
 function addGeneratorLayer(
   layerData: GeneratorLayer,
-  mapData: Matrix<Entity>,
+  mapData: StridedView<Entity>,
   meta: Meta
 ) {
   const meta$ = meta as Meta & RogueMap;
 
-  let n = ~~(getValue(layerData.count, meta) ?? 1);
+  const n = ~~(getValue(layerData.count, meta) ?? 1);
   const special = getValue(layerData.special, meta) ?? false;
   const deadends = getValue(layerData.deadends, meta) ?? false;
 
@@ -356,12 +363,18 @@ function addGeneratorLayer(
     }
   }
 
-  if (n < 1) return;
-  while (n--) {
-    const p = mapData.getRandom((e) => e.type === Type.Floor, x0, y0, x1, y1);
-    if (!p) break;
-    layerData.generator(mapData, p[0], p[1], meta);
-  }
+  const slice = mapData.slice([x0, y0], [x1 - x0 + 1, y1 - y0 + 1]);
+  const postions = slice.sample(n, (e) => e?.type === Type.Floor);
+  postions.forEach(([x, y]) => {
+    layerData.generator(mapData, x + x0, y + y0, meta);
+  });
+
+  // if (n < 1) return;
+  // while (n--) {
+  //   const p = mapData.sample(1, (e) => e?.type === Type.Floor)[0];
+  //   if (!p) break;
+  //   layerData.generator(mapData, p[0], p[1], meta);
+  // }
 }
 
 // ************ Brogue-like map generation ************
@@ -392,7 +405,7 @@ const DefaultTileTypes = {
 
 function addBrogueLayer(
   layerData: BrogueLayer,
-  mapData: Matrix<Entity>,
+  mapData: StridedView<Entity>,
   meta: Meta
 ) {
   const width = layerData.width ?? mapData.width;
@@ -409,7 +422,7 @@ function addBrogueLayer(
 
   const btl = buildMap();
 
-  mapData.fill((x, y) => {
+  mapData.update((_, [x, y]) => {
     const t = btl.world[y][x] as RogueMapType;
     const type = getType(tileTypes[t]);
     return tiles.createEntityOfType(type, x, y);
@@ -453,7 +466,7 @@ function addBrogueLayer(
 
 function addKeys(
   layerData: BrogueLayer | BSPLayer,
-  mapData: Matrix<Entity>,
+  mapData: StridedView<Entity>,
   meta: Meta
 ) {
   const meta$ = meta as Meta & RogueMap;
@@ -530,7 +543,11 @@ function addKeys(
 
 // ************ BSP Layer ************
 
-function addBSPLayer(layerData: BSPLayer, mapData: Matrix<Entity>, meta: Meta) {
+function addBSPLayer(
+  layerData: BSPLayer,
+  mapData: StridedView<Entity>,
+  meta: Meta
+) {
   const meta$ = meta as Meta & RogueMap;
 
   const special = getValue(layerData.special, meta) ?? false;
@@ -543,8 +560,10 @@ function addBSPLayer(layerData: BSPLayer, mapData: Matrix<Entity>, meta: Meta) {
     [key in RogueMapType]: Type;
   };
 
-  const bspMap = new Matrix<RogueMapType>(mapData.width, mapData.height);
-  bspMap.fill(RogueMapType.Floor);
+  const bspMap = StridedView.fill(
+    [mapData.width, mapData.height],
+    RogueMapType.Floor
+  );
 
   const rooms: RogueRoom[] = [];
   const doors: RogueDoor[] = [];
@@ -553,7 +572,7 @@ function addBSPLayer(layerData: BSPLayer, mapData: Matrix<Entity>, meta: Meta) {
   sliceMap(0, 0, mapData.width - 1, mapData.height - 1);
   addMeta();
 
-  mapData.fill((x, y) => {
+  mapData.update((_, [x, y]) => {
     const t = bspMap.get(x, y);
     const type = getType(tileTypes[t!]);
     return tiles.createEntityOfType(type, x, y);
@@ -639,7 +658,7 @@ function addBSPLayer(layerData: BSPLayer, mapData: Matrix<Entity>, meta: Meta) {
 
     if (RNG.getItem(directions) === 'x') {
       const x = RNG.getUniformInt(x0 + min_width, x1 - min_width);
-      bspMap.fillRegion(RogueMapType.Wall, x, y0, x, y1);
+      bspMap.slice([x, y0], [1, y1 - y0 + 1]).fill(RogueMapType.Wall);
 
       sliceMap(x0, y0, x - 1, y1);
       sliceMap(x + 1, y0, x1, y1);
@@ -657,7 +676,7 @@ function addBSPLayer(layerData: BSPLayer, mapData: Matrix<Entity>, meta: Meta) {
       }
     } else {
       const y = RNG.getUniformInt(y0 + min_height, y1 - min_height);
-      bspMap.fillRegion(RogueMapType.Wall, x0, y, x1, y);
+      bspMap.slice([x0, y], [x1 - x0 + 1, 1]).fill(RogueMapType.Wall);
 
       sliceMap(x0, y0, x1, y - 1);
       sliceMap(x0, y + 1, x1, y1);

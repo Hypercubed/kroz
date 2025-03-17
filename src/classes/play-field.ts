@@ -3,14 +3,11 @@ import { default as RNG } from 'rot-js/lib/rng';
 import { XMax, YMax } from '../constants/constants';
 import { Entity } from './entity';
 import { Type } from '../constants/types';
-import { Matrix } from './map';
+import { StridedView } from 'strided-view';
 
-export class PlayField extends Matrix<Entity> {
-  constructor(
-    public width = XMax + 1,
-    public height = YMax + 1
-  ) {
-    super(width, height);
+export class PlayField extends StridedView<Entity> {
+  constructor(width = XMax + 1, height = YMax + 1) {
+    super([], [width, height]);
   }
 
   getType(x: number, y: number): Type | string {
@@ -36,5 +33,12 @@ export class PlayField extends Matrix<Entity> {
       n++;
     }
     return null;
+  }
+
+  // TODO: Get rid of this method
+  fromArray(arr: Entity[]): void {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.data.splice(0, this.data.length, ...arr);
   }
 }

@@ -86,7 +86,9 @@ function hordeGenerator(
         const [dx, dy] = RNG.getItem(DIRS[4])!;
         const [xx, yy] = [x + dx, y + dy];
         const e = map.get(xx, yy);
-        if (!e || (e.type === Type.Floor && Math.random() < 0.5)) {
+        if (!e) return;
+
+        if (e.type === Type.Floor && Math.random() < 0.5) {
           map.set(xx, yy, tiles.createEntityOfType(type, xx, yy));
           if (n-- < 1) return;
         }
@@ -119,7 +121,9 @@ function growthGenerator(
         map.set(x, y, tiles.createEntityOfType(type, x, y));
         const [dx, dy] = RNG.getItem(DIRS[8])!;
         const [xx, yy] = [x + dx, y + dy];
-        if (map.get(xx, yy)?.type === Type.Floor && Math.random() < 0.8) {
+        const e = map.get(xx, yy);
+        if (!e) return;
+        if (e.type === Type.Floor && Math.random() < 0.8) {
           genAt(xx, yy);
           if (n-- < 1) return;
         }
@@ -152,7 +156,9 @@ function collectibleGenerator(
         map.set(x, y, tiles.createEntityOfType(type, x, y));
         const [dx, dy] = RNG.getItem(DIRS[4])!;
         const [xx, yy] = [x + dx, y + dy];
-        if (map.get(xx, yy)?.type === Type.Floor && Math.random() < 0.5) {
+        const e = map.get(xx, yy);
+        if (!e) return;
+        if (e.type === Type.Floor && Math.random() < 0.5) {
           genAt(xx, yy);
           if (n-- < 1) return;
         }
@@ -188,6 +194,8 @@ function clusterGenerator(
           for (let dy = -1; dy <= 1; dy++) {
             if (dx === 0 && dy === 0) continue;
             const e = map.get(x + dx, y + dy);
+            if (!e) return;
+
             if (!e || (e!.type === Type.Floor && Math.random() < 0.3)) {
               map.set(x + dx, y + dy, tiles.createEntityOfType(type, x, y));
               if (n-- < 1) return;
